@@ -14,6 +14,7 @@ public:
     QVBoxLayout *vbox;          //用于放置Item的Layout
     QVBoxLayout *scrollLayout; //用于放置scrollArea的layout
     QScrollArea *scrollArea; //滚动槽
+    QWidget *ItemWidget;
 signals:
 
 public slots:

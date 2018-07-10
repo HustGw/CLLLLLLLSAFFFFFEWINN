@@ -7,10 +7,13 @@
 #include <QStackedWidget>
 #include "encryptionitem.h"
 #include <QListWidget>
+#include <QVBoxLayout>
 #include "encryptionbtnview.h"
 #include "decryptionbtnview.h"
 #include "decryptionviewcontroller.h"
 #include "decryptionviewcontroller.h"
+#include <QLabel>
+#include <QImage>
 namespace Ui {
 class MainWindow;
 }
@@ -24,10 +27,11 @@ public:
     ~MainWindow();
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
-    EncryptionBtnView *encryptionBtnItem;
-    DecryptionBtnView *decryptionBtnItem;
-    DecryptionViewController *decryptionViewController;
+    EncryptionBtnView *encryptionBtnItem; //加密单元
+    DecryptionBtnView *decryptionBtnItem; //解密单元
+    DecryptionViewController *decryptionViewController; //解密界面控制器 对解密单元进行布局管理
     QListWidget *list;
+    QLabel *userHead;
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -43,6 +47,12 @@ private slots:
     void on_FinDepBtn_clicked();
 
     void on_OpenFileBtn_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_4_clicked();
 
 private:
     Ui::MainWindow *ui;

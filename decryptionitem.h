@@ -25,9 +25,11 @@ public:
     QCheckBox *checkBox;
     QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
+
 signals:
 
 public slots:
+    void changeCheckBox();
 private:
 protected:
     void paintEvent(QPaintEvent *event);

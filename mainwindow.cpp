@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFont>
@@ -17,16 +16,16 @@ MainWindow::MainWindow(QWidget *parent) :
     decryptionViewController = new DecryptionViewController();
     ui->MidStaWidget->addWidget(encryptionPage);
     ui->MidStaWidget->addWidget(decryptionViewController);
-//    ui->BtnStaWidget->addWidget(encryptionBtnItem);
-//    ui->BtnStaWidget->addWidget(decryptionBtnItem);
-    QLabel *label1 = new QLabel(tr("这是页面3"));
-    ui->MidStaWidget->addWidget(label1);
+    ui->nameLabel->setText(tr("新垣结衣"));
+    QPixmap pixmap("head.jpg");
+    pixmap.scaled(ui->headLabel->size(),Qt::KeepAspectRatio);
+    ui->headLabel->setScaledContents(true);
+    ui->headLabel->setPixmap(pixmap);
     ui->FinDepBtn->hide();
     ui->FinEnpBtn->hide();
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
-
 }
 
 MainWindow::~MainWindow()
@@ -78,4 +77,43 @@ void MainWindow::on_FinDepBtn_clicked()
 void MainWindow::on_OpenFileBtn_clicked()
 {
 
+}
+//批量删除按钮
+void MainWindow::on_pushButton_3_clicked()
+{
+
+
+}
+//点击全选按钮 QCheckbox处于被选择状态
+void MainWindow::on_pushButton_clicked()
+{
+   // QVBoxLayout *SelLayout = decryptionViewController->vbox;
+    if(decryptionViewController->vbox){
+        //遍历layout中的Item
+        for(int i= 0;i<decryptionViewController->vbox->count();i++){
+
+
+        }
+    }
+}
+
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    DecryptionItem *v1 = new DecryptionItem();
+    v1->fileName->setText(tr("这是测试"));
+    v1->fileSize->setText(tr("222tB"));
+    v1->fileDescription->setText(tr("描述啊啊啊啊啊啊"));
+    v1->fileIcon->setText(tr("图片片"));
+    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+    decryptionViewController->vbox->addWidget(v1);
+    delete decryptionViewController->layout();
+    QWidget *newItemWidget = new QWidget();
+    QScrollArea *newScrollArea = new QScrollArea();
+    newItemWidget->setLayout(decryptionViewController->vbox);
+    newScrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(newScrollArea);
+    decryptionViewController->setLayout(newVbox);
 }

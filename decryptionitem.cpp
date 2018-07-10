@@ -27,4 +27,7 @@ void DecryptionItem::paintEvent(QPaintEvent *event){
     painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
 }
 
+void DecryptionItem::changeCheckBox(){
+    checkBox->setCheckState(Qt::Checked);
+}
 

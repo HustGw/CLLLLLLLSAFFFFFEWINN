@@ -45,3 +45,5 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     loginview.ui
+
+DISTFILES +=
