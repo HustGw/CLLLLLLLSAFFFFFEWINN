@@ -2,7 +2,6 @@
 #define LOGINVIEW_H
 
 #include <QDialog>
-
 namespace Ui {
 class LoginView;
 }

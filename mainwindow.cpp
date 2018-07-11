@@ -3,8 +3,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFont>
-
-
 #include <connectsql.h>
 #include <encryption.h>
 #include <QLabel>
@@ -18,8 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    encryptionPage = new EncryptionItem();
-    decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
     decryptionBtnItem = new DecryptionBtnView();
     decryptionViewController = new DecryptionViewController();
@@ -36,6 +32,60 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
+    //连接数据库ODBC
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+           db.setHostName("119.23.138.181");
+           db.setPort(3306);
+           db.setDatabaseName("Cloud_Encryption");
+           db.setUserName("root");
+           db.setPassword("F103-backup");
+           bool ok = db.open();
+        if(ok)
+        {
+            qDebug() << "connect MySql success!";
+        }
+        else // 打开数据库失败
+        {
+            qDebug() <<"error_MySql:\n" << db.lastError().text();
+        }
+        //查询数据库  查询解密请求
+     QSqlQuery query;
+     bool success = query.exec("select * from Decryption where oemp_id='123'");
+     if(!success){
+         qDebug() << "查询user失败";
+         return;
+      }else{
+               qDebug()<<"查询成功";
+               //将数据库查到的数据添加到视图中
+               while(query.next())
+               {
+                   DecryptionItem *v1 =  new DecryptionItem();
+                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
+                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                   if(query.record().value("status").toString()=="0"){
+                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
+                       v1->downloadBtn->setText("确认下载");
+                   }
+                   else {
+                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
+                       v1->downloadBtn->setText("申请解密");
+                   }
+                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                   decryptionViewController->vbox->addWidget(v1);
+
+               }
+          //     delete decryptionViewController->layout();
+               QWidget *newItemWidget = new QWidget();
+               QScrollArea *newScrollArea = new QScrollArea();
+               newItemWidget->setLayout(decryptionViewController->vbox);
+               newScrollArea->setWidget(newItemWidget);
+               QVBoxLayout *newVbox = new QVBoxLayout();
+               newVbox->addWidget(newScrollArea);
+               decryptionViewController->setLayout(newVbox);
+               return;
+           }
+
+
 }
 
 MainWindow::~MainWindow()
@@ -72,6 +122,7 @@ void MainWindow::on_EncryptionBtn_clicked()
 {   //点击解密按钮后，MidStaWidget跳转到1号子页面
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(0);
+
 }
 
 void MainWindow::on_FinEnpBtn_clicked()
@@ -114,7 +165,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
     encryption *contest = new encryption();
      //连接数据库
-    contest->connect();
+    //contest->connect();
     contest->originalFileName =fName;
     contest->originalFilePath =fPath;
     contest->originalFileSize =mfSize;
@@ -131,33 +182,11 @@ void MainWindow::on_pushButton_3_clicked()
 //点击全选按钮 QCheckbox处于被选择状态
 void MainWindow::on_pushButton_clicked()
 {
-   // QVBoxLayout *SelLayout = decryptionViewController->vbox;
-    if(decryptionViewController->vbox){
-        //遍历layout中的Item
-        for(int i= 0;i<decryptionViewController->vbox->count();i++){
-
-
-        }
-    }
 }
 
 
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    DecryptionItem *v1 = new DecryptionItem();
-    v1->fileName->setText(tr("这是测试"));
-    v1->fileSize->setText(tr("222tB"));
-    v1->fileDescription->setText(tr("描述啊啊啊啊啊啊"));
-    v1->fileIcon->setText(tr("图片片"));
-    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
-    decryptionViewController->vbox->addWidget(v1);
-    delete decryptionViewController->layout();
-    QWidget *newItemWidget = new QWidget();
-    QScrollArea *newScrollArea = new QScrollArea();
-    newItemWidget->setLayout(decryptionViewController->vbox);
-    newScrollArea->setWidget(newItemWidget);
-    QVBoxLayout *newVbox = new QVBoxLayout();
-    newVbox->addWidget(newScrollArea);
-    decryptionViewController->setLayout(newVbox);
+
 }

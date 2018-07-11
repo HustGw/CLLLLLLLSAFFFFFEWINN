@@ -11,19 +11,20 @@
 #include "encryptionbtnview.h"
 #include "decryptionbtnview.h"
 #include "decryptionviewcontroller.h"
-#include "decryptionviewcontroller.h"
+#include "encryptionviewcontroller.h"
 #include <QLabel>
 #include <QImage>
-
-
 #include <QFile>
 #include <QFileDialog>
 #include <QDir>
 #include <QTextStream>
-#include "encryptionbtnview.h"
-#include "decryptionbtnview.h"
-#include "decryptionviewcontroller.h"
-#include "encryptionviewcontroller.h"
+#include <QtSql/QSqlDatabase>
+#include <QDebug>
+#include <QtSql/QSqlError>
+#include <QUuid>
+#include<QtSql/QSqlQuery>
+#include <QtSql/QSqlRecord>
+
 namespace Ui {
 class MainWindow;
 }

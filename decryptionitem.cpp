@@ -11,7 +11,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
     fileName->setGeometry(200,10,100,30);
     fileSize->setGeometry(200,40,100,30);
-    fileDescription->setGeometry(200,80,200,30);
+    fileDescription->setGeometry(200,80,250,30);
     downloadBtn->setGeometry(500,50,100,30);
     checkBox->setGeometry(10,70,20,20);
     fileIcon->setGeometry(30,50,100,30);

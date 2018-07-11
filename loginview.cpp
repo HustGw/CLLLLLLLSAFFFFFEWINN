@@ -1,6 +1,7 @@
 #include "loginview.h"
 #include "ui_loginview.h"
 #include <QMessageBox>
+
 LoginView::LoginView(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoginView)
@@ -15,8 +16,6 @@ LoginView::LoginView(QWidget *parent) :
     ui->UserName->setPlaceholderText("请输入用户名/手机号");
     ui->PassWord->setPlaceholderText("请输入密码");
 
- //   ui->LoginBtn->setStyleSheet("background-color:blue");
-   // ui->LoginBtn->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
 
 }
 
