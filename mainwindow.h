@@ -14,6 +14,16 @@
 #include "decryptionviewcontroller.h"
 #include <QLabel>
 #include <QImage>
+
+
+#include <QFile>
+#include <QFileDialog>
+#include <QDir>
+#include <QTextStream>
+#include "encryptionbtnview.h"
+#include "decryptionbtnview.h"
+#include "decryptionviewcontroller.h"
+#include "encryptionviewcontroller.h"
 namespace Ui {
 class MainWindow;
 }
@@ -30,6 +40,7 @@ public:
     EncryptionBtnView *encryptionBtnItem; //加密单元
     DecryptionBtnView *decryptionBtnItem; //解密单元
     DecryptionViewController *decryptionViewController; //解密界面控制器 对解密单元进行布局管理
+    EncryptionViewController *encryptionViewController;
     QListWidget *list;
     QLabel *userHead;
 private slots:

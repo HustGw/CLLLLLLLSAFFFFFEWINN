@@ -6,6 +6,9 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QHBoxLayout>
+#include <QSize>
+#include <QLine>
+#include <QPainter>
 
 class EncryptionItem : public QWidget
 {
@@ -13,19 +16,21 @@ class EncryptionItem : public QWidget
 public:
     explicit EncryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(200,50);
+        return QSize(660,120);
     }
-signals:
-
-public slots:
-private:
     QLabel *fileName;
     QLabel *fileSize;
     QLabel *fileDescription;
     QLabel *fileIcon;
     QCheckBox *checkBox;
-    QPushButton *downloadBtn;
+    //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
+signals:
+
+public slots:
+private:
+protected:
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // ENCRYPTIONITEM_H

@@ -3,6 +3,15 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFont>
+
+
+#include <connectsql.h>
+#include <encryption.h>
+#include <QLabel>
+#include <QTextCodec>
+#include <QtSql/QSqlDatabase>
+#include <QDebug>
+#include <QtSql/QSqlError>
 extern int isFinishedBtn=0;//用于判断是否已经点击
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     encryptionBtnItem = new EncryptionBtnView();
     decryptionBtnItem = new DecryptionBtnView();
     decryptionViewController = new DecryptionViewController();
-    ui->MidStaWidget->addWidget(encryptionPage);
+    encryptionViewController = new EncryptionViewController();
+    ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->nameLabel->setText(tr("新垣结衣"));
     QPixmap pixmap("head.jpg");
@@ -60,7 +70,7 @@ void MainWindow::on_DecryptionBtn_clicked()
 
 void MainWindow::on_EncryptionBtn_clicked()
 {   //点击解密按钮后，MidStaWidget跳转到1号子页面
-    ui->MidStaWidget->setCurrentWidget(encryptionPage);
+    ui->MidStaWidget->setCurrentWidget(encryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(0);
 }
 
@@ -76,6 +86,40 @@ void MainWindow::on_FinDepBtn_clicked()
 
 void MainWindow::on_OpenFileBtn_clicked()
 {
+    QTextCodec *codec = QTextCodec::codecForName("GB18030");
+    QString file_full,fName,fPath;
+    qint64 fSize;
+    double mfSize;
+    QFileInfo fInfo;
+    file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
+    fInfo=QFileInfo(file_full);
+    fName=fInfo.fileName();
+    fPath=fInfo.filePath();
+    fSize=fInfo.size();
+    EncryptionItem *v1 = new EncryptionItem();
+    v1->fileName->setText(fName);
+    mfSize=(double)(fSize/1024.);//字节转换为KB
+    v1->fileSize->setText(QString::number( mfSize)+codec->toUnicode(" KB"));
+    v1->fileIcon->setText(fName);
+    v1->fileDescription->setText("111");
+    encryptionViewController->vbox->addWidget(v1);
+    delete encryptionViewController->layout();
+    QWidget *newItemWidget = new QWidget();
+    QScrollArea *newScrollArea = new QScrollArea();
+    newItemWidget->setLayout(encryptionViewController->vbox);
+    newScrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(newScrollArea);
+    encryptionViewController->setLayout(newVbox);
+
+    encryption *contest = new encryption();
+     //连接数据库
+    contest->connect();
+    contest->originalFileName =fName;
+    contest->originalFilePath =fPath;
+    contest->originalFileSize =mfSize;
+    qDebug()<<contest->originalFilePath ;
+    contest->encrypt();
 
 }
 //批量删除按钮

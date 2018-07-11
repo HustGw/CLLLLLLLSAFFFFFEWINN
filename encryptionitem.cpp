@@ -2,14 +2,29 @@
 
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
-    fileName = new QLabel(tr("加密界面"));
-    fileSize = new QLabel(tr("15KB"));
-    fileDescription = new QLabel(tr("请调取本地文件进行加密"));
-    downloadBtn = new QPushButton(tr("确认下载"));
-    hbox1 = new QHBoxLayout();
-    hbox1->addWidget(fileName);
-    hbox1->addWidget(fileSize);
-    hbox1->addWidget(fileDescription);
-    hbox1->addWidget(downloadBtn);
-    this->setLayout(hbox1);
+    fileName = new QLabel(this);
+    fileSize = new QLabel(this);
+    fileDescription = new QLabel(this);
+    //downloadBtn = new QPushButton(this);
+    fileIcon = new QLabel(this);
+    checkBox = new QCheckBox(this);
+    //设置fileName、fileName fileDescription checkBox fileIcon 的位置
+    fileName->setGeometry(300,10,300,30);
+    fileSize->setGeometry(300,40,100,30);
+    fileDescription->setGeometry(300,80,200,30);
+    //downloadBtn->setGeometry(500,50,100,30);
+    checkBox->setGeometry(10,70,20,20);
+    fileIcon->setGeometry(30,50,300,30);
+
+}
+//每一个Item绘制边界框
+void EncryptionItem::paintEvent(QPaintEvent *event){
+    QPainter painter(this);
+    painter.setPen(QColor(139,139,139));
+    painter.drawLine(31,0,this->width()-1,0);
+    painter.drawLine(31,0,31,this->height()-1);
+    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
+    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
+
+
 }

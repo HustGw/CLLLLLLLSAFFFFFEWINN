@@ -6,6 +6,7 @@
 
 QT       += core gui
 
+QT       += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = CloundSafeWindows
@@ -31,7 +32,11 @@ SOURCES += \
     decryptionitem.cpp \
     encryptionbtnview.cpp \
     decryptionbtnview.cpp \
-    decryptionviewcontroller.cpp
+    decryptionviewcontroller.cpp \
+    connectsql.cpp \
+    encryptionviewcontroller.cpp \
+    encryption.cpp \
+    encryptfile.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +45,11 @@ HEADERS += \
     decryptionitem.h \
     encryptionbtnview.h \
     decryptionbtnview.h \
-    decryptionviewcontroller.h
+    decryptionviewcontroller.h \
+    connectsql.h \
+    encryptionviewcontroller.h \
+    encryption.h \
+    encryptfile.h
 
 FORMS += \
         mainwindow.ui \
