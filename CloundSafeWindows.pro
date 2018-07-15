@@ -37,7 +37,9 @@ SOURCES += \
     connectsql.cpp \
     encryptionviewcontroller.cpp \
     encryption.cpp \
-    encryptfile.cpp
+    encryptfile.cpp \
+    requestrecthread.cpp \
+    connectionpool.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,7 +52,9 @@ HEADERS += \
     connectsql.h \
     encryptionviewcontroller.h \
     encryption.h \
-    encryptfile.h
+    encryptfile.h \
+    requestrecthread.h \
+    connectionpool.h
 
 FORMS += \
         mainwindow.ui \

@@ -24,11 +24,17 @@
 #include <QUuid>
 #include<QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
-
+#include <QString>
+#include <QScrollArea>
+#include <QMessageBox>
+#include <QDir>
+#include "requestrecthread.h"
+#include "connectionpool.h"
 namespace Ui {
 class MainWindow;
 }
-
+extern QString User_ID;
+extern QString URL;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -44,6 +50,9 @@ public:
     EncryptionViewController *encryptionViewController;
     QListWidget *list;
     QLabel *userHead;
+    QScrollArea *newScrollArea;
+    QSqlDatabase db;
+
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -65,6 +74,12 @@ private slots:
     void on_pushButton_clicked();
 
     void on_pushButton_4_clicked();
+
+    void getFileID();
+
+    void OssDownLoadFile();
+
+    void ReceiveNewReq();
 
 private:
     Ui::MainWindow *ui;

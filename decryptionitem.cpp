@@ -14,7 +14,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileDescription->setGeometry(200,80,250,30);
     downloadBtn->setGeometry(500,50,100,30);
     checkBox->setGeometry(10,70,20,20);
-    fileIcon->setGeometry(30,50,100,30);
+    fileIcon->setGeometry(30,0,100,115);
 
 }
 //每一个Item绘制边界框
