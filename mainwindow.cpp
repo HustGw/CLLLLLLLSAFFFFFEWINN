@@ -29,15 +29,23 @@ MainWindow::MainWindow(QWidget *parent) :
     finishViewController2 = new FinishViewController2();
     finishEncryptionItem = new FinishEncryptionItem();
     finishDecryptionItem = new FinishDecryptionItem();
-
     finScrollArea = new QScrollArea();
-
     ui->MidStaWidget->addWidget(encryptionPage);
+    friendListLab = new QLabel(ui->RightWidget);
+    friendListLab->setText(tr("好友列表"));
+    friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
+    friendListWidget = new QListWidget(ui->RightWidget);
+    addFriendBtn = new QPushButton(ui->RightWidget);
+    addFriendBtn->setGeometry(ui->RightWidget->width()/2-50,ui->RightWidget->height()-50,100,40);//设置添加好友BUTTON位置
+    friendListWidget->setGeometry(0,40,ui->RightWidget->width(),ui->RightWidget->height()-40);
+    addFriendBtn->setText(tr("添加好友"));
+    connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
     ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
     ui->nameLabel->setText(tr("新垣结衣"));
+    ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
     QPixmap pixmap("head.jpg");
     pixmap.scaled(ui->headLabel->size(),Qt::KeepAspectRatio);
     ui->headLabel->setScaledContents(true);
@@ -86,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent) :
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                    }
-
                }
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
@@ -94,9 +101,24 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea->setWidget(newItemWidget);
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
-               decryptionViewController->setLayout(newVbox);
-           //    return;
+               decryptionViewController->setLayout(newVbox);          
            }
+     //好友列表加载
+     bool friendSelSuc = query.exec("select * from friend where user_id ="+User_ID+"");
+     if(!friendSelSuc){
+         qDebug()<<"查询好友失败";
+         return;
+     }
+     else{
+         qDebug()<<"查询好友成功";
+         //将查询的好友插入视图中
+         int count = 0;
+         while(query.next()){
+             friendListWidget->insertItem(count,query.record().value("friend_nickname").toString());
+             count++;
+         }
+     }
+
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      recThread->start();
@@ -341,6 +363,12 @@ void MainWindow::ReceiveNewReq(){
     }
 }
 
+void MainWindow::showAddfriendWidget(){
+    qDebug()<<"点击响应";
+    //friendInputDlg *friendAdd = new friendInputDlg();
+   // friendAdd->show();
+
+}
 
 void MainWindow::on_pushButton_4_clicked()
 {

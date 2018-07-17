@@ -5,6 +5,7 @@
 #include <QDebug>
 int main(int argc, char *argv[])
 {
+
     QApplication a(argc, argv);
     QFont f("ZYSong18030",12,75);
    // a.setFont(f);

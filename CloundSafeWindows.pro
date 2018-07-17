@@ -44,6 +44,7 @@ SOURCES += \
     finishencryptionitem.cpp \
     finishviewcontroller.cpp \
     finishviewcontroller2.cpp
+    friendinputdlg.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -63,6 +64,7 @@ HEADERS += \
     finishencryptionitem.h \
     finishviewcontroller.h \
     finishviewcontroller2.h
+    friendinputdlg.h
 
 FORMS += \
         mainwindow.ui \

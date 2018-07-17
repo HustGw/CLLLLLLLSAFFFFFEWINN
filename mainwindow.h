@@ -17,7 +17,6 @@
 #include "finishviewcontroller.h"
 #include "finishdecryptionItem.h"
 #include "finishviewcontroller2.h"
-
 #include <QLabel>
 #include <QImage>
 #include <QFile>
@@ -36,11 +35,11 @@
 #include <QDir>
 #include "requestrecthread.h"
 #include "connectionpool.h"
-
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFont>
-
+#include <QListWidget>
+#include "friendinputdlg.h"
 
 namespace Ui {
 class MainWindow;
@@ -69,6 +68,10 @@ public:
     QScrollArea *finScrollArea;
     QScrollArea *newScrollArea;
     QSqlDatabase db;
+    QListWidget *friendListWidget;
+    QPushButton *addFriendBtn;
+    QLabel *friendListLab;
+
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -82,7 +85,6 @@ private slots:
     void on_FinEnpBtn_clicked();
 
     void on_FinDepBtn_clicked();
-
 
     void on_OpenFileBtn_clicked();
 
@@ -106,6 +108,8 @@ private slots:
     void OssDownLoadFile();
 
     void ReceiveNewReq();
+
+    void showAddfriendWidget();
 
 private:
     Ui::MainWindow *ui;

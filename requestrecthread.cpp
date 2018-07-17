@@ -3,21 +3,7 @@ int RequestNum = 0;
 QString user_ID = "123";
 RequestRecThread::RequestRecThread(QObject *parent):QThread(parent)
 {
-//    QSqlDatabase database = QSqlDatabase::addDatabase("QMYSQL","B");
-//           database.setHostName("119.23.138.181");
-//           //database.setPort(3306);
-//           database.setDatabaseName("Cloud_Encryption");
-//           database.setUserName("root");
-//           database.setPassword("F103-backup");
-//           bool ok = database.open();
-//        if(ok)
-//        {
-//            qDebug() << "Thread:connect MySql success!";
-//        }
-//        else // 打开数据库失败
-//        {
-//            qDebug() <<"error_MySql:\n" << database.lastError().text();
-//        }
+
 }
 
 void RequestRecThread::run(){
@@ -48,7 +34,7 @@ void RequestRecThread::listenReqNum(){
     int num= 0;
     while(1){
         num = getReqNum();
-        if(num!=RequestNum){
+        if(num>RequestNum){
             emit numChanged();
             RequestNum = getReqNum();
         }
