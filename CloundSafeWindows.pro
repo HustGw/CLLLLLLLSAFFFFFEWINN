@@ -39,7 +39,11 @@ SOURCES += \
     encryption.cpp \
     encryptfile.cpp \
     requestrecthread.cpp \
-    connectionpool.cpp
+    connectionpool.cpp \
+    finishdecryptionitem.cpp \
+    finishencryptionitem.cpp \
+    finishviewcontroller.cpp \
+    finishviewcontroller2.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +58,11 @@ HEADERS += \
     encryption.h \
     encryptfile.h \
     requestrecthread.h \
-    connectionpool.h
+    connectionpool.h \
+    finishdecryptionitem.h \
+    finishencryptionitem.h \
+    finishviewcontroller.h \
+    finishviewcontroller2.h
 
 FORMS += \
         mainwindow.ui \
