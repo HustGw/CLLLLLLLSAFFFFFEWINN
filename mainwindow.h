@@ -99,6 +99,7 @@ private slots:
     void on_pushButton_5_clicked();
 
     void on_deleteBtn_clicked();
+
     void on_deleteBtn2_clicked();
 
     void on_pushButton_9_clicked();
@@ -110,6 +111,8 @@ private slots:
     void ReceiveNewReq();
 
     void showAddfriendWidget();
+
+    void addFriendToDatabase(QString name);
 
 private:
     Ui::MainWindow *ui;

@@ -10,14 +10,19 @@ class friendInputDlg : public QDialog
 public:
     friendInputDlg(QWidget* parent= 0);
     QSize sizeHint() const{
-        return QSize(300,300);
+        return QSize(300,150);
     }
-private slots:
-private:
     QLabel *titleLabel;
     QLineEdit *inputLineEdit;
     QPushButton *okBtn;
     QPushButton *cancelBtn;
+private slots:
+    void sendName();
+    void cancel();
+signals:
+    void sendNameToMain(QString name);
+
+private:
 };
 
 #endif // FRIENDINPUTDLG_H

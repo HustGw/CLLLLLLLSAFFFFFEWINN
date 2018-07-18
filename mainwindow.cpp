@@ -59,8 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
      db = ConnectionPool::openConnection();
         //查询数据库  查询解密请求
      QSqlQuery query(db);
-
-     bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
      if(!success){
          qDebug() << "查询user失败";
          return;
@@ -104,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
                decryptionViewController->setLayout(newVbox);          
            }
      //好友列表加载
-     bool friendSelSuc = query.exec("select * from friend where user_id ="+User_ID+"");
+     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
      if(!friendSelSuc){
          qDebug()<<"查询好友失败";
          return;
@@ -214,7 +213,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -271,7 +270,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::getFileID(){
     QPushButton *pt = qobject_cast<QPushButton *>(sender());
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -284,7 +283,7 @@ void MainWindow::getFileID(){
                       return;
                   if(pt==b1){
                       qDebug()<<fileID;
-                      bool updateRequest = query.exec("update Decryption set status = 2 where file_id = "+fileID+"");
+                      bool updateRequest = query.exec("update Decryption set status = 2 where file_id = '"+fileID+"'");
                       if(updateRequest){
                            QMessageBox::warning(this,tr("Success"),tr("申请成功请等待！"),QMessageBox::Yes);
                       }
@@ -318,7 +317,7 @@ void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
     QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -362,13 +361,80 @@ void MainWindow::ReceiveNewReq(){
               decryptionViewController->setLayout(newVbox);
     }
 }
+//进行数据库INSERT操作
+void MainWindow::addFriendToDatabase(QString name){
+    //判断是否是好友关系
+    QSqlQuery query(db);
+    bool judgeSuccess = query.exec("select * from friend where user_id='"+User_ID+"'");
+    if(!judgeSuccess){
+        qDebug()<<"查询失败";
+    }
+    else{
+        while (query.next()) {
+            if(query.record().value("friend_nickname").toString()==name){
+                QMessageBox::warning(this,tr("Warning"),tr("已经是好友！"),QMessageBox::Yes);
+                return;
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    //将好友关系插入到数据库表中
+    QString userid;
+    bool success = query.exec("select * from employee where emp_name='"+name+"'");
+    if(success){
+        qDebug()<<"查询ID成功";
+        while (query.next()) {
+            userid = query.record().value("emp_id").toString();
+            qDebug()<<userid;
+        }
 
-void MainWindow::showAddfriendWidget(){
-    qDebug()<<"点击响应";
-    //friendInputDlg *friendAdd = new friendInputDlg();
-   // friendAdd->show();
+    }
+    else {
+        qDebug()<<"查询失败";
+        QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+        return;
+    }
+    bool success1 = query.exec("select *from employee where emp_id = '"+User_ID+"'");
+    QString friendname;
+    if(success1){
+        qDebug()<<"查询用户名成功";
+        while(query.next()){
+            friendname = query.record().value("emp_name").toString();
+            qDebug()<<friendname;
+        }
+
+    }
+    else{
+        qDebug()<<"查询失败";
+    }
+    //创建记录唯一标识
+    QUuid id = QUuid::createUuid();
+    QString strID = id.toString();
+    bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0)");
+    if(insertSuccess){
+        //将好友插入到视图当中
+        int i = friendListWidget->count();
+        i++;
+        friendListWidget->insertItem(i,name);
+         QMessageBox::warning(this,tr("Success"),tr("添加好友成功！"),QMessageBox::Yes);
+    }
+    else{
+        QMessageBox::warning(this,tr("Failed!"),tr("添加好友失败！"),QMessageBox::Yes);
+    }
+
+
 
 }
+//显示添加好友窗口槽函数
+void MainWindow::showAddfriendWidget(){
+    friendInputDlg *friendAdd = new friendInputDlg();
+    connect(friendAdd,SIGNAL(sendNameToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
+    friendAdd->show();
+
+}
+
 
 void MainWindow::on_pushButton_4_clicked()
 {
@@ -398,26 +464,8 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_discryption;
     QString file_status;
 
-  //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-       db.setHostName("119.23.138.181");
-       db.setPort(3306);
-       db.setDatabaseName("Cloud_Encryption");
-       db.setUserName("root");
-       db.setPassword("F103-backup");
-       bool ok = db.open();
-    if(ok)
-    {
-        qDebug() << "connect MySql success!";
-    }
-    else // 打开数据库失败
-    {
-        qDebug() <<"error_MySql:\n" << db.lastError().text();
-    }
-
-    QSqlQuery query;
-       bool success = query.exec("select * from varticle where emp_id="+User_ID);
+       QSqlQuery query(db);
+       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -487,7 +535,7 @@ void MainWindow::on_pushButton_5_clicked()
 
      QSqlQuery query;
      int check_flag = 0;
-        bool success = query.exec("select * from varticle where emp_id="+User_ID);
+        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
         if(!success){
             qDebug() << "查询密文失败";
             return;
@@ -600,10 +648,8 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_size;
     QString file_discryption;
 
-  //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
-
-    QSqlQuery query;
-       bool success = query.exec("select * from Decryption where status = 2 and oemp_id =" + User_ID);
+    QSqlQuery query(db);
+       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='"+User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
            return;

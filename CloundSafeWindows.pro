@@ -43,7 +43,8 @@ SOURCES += \
     finishdecryptionitem.cpp \
     finishencryptionitem.cpp \
     finishviewcontroller.cpp \
-    finishviewcontroller2.cpp
+    finishviewcontroller2.cpp \
+    friendinputdlg.cpp
     friendinputdlg.cpp
 
 HEADERS += \
@@ -63,7 +64,8 @@ HEADERS += \
     finishdecryptionitem.h \
     finishencryptionitem.h \
     finishviewcontroller.h \
-    finishviewcontroller2.h
+    finishviewcontroller2.h \
+    friendinputdlg.h
     friendinputdlg.h
 
 FORMS += \
