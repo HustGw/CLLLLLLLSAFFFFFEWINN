@@ -40,7 +40,9 @@
 #include <QFont>
 #include <QListWidget>
 #include "friendinputdlg.h"
-
+#include "mylabel.h"
+#include "informationdlg.h"
+#include "informationthread.h"
 namespace Ui {
 class MainWindow;
 }
@@ -64,13 +66,14 @@ public:
     FinishViewController2 *finishViewController2;
     FinishDecryptionItem *finishDecryptionItem;
     QListWidget *list;
-    QLabel *userHead;
+    Mylabel *userHead;
     QScrollArea *finScrollArea;
     QScrollArea *newScrollArea;
     QSqlDatabase db;
     QListWidget *friendListWidget;
     QPushButton *addFriendBtn;
     QLabel *friendListLab;
+    informationDlg *inforDlg;
 
 private slots:
 
@@ -114,6 +117,11 @@ private slots:
 
     void addFriendToDatabase(QString name);
 
+    void HeadClickedSlot();
+
+    void HeadChanged();
+signals:
+    void sendUserID(QString user_id);
 private:
     Ui::MainWindow *ui;
 };

@@ -17,6 +17,7 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     cancelBtn->setGeometry(200,100,40,30);
     connect(okBtn,SIGNAL(clicked(bool)),this,SLOT(sendName()));
     connect(cancelBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));
+ //   this->setFixedSize(this->width(),this->height());
 
 }
 void friendInputDlg::sendName(){

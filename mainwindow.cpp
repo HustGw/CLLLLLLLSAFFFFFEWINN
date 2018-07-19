@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     finishViewController2 = new FinishViewController2();
     finishEncryptionItem = new FinishEncryptionItem();
     finishDecryptionItem = new FinishDecryptionItem();
+    inforDlg = new informationDlg();
+    connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
+    emit sendUserID(User_ID);
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
     friendListLab = new QLabel(ui->RightWidget);
@@ -46,10 +49,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(finishViewController2);
     ui->nameLabel->setText(tr("新垣结衣"));
     ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
+    //使用Mylabel添加头像
+    userHead = new Mylabel(ui->TopWidget);
+    userHead->setGeometry(40,10,110,70);
     QPixmap pixmap("head.jpg");
-    pixmap.scaled(ui->headLabel->size(),Qt::KeepAspectRatio);
-    ui->headLabel->setScaledContents(true);
-    ui->headLabel->setPixmap(pixmap);
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
+    //连接头像信号槽
+    connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     ui->FinDepBtn->hide();
     ui->FinEnpBtn->hide();
     this->setFixedSize(this->width(),this->height());
@@ -121,6 +129,10 @@ MainWindow::MainWindow(QWidget *parent) :
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      recThread->start();
+     InformationThread *inforThread = new InformationThread();
+     connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
+     connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
+     inforThread->start();
 
 }
 
@@ -199,7 +211,6 @@ void MainWindow::on_OpenFileBtn_clicked()
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(newScrollArea);
     encryptionViewController->setLayout(newVbox);
-
     encryption *contest = new encryption();
      //连接数据库
     //contest->connect();
@@ -382,12 +393,25 @@ void MainWindow::addFriendToDatabase(QString name){
     }
     //将好友关系插入到数据库表中
     QString userid;
-    bool success = query.exec("select * from employee where emp_name='"+name+"'");
-    if(success){
-        qDebug()<<"查询ID成功";
-        while (query.next()) {
-            userid = query.record().value("emp_id").toString();
-            qDebug()<<userid;
+    bool success4 = query.exec("select * from employee where emp_name='"+name+"'");
+    qDebug()<<name;
+    if(success4){
+        if(query.size()==0){
+            QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+            return;
+        }
+        else{
+            while (query.next()) {
+                if(query.record().value("emp_id").toString().isEmpty()){
+                    QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+                    return;
+                }
+                else{
+                userid = query.record().value("emp_id").toString();
+                qDebug()<<userid;
+                }
+            }
+
         }
 
     }
@@ -423,10 +447,19 @@ void MainWindow::addFriendToDatabase(QString name){
     else{
         QMessageBox::warning(this,tr("Failed!"),tr("添加好友失败！"),QMessageBox::Yes);
     }
-
-
-
 }
+
+
+//头像点击槽函数
+void MainWindow::HeadClickedSlot(){
+    QPixmap pixmap("head.jpg");
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
+    inforDlg->show();
+}
+
+
 //显示添加好友窗口槽函数
 void MainWindow::showAddfriendWidget(){
     friendInputDlg *friendAdd = new friendInputDlg();
@@ -691,7 +724,6 @@ void MainWindow::on_pushButton_9_clicked()
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(finScrollArea);
                finishViewController2->setLayout(newVbox);
-
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->openBtn,SIGNAL(clicked(bool)),f1,SLOT(on_openBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn2_clicked()));
@@ -701,4 +733,12 @@ void MainWindow::on_pushButton_9_clicked()
            return;
        }
 
+}
+
+void MainWindow::HeadChanged(){
+    qDebug()<<"我要变身了";
+    QPixmap pixmap("new.jpg");
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
 }

@@ -44,7 +44,11 @@ SOURCES += \
     finishencryptionitem.cpp \
     finishviewcontroller.cpp \
     finishviewcontroller2.cpp \
-    friendinputdlg.cpp
+    friendinputdlg.cpp \
+    mylabel.cpp \
+    informationdlg.cpp \
+    informationitem.cpp \
+    informationthread.cpp
     friendinputdlg.cpp
 
 HEADERS += \
@@ -65,7 +69,11 @@ HEADERS += \
     finishencryptionitem.h \
     finishviewcontroller.h \
     finishviewcontroller2.h \
-    friendinputdlg.h
+    friendinputdlg.h \
+    mylabel.h \
+    informationdlg.h \
+    informationitem.h \
+    informationthread.h
     friendinputdlg.h
 
 FORMS += \
