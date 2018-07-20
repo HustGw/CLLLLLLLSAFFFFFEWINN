@@ -499,16 +499,11 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_discryption;
     QString file_status;
 
-<<<<<<< HEAD
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
     finishViewController->vbox = new QVBoxLayout();
-
    QSqlQuery query(db);
        bool success = query.exec("select * from varticle where emp_id="+User_ID);
-=======
-       QSqlQuery query(db);
-       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
->>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
+
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -577,12 +572,8 @@ void MainWindow::on_pushButton_5_clicked()
     QString file_status;
 
      int check_flag = 0;
-<<<<<<< HEAD
         QSqlQuery query(db);
         bool success = query.exec("select * from varticle where emp_id="+User_ID);
-=======
-        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
->>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
         if(!success){
             qDebug() << "查询密文失败";
             return;
@@ -694,17 +685,11 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_name;
     QString file_size;
     QString file_discryption;
-<<<<<<< HEAD
     finishViewController2->vbox = new QVBoxLayout();
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
 
    QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where status = 2 and oemp_id =" + User_ID);
-=======
-
-    QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='"+User_ID+"'");
->>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
        if(!success){
            qDebug() << "查询密文失败";
            return;

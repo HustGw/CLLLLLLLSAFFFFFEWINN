@@ -44,16 +44,13 @@ SOURCES += \
     finishencryptionitem.cpp \
     finishviewcontroller.cpp \
     finishviewcontroller2.cpp \
-<<<<<<< HEAD
-    senddialog.cpp
-=======
+    senddialog.cpp\
     friendinputdlg.cpp \
     mylabel.cpp \
     informationdlg.cpp \
     informationitem.cpp \
     informationthread.cpp
->>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
-    friendinputdlg.cpp
+
 
 HEADERS += \
         mainwindow.h \
@@ -73,16 +70,13 @@ HEADERS += \
     finishencryptionitem.h \
     finishviewcontroller.h \
     finishviewcontroller2.h \
-<<<<<<< HEAD
-    senddialog.h
-=======
+    senddialog.h\
     friendinputdlg.h \
     mylabel.h \
     informationdlg.h \
     informationitem.h \
     informationthread.h
->>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
-    friendinputdlg.h
+
 
 FORMS += \
         mainwindow.ui \
