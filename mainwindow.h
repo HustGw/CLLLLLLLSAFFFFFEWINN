@@ -49,7 +49,9 @@ extern QString URL;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
+signals:
+    void fileData(QString);
+    void sendUserId(QString);
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

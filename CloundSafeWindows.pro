@@ -43,7 +43,8 @@ SOURCES += \
     finishdecryptionitem.cpp \
     finishencryptionitem.cpp \
     finishviewcontroller.cpp \
-    finishviewcontroller2.cpp
+    finishviewcontroller2.cpp \
+    senddialog.cpp
     friendinputdlg.cpp
 
 HEADERS += \
@@ -63,11 +64,13 @@ HEADERS += \
     finishdecryptionitem.h \
     finishencryptionitem.h \
     finishviewcontroller.h \
-    finishviewcontroller2.h
+    finishviewcontroller2.h \
+    senddialog.h
     friendinputdlg.h
 
 FORMS += \
         mainwindow.ui \
-    loginview.ui
+    loginview.ui \
+    senddialog.ui
 
 DISTFILES +=

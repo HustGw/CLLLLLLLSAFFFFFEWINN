@@ -14,7 +14,8 @@
 #include <qdebug.h>
 #include "connectionpool.h"
 #include <QMessageBox>
-
+#include "senddialog.h"
+extern QString file_id;
 class FinishEncryptionItem : public QWidget
 {
     Q_OBJECT
@@ -30,12 +31,14 @@ public:
     QLabel *fileIcon;
     QCheckBox *checkBox;
     QPushButton *transprotBtn;
+    QSqlDatabase db;
     QPushButton *shareBtn;
     QPushButton *pathOpenBtn;
     QPushButton *deleteBtn;
     QHBoxLayout *hbox1;
+    sendDialog *dlg;
 signals:
-
+    void fileData(QString);
 public slots:
     void on_transprotBtn_clicked();
     void on_shareBtn_clicked();

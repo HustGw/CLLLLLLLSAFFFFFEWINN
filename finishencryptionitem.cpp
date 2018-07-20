@@ -1,5 +1,6 @@
 #include "finishencryptionItem.h"
 
+QString file_id;
 FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
 
     fileName = new QLabel(this);
@@ -49,10 +50,14 @@ void FinishEncryptionItem::paintEvent(QPaintEvent *event){
 
 void FinishEncryptionItem::on_transprotBtn_clicked(){
 
-    QString openPath = QString("file:///E:");
-//    QString openPath = QString("file:///") + filePath;
-    QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+    QPushButton* button = qobject_cast<QPushButton*>(sender());
+    QString name = button->objectName();
+    file_id = name;
+    dlg = new sendDialog();
+    dlg->show();
+
 }
+
 void FinishEncryptionItem::on_shareBtn_clicked(){
     QString openPath = QString("file:///E:");
 //    QString openPath = QString("file:///") + filePath;
@@ -62,7 +67,7 @@ void FinishEncryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
-    QSqlQuery query;
+    QSqlQuery query(db);
        bool success = query.exec("select * from varticle where article_id=" + name);
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");

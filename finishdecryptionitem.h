@@ -29,7 +29,7 @@ public:
     QLabel *fileDescription;
     QLabel *fileIcon;
     QCheckBox *checkBox;
-
+    QSqlDatabase db;
     QPushButton *openBtn;
     QPushButton *pathOpenBtn;
     QPushButton *deleteBtn;

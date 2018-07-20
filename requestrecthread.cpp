@@ -39,7 +39,7 @@ void RequestRecThread::listenReqNum(){
             RequestNum = getReqNum();
         }
         else{
-           Sleep(1000);
+           Sleep(1000000000000000000);
         }
 
     }

@@ -165,12 +165,14 @@ void MainWindow::on_FinEnpBtn_clicked()
 {
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
+    on_pushButton_8_clicked();
 }
 
 void MainWindow::on_FinDepBtn_clicked()
 {
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
+    on_pushButton_9_clicked();
 }
 
 void MainWindow::on_OpenFileBtn_clicked()
@@ -399,24 +401,9 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_status;
 
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
+    finishViewController->vbox = new QVBoxLayout();
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-       db.setHostName("119.23.138.181");
-       db.setPort(3306);
-       db.setDatabaseName("Cloud_Encryption");
-       db.setUserName("root");
-       db.setPassword("F103-backup");
-       bool ok = db.open();
-    if(ok)
-    {
-        qDebug() << "connect MySql success!";
-    }
-    else // 打开数据库失败
-    {
-        qDebug() <<"error_MySql:\n" << db.lastError().text();
-    }
-
-    QSqlQuery query;
+   QSqlQuery query(db);
        bool success = query.exec("select * from varticle where emp_id="+User_ID);
        if(!success){
            qDebug() << "查询密文失败";
@@ -448,7 +435,7 @@ void MainWindow::on_pushButton_8_clicked()
 
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
-               f1->transprotBtn->setObjectName(file_id + "trans");
+               f1->transprotBtn->setObjectName(file_id);
                f1->shareBtn->setObjectName(file_id + "share");
                f1->deleteBtn->setObjectName(file_id);
 
@@ -468,7 +455,7 @@ void MainWindow::on_pushButton_8_clicked()
 
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn_clicked()));
-
+               connect(f1->transprotBtn,SIGNAL(clicked(bool)),f1,SLOT(on_transprotBtn_clicked()));
                qDebug()<<"文件名称:"+query.record().value("article_name").toString();
                qDebug()<<"密文ID:"+file_id;
            }
@@ -485,8 +472,8 @@ void MainWindow::on_pushButton_5_clicked()
     QString file_discryption;
     QString file_status;
 
-     QSqlQuery query;
      int check_flag = 0;
+        QSqlQuery query(db);
         bool success = query.exec("select * from varticle where emp_id="+User_ID);
         if(!success){
             qDebug() << "查询密文失败";
@@ -599,10 +586,10 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_name;
     QString file_size;
     QString file_discryption;
-
+    finishViewController2->vbox = new QVBoxLayout();
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
 
-    QSqlQuery query;
+   QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where status = 2 and oemp_id =" + User_ID);
        if(!success){
            qDebug() << "查询密文失败";

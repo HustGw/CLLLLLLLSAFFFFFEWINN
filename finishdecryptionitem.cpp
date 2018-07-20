@@ -49,7 +49,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
-    QSqlQuery query;
+    QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where id=" + name);
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
@@ -65,7 +65,7 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
-    QSqlQuery query;
+   QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where id=" + name);
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
