@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     finishViewController2 = new FinishViewController2();
     finishEncryptionItem = new FinishEncryptionItem();
     finishDecryptionItem = new FinishDecryptionItem();
+    inforDlg = new informationDlg();
+    connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
+    emit sendUserID(User_ID);
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
     friendListLab = new QLabel(ui->RightWidget);
@@ -46,10 +49,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(finishViewController2);
     ui->nameLabel->setText(tr("新垣结衣"));
     ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
+    //使用Mylabel添加头像
+    userHead = new Mylabel(ui->TopWidget);
+    userHead->setGeometry(40,10,110,70);
     QPixmap pixmap("head.jpg");
-    pixmap.scaled(ui->headLabel->size(),Qt::KeepAspectRatio);
-    ui->headLabel->setScaledContents(true);
-    ui->headLabel->setPixmap(pixmap);
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
+    //连接头像信号槽
+    connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     ui->FinDepBtn->hide();
     ui->FinEnpBtn->hide();
     this->setFixedSize(this->width(),this->height());
@@ -59,8 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
      db = ConnectionPool::openConnection();
         //查询数据库  查询解密请求
      QSqlQuery query(db);
-
-     bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
      if(!success){
          qDebug() << "查询user失败";
          return;
@@ -104,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
                decryptionViewController->setLayout(newVbox);          
            }
      //好友列表加载
-     bool friendSelSuc = query.exec("select * from friend where user_id ="+User_ID+"");
+     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
      if(!friendSelSuc){
          qDebug()<<"查询好友失败";
          return;
@@ -122,6 +129,10 @@ MainWindow::MainWindow(QWidget *parent) :
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      recThread->start();
+     InformationThread *inforThread = new InformationThread();
+     connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
+     connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
+     inforThread->start();
 
 }
 
@@ -202,7 +213,6 @@ void MainWindow::on_OpenFileBtn_clicked()
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(newScrollArea);
     encryptionViewController->setLayout(newVbox);
-
     encryption *contest = new encryption();
      //连接数据库
     //contest->connect();
@@ -216,7 +226,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -273,7 +283,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::getFileID(){
     QPushButton *pt = qobject_cast<QPushButton *>(sender());
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -286,7 +296,7 @@ void MainWindow::getFileID(){
                       return;
                   if(pt==b1){
                       qDebug()<<fileID;
-                      bool updateRequest = query.exec("update Decryption set status = 2 where file_id = "+fileID+"");
+                      bool updateRequest = query.exec("update Decryption set status = 2 where file_id = '"+fileID+"'");
                       if(updateRequest){
                            QMessageBox::warning(this,tr("Success"),tr("申请成功请等待！"),QMessageBox::Yes);
                       }
@@ -320,7 +330,7 @@ void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
     QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id="+User_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -364,13 +374,102 @@ void MainWindow::ReceiveNewReq(){
               decryptionViewController->setLayout(newVbox);
     }
 }
+//进行数据库INSERT操作
+void MainWindow::addFriendToDatabase(QString name){
+    //判断是否是好友关系
+    QSqlQuery query(db);
+    bool judgeSuccess = query.exec("select * from friend where user_id='"+User_ID+"'");
+    if(!judgeSuccess){
+        qDebug()<<"查询失败";
+    }
+    else{
+        while (query.next()) {
+            if(query.record().value("friend_nickname").toString()==name){
+                QMessageBox::warning(this,tr("Warning"),tr("已经是好友！"),QMessageBox::Yes);
+                return;
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    //将好友关系插入到数据库表中
+    QString userid;
+    bool success4 = query.exec("select * from employee where emp_name='"+name+"'");
+    qDebug()<<name;
+    if(success4){
+        if(query.size()==0){
+            QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+            return;
+        }
+        else{
+            while (query.next()) {
+                if(query.record().value("emp_id").toString().isEmpty()){
+                    QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+                    return;
+                }
+                else{
+                userid = query.record().value("emp_id").toString();
+                qDebug()<<userid;
+                }
+            }
 
+        }
+
+    }
+    else {
+        qDebug()<<"查询失败";
+        QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+        return;
+    }
+    bool success1 = query.exec("select *from employee where emp_id = '"+User_ID+"'");
+    QString friendname;
+    if(success1){
+        qDebug()<<"查询用户名成功";
+        while(query.next()){
+            friendname = query.record().value("emp_name").toString();
+            qDebug()<<friendname;
+        }
+
+    }
+    else{
+        qDebug()<<"查询失败";
+    }
+    //创建记录唯一标识
+    QUuid id = QUuid::createUuid();
+    QString strID = id.toString();
+    bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0)");
+    if(insertSuccess){
+        //将好友插入到视图当中
+        int i = friendListWidget->count();
+        i++;
+        friendListWidget->insertItem(i,name);
+         QMessageBox::warning(this,tr("Success"),tr("添加好友成功！"),QMessageBox::Yes);
+    }
+    else{
+        QMessageBox::warning(this,tr("Failed!"),tr("添加好友失败！"),QMessageBox::Yes);
+    }
+}
+
+
+//头像点击槽函数
+void MainWindow::HeadClickedSlot(){
+    QPixmap pixmap("head.jpg");
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
+    inforDlg->show();
+}
+
+
+//显示添加好友窗口槽函数
 void MainWindow::showAddfriendWidget(){
-    qDebug()<<"点击响应";
-    //friendInputDlg *friendAdd = new friendInputDlg();
-   // friendAdd->show();
+    friendInputDlg *friendAdd = new friendInputDlg();
+    connect(friendAdd,SIGNAL(sendNameToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
+    friendAdd->show();
 
 }
+
 
 void MainWindow::on_pushButton_4_clicked()
 {
@@ -400,11 +499,16 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_discryption;
     QString file_status;
 
+<<<<<<< HEAD
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
     finishViewController->vbox = new QVBoxLayout();
 
    QSqlQuery query(db);
        bool success = query.exec("select * from varticle where emp_id="+User_ID);
+=======
+       QSqlQuery query(db);
+       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+>>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -473,8 +577,12 @@ void MainWindow::on_pushButton_5_clicked()
     QString file_status;
 
      int check_flag = 0;
+<<<<<<< HEAD
         QSqlQuery query(db);
         bool success = query.exec("select * from varticle where emp_id="+User_ID);
+=======
+        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+>>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
         if(!success){
             qDebug() << "查询密文失败";
             return;
@@ -586,11 +694,17 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_name;
     QString file_size;
     QString file_discryption;
+<<<<<<< HEAD
     finishViewController2->vbox = new QVBoxLayout();
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
 
    QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where status = 2 and oemp_id =" + User_ID);
+=======
+
+    QSqlQuery query(db);
+       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='"+User_ID+"'");
+>>>>>>> 182292bdb3ee2f2933ce30b3b4dd0509471f022c
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -632,7 +746,6 @@ void MainWindow::on_pushButton_9_clicked()
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(finScrollArea);
                finishViewController2->setLayout(newVbox);
-
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->openBtn,SIGNAL(clicked(bool)),f1,SLOT(on_openBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn2_clicked()));
@@ -642,4 +755,12 @@ void MainWindow::on_pushButton_9_clicked()
            return;
        }
 
+}
+
+void MainWindow::HeadChanged(){
+    qDebug()<<"我要变身了";
+    QPixmap pixmap("new.jpg");
+    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+    userHead->setScaledContents(true);
+    userHead->setPixmap(pixmap);
 }

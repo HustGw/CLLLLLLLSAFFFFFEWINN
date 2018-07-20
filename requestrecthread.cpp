@@ -20,7 +20,6 @@ int RequestRecThread::getReqNum(){
     if(!success){
         qDebug() << "Thread:查询user失败";
     }else{
-         qDebug()<<"Thread:查询成功！";
          while(query.next()){
              num++;
          }
