@@ -13,6 +13,7 @@
 #include "decryptionbtnview.h"
 #include "decryptionviewcontroller.h"
 #include "decryptionviewcontroller.h"
+#include "encryption.h"
 #include "finishencryptionItem.h"
 #include "finishviewcontroller.h"
 #include "finishdecryptionItem.h"

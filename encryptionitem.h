@@ -9,6 +9,7 @@
 #include <QSize>
 #include <QLine>
 #include <QPainter>
+#include "QProgressBar"
 
 class EncryptionItem : public QWidget
 {
@@ -25,6 +26,7 @@ public:
     QCheckBox *checkBox;
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
+    QProgressBar *progressBar = new QProgressBar(this);
 signals:
 
 public slots:
