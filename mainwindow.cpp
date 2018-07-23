@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->FinEnpBtn->hide();
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
-    this->setFont(font);
+    this->setFont(font);-
     //使用连接池 管理数据库连接
      db = ConnectionPool::openConnection();
         //查询数据库  查询解密请求
@@ -178,7 +178,6 @@ void MainWindow::on_FinEnpBtn_clicked()
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
 }
-
 void MainWindow::on_FinDepBtn_clicked()
 {
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
