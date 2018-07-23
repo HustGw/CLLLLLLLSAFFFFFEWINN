@@ -8,6 +8,19 @@ QT       += core gui
 QT       += sql
 
 QT       += sql
+
+LIBS += -lWs2_32
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+#LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk -loss_c_sdk
+#LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -loss_c_sdk
+
+#LIBS += -LE:/CloundSafe/aliyun-oss-c-sdk-3.5.0/aliyun-oss-c-sdk-3.5.0/Debug/ -loss_c_sdk
+
+LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = CloundSafeWindows
@@ -36,7 +49,6 @@ SOURCES += \
     decryptionviewcontroller.cpp \
     connectsql.cpp \
     encryptionviewcontroller.cpp \
-    encryption.cpp \
     encryptfile.cpp \
     requestrecthread.cpp \
     connectionpool.cpp \
@@ -49,7 +61,28 @@ SOURCES += \
     mylabel.cpp \
     informationdlg.cpp \
     informationitem.cpp \
-    informationthread.cpp
+    informationthread.cpp \
+    aos_buf.c \
+    aos_crc64.c \
+    aos_fstack.c \
+    aos_http_io.c \
+    aos_log.c \
+    aos_status.c \
+    aos_string.c \
+    aos_transport.c \
+    aos_util.c \
+    oss_auth.c \
+    oss_bucket.c \
+    oss_define.c \
+    oss_live.c \
+    oss_multipart.c \
+    oss_object.c \
+    oss_resumable.c \
+    oss_util.c \
+    oss_xml.c \
+    downloadoss.cpp \
+    uploadoss.cpp \
+    encryption.cpp
 
 
 HEADERS += \
@@ -62,7 +95,6 @@ HEADERS += \
     decryptionviewcontroller.h \
     connectsql.h \
     encryptionviewcontroller.h \
-    encryption.h \
     encryptfile.h \
     requestrecthread.h \
     connectionpool.h \
@@ -75,7 +107,63 @@ HEADERS += \
     mylabel.h \
     informationdlg.h \
     informationitem.h \
-    informationthread.h
+    informationthread.h \
+    aos_buf.h \
+    aos_crc64.h \
+    aos_define.h \
+    aos_fstack.h \
+    aos_http_io.h \
+    aos_list.h \
+    aos_log.h \
+    aos_status.h \
+    aos_string.h \
+    aos_transport.h \
+    aos_util.h \
+    apr.h \
+    apr_allocator.h \
+    apr_atomic.h \
+    apr_dso.h \
+    apr_errno.h \
+    apr_file_info.h \
+    apr_file_io.h \
+    apr_general.h \
+    apr_global_mutex.h \
+    apr_inherit.h \
+    apr_md5.h \
+    apr_network_io.h \
+    apr_pools.h \
+    apr_portable.h \
+    apr_proc_mutex.h \
+    apr_queue.h \
+    apr_sha1.h \
+    apr_shm.h \
+    apr_strings.h \
+    apr_tables.h \
+    apr_thread_mutex.h \
+    apr_thread_pool.h \
+    apr_thread_proc.h \
+    apr_time.h \
+    apr_user.h \
+    apr_want.h \
+    apr_xlate.h \
+    apu.h \
+    curl.h \
+    curlbuild.h \
+    curlrules.h \
+    curlver.h \
+    easy.h \
+    multi.h \
+    mxml.h \
+    mylabel.h \
+    oss_api.h \
+    oss_auth.h \
+    oss_define.h \
+    oss_resumable.h \
+    oss_util.h \
+    oss_xml.h \
+    downloadoss.h \
+    uploadoss.h \
+    encryption.h
 
 
 FORMS += \

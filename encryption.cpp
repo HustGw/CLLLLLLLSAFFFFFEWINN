@@ -1,17 +1,35 @@
 #include "encryption.h"
-#include <connectsql.h>
-#include <encryptfile.h>
-#include <QtSql/QSqlDatabase>
-#include <QDebug>
-#include <QtSql/QSqlError>
-#include <QUuid>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlRecord>
-
+#include "downloadoss.h"//测试下载
 
 encryption::encryption()
 {
-
+    //创建加密目录
+    //创建CloundSafe 主目录
+    QDir dir;
+    dir.cd("C://CloundSafe");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("C://CloundSafe"); //创建文件夹
+    }
+    //创建encrypt子目录
+    dir.cd("C://CloundSafe//encrypt");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe//encrypt"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("C://CloundSafe//encrypt"); //创建文件夹
+    }
+    //创建yKey子目录
+    dir.cd("C://CloundSafe//encrypt//yKey");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe//encrypt//yKey"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("C://CloundSafe//encrypt//yKey"); //创建文件夹
+    }
+    //创建yZip子目录
+    dir.cd("C://CloundSafe//encrypt//yZip");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe//encrypt//yZip"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("C://CloundSafe//encrypt//yZip"); //创建文件夹
+    }
+    //encrypt();
 }
 void encryption::connect(){
     //连接数据库
@@ -41,6 +59,11 @@ void encryption::connect(){
 }
 
 void encryption::encrypt(){
+
+    //drawItem(50);
+    originalFileName=fInfo.fileName();
+    originalFilePath=fInfo.filePath();
+
     //拆分原文件路径
 
     qDebug()<<originalFilePath ;
@@ -59,29 +82,112 @@ void encryption::encrypt(){
     QString orFileID = orfile_id.toString();
     //加密
     //生成密文唯一标识
-    QUuid enfile_id =QUuid::createUuid();
-    QString enFileID = enfile_id.toString();
+    QString enfile_id =QUuid::createUuid().toString();
+    std::string enFileID = enfile_id.toStdString();
     //生成密钥唯一标识
-    QUuid enkey_id = QUuid::createUuid();
-    QString enKeyID = enkey_id.toString();
+    QString enkey_id = QUuid::createUuid().toString();
+    std::string enKeyID = enkey_id.toStdString();
+
     /////////////////////////进行加密
     ///
     ///
     //设置密钥地址
-    QString ykeyAbPath = "E://CloundSafe//ykey//"+enKeyID;
+    QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID);
     //设置密文地址
-    QString yzipAbPath = "E://CloundSafe//yzip//"+enFileID;
+    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+enfile_id;
     encryptfile *enfile = new encryptfile();
+    //文件加密
     enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
 
+    //EncryptionItem *I1 = new EncryptionItem();
 
 
+    drawItem();
+
+    QByteArray yKey_oss_Path = ykeyAbPath.toLatin1();
+    QByteArray yFile_oss_Path = yzipAbPath.toLatin1();
+
+    //密钥上传OSS
+    uploadoss *upKey = new uploadoss;
+    upKey->OBJECT_NAME=enKeyID.c_str();
+    upKey->BUCKET_NAME="cloudsafe-pc-ykey";
+    upKey->filepath=yKey_oss_Path.data();
+    upKey->put_object_from_file();
+    //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
     //上传至密钥信息表
     //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
+    connect();
+    QDateTime time = QDateTime::currentDateTime();
+    QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
+    QString savesql_key = QString ("INSERT INTO vfile(file_id,file_uploadtime,file_name,emp_id,emp_phone)");
+    savesql_key+=QString("VALUES ('"+ enkey_id +"','"+time_str+"','"+enkey_id+"','"+userID+"','"+111+"')");
     QSqlQuery query;
-    query.exec("select * from employee");
-    query.seek(1);
-    QSqlRecord record=query.record();
-    QString phone=record.value("emp_phone").toString();
-    qDebug()<<"phone"<<phone;
+    bool aok=query.exec(savesql_key);
+    if(aok){
+      qDebug()<<"ok";
+    }
+    else{
+      qDebug()<<"error";
+    }
+
+    //密文上传OSS
+    uploadoss *upFile = new uploadoss;
+    upFile->OBJECT_NAME=enFileID.c_str();
+    upFile->BUCKET_NAME="cloudsafe-pc-yfile";
+    upFile->filepath=yFile_oss_Path.data();
+    upFile->put_object_from_file();
+    //上传至密文信息表
+    //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
+    char article_status = '0';
+    QString article_size=QString::number(originalFileSize,10,2);
+    QString savesql_efile = QString ("INSERT INTO varticle(article_id,article_uploadtime,article_name,emp_id,emp_phone,article_address,article_size,article_status)");
+    savesql_efile+=QString("VALUES ('"+enfile_id+"','"+time_str+"','"+enfile_id+"','"+userID+"','"+111+"','"+yzipAbPath+"','"+article_size+"',"+ article_status +")");
+    bool isok=query.exec(savesql_efile);
+    if(isok){
+      qDebug()<<"ok";
+    }
+    else{
+      qDebug()<<"error";
+    }
+
+    /////////////////////////////////密文下载测试
+    /// 密钥下载
+    /// 密文下载
+    QString downPath = "E://CloundSafe//download_test//"+enkey_id;
+    QByteArray down_oss_Path = downPath.toLatin1();
+
+    downloadoss *downKey=new downloadoss;
+    downKey->OBJECT_NAME=enKeyID.c_str();
+    downKey->BUCKET_NAME="cloudsafe-pc-ykey";
+    downKey->download_filePath=down_oss_Path.data();
+    downKey->get_object_to_file();
+}
+
+void encryption::drawItem(){
+    //delete encryptionViewController->layout();
+    QTextCodec *codec = QTextCodec::codecForName("GB18030");
+    QString fName,fPath;
+    qint64 fSize;
+    double mfSize;
+    fName=fInfo.fileName();
+    fPath=fInfo.filePath();
+    fSize=fInfo.size();
+    mfSize=(double)(fSize/1024.);//字节转换为KB
+    EncryptionItem *v1 = new EncryptionItem();
+    v1->fileName->setText(fName);
+    v1->fileSize->setText(QString::number( mfSize)+codec->toUnicode(" KB"));
+    v1->fileIcon->setText(fName);
+    v1->fileDescription->setText("密钥正在上传...");
+    v1->progressBar->setValue(100);
+    //EncryptionViewController *encryptionViewController = new EncryptionViewController();
+    encryptionViewController->vbox->addWidget(v1);
+
+    delete encryptionViewController->layout();
+    QWidget *newItemWidget = new QWidget();
+    QScrollArea *newScrollArea = new QScrollArea();
+    newItemWidget->setLayout(encryptionViewController->vbox);
+    newScrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(newScrollArea);
+    encryptionViewController->setLayout(newVbox);
 }

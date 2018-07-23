@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
     emit sendUserID(User_ID);
     finScrollArea = new QScrollArea();
-    ui->MidStaWidget->addWidget(encryptionPage);
+    //ui->MidStaWidget->addWidget(encryptionPage);
     friendListLab = new QLabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
     friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
@@ -192,33 +192,17 @@ void MainWindow::on_OpenFileBtn_clicked()
     qint64 fSize;
     double mfSize;
     QFileInfo fInfo;
+
     file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
     fInfo=QFileInfo(file_full);
-    fName=fInfo.fileName();
-    fPath=fInfo.filePath();
-    fSize=fInfo.size();
-    EncryptionItem *v1 = new EncryptionItem();
-    v1->fileName->setText(fName);
-    mfSize=(double)(fSize/1024.);//字节转换为KB
-    v1->fileSize->setText(QString::number( mfSize)+codec->toUnicode(" KB"));
-    v1->fileIcon->setText(fName);
-    v1->fileDescription->setText("111");
-    encryptionViewController->vbox->addWidget(v1);
-    delete encryptionViewController->layout();
-    QWidget *newItemWidget = new QWidget();
-    QScrollArea *newScrollArea = new QScrollArea();
-    newItemWidget->setLayout(encryptionViewController->vbox);
-    newScrollArea->setWidget(newItemWidget);
-    QVBoxLayout *newVbox = new QVBoxLayout();
-    newVbox->addWidget(newScrollArea);
-    encryptionViewController->setLayout(newVbox);
+
     encryption *contest = new encryption();
-     //连接数据库
-    //contest->connect();
-    contest->originalFileName =fName;
-    contest->originalFilePath =fPath;
-    contest->originalFileSize =mfSize;
-    qDebug()<<contest->originalFilePath ;
+    contest->encryptionViewController = encryptionViewController;
+    //contest->encryptionViewController=encryptionViewController;
+
+    contest->fInfo=fInfo;
+
+    //contest->drawItem();
     contest->encrypt();
 }
 //批量删除按钮
