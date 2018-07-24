@@ -91,38 +91,41 @@ void sendDialog::on_pushButton_2_clicked()
     int count = ui->listWidget_2->count();
     qDebug()<<file_id;
     QSqlQuery query(db1);
-    bool select_file_name = query.exec("select * from varticle where article_id ="+file_id);
+    bool select_file_name = query.exec("select * from varticle where article_id ='"+file_id+"'");
     if(!select_file_name){
         qDebug()<<"bug!~!!!!!!";
     }else{
         while(query.next()){
             fileName = query.record().value("article_name").toString();
             for(int i = 0;i<count;i++){
+                QDateTime time = QDateTime::currentDateTime();
+                QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
                 QListWidgetItem *item = ui->listWidget_2->item(i);
                 QString nick_name = item->text();
                 QString friend_id;
-                QString friend_phone;
+                QString oemp_phone;
+                QString emp_phone;
                 query.exec("select * from friend where friend_nickname ='"+nick_name+"'");
                 while(query.next()){
                      friend_id= query.record().value("friend_id").toString();
                 }
                 query.exec("select * from employee where emp_id  = '"+friend_id+"'");
                 while(query.next()){
-                     friend_phone = query.record().value("emp_phone").toString();
+                     oemp_phone = query.record().value("emp_phone").toString();
                 }
                 query.exec("select * from employee where emp_id  = '"+User_ID+"'");
                 while(query.next()){
-                     friend_phone = query.record().value("emp_phone").toString();
+                     emp_phone = query.record().value("emp_phone").toString();
                 }
-                qDebug()<<nick_name+"---"+friend_id+"---"+friend_phone;
-                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status) values (?,?,?,?,9999999,?,?,0)");
+                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status,createtime) values (?,?,?,?,?,?,?,0,?)");
                 query.bindValue(0,QUuid::createUuid().toString());
                 query.bindValue(1,file_id);
                 query.bindValue(2,fileName);
                 query.bindValue(3,User_ID);
-               // query.bindValue(3,user_phone);
-                query.bindValue(4,friend_id);
-                query.bindValue(5,friend_phone);
+                query.bindValue(4,emp_phone);
+                query.bindValue(5,friend_id);
+                query.bindValue(6,oemp_phone);
+                query.bindValue(7,time_str);
                 bool success = query.exec();
                 if(success){
                     qDebug()<<"插入待解密表成功";

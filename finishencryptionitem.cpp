@@ -67,14 +67,18 @@ void FinishEncryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
+    db = ConnectionPool::openConnection();
+    qDebug()<<name;
     QSqlQuery query(db);
-       bool success = query.exec("select * from varticle where article_id=" + name);
+       bool success = query.exec("select * from varticle where article_id='" + name + "'");
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
            return;
        }else{
-           openPath = QString("file:///") + query.record().value("article_address").toString();
+           while(query.next()){
+           openPath = QString("file:///C:/CloundSafe/encrypt/yZip");
+           }
        }
-    QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+        QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
 }
 
