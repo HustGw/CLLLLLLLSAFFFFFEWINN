@@ -20,7 +20,7 @@ public:
     char *filepath;
     uploadoss();
     void init_sample_request_options(oss_request_options_t *options, int is_cname);
-    void put_object_from_file();
+    int put_object_from_file();
 };
 
 #endif // UPLOADOSS_H

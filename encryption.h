@@ -20,6 +20,9 @@
 #include "encryptionitem.h"
 #include <QTextStream>
 #include <QTextCodec>
+#include "connectionpool.h"
+#include "QMessageBox"
+#include "QtWidgets"
 
 class encryption
 {
@@ -34,6 +37,9 @@ public:
     //文件信息
     QFileInfo fInfo;
     EncryptionViewController *encryptionViewController ;
+    QSqlDatabase conn ;
+    int oss_PutKey_Flag;
+    int oss_PutFile_Flag;
 
 public:
     encryption();

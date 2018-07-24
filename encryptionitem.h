@@ -10,6 +10,7 @@
 #include <QLine>
 #include <QPainter>
 #include "QProgressBar"
+#include "enitemthread.h"
 
 class EncryptionItem : public QWidget
 {
@@ -26,11 +27,16 @@ public:
     QCheckBox *checkBox;
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
-    QProgressBar *progressBar = new QProgressBar(this);
+    //QProgressBar *progressBar = new QProgressBar(this);
 signals:
 
 public slots:
+//    // 更新进度
+//        void handleResults(int value);
+//        // 开启线程
+//        void startThread();
 private:
+       // enItemThread enItem_Thread;
 protected:
     void paintEvent(QPaintEvent *event);
 };

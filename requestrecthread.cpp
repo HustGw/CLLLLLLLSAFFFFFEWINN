@@ -58,7 +58,7 @@ int RequestRecThread::ReqAllowNum(){
     else{
         while(query.next()){
             num++;
-        }
+    }
 
     }
     return num;

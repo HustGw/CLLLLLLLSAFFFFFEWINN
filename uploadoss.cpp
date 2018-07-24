@@ -24,7 +24,7 @@ uploadoss::uploadoss()
 
 }
 
-void uploadoss::put_object_from_file()
+int uploadoss::put_object_from_file()
 {
     apr_file_t *output = NULL;
     aos_pool_t *pool = NULL;
@@ -60,11 +60,12 @@ void uploadoss::put_object_from_file()
 
         if (aos_status_is_ok(s)) {
             qDebug()<< "put object from file succeeded";
-            //return true;
+            return 1;
         } else {
-             qDebug()<<"put object from file failed, code:%d, error_code:%s, error_msg:%s, request_id:%s\n",
-                s->code, s->error_code, s->error_msg, s->req_id;
-             //return false;
+             qDebug()<<"put object from file failed"<<s->code<<s->error_code<<s->error_msg<<s->req_id;
+                       //code:%d, error_code:%s, error_msg:%s, request_id:%s\n",
+                //s->code, s->error_code, s->error_msg, s->req_id;
+             return 0;
         }
 
         aos_pool_destroy(p);

@@ -15,14 +15,14 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
     //downloadBtn->setGeometry(500,50,100,30);
     checkBox->setGeometry(10,70,20,20);
     fileIcon->setGeometry(30,50,300,30);
-    progressBar->setMinimum(0);
-    progressBar->setMaximum(0);
-    progressBar->setValue(20);
-    progressBar->setGeometry(450,85,100,20);
+    //progressBar->setMinimum(0);
+    //progressBar->setMaximum(0);
+    //progressBar->setValue(20);
+   // progressBar->setGeometry(450,85,100,20);
 //    double dProgress = (progressBar->value() - progressBar->minimum()) * 100.0
 //                    / (progressBar->maximum() - progressBar->minimum());
 //    progressBar->setFormat(QString::fromLocal8Bit(u8"%1%").arg(QString::number(dProgress, 'f', 1)));
-    progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+    //progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
 }
 //每一个Item绘制边界框
 void EncryptionItem::paintEvent(QPaintEvent *event){
@@ -35,3 +35,20 @@ void EncryptionItem::paintEvent(QPaintEvent *event){
 
 
 }
+
+//// 更新进度
+//void EncryptionItem::handleResults(int value)
+//{
+//    qDebug() << "Handle Thread : " << QThread::currentThreadId();
+//    progressBar->setValue(value);
+//}
+
+//// 开启线程
+//void startThread()
+//{
+//    enItemThread *enitemThread = new enItemThread(this);
+//    connect(enitemThread, SIGNAL(resultReady(int)), this, SLOT(handleResults(int)));
+//    // 线程结束后，自动销毁
+//    connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
+//    workerThread->start();
+//}

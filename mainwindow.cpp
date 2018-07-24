@@ -10,12 +10,17 @@
 #include <QtSql/QSqlDatabase>
 #include <QDebug>
 #include <QtSql/QSqlError>
+#include "QProgressBar"
 
 
 extern int isFinishedBtn=0;//用于判断是否已经点击
 QString User_ID = "123";
 QString URL = "119.23.162.138/cloud";
+
 int threadNum = 0;
+
+QFileInfo openFileInfo;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -34,6 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :
     inforDlg = new informationDlg();
     connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
     emit sendUserID(User_ID);
+
+
+
+    // 连接进度条信号槽
+    connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
+    //开始加密信号槽
+    connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     finScrollArea = new QScrollArea();
     //ui->MidStaWidget->addWidget(encryptionPage);
     friendListLab = new QLabel(ui->RightWidget);
@@ -203,16 +215,87 @@ void MainWindow::on_OpenFileBtn_clicked()
 
     file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
     fInfo=QFileInfo(file_full);
+    openFileInfo=fInfo;
+    fName=fInfo.fileName();
+    fPath=fInfo.filePath();
+    fSize=fInfo.size();
+    mfSize=(double)(fSize/1024.);//字节转换为KB
+    //encryption *contest = new encryption();
 
-    encryption *contest = new encryption();
-    contest->encryptionViewController = encryptionViewController;
-    //contest->encryptionViewController=encryptionViewController;
+    //contest->fInfo=fInfo;
+    EncryptionItem *v1 = new EncryptionItem();
+    v1->fileName->setText(fName);
+    v1->fileSize->setText(QString::number( mfSize)+codec->toUnicode(" KB"));
+    v1->fileIcon->setText(fName);
+    v1->fileDescription->setText("密钥正在上传...");
+    //v1->progressBar->setValue(100);
+    //EncryptionViewController *encryptionViewController = new EncryptionViewController();
+    encryptionViewController->vbox->addWidget(v1);
 
-    contest->fInfo=fInfo;
+    f_progressBar = new QProgressBar(this);
+    f_progressBar->setMinimum(0);
+    f_progressBar->setMaximum(100);
+    //f_progressBar->setValue(20);
+    f_progressBar->setOrientation(Qt::Horizontal);
 
-    //contest->drawItem();
-    contest->encrypt();
+    encryptionViewController->vbox->addWidget(f_progressBar);
+    //encryptionViewController->vbox->setGeometry(100);
+
+    delete encryptionViewController->layout();
+    QWidget *newItemWidget = new QWidget();
+    QScrollArea *newScrollArea = new QScrollArea();
+    newItemWidget->setLayout(encryptionViewController->vbox);
+    newScrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(newScrollArea);
+    encryptionViewController->setLayout(newVbox);
+
+
+
+
+//    contest->encryptionViewController = encryptionViewController;
+//    //contest->encryptionViewController=encryptionViewController;
+
+
+
+//    //contest->drawItem();
+//    contest->encrypt();
 }
+
+// 更新进度条
+void MainWindow::handleResults(int value)
+{
+    //qDebug() << "Handle Thread : " << QThread::currentThreadId();
+    //m_pProgressBar->setValue(value);
+    f_progressBar->setValue(value);
+
+}
+
+// 开启进度条
+void MainWindow::startProgressBarThread()
+{
+    enItemThread *workerThread = new enItemThread(this);
+    connect(workerThread, SIGNAL(resultReady(int)), this, SLOT(handleResults(int)));
+    // 线程结束后，自动销毁
+    //connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
+    workerThread->start();
+    //startEncryptThread();
+    encryptthread *ecpThread = new encryptthread(this);
+    connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
+    // 线程结束后，自动销毁
+    connect(ecpThread, SIGNAL(finished()), ecpThread, SLOT(deleteLater()));
+    ecpThread->start();
+}
+
+//开始加密
+void MainWindow::startEncryptThread(){
+    encryptthread *ecpThread = new encryptthread(this);
+    connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
+    // 线程结束后，自动销毁
+    connect(ecpThread, SIGNAL(finished()), ecpThread, SLOT(deleteLater()));
+    ecpThread->start();
+}
+
 //批量删除按钮
 void MainWindow::on_pushButton_3_clicked()
 {
@@ -883,3 +966,4 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     //连接新的信号槽
     connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
 }
+

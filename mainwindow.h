@@ -28,7 +28,7 @@
 #include <QDebug>
 #include <QtSql/QSqlError>
 #include <QUuid>
-#include<QtSql/QSqlQuery>
+#include <QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
 #include <QString>
 #include <QScrollArea>
@@ -47,6 +47,9 @@
 #include "downloadoss.h"//测试下载
 #include "decryptionfile.h"
 #include "depdownthread.h"
+#include "QProgressBar"
+#include "enitemthread.h"
+#include "encryptthread.h"
 namespace Ui {
 class MainWindow;
 }
@@ -82,6 +85,9 @@ public:
     QLabel *friendListLab;
     informationDlg *inforDlg;
     DepDownThread *downThread[MAXSIZE];
+    QProgressBar *f_progressBar;
+    encryption *contest = new encryption();
+
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -132,6 +138,16 @@ private slots:
 
     void ChangeItemBtnText(QString fileID);
 
+    // 更新进度条
+    void handleResults(int value);
+    // 开启进度条线程
+    void startProgressBarThread();
+    //开启加密进程
+    void startEncryptThread();
+
+
+
+
 signals:
     void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
@@ -139,5 +155,4 @@ signals:
 private:
     Ui::MainWindow *ui;
 };
-
 #endif // MAINWINDOW_H
