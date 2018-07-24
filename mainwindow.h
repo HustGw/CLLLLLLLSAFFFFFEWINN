@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#define MAXSIZE 10      //定义最多并发进行线程为10
 #include <QMainWindow>
 #include <QPushButton>
 #include "decryptionitem.h"
@@ -44,11 +44,15 @@
 #include "mylabel.h"
 #include "informationdlg.h"
 #include "informationthread.h"
+#include "downloadoss.h"//测试下载
+#include "decryptionfile.h"
+#include "depdownthread.h"
 namespace Ui {
 class MainWindow;
 }
 extern QString User_ID;
 extern QString URL;
+extern int threadNum;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -77,7 +81,7 @@ public:
     QPushButton *addFriendBtn;
     QLabel *friendListLab;
     informationDlg *inforDlg;
-
+    DepDownThread *downThread[MAXSIZE];
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -123,8 +127,15 @@ private slots:
     void HeadClickedSlot();
 
     void HeadChanged();
+
+    void FileIsAllowed();
+
+    void ChangeItemBtnText(QString fileID);
+
 signals:
     void sendUserID(QString user_id);
+    void sendFileID(QString enkey_id,QString file_id,QString file_name);
+    void OSSfileDownFileID(QString enkey_id);
 private:
     Ui::MainWindow *ui;
 };

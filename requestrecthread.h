@@ -8,8 +8,9 @@
 #include <QtSql/QSqlRecord>
 #include<QtSql/QSqlQuery>
 #include <connectionpool.h>
+#include "mainwindow.h"
 extern int RequestNum;
-extern QString user_ID;
+extern int RequsetAllowNum;
 class RequestRecThread : public QThread
 {
     Q_OBJECT
@@ -21,8 +22,10 @@ public:
     QSqlDatabase dd;
     int getReqNum();//获取数据库条目数量
     void listenReqNum();//监听数据库文件数量
+    int ReqAllowNum();
 signals:
     void numChanged();
+    void ReqIsAlliowed();
 };
 
 #endif // REQUESTRECTHREAD_H

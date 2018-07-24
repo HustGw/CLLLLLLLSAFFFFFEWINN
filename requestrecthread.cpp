@@ -1,6 +1,6 @@
 #include "requestrecthread.h"
 int RequestNum = 0;
-QString user_ID = "123";
+int RequsetAllowNum = 0;
 RequestRecThread::RequestRecThread(QObject *parent):QThread(parent)
 {
 
@@ -16,7 +16,7 @@ int RequestRecThread::getReqNum(){
     //查询数据库
     QSqlQuery query(dd);
     int num=0;
-    bool success = query.exec("select * from Decryption where oemp_id="+user_ID+"");
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
         qDebug() << "Thread:查询user失败";
     }else{
@@ -30,18 +30,38 @@ int RequestRecThread::getReqNum(){
 
 void RequestRecThread::listenReqNum(){
     RequestNum = getReqNum();
+    RequsetAllowNum = ReqAllowNum();
     int num= 0;
+    int allownum = 0;
     while(1){
         num = getReqNum();
+        allownum = ReqAllowNum();
         if(num>RequestNum){
             emit numChanged();
             RequestNum = getReqNum();
         }
-        else{
-           Sleep(1000000000000000000);
+        if(allownum>RequsetAllowNum){
+            emit ReqIsAlliowed();
+            RequsetAllowNum = ReqAllowNum();
+        }
+        Sleep(2000);
+    }
+}
+
+int RequestRecThread::ReqAllowNum(){
+    QSqlQuery query(dd);
+    int num = 0;
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' and status = 3");
+    if(!success){
+        qDebug()<<"Thread:allow查询失败";
+    }
+    else{
+        while(query.next()){
+            num++;
         }
 
     }
+    return num;
 }
 
 

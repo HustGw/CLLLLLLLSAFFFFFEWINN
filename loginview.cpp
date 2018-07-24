@@ -15,7 +15,10 @@ LoginView::LoginView(QWidget *parent) :
     ui->LoginBtn->setFont(f);
     ui->UserName->setPlaceholderText("请输入用户名/手机号");
     ui->PassWord->setPlaceholderText("请输入密码");
-
+    registerBtn = new Mylabel(this);
+    registerBtn->setGeometry(120,280,60,16);
+    registerBtn->setText("注册账号");
+    connect(registerBtn,SIGNAL(LabelClicked()),this,SLOT(RegisterClicked()));
 
 }
 
@@ -32,6 +35,13 @@ void LoginView::on_LoginBtn_clicked()
     else{
         QMessageBox::warning(this,tr("error"),tr("user name or password error!"),QMessageBox::Yes);
     }
+}
+
+void LoginView::RegisterClicked(){
+    qDebug()<<"注册点击";
+    tcpWindow  = new TcpClient();
+    tcpWindow->show();
+
 }
 
 
