@@ -186,7 +186,6 @@ void MainWindow::on_FinEnpBtn_clicked()
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
 }
-
 void MainWindow::on_FinDepBtn_clicked()
 {
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
@@ -531,7 +530,7 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_status;
     finishViewController->vbox = new QVBoxLayout();
    QSqlQuery query(db);
-       bool success = query.exec("select * from varticle where emp_id="+User_ID);
+       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
 
        if(!success){
            qDebug() << "查询密文失败";
@@ -602,7 +601,7 @@ void MainWindow::on_pushButton_5_clicked()
 
      int check_flag = 0;
         QSqlQuery query(db);
-        bool success = query.exec("select * from varticle where emp_id="+User_ID);
+        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
         if(!success){
             qDebug() << "查询密文失败";
             return;
@@ -674,9 +673,16 @@ void MainWindow::on_deleteBtn_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
 
+
     FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(name);
     delete f2;
     qDebug()<<name;
+
+    QSqlQuery query(db);
+    bool success = query.exec("delete from varticle where article_id = '"+name+"'");
+    if(success){
+        QMessageBox::information(NULL, "success", "成功删除已加密文件条目！");
+    }
 
     delete finishViewController->layout();
     QWidget *newItemWidget = new QWidget();
@@ -695,6 +701,12 @@ void MainWindow::on_deleteBtn2_clicked(){
     FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(name);
     delete f2;
     qDebug()<<name;
+
+    QSqlQuery query(db);
+    bool success = query.exec("delete from Decryption where file_id = '"+name+"'");
+    if(success){
+        QMessageBox::information(NULL, "success", "成功删除已解密文件条目！");
+    }
 
     delete finishViewController2->layout();
     QWidget *newItemWidget = new QWidget();
@@ -718,7 +730,7 @@ void MainWindow::on_pushButton_9_clicked()
   //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
 
    QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 2 and oemp_id =" + User_ID);
+       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='" + User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -730,7 +742,7 @@ void MainWindow::on_pushButton_9_clicked()
                file_name = query.record().value("file_name").toString();
                file_size = query.record().value("article_size").toString();
 
-               file_id = query.record().value("id").toString();
+               file_id = query.record().value("file_id").toString();
 
                file_discryption = "文件已成功解密。";
 

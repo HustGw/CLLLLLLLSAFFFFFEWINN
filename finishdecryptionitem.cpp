@@ -49,13 +49,17 @@ void FinishDecryptionItem::on_openBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
+    db = ConnectionPool::openConnection();
     QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where id=" + name);
+       bool success = query.exec("select * from Decryption where file_id=" + name);
+
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
            return;
        }else{
-           openPath = QString("file:///C:/Users/Administrator/Desktop/1.txt") + query.record().value("file_address").toString();
+           while(query.next()){
+           openPath = QString("file:///D:/CloundSafeWindows/file/") + query.record().value("file_name").toString();
+           }
        }
     QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
 
@@ -65,13 +69,16 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
-   QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where id=" + name);
+    db = ConnectionPool::openConnection();
+    QSqlQuery query(db);
+       bool success = query.exec("select * from Decryption where file_id=" + name);
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
            return;
        }else{
-           openPath = QString("file:///") + query.record().value("file_name").toString();
+           while(query.next()){
+           openPath = QString("file:///D:/CloundSafeWindows/file/");
+           }
        }
     QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
 }
