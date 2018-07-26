@@ -81,9 +81,7 @@ void encryption::encrypt(){
         originalFilePath = originalFilePath + "\\" + file_part[i];
     }
     //生成用户唯一标识
-    QUuid user_id =QUuid::createUuid();
     QString userID = User_ID;
-    userID="123";
     //生成源文件的唯一标识
     QUuid orfile_id =QUuid::createUuid();
     QString orFileID = orfile_id.toString();

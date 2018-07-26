@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->nameLabel->setText(tr("新垣结衣"));
+    ui->nameLabel->setText(tr("国家广电"));
     ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
@@ -909,6 +909,7 @@ void MainWindow::FileIsAllowed(){
              }
              else{
                  //下载密文
+                 QString id = query.record().value("id").toString();
                  QString fileName = query.record().value("file_name").toString();
                  //查找秘钥ID
                  QSqlQuery keyQuery(db);
@@ -927,21 +928,40 @@ void MainWindow::FileIsAllowed(){
 //                 downThread->start();
 //                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),downThread,SLOT(DownTread_RecvID(QString,QString,QString)));
 //                 emit sendFileID(enkey_id,file_id,fileName);
-                 QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
-                 QByteArray down_oss_Path = downPath.toLatin1();
-                 std::string enKeyID = enkey_id.toStdString();
-                 downloadoss *downKey=new downloadoss;
-                 downKey->OBJECT_NAME=enKeyID.c_str();
-                 downKey->BUCKET_NAME="cloudsafe-pc-ykey";
-                 downKey->download_filePath=down_oss_Path.data();
-                 downKey->get_object_to_file();
-                 //下载完成后开始解密
-                 DecryptionFile *fileD = new DecryptionFile();
-                 QString contentPath = "D://CloundSafeWindows//content//"+file_id;
-                 QString filePath = "D://CloundSafeWindows//file//"+fileName;
-                if((fileD->decryptFile(downPath,contentPath,filePath))==54){
-                     qDebug()<<"success";
-                 };//解密函数
+                 DecryptionThread  *depThread = new DecryptionThread();
+                 connect(depThread,SIGNAL(finished()),depThread,SLOT(deleteLater()));
+                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread,SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 depThread->start();
+                 emit sendFileID(enkey_id,file_id,fileName);
+//                 QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
+//                 QByteArray down_oss_Path = downPath.toLatin1();
+//                 std::string enKeyID = enkey_id.toStdString();
+//                 downloadoss *downKey=new downloadoss;
+//                 downKey->OBJECT_NAME=enKeyID.c_str();
+//                 downKey->BUCKET_NAME="cloudsafe-pc-ykey";
+//                 downKey->download_filePath=down_oss_Path.data();
+//                 downKey->get_object_to_file();
+//                 //下载完成后开始解密
+//                 DecryptionFile *fileD = new DecryptionFile();
+//                 QString contentPath = "D://CloundSafeWindows//content//"+file_id;
+//                 QString filePath = "D://CloundSafeWindows//file//"+fileName;
+//                if((fileD->decryptFile(downPath,contentPath,filePath))==54){
+//                     qDebug()<<"success";
+//                 };//解密函数
+                 //解密完成后将数据库该条数据状态status改成5
+                 QSqlQuery updateQuery(db);
+                 bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+                 if(updataSuccess){
+                     qDebug()<<"status=5 update success!";
+                 }
+                 else{
+                     qDebug()<<"status=5 update failed";
+                 }
+                 //解密完成后删除本地密钥和密文
+//                 QFile contentFileTemp(file_id);
+//                 QFile keyTemp(enkey_id);
+//                 contentFileTemp.remove();
+//                 keyTemp.remove();
                  //解密完成后删除控件
                  delete f1;
                  //重新布局
