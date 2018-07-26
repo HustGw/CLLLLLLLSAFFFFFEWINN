@@ -18,7 +18,7 @@ int RequestRecThread::getReqNum(){
     int num=0;
     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
-        qDebug() << "Thread:查询user失败";
+        qDebug() << "qThread:查询user失败";
     }else{
          while(query.next()){
              num++;

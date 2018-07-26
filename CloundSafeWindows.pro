@@ -16,10 +16,10 @@ LIBS += -lWs2_32
 #LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
 #LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
-#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
-#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
-#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
-#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
+LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
+LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
+LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
 LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
 LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
@@ -32,7 +32,7 @@ LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAF
 #LIBS += -LE:/CloundSafe/aliyun-oss-c-sdk-3.5.0/aliyun-oss-c-sdk-3.5.0/Debug/ -loss_c_sdk
 
 
-#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
@@ -106,7 +106,8 @@ SOURCES += \
     tcpclient.cpp \
     depdownthread.cpp \
     enitemthread.cpp \
-    encryptthread.cpp
+    encryptthread.cpp \
+    decryptionthread.cpp
 
 
 
@@ -193,7 +194,8 @@ HEADERS += \
     tcpclient.h \
     depdownthread.h \
     enitemthread.h \
-    encryptthread.h
+    encryptthread.h \
+    decryptionthread.h
 
 
 

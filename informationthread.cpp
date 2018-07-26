@@ -15,7 +15,7 @@ void InformationThread::run(){
 int InformationThread::getInfNum(){
     QSqlQuery query(inforDB);
     int num=0;
-    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2");
+    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 or status =3 or status =4 or status = 5");
     if(!success){
         qDebug() << "Thread:查询user失败";
     }else{
@@ -39,5 +39,4 @@ void InformationThread::listenInfNum(){
             Sleep(2000);
         }
     }
-
 }

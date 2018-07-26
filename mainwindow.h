@@ -50,6 +50,8 @@
 #include "QProgressBar"
 #include "enitemthread.h"
 #include "encryptthread.h"
+#include <QFile>
+#include "decryptionthread.h"
 namespace Ui {
 class MainWindow;
 }
