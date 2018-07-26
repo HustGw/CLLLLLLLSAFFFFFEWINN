@@ -148,6 +148,12 @@ private slots:
 
 
 
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void on_pushButton_11_clicked();
+
 signals:
     void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);

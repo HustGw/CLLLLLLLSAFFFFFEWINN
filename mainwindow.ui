@@ -195,7 +195,6 @@
     </property>
     <property name="currentIndex">
      <number>2</number>
-     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="allSelLab">
@@ -306,19 +305,6 @@
        <string>批量分享</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>10</y>
-        <width>60</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>全选</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton_8">
       <property name="geometry">
        <rect>
@@ -332,21 +318,21 @@
        <string>刷新</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="page_4">
-     <widget class="QLabel" name="label_4">
+     <widget class="QPushButton" name="pushButton_11">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>10</y>
-        <width>60</width>
-        <height>30</height>
+        <width>61</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>全选</string>
       </property>
      </widget>
+    </widget>
+    <widget class="QWidget" name="page_4">
      <widget class="QPushButton" name="pushButton_7">
       <property name="geometry">
        <rect>
@@ -373,6 +359,19 @@
        <string>刷新</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_10">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>61</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>全选</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="Line" name="line_2">
@@ -395,7 +394,7 @@
      <x>0</x>
      <y>0</y>
      <width>1165</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
