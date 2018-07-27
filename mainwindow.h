@@ -50,17 +50,13 @@
 #include "QProgressBar"
 #include "enitemthread.h"
 #include "encryptthread.h"
-#include <QFile>
-#include "decryptionthread.h"
-#include <QPalette>
-#include "tcpclient.h"
+#include "initpage.h"
 namespace Ui {
 class MainWindow;
 }
 extern QString User_ID;
 extern QString URL;
 extern int threadNum;
-extern int isFinishedBtn;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -70,6 +66,7 @@ signals:
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    initPage * initpage;
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
     EncryptionViewController *encryptionViewController;
@@ -92,7 +89,6 @@ public:
     DepDownThread *downThread[MAXSIZE];
     QProgressBar *f_progressBar;
     encryption *contest = new encryption();
-
 
 private slots:
 
@@ -126,6 +122,8 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void on_encryptStaBtn_clicked();
+
     void getFileID();
 
     void OssDownLoadFile();
@@ -150,16 +148,8 @@ private slots:
     void startProgressBarThread();
     //开启加密进程
     void startEncryptThread();
-    //设置主界面用户名称
-    void setEmp_name();
 
 
-
-    void on_pushButton_7_clicked();
-
-    void on_pushButton_10_clicked();
-
-    void on_pushButton_11_clicked();
 
 signals:
     void sendUserID(QString user_id);

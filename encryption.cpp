@@ -2,6 +2,7 @@
 #include "downloadoss.h"//测试下载
 extern QString User_ID;
 extern QFileInfo openFileInfo;
+extern QString orfileUuid;
 encryption::encryption()
 {
     //创建加密目录
@@ -83,8 +84,8 @@ void encryption::encrypt(){
     //生成用户唯一标识
     QString userID = User_ID;
     //生成源文件的唯一标识
-    QUuid orfile_id =QUuid::createUuid();
-    QString orFileID = orfile_id.toString();
+    //QUuid orfile_id =QUuid::createUuid();
+    QString orFileID = orfileUuid;
     //加密
     //生成密文唯一标识
     QString enfile_id =QUuid::createUuid().toString();

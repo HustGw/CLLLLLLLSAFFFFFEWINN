@@ -11,20 +11,20 @@ QT       += sql
 QT       += network
 LIBS += -lWs2_32
 
-#LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
-#LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
-#LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
-#LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
+LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
-LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
-LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
-LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
-LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
+#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
+#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
+#LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
-LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
-LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
-LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
-LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+#LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
+#LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
+#LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
+#LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
 #LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk -loss_c_sdk
 #LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -loss_c_sdk
@@ -32,12 +32,12 @@ LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAF
 #LIBS += -LE:/CloundSafe/aliyun-oss-c-sdk-3.5.0/aliyun-oss-c-sdk-3.5.0/Debug/ -loss_c_sdk
 
 
-LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
-LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -103,12 +103,11 @@ SOURCES += \
     uploadoss.cpp \
     encryption.cpp \
     decryptionfile.cpp \
+    tcpclient.cpp \
     depdownthread.cpp \
     enitemthread.cpp \
     encryptthread.cpp \
-    decryptionthread.cpp \
-    registerdialog.cpp \
-    tcpclient.cpp
+    registerdialog.cpp
 
 
 
@@ -192,12 +191,11 @@ HEADERS += \
     uploadoss.h \
     encryption.h \
     decryptionfile.h \
-    depdownthread.h \
+    tcpclient.h \
+    depdownthread.h\
     enitemthread.h \
     encryptthread.h \
-    decryptionthread.h \
-    registerdialog.h \
-    tcpclient.h
+    registerdialog.h
 
 
 
@@ -205,7 +203,7 @@ FORMS += \
         mainwindow.ui \
     loginview.ui \
     senddialog.ui \
-    registerdialog.ui \
-    tcpclient.ui
+    tcpclient.ui \
+    registerdialog.ui
 
 DISTFILES +=

@@ -194,7 +194,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="allSelLab">
@@ -394,7 +394,7 @@
      <x>0</x>
      <y>0</y>
      <width>1165</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

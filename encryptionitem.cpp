@@ -1,20 +1,29 @@
 #include "encryptionitem.h"
-
+extern bool initLableFlag;
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
-    fileName = new QLabel(this);
-    fileSize = new QLabel(this);
-    fileDescription = new QLabel(this);
-    //downloadBtn = new QPushButton(this);
-    fileIcon = new QLabel(this);
-    checkBox = new QCheckBox(this);
-    //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-    fileName->setGeometry(300,10,300,30);
-    fileSize->setGeometry(300,40,100,30);
-    fileDescription->setGeometry(300,80,200,30);
-    //downloadBtn->setGeometry(500,50,100,30);
-    checkBox->setGeometry(10,70,20,20);
-    fileIcon->setGeometry(30,50,300,30);
+    if (!initLableFlag){
+        initPage = new QLabel(this);
+        initPage->setGeometry(300,150,300,100);
+        initPage->setText("请调取本地文件进行加密！");
+    }
+
+        fileName = new QLabel(this);
+        fileSize = new QLabel(this);
+        fileDescription = new QLabel(this);
+        //downloadBtn = new QPushButton(this);
+        fileIcon = new QLabel(this);
+        //checkBox = new QCheckBox(this);
+        encryptStaBtn = new QPushButton(this);
+        //设置fileName、fileName fileDescription checkBox fileIcon 的位置
+        fileName->setGeometry(300,10,300,30);
+        fileSize->setGeometry(300,40,100,30);
+        fileDescription->setGeometry(300,80,200,30);
+        //downloadBtn->setGeometry(500,50,100,30);
+        //checkBox->setGeometry(10,70,20,20);
+        fileIcon->setGeometry(30,50,300,30);
+        encryptStaBtn->setGeometry(500,50,100,30);
+        encryptStaBtn->hide();
     //progressBar->setMinimum(0);
     //progressBar->setMaximum(0);
     //progressBar->setValue(20);
@@ -36,19 +45,4 @@ void EncryptionItem::paintEvent(QPaintEvent *event){
 
 }
 
-//// 更新进度
-//void EncryptionItem::handleResults(int value)
-//{
-//    qDebug() << "Handle Thread : " << QThread::currentThreadId();
-//    progressBar->setValue(value);
-//}
 
-//// 开启线程
-//void startThread()
-//{
-//    enItemThread *enitemThread = new enItemThread(this);
-//    connect(enitemThread, SIGNAL(resultReady(int)), this, SLOT(handleResults(int)));
-//    // 线程结束后，自动销毁
-//    connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
-//    workerThread->start();
-//}
