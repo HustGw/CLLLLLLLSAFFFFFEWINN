@@ -11,10 +11,10 @@ QT       += sql
 QT       += network
 LIBS += -lWs2_32
 
-LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
-LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
-LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
-LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
+LIBS += -LE:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -lcurl
+LIBS += -LE:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -llibapr-1
+LIBS += -LE:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -llibaprutil-1
+LIBS += -LE:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -lmxml1
 
 #LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lcurl
 #LIBS += -LF:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibapr-1
@@ -32,12 +32,12 @@ LIBS += -LE:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release
 #LIBS += -LE:/CloundSafe/aliyun-oss-c-sdk-3.5.0/aliyun-oss-c-sdk-3.5.0/Debug/ -loss_c_sdk
 
 
-#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -103,11 +103,12 @@ SOURCES += \
     uploadoss.cpp \
     encryption.cpp \
     decryptionfile.cpp \
-    tcpclient.cpp \
     depdownthread.cpp \
     enitemthread.cpp \
     encryptthread.cpp \
-    registerdialog.cpp
+    decryptionthread.cpp \
+    registerdialog.cpp \
+    tcpclient.cpp
 
 
 
@@ -191,11 +192,12 @@ HEADERS += \
     uploadoss.h \
     encryption.h \
     decryptionfile.h \
-    tcpclient.h \
-    depdownthread.h\
+    depdownthread.h \
     enitemthread.h \
     encryptthread.h \
-    registerdialog.h
+    decryptionthread.h \
+    registerdialog.h \
+    tcpclient.h
 
 
 
@@ -203,7 +205,7 @@ FORMS += \
         mainwindow.ui \
     loginview.ui \
     senddialog.ui \
-    tcpclient.ui \
-    registerdialog.ui
+    registerdialog.ui \
+    tcpclient.ui
 
 DISTFILES +=

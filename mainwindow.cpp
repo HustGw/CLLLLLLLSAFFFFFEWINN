@@ -13,8 +13,8 @@
 #include "QProgressBar"
 
 
-extern int isFinishedBtn=0;//用于判断是否已经点击
-QString User_ID = "carlos";
+int isFinishedBtn=0;//用于判断是否已经点击
+QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
@@ -24,13 +24,12 @@ int threadNum = 0;
 
 QFileInfo openFileInfo;
 QString orfileUuid;
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    User_ID = LoginUserID;
     ui->setupUi(this);
-    //initpage = new initPage();
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -44,9 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     inforDlg = new informationDlg();
     connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
     emit sendUserID(User_ID);
-
-
-
+    //使用连接池 管理数据库连接
+    db = ConnectionPool::openConnection();
     // 连接进度条信号槽
     connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
     //开始加密信号槽
@@ -67,8 +65,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->nameLabel->setText(tr("新垣结衣"));
     ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
+    //查询数据库 获取用户名称
+    setEmp_name();
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
     userHead->setGeometry(40,10,110,70);
@@ -83,8 +82,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
-    //使用连接池 管理数据库连接
-     db = ConnectionPool::openConnection();
         //查询数据库  查询解密请求
      QSqlQuery query(db);
      bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
@@ -133,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea->setWidget(newItemWidget);
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
-               decryptionViewController->setLayout(newVbox);
+               decryptionViewController->setLayout(newVbox);          
            }
      //好友列表加载
      bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
@@ -170,6 +167,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_FinishedBtn_clicked()
 {
+//    QPalette pal = ui->FinishedBtn->palette();
+//    pal.setColor(QColorGroup::ButtonText,QColor(255,0,0));
+//    ui->FinishedBtn->setPalette(pal);
+    ui->FinishedBtn->setStyleSheet("background-color:rgb(119,119,119);");
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
         ui->FinDepBtn->show();
@@ -185,7 +186,7 @@ void MainWindow::on_FinishedBtn_clicked()
 }
 
 void MainWindow::on_DecryptionBtn_clicked()
-{   //点击解密按钮后，QMidStaWidget跳转到0号子页面
+{   //点击加密按钮后，QMidStaWidget跳转到0号子页面
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(1);
 }
@@ -193,7 +194,7 @@ void MainWindow::on_DecryptionBtn_clicked()
 
 
 void MainWindow::on_EncryptionBtn_clicked()
-{   //点击加密按钮后，MidStaWidget跳转到1号子页面
+{   //点击解密按钮后，MidStaWidget跳转到1号子页面
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
     if (encryptionViewController->vbox->count()==0||encryptionViewController->layout()->count()-1==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
@@ -203,8 +204,6 @@ void MainWindow::on_EncryptionBtn_clicked()
     }else {
         ui->BtnStaWidget->setCurrentIndex(0);
     }
-
-    //ui->MidStaWidget->setCurrentWidget(encryptionPage);
 }
 
 void MainWindow::on_FinEnpBtn_clicked()
@@ -481,8 +480,7 @@ void MainWindow::OssDownLoadFile(){
                     QString enkey_id = fileID;
          //         DepDownThread *downThread = new DepDownThread();
                     downThread[threadNum] = new DepDownThread();
-                    connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(
-                                Later()));
+                    connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
                     connect(this,SIGNAL(OSSfileDownFileID(QString)),downThread[threadNum],SLOT(DownContent(QString)));
                     connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),this,SLOT(ChangeItemBtnText(QString)));
                     downThread[threadNum]->start();
@@ -691,11 +689,9 @@ void MainWindow::on_pushButton_8_clicked()
                file_status = query.record().value("article_status").toString();
                file_id = query.record().value("article_id").toString();
 
-               if(file_status == "0"){
+               if(file_status == "1"){
                    file_discryption = "文件未上传，请上传。";
-
-
-               }else if(file_status == "1"){
+               }else if(file_status == "0"){
                    file_discryption = "文件已上传，可传输分享。";
                }
 
@@ -729,23 +725,16 @@ void MainWindow::on_pushButton_8_clicked()
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn_clicked()));
                connect(f1->transprotBtn,SIGNAL(clicked(bool)),f1,SLOT(on_transprotBtn_clicked()));
-               qDebug()<<"文件名称:"+query.record().value("article_name").toString();
-               qDebug()<<"密文ID:"+file_id;
+
            }
            return;
        }
 
 }
-
+//已加密文件批量删除按钮
 void MainWindow::on_pushButton_5_clicked()
 {
-    QString file_name;
     QString file_id;
-    QString file_size;
-    QString file_discryption;
-    QString file_status;
-
-     int check_flag = 0;
         QSqlQuery query(db);
         bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
         if(!success){
@@ -753,68 +742,22 @@ void MainWindow::on_pushButton_5_clicked()
             return;
         }else{
             qDebug()<<"查询成功";
-
             while(query.next())
             {
-
-                file_name = query.record().value("article_name").toString();
                 file_id = query.record().value("article_id").toString();
-                file_status = query.record().value("article_status").toString();
-                file_size = query.record().value("article_size").toString();
-
-                if(file_status == "0"){
-                    file_discryption = "文件未上传，请上传。";
-                }else if(file_status == "1"){
-                    file_discryption = "文件已上传，可传输分享。";
-                }
-
                 QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
                 if(checkcheck->isChecked()){
-                    check_flag = 1;
+                    QSqlQuery query9(db);
+                    query9.exec("delete from varticle where article_id = '"+file_id+"'");
                 }
-
-                FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id);
-                delete f2;
-
-                delete finishViewController->layout();
-                QWidget *newItemWidget = new QWidget();
-                //QScrollArea *newScrollArea = new QScrollArea();
-                newItemWidget->setLayout(finishViewController->vbox);
-                finScrollArea->setWidget(newItemWidget);
-                QVBoxLayout *newVbox = new QVBoxLayout();
-                newVbox->addWidget(finScrollArea);
-                finishViewController->setLayout(newVbox);
-
-                if(check_flag == 0){
-                    FinishEncryptionItem *f1 = new FinishEncryptionItem();
-                    f1->setObjectName(file_id);
-
-                    f1->checkBox->setObjectName(file_id + "check");
-
-                    f1->pathOpenBtn->setObjectName(file_id);
-                    f1->transprotBtn->setObjectName(file_id + "trans");
-                    f1->shareBtn->setObjectName(file_id + "share");
-                    f1->deleteBtn->setObjectName(file_id);
-
-                    f1->fileName->setText(file_name);
-                    f1->fileSize->setText(file_size);
-                    f1->fileDescription->setText(file_discryption);
-
-                    finishViewController->vbox->addWidget(f1);
-                    delete finishViewController->layout();
-                    QWidget *newItemWidget = new QWidget();
-                    //QScrollArea *newScrollArea = new QScrollArea();
-                    newItemWidget->setLayout(finishViewController->vbox);
-                    finScrollArea->setWidget(newItemWidget);
-                    QVBoxLayout *newVbox = new QVBoxLayout();
-                    newVbox->addWidget(finScrollArea);
-                    finishViewController->setLayout(newVbox);
-                }
-                check_flag = 0;
             }
-        }
+         }
+        on_pushButton_8_clicked();
+        QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
 
+//已加密文件单独删除按钮
 void MainWindow::on_deleteBtn_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
@@ -839,7 +782,7 @@ void MainWindow::on_deleteBtn_clicked(){
     newVbox->addWidget(finScrollArea);
     finishViewController->setLayout(newVbox);
 }
-
+//已解密文件单独删除按钮
 void MainWindow::on_deleteBtn2_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
@@ -873,10 +816,8 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_size;
     QString file_discryption;
     finishViewController2->vbox = new QVBoxLayout();
-  //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
-
    QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='" + User_ID+"'");
+       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -972,6 +913,7 @@ void MainWindow::FileIsAllowed(){
              }
              else{
                  //下载密文
+                 QString id = query.record().value("id").toString();
                  QString fileName = query.record().value("file_name").toString();
                  //查找秘钥ID
                  QSqlQuery keyQuery(db);
@@ -990,21 +932,40 @@ void MainWindow::FileIsAllowed(){
 //                 downThread->start();
 //                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),downThread,SLOT(DownTread_RecvID(QString,QString,QString)));
 //                 emit sendFileID(enkey_id,file_id,fileName);
-                 QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
-                 QByteArray down_oss_Path = downPath.toLatin1();
-                 std::string enKeyID = enkey_id.toStdString();
-                 downloadoss *downKey=new downloadoss;
-                 downKey->OBJECT_NAME=enKeyID.c_str();
-                 downKey->BUCKET_NAME="cloudsafe-pc-ykey";
-                 downKey->download_filePath=down_oss_Path.data();
-                 downKey->get_object_to_file();
-                 //下载完成后开始解密
-                 DecryptionFile *fileD = new DecryptionFile();
-                 QString contentPath = "D://CloundSafeWindows//content//"+file_id;
-                 QString filePath = "D://CloundSafeWindows//file//"+fileName;
-                if((fileD->decryptFile(downPath,contentPath,filePath))==54){
-                     qDebug()<<"success";
-                 };//解密函数
+                 DecryptionThread  *depThread = new DecryptionThread();
+                 connect(depThread,SIGNAL(finished()),depThread,SLOT(deleteLater()));
+                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread,SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 depThread->start();
+                 emit sendFileID(enkey_id,file_id,fileName);
+//                 QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
+//                 QByteArray down_oss_Path = downPath.toLatin1();
+//                 std::string enKeyID = enkey_id.toStdString();
+//                 downloadoss *downKey=new downloadoss;
+//                 downKey->OBJECT_NAME=enKeyID.c_str();
+//                 downKey->BUCKET_NAME="cloudsafe-pc-ykey";
+//                 downKey->download_filePath=down_oss_Path.data();
+//                 downKey->get_object_to_file();
+//                 //下载完成后开始解密
+//                 DecryptionFile *fileD = new DecryptionFile();
+//                 QString contentPath = "D://CloundSafeWindows//content//"+file_id;
+//                 QString filePath = "D://CloundSafeWindows//file//"+fileName;
+//                if((fileD->decryptFile(downPath,contentPath,filePath))==54){
+//                     qDebug()<<"success";
+//                 };//解密函数
+                 //解密完成后将数据库该条数据状态status改成5
+                 QSqlQuery updateQuery(db);
+                 bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+                 if(updataSuccess){
+                     qDebug()<<"status=5 update success!";
+                 }
+                 else{
+                     qDebug()<<"status=5 update failed";
+                 }
+                 //解密完成后删除本地密钥和密文
+//                 QFile contentFileTemp(file_id);
+//                 QFile keyTemp(enkey_id);
+//                 contentFileTemp.remove();
+//                 keyTemp.remove();
                  //解密完成后删除控件
                  delete f1;
                  //重新布局
@@ -1029,4 +990,86 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     //连接新的信号槽
     connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
 }
+//设置主界面用户名
+void MainWindow::setEmp_name(){
+    qDebug()<<"函数执行";
+    QSqlQuery query(db);
+    bool success = query.exec("select * from employee where emp_id = '"+User_ID+"'");
+    if(success){
+        while (query.next()) {
+            QString nickName = query.record().value("emp_name").toString();
+            qDebug()<<nickName;
+            ui->nameLabel->setText(nickName);
+        }
+    }
+    else{
+        qDebug()<<"查询用户名失败";
 
+    }
+}
+
+//已解密文件批量删除按钮
+void MainWindow::on_pushButton_7_clicked()
+{
+    QString file_id;
+        QSqlQuery query(db);
+        bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+        if(!success){
+            qDebug() << "查询密文失败";
+            return;
+        }else{
+            qDebug()<<"查询成功";
+            while(query.next())
+            {
+                file_id = query.record().value("file_id").toString();
+
+                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
+                if(checkcheck->isChecked()){
+                    QSqlQuery query9(db);
+                    query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                }
+            }
+         }
+        on_pushButton_9_clicked();
+        QMessageBox::information(NULL, "success", "成功批量删除条目！");
+}
+//已解密页面全选按钮
+void MainWindow::on_pushButton_10_clicked()
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("file_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            checkcheck->setChecked(true);
+        }
+    }
+
+}
+//已加密页面全选按钮
+void MainWindow::on_pushButton_11_clicked()
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("article_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            checkcheck->setChecked(true);
+        }
+
+
+    }
+}
