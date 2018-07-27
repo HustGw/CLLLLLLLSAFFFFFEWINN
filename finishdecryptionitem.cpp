@@ -51,7 +51,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
     QString name = button->objectName();
     db = ConnectionPool::openConnection();
     QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where file_id=" + name);
+       bool success = query.exec("select * from Decryption where file_id='" + name+"'");
 
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
@@ -71,7 +71,7 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
     QString name = button->objectName();
     db = ConnectionPool::openConnection();
     QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where file_id=" + name);
+       bool success = query.exec("select * from Decryption where file_id='" + name+"'");
        if(!success){
            QMessageBox::information(NULL, "warning", "未找到路径！");
            return;

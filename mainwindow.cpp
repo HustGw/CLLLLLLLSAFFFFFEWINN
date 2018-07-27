@@ -16,7 +16,6 @@
 int isFinishedBtn=0;//用于判断是否已经点击
 QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
-
 int threadNum = 0;
 
 QFileInfo openFileInfo;
@@ -631,11 +630,9 @@ void MainWindow::on_pushButton_8_clicked()
                file_status = query.record().value("article_status").toString();
                file_id = query.record().value("article_id").toString();
 
-               if(file_status == "0"){
+               if(file_status == "1"){
                    file_discryption = "文件未上传，请上传。";
-
-
-               }else if(file_status == "1"){
+               }else if(file_status == "0"){
                    file_discryption = "文件已上传，可传输分享。";
                }
 
@@ -669,23 +666,16 @@ void MainWindow::on_pushButton_8_clicked()
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn_clicked()));
                connect(f1->transprotBtn,SIGNAL(clicked(bool)),f1,SLOT(on_transprotBtn_clicked()));
-               qDebug()<<"文件名称:"+query.record().value("article_name").toString();
-               qDebug()<<"密文ID:"+file_id;
+
            }
            return;
        }
 
 }
-
+//已加密文件批量删除按钮
 void MainWindow::on_pushButton_5_clicked()
 {
-    QString file_name;
     QString file_id;
-    QString file_size;
-    QString file_discryption;
-    QString file_status;
-
-     int check_flag = 0;
         QSqlQuery query(db);
         bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
         if(!success){
@@ -693,68 +683,22 @@ void MainWindow::on_pushButton_5_clicked()
             return;
         }else{
             qDebug()<<"查询成功";
-
             while(query.next())
             {
-
-                file_name = query.record().value("article_name").toString();
                 file_id = query.record().value("article_id").toString();
-                file_status = query.record().value("article_status").toString();
-                file_size = query.record().value("article_size").toString();
-
-                if(file_status == "0"){
-                    file_discryption = "文件未上传，请上传。";
-                }else if(file_status == "1"){
-                    file_discryption = "文件已上传，可传输分享。";
-                }
-
                 QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
                 if(checkcheck->isChecked()){
-                    check_flag = 1;
+                    QSqlQuery query9(db);
+                    query9.exec("delete from varticle where article_id = '"+file_id+"'");
                 }
-
-                FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id);
-                delete f2;
-
-                delete finishViewController->layout();
-                QWidget *newItemWidget = new QWidget();
-                //QScrollArea *newScrollArea = new QScrollArea();
-                newItemWidget->setLayout(finishViewController->vbox);
-                finScrollArea->setWidget(newItemWidget);
-                QVBoxLayout *newVbox = new QVBoxLayout();
-                newVbox->addWidget(finScrollArea);
-                finishViewController->setLayout(newVbox);
-
-                if(check_flag == 0){
-                    FinishEncryptionItem *f1 = new FinishEncryptionItem();
-                    f1->setObjectName(file_id);
-
-                    f1->checkBox->setObjectName(file_id + "check");
-
-                    f1->pathOpenBtn->setObjectName(file_id);
-                    f1->transprotBtn->setObjectName(file_id + "trans");
-                    f1->shareBtn->setObjectName(file_id + "share");
-                    f1->deleteBtn->setObjectName(file_id);
-
-                    f1->fileName->setText(file_name);
-                    f1->fileSize->setText(file_size);
-                    f1->fileDescription->setText(file_discryption);
-
-                    finishViewController->vbox->addWidget(f1);
-                    delete finishViewController->layout();
-                    QWidget *newItemWidget = new QWidget();
-                    //QScrollArea *newScrollArea = new QScrollArea();
-                    newItemWidget->setLayout(finishViewController->vbox);
-                    finScrollArea->setWidget(newItemWidget);
-                    QVBoxLayout *newVbox = new QVBoxLayout();
-                    newVbox->addWidget(finScrollArea);
-                    finishViewController->setLayout(newVbox);
-                }
-                check_flag = 0;
             }
-        }
+         }
+        on_pushButton_8_clicked();
+        QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
 
+//已加密文件单独删除按钮
 void MainWindow::on_deleteBtn_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
@@ -779,7 +723,7 @@ void MainWindow::on_deleteBtn_clicked(){
     newVbox->addWidget(finScrollArea);
     finishViewController->setLayout(newVbox);
 }
-
+//已解密文件单独删除按钮
 void MainWindow::on_deleteBtn2_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
@@ -813,10 +757,8 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_size;
     QString file_discryption;
     finishViewController2->vbox = new QVBoxLayout();
-  //  connect(ui->pushButton_8,SIGNAL(clicked()),connectOdbc,SLOT(connectodbc()));
-
    QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 2 and oemp_id ='" + User_ID+"'");
+       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -1003,5 +945,72 @@ void MainWindow::setEmp_name(){
     }
     else{
         qDebug()<<"查询用户名失败";
+
+    }
+}
+
+//已解密文件批量删除按钮
+void MainWindow::on_pushButton_7_clicked()
+{
+    QString file_id;
+        QSqlQuery query(db);
+        bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+        if(!success){
+            qDebug() << "查询密文失败";
+            return;
+        }else{
+            qDebug()<<"查询成功";
+            while(query.next())
+            {
+                file_id = query.record().value("file_id").toString();
+
+                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
+                if(checkcheck->isChecked()){
+                    QSqlQuery query9(db);
+                    query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                }
+            }
+         }
+        on_pushButton_9_clicked();
+        QMessageBox::information(NULL, "success", "成功批量删除条目！");
+}
+//已解密页面全选按钮
+void MainWindow::on_pushButton_10_clicked()
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("file_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            checkcheck->setChecked(true);
+        }
+    }
+
+}
+//已加密页面全选按钮
+void MainWindow::on_pushButton_11_clicked()
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("article_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            checkcheck->setChecked(true);
+        }
+
+
     }
 }
