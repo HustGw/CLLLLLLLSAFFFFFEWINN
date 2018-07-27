@@ -1,25 +1,25 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
 
+#include "registerdialog.h"
+
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonParseError>
-
+QString LoginUserID = NULL;
 QNetworkAccessManager *m_accessManager;
 
-
 TcpClient::TcpClient(QWidget *parent) :
-    QMainWindow(parent),
+    QDialog(parent),
     ui(new Ui::TcpClient)
 {
     ui->setupUi(this);
     ui->passwardLineEdit->setEchoMode(QLineEdit::Password);  //密码方式显示文本
-    //init();
-    //connectServer();
 
     flag = 0;
+
 
     //http
     m_accessManager = new QNetworkAccessManager(this);
@@ -54,14 +54,12 @@ void TcpClient::on_sendBtn_clicked()
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
     if(userName=="" || passward=="")//判断用户名密码是否为空，为空弹出警告
         QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
-    //QString bs="b";
-    //QString data=bs+"#"+userName+"#"+passward;
-    //tcpSocket->write(data.toLatin1());//将用户名密码通过socket发送到服务器。
 
-    //要求里是需要先判断，手机号是否已经注册， 调用Judge_phone.do
-    //然后再调用登录接口，登录，调用接口Employee.do
+
+    //先判断，手机号是否已经注册， 调用judge_phone.do
+    //然后再调用登录接口，登录，调用接口employee.do
     QNetworkRequest request;
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
     flag = 3; //步骤：登录
     request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/Employee.do"));  //登录
     QByteArray postData;
@@ -77,44 +75,12 @@ void TcpClient::on_sendBtn_clicked()
 
 void TcpClient::on_signBtn_clicked()
 {
-    //点击注册按钮的响应
-    QString userName=ui->userLineEdit->text();  //获取对话框中用户名
-    QString passward=ui->passwardLineEdit->text();//获取对话框中密码
-    if(userName=="" || passward=="")//判断用户名、密码是否为空，为空弹出警告
-        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
-    //QString as="a";
-    //QString data=as+"#"+userName+"#"+passward;
-    //tcpSocket->write(data.toLatin1()); //将用户名密码通过socket发送到服务器。
+
+    registerDialog *regDlg = new registerDialog(this);
+    regDlg->exec();
+    return;
 
 
-    //http 判断手机号是否注册
-    QNetworkRequest request;
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-    flag = 1; //步骤：判断手机是否注册
-    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Employee/Judge_phone.do"));  //判断手机是否注册网址
-    QByteArray postData;
-    postData.append("emp_phone=");//参数
-    postData.append(ui->userLineEdit->text());//参数
-    QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
-
-
-    /*
-    //登录测试
-    QNetworkRequest request;
-    flag = 2; //步骤：注册
-    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Register/Employee.do"));  //登录
-    QByteArray postData;
-    //emp_password  emp_email   code
-    postData.append("emp_phone=");//参数手机
-    postData.append(ui->userLineEdit->text());
-    postData.append("&emp_password=");//参数密码
-    postData.append(ui->passwardLineEdit->text());//
-    postData.append("&emp_email=");//参数邮箱
-    postData.append(ui->email->text());//
-    postData.append("&code=");//参数验证码
-    postData.append(ui->code->text());//
-    QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
-    */
 
 }
 
@@ -191,23 +157,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              content = value.toString();
                              if(content.contains("available",Qt::CaseSensitive))
                              {
-                                 //成功，发送注册信息。
-                                 //http 判断手机号是否注册
-                                 QNetworkRequest request;
-                                 request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-                                 flag = 2; //步骤：注册
-                                 request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Register/Employee.do"));  //登录
-                                 QByteArray postData;
-                                 //emp_password  emp_email   code
-                                 postData.append("emp_phone=");//参数手机
-                                 postData.append(ui->userLineEdit->text());
-                                 postData.append("&emp_password=");//参数密码
-                                 postData.append(ui->passwardLineEdit->text());//
-                                 postData.append("&emp_email=");//参数邮箱
-                                 postData.append(ui->email->text());//
-                                 postData.append("&code=");//参数验证码
-                                 postData.append(ui->code->text());//
-                                 QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
 
                              }
                          }
@@ -390,7 +339,12 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
 
                              }
                              else{
-                                 QMessageBox::information(this,"警告","登录成功",QMessageBox::Ok);
+                                 accept();
+                                 int index = content.lastIndexOf('_');
+                                 LoginUserID = content.mid(0,index);
+                                 qDebug()<<LoginUserID;
+
+//                                 QMessageBox::information(this,"警告","登录成功",QMessageBox::Ok);
                              }
                          }
 
@@ -408,7 +362,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
 
          qDebug()<<"handle errors here";
          QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-         //statusCodeV是HTTP服务器的相应码
          qDebug( "found error ....code: %d %d\n", statusCodeV.toInt(), (int)reply->error());
          qDebug(qPrintable(reply->errorString()));
      }
@@ -416,11 +369,11 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
 }
 
 //点击获取验证码
-void TcpClient::on_huoquyanzhengmaBtn_clicked()
+void TcpClient::on_codeBtn_clicked()
 {
     //http 获取验证码
     QNetworkRequest request;
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
     flag = 4; //步骤：获取验证码
     request.setUrl(QUrl("http://119.23.138.209:8080/cloud/AcquireCode.do"));
     QByteArray postData;

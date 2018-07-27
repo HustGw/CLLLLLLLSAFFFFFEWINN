@@ -13,8 +13,8 @@
 #include "QProgressBar"
 
 
-extern int isFinishedBtn=0;//用于判断是否已经点击
-QString User_ID = "123";
+int isFinishedBtn=0;//用于判断是否已经点击
+QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
 
 int threadNum = 0;
@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    User_ID = LoginUserID;
     ui->setupUi(this);
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
@@ -39,9 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     inforDlg = new informationDlg();
     connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
     emit sendUserID(User_ID);
-
-
-
+    //使用连接池 管理数据库连接
+    db = ConnectionPool::openConnection();
     // 连接进度条信号槽
     connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
     //开始加密信号槽
@@ -61,8 +61,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->nameLabel->setText(tr("国家广电"));
     ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
+    //查询数据库 获取用户名称
+    setEmp_name();
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
     userHead->setGeometry(40,10,110,70);
@@ -77,8 +78,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
-    //使用连接池 管理数据库连接
-     db = ConnectionPool::openConnection();
         //查询数据库  查询解密请求
      QSqlQuery query(db);
      bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
@@ -164,6 +163,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_FinishedBtn_clicked()
 {
+//    QPalette pal = ui->FinishedBtn->palette();
+//    pal.setColor(QColorGroup::ButtonText,QColor(255,0,0));
+//    ui->FinishedBtn->setPalette(pal);
+    ui->FinishedBtn->setStyleSheet("background-color:rgb(119,119,119);");
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
         ui->FinDepBtn->show();
@@ -986,4 +989,19 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     //连接新的信号槽
     connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
 }
-
+//设置主界面用户名
+void MainWindow::setEmp_name(){
+    qDebug()<<"函数执行";
+    QSqlQuery query(db);
+    bool success = query.exec("select * from employee where emp_id = '"+User_ID+"'");
+    if(success){
+        while (query.next()) {
+            QString nickName = query.record().value("emp_name").toString();
+            qDebug()<<nickName;
+            ui->nameLabel->setText(nickName);
+        }
+    }
+    else{
+        qDebug()<<"查询用户名失败";
+    }
+}

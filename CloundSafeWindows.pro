@@ -103,11 +103,12 @@ SOURCES += \
     uploadoss.cpp \
     encryption.cpp \
     decryptionfile.cpp \
-    tcpclient.cpp \
     depdownthread.cpp \
     enitemthread.cpp \
     encryptthread.cpp \
-    decryptionthread.cpp
+    decryptionthread.cpp \
+    registerdialog.cpp \
+    tcpclient.cpp
 
 
 
@@ -191,11 +192,12 @@ HEADERS += \
     uploadoss.h \
     encryption.h \
     decryptionfile.h \
-    tcpclient.h \
     depdownthread.h \
     enitemthread.h \
     encryptthread.h \
-    decryptionthread.h
+    decryptionthread.h \
+    registerdialog.h \
+    tcpclient.h
 
 
 
@@ -203,6 +205,7 @@ FORMS += \
         mainwindow.ui \
     loginview.ui \
     senddialog.ui \
+    registerdialog.ui \
     tcpclient.ui
 
 DISTFILES +=

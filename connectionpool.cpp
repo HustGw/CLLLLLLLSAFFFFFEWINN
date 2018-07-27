@@ -68,6 +68,7 @@ QSqlDatabase ConnectionPool::openConnection() {
 
         // 重新计算已创建连接数
         connectionCount = pool.unusedConnectionNames.size() + pool.usedConnectionNames.size();
+
     }
 
     if (pool.unusedConnectionNames.size() > 0) {

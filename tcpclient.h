@@ -1,20 +1,18 @@
 #ifndef TCPCLIENT_H
 #define TCPCLIENT_H
 
-#include <QMainWindow>
 #include <QtNetwork>
 #include <QMessageBox>
 #include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QJsonParseError>
+#include <QDialog>
+#include <QMainWindow>
 
+extern QString LoginUserID;
 namespace Ui {
 class TcpClient;
 }
 
-class TcpClient : public QMainWindow
+class TcpClient : public QDialog
 {
     Q_OBJECT
 
@@ -23,6 +21,7 @@ public:
     ~TcpClient();
 
     int flag;  //步骤
+
 
 protected:
     void init();
@@ -38,7 +37,7 @@ private slots:
     void readMessages();
     void finishedSlot(QNetworkReply *reply);
 
-    void on_huoquyanzhengmaBtn_clicked();
+    void on_codeBtn_clicked();
 
 private:
     Ui::TcpClient *ui;

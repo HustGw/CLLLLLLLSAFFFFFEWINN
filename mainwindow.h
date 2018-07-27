@@ -52,12 +52,15 @@
 #include "encryptthread.h"
 #include <QFile>
 #include "decryptionthread.h"
+#include <QPalette>
+#include "tcpclient.h"
 namespace Ui {
 class MainWindow;
 }
 extern QString User_ID;
 extern QString URL;
 extern int threadNum;
+extern int isFinishedBtn;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -89,6 +92,7 @@ public:
     DepDownThread *downThread[MAXSIZE];
     QProgressBar *f_progressBar;
     encryption *contest = new encryption();
+
 
 private slots:
 
@@ -146,7 +150,8 @@ private slots:
     void startProgressBarThread();
     //开启加密进程
     void startEncryptThread();
-
+    //设置主界面用户名称
+    void setEmp_name();
 
 
 
