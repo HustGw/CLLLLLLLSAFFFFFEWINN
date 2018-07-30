@@ -902,7 +902,7 @@ void MainWindow::on_pushButton_9_clicked()
 
 void MainWindow::HeadChanged(){
     qDebug()<<"head change!";
-    QPixmap pixmap("new.jpg");
+    QPixmap pixmap(":/new/src/head2");
     pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
     userHead->setScaledContents(true);
     userHead->setPixmap(pixmap);
