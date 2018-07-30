@@ -762,10 +762,10 @@ void MainWindow::on_pushButton_5_clicked()
                         qDebug()<<"delete 1";
                     }
                 }
+                FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id_d);
+                delete f2;
             }
          }
-        FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id_d);
-        delete f2;
         on_pushButton_8_clicked();
         QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
@@ -1047,10 +1047,11 @@ void MainWindow::on_pushButton_7_clicked()
                     QSqlQuery query9(db);
                     query9.exec("delete from Decryption where file_id = '"+file_id+"'");
                 }
+                FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+                delete f2;
             }
          }
-        FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
-        delete f2;
+
         on_pushButton_9_clicked();
         QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
