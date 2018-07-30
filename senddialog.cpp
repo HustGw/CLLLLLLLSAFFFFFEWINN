@@ -9,8 +9,6 @@ sendDialog::sendDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::sendDialog)
 {
-    MainWindow *main_window = new MainWindow();
-    connect(main_window,SIGNAL(sendUserId(QString)),this,SLOT(reciveUserId(QString)));
     db1 = ConnectionPool::openConnection();
     ui->setupUi(this);
     QSqlQuery query(db1);
@@ -28,7 +26,6 @@ sendDialog::sendDialog(QWidget *parent) :
         int count = 0;
         while(query.next()){
             QString nickName = query.record().value("friend_nickname").toString();
-            QString friend_id  =  query.record().value("friend_id").toString();
             QCheckBox * b1 = new QCheckBox(nickName);
             QListWidgetItem* a1 = new QListWidgetItem();
 

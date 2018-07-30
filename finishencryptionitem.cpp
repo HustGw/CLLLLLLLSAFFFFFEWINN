@@ -33,7 +33,7 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
 
     checkBox->setGeometry(10,70,20,20);
 
-    fileIcon->setGeometry(30,0,100,115);
+    fileIcon->setGeometry(31,1,100,115);
 
 
 }
