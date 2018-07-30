@@ -17,7 +17,7 @@ int isFinishedBtn=0;//用于判断是否已经点击
 QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
 int threadNum = 0;
-
+QFont f("ZYSong18030",12,75);
 QFileInfo openFileInfo;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     finishEncryptionItem = new FinishEncryptionItem();
     finishDecryptionItem = new FinishDecryptionItem();
     inforDlg = new informationDlg();
+    CleanButtonClicked();
     connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
     emit sendUserID(User_ID);
     //使用连接池 管理数据库连接
@@ -165,6 +166,7 @@ void MainWindow::on_FinishedBtn_clicked()
 //    QPalette pal = ui->FinishedBtn->palette();
 //    pal.setColor(QColorGroup::ButtonText,QColor(255,0,0));
 //    ui->FinishedBtn->setPalette(pal);
+    CleanButtonClicked();
     ui->FinishedBtn->setStyleSheet("background-color:rgb(119,119,119);");
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
@@ -182,6 +184,8 @@ void MainWindow::on_FinishedBtn_clicked()
 
 void MainWindow::on_DecryptionBtn_clicked()
 {   //点击加密按钮后，QMidStaWidget跳转到0号子页面
+    CleanButtonClicked();
+    ui->DecryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(1);
 }
@@ -190,18 +194,24 @@ void MainWindow::on_DecryptionBtn_clicked()
 
 void MainWindow::on_EncryptionBtn_clicked()
 {   //点击解密按钮后，MidStaWidget跳转到1号子页面
+    CleanButtonClicked();
+    ui->EncryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_FinEnpBtn_clicked()
 {
+    CleanButtonClicked();
+    ui->FinEnpBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
 }
 void MainWindow::on_FinDepBtn_clicked()
 {
+    CleanButtonClicked();
+    ui->FinDepBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
     on_pushButton_9_clicked();
@@ -716,7 +726,6 @@ void MainWindow::on_deleteBtn_clicked(){
 
     delete finishViewController->layout();
     QWidget *newItemWidget = new QWidget();
-   // QScrollArea *newScrollArea = new QScrollArea();
     newItemWidget->setLayout(finishViewController->vbox);
     finScrollArea->setWidget(newItemWidget);
     QVBoxLayout *newVbox = new QVBoxLayout();
@@ -1013,4 +1022,17 @@ void MainWindow::on_pushButton_11_clicked()
 
 
     }
+}
+
+void MainWindow::CleanButtonClicked(){
+    ui->FinDepBtn->setFont(f);
+    ui->DecryptionBtn->setFont(f);
+    ui->EncryptionBtn->setFont(f);
+    ui->FinishedBtn->setFont(f);
+    ui->FinEnpBtn->setFont(f);
+    ui->FinDepBtn->setStyleSheet("background-color:rgb(255,255,255);");
+    ui->DecryptionBtn->setStyleSheet("background-color:rgb(255,255,255);");
+    ui->EncryptionBtn->setStyleSheet("background-color:rgb(255,255,255);");
+    ui->FinEnpBtn->setStyleSheet("background-color:rgb(255,255,255);");
+    ui->FinishedBtn->setStyleSheet("background-color:rgb(255,255,255);");
 }

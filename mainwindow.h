@@ -61,6 +61,7 @@ extern QString User_ID;
 extern QString URL;
 extern int threadNum;
 extern int isFinishedBtn;
+extern QFont f;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -152,8 +153,8 @@ private slots:
     void startEncryptThread();
     //设置主界面用户名称
     void setEmp_name();
-
-
+    //清楚左侧Button点击效果
+    void CleanButtonClicked();
 
     void on_pushButton_7_clicked();
 
@@ -168,4 +169,5 @@ signals:
 private:
     Ui::MainWindow *ui;
 };
+
 #endif // MAINWINDOW_H

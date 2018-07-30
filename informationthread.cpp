@@ -21,8 +21,10 @@ int InformationThread::getInfNum(){
     }else{
          while(query.next()){
              num++;
-         }
+         }         
     }
+    qDebug()<<"num is:";
+    qDebug()<<num;
     return num;
 }
 
@@ -33,6 +35,7 @@ void InformationThread::listenInfNum(){
         num = getInfNum();
         if(num>informationNum){
             emit InformationChanged();
+            qDebug()<<"send infor";
             informationNum = getInfNum();
         }
         else{

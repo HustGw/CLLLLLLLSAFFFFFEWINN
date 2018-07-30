@@ -123,7 +123,7 @@ void informationDlg::setItem(){
             InformationItem *m1 = new InformationItem();
             QString oemp_id= query.record().value("oemp_id").toString();
             qDebug()<<oemp_id;
-            //预留 ：找出用户昵称
+            //预留 ：找出用户昵称                   
             QString filename = query.record().value("file_name").toString();
             QString title = oemp_id+"请求文件"+filename+"密钥文件下载";
             qDebug()<<title;
