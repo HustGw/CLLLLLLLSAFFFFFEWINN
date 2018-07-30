@@ -21,7 +21,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         fileDescription->setGeometry(300,80,200,30);
         //downloadBtn->setGeometry(500,50,100,30);
         //checkBox->setGeometry(10,70,20,20);
-        fileIcon->setGeometry(30,50,300,30);
+        fileIcon->setGeometry(30,0,100,115);
         encryptStaBtn->setGeometry(500,50,100,30);
         encryptStaBtn->hide();
     //progressBar->setMinimum(0);

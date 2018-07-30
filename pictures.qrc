@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/new/src">
+        <file alias="head1">pictures/head.jpg</file>
+        <file alias="finEncryption">pictures/icon.png</file>
+        <file alias="head2">pictures/new.jpg</file>
+        <file alias="fileIcon">pictures/icon_0.png</file>
+    </qresource>
+</RCC>
