@@ -5,6 +5,7 @@ extern QFileInfo openFileInfo;
 extern QString orfileUuid;
 encryption::encryption()
 {
+    conn = ConnectionPool::openConnection();
     //创建加密目录
     //创建CloundSafe 主目录
     QDir dir;
@@ -113,7 +114,8 @@ void encryption::encrypt(){
     QByteArray yKey_oss_Path = ykeyAbPath.toLatin1();
     QByteArray yFile_oss_Path = yzipAbPath.toLatin1();
 
-    conn = ConnectionPool::openConnection();
+
+    //conn.close();
     QSqlQuery query(conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
@@ -180,7 +182,7 @@ void encryption::encrypt(){
           qDebug()<<"error";
         }
     }
-
+    ConnectionPool::closeConnection(conn);
 
     /////////////////////////////////密文下载测试
     /// 密钥下载

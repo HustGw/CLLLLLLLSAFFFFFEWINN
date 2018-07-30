@@ -58,7 +58,8 @@ QSqlDatabase ConnectionPool::openConnection() {
 
     // 已创建连接数
     int connectionCount = pool.unusedConnectionNames.size() + pool.usedConnectionNames.size();
-
+    qDebug()<<"连接个数";
+    qDebug()<<connectionCount;
     // 如果连接已经用完，等待 waitInterval 毫秒看看是否有可用连接，最长等待 maxWaitTime 毫秒
     for (int i = 0;
          i < pool.maxWaitTime
