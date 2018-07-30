@@ -12,7 +12,7 @@
 #include <QtSql/QSqlError>
 #include "QProgressBar"
 
-
+int informationNum = 0;
 int isFinishedBtn=0;//用于判断是否已经点击
 QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
@@ -42,8 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     finishDecryptionItem = new FinishDecryptionItem();
     inforDlg = new informationDlg();
     CleanButtonClicked();
-    connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
-    emit sendUserID(User_ID);
+//    connect(this,SIGNAL(sendUserID(QString)),inforDlg,SLOT(setUserID(QString)));//连接信号槽 将User_ID传到informationDlg窗口
+//    emit sendUserID(User_ID);
     //使用连接池 管理数据库连接
     db = ConnectionPool::openConnection();
     // 连接进度条信号槽
@@ -157,7 +157,6 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      inforThread->start();
-
 }
 
 MainWindow::~MainWindow()
@@ -548,6 +547,11 @@ void MainWindow::ReceiveNewReq(){
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                   }
+                  else if(query.record().value("status").toString()=="2"){//申请等待状态
+                      v1->fileDescription->setText("正在申请解密，请等待！");
+                      v1->downloadBtn->setText("申请中");
+                      decryptionViewController->vbox->addWidget(v1);
+                      }
               }
               delete decryptionViewController->layout();
               QWidget *newItemWidget = new QWidget();
@@ -879,6 +883,7 @@ void MainWindow::on_pushButton_9_clicked()
 }
 
 void MainWindow::HeadChanged(){
+    qDebug()<<"head change!";
     QPixmap pixmap("new.jpg");
     pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
     userHead->setScaledContents(true);
@@ -1017,6 +1022,11 @@ void MainWindow::setEmp_name(){
     }
 }
 
+void MainWindow::NumDown(){
+    qDebug()<<"down";
+}
+
+
 //已解密文件批量删除按钮
 void MainWindow::on_pushButton_7_clicked()
 {
@@ -1095,3 +1105,4 @@ void MainWindow::CleanButtonClicked(){
     ui->FinEnpBtn->setStyleSheet("background-color:rgb(255,255,255);");
     ui->FinishedBtn->setStyleSheet("background-color:rgb(255,255,255);");
 }
+

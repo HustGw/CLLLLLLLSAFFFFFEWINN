@@ -62,6 +62,7 @@ extern QString URL;
 extern int threadNum;
 extern int isFinishedBtn;
 extern QFont f;
+extern int informationNum;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -158,6 +159,8 @@ private slots:
     //清楚左侧Button点击效果
     void CleanButtonClicked();
 
+    void NumDown();
+
     void on_pushButton_7_clicked();
 
     void on_pushButton_10_clicked();
@@ -165,7 +168,7 @@ private slots:
     void on_pushButton_11_clicked();
 
 signals:
-    void sendUserID(QString user_id);
+//    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
     void OSSfileDownFileID(QString enkey_id);
 private:
