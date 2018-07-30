@@ -127,6 +127,8 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void on_encryptStaBtn_clicked();
+
     void getFileID();
 
     void OssDownLoadFile();

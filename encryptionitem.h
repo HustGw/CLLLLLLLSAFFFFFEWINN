@@ -11,6 +11,7 @@
 #include <QPainter>
 #include "QProgressBar"
 #include "enitemthread.h"
+#include <QPushButton>
 
 class EncryptionItem : public QWidget
 {
@@ -28,9 +29,13 @@ public:
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
     //QProgressBar *progressBar = new QProgressBar(this);
+    QPushButton *encryptStaBtn;
+    QLabel *initPage;
+
 signals:
 
 public slots:
+    //void on_encryptStaBtn_clicked();
 //    // 更新进度
 //        void handleResults(int value);
 //        // 开启线程
