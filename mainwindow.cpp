@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
     userHead->setGeometry(40,10,110,70);
-    QPixmap pixmap("head.jpg");
+    QPixmap pixmap(":/new/src/head1");
     pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
     userHead->setScaledContents(true);
     userHead->setPixmap(pixmap);
@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
                    v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
                    v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
                    //设置fileIcon的图片
-                   QPixmap pixmap("icon.png");
+                   QPixmap pixmap(":/new/src/finEncryption");
                    pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                    v1->fileIcon->setScaledContents(true);
                    v1->fileIcon->setPixmap(pixmap);
@@ -259,7 +259,12 @@ void MainWindow::on_OpenFileBtn_clicked()
         v1->setObjectName(orFileID);
         v1->fileName->setText(fName);
         v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
-        v1->fileIcon->setText(fName);
+
+        QPixmap pixmap(":/new/src/fileIcon");
+        pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+        v1->fileIcon->setScaledContents(true);
+        v1->fileIcon->setPixmap(pixmap);
+
         v1->encryptStaBtn->setObjectName(orFileID);
         v1->encryptStaBtn->show();
         v1->encryptStaBtn->setEnabled(false);
@@ -314,8 +319,6 @@ void MainWindow::handleResults(int value)
 //        encryptionViewController->setLayout(newVbox);
 ///////////////////////////////////////////////////////////////////////
         on_FinEnpBtn_clicked();
-        on_pushButton_8_clicked();
-
     }
 }
 
@@ -628,7 +631,7 @@ void MainWindow::addFriendToDatabase(QString name){
 
 //头像点击槽函数
 void MainWindow::HeadClickedSlot(){
-    QPixmap pixmap("head.jpg");
+    QPixmap pixmap(":/new/src/head1");
     pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
     userHead->setScaledContents(true);
     userHead->setPixmap(pixmap);
@@ -702,6 +705,11 @@ void MainWindow::on_pushButton_8_clicked()
                FinishEncryptionItem *f1 = new FinishEncryptionItem();
                f1->setObjectName(file_id);
 
+               QPixmap pixmap(":/new/src/finEncryption");
+               pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+               f1->fileIcon->setScaledContents(true);
+               f1->fileIcon->setPixmap(pixmap);
+
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->transprotBtn->setObjectName(file_id);
@@ -734,25 +742,30 @@ void MainWindow::on_pushButton_8_clicked()
 //已加密文件批量删除按钮
 void MainWindow::on_pushButton_5_clicked()
 {
-    QString file_id;
-        QSqlQuery query(db);
-        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+    QString file_id_d;
+        QSqlQuery query3(db);
+        bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
         if(!success){
             qDebug() << "查询密文失败";
             return;
         }else{
             qDebug()<<"查询成功";
-            while(query.next())
+            while(query3.next())
             {
-                file_id = query.record().value("article_id").toString();
-                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+                file_id_d = query3.record().value("article_id").toString();
+                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
 
                 if(checkcheck->isChecked()){
                     QSqlQuery query9(db);
-                    query9.exec("delete from varticle where article_id = '"+file_id+"'");
+                    bool qq = query9.exec("delete from varticle where article_id = '"+file_id_d+"'");
+                    if(qq){
+                        qDebug()<<"delete 1";
+                    }
                 }
             }
          }
+        FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id_d);
+        delete f2;
         on_pushButton_8_clicked();
         QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
@@ -839,6 +852,11 @@ void MainWindow::on_pushButton_9_clicked()
 
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
                f1->setObjectName(file_id);
+
+               QPixmap pixmap(":/new/src/finEncryption");
+               pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+               f1->fileIcon->setScaledContents(true);
+               f1->fileIcon->setPixmap(pixmap);
 
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
@@ -1012,16 +1030,16 @@ void MainWindow::setEmp_name(){
 void MainWindow::on_pushButton_7_clicked()
 {
     QString file_id;
-        QSqlQuery query(db);
-        bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+        QSqlQuery query3(db);
+        bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
         if(!success){
             qDebug() << "查询密文失败";
             return;
         }else{
             qDebug()<<"查询成功";
-            while(query.next())
+            while(query3.next())
             {
-                file_id = query.record().value("file_id").toString();
+                file_id = query3.record().value("file_id").toString();
 
                 QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
 
@@ -1031,6 +1049,8 @@ void MainWindow::on_pushButton_7_clicked()
                 }
             }
          }
+        FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+        delete f2;
         on_pushButton_9_clicked();
         QMessageBox::information(NULL, "success", "成功批量删除条目！");
 }
