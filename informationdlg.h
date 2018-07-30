@@ -18,7 +18,8 @@
 #include <connectionpool.h>
 #include <QString>
 #include <QMessageBox>
-extern QString infor_User_ID;
+extern QString User_ID;
+extern int informationNum;
 class informationDlg : public QDialog
 {
     Q_OBJECT
@@ -37,11 +38,12 @@ public:
 private:
 
 private slots:
-    void setUserID(QString user_id);
+//    void setUserID(QString user_id);
     void recvReq();
     void ignoreReq();
     void newInformation();
 signals:
+    void statusChanged();
 };
 
 #endif // INFORMATIONDLG_H

@@ -6,7 +6,6 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonParseError>
-
 QNetworkAccessManager *m_accessManagerRegister;
 
 registerDialog::registerDialog(QWidget *parent) :
@@ -106,7 +105,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
         if(flag==1){   //判断手机是否注册
             qDebug()<<"判断手机是否注册";
 
-            if(content.contains("available",Qt::CaseSensitive))
+            if(content == "available")
             {
                 //成功，发送注册信息。
                 //http 判断手机号是否注册

@@ -17,7 +17,10 @@ TcpClient::TcpClient(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->passwardLineEdit->setEchoMode(QLineEdit::Password);  //密码方式显示文本
-
+    ui->userLineEdit->setPlaceholderText(tr("请输入用户名/手机号"));
+    ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));
+    QFont f("ZYSong18030",12,75);
+    ui->label_3->setFont(f);
     flag = 0;
 
 
