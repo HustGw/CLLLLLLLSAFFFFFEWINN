@@ -63,6 +63,7 @@ extern int threadNum;
 extern int isFinishedBtn;
 extern QFont f;
 extern int informationNum;
+extern int RequsetAllowNum;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -170,7 +171,7 @@ private slots:
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
-    void OSSfileDownFileID(QString enkey_id);
+    void OSSfileDownFileID(QString id,QString enkey_id);
 private:
     Ui::MainWindow *ui;
 };

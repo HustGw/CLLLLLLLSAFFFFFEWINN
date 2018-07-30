@@ -1,6 +1,5 @@
 #include "requestrecthread.h"
 int RequestNum = 0;
-int RequsetAllowNum = 0;
 RequestRecThread::RequestRecThread(QObject *parent):QThread(parent)
 {
 

@@ -13,6 +13,7 @@
 #include "QProgressBar"
 
 int informationNum = 0;
+int RequsetAllowNum = 0;
 int isFinishedBtn=0;//用于判断是否已经点击
 QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
@@ -102,9 +103,9 @@ MainWindow::MainWindow(QWidget *parent) :
                    pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                    v1->fileIcon->setScaledContents(true);
                    v1->fileIcon->setPixmap(pixmap);
-                   v1->checkBox->setObjectName((query.record().value("file_id").toString())+"Decheck");//设置checkbox的ID
-                   v1->setObjectName(query.record().value("file_id").toString()+"decryption");//设置Item的ID
-                   v1->downloadBtn->setObjectName((query.record().value("file_id").toString())+"btn");//设置downloadBtn的ID
+                   v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
+                   v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
+                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
                    //连接信号槽
                    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
@@ -381,11 +382,11 @@ void MainWindow::on_pushButton_3_clicked()
               qDebug()<<"查询成功";
               //将数据库查到的数据添加到视图中
               while(query.next()){
-                  QString fileID = query.record().value("file_id").toString();
+                  QString fileID = query.record().value("id").toString();
                   QCheckBox *check = ui->MidStaWidget->findChild<QCheckBox*>(fileID+"Decheck");
                   if(check!=NULL){//判断是否找到相应控件
                       if(check->isChecked()){
-                          QString deleteQuest = "delete from Decryption where file_id ='"+fileID+"'";
+                          QString deleteQuest = "delete from Decryption where id ='"+fileID+"'";
                           QSqlQuery queryDelete(db);
                           bool deleteSuccess = queryDelete.exec(deleteQuest);
                           if(!deleteSuccess){
@@ -438,13 +439,13 @@ void MainWindow::getFileID(){
      }else{
 
               while(query.next()){
-                  QString fileID = query.record().value("file_id").toString();
+                  QString fileID = query.record().value("id").toString();
                   QPushButton *b1 = ui->MidStaWidget->findChild<QPushButton*>(fileID+"btn");
                   if(!pt)
                       return;
                   if(pt==b1){
                       qDebug()<<fileID;
-                      bool updateRequest = query.exec("update Decryption set status = 2 where file_id = '"+fileID+"'");
+                      bool updateRequest = query.exec("update Decryption set status = 2 where id = '"+fileID+"'");
                       if(updateRequest){
                           DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(fileID+"decryption");
                           m1->downloadBtn->setText("申请中");
@@ -481,25 +482,26 @@ void MainWindow::OssDownLoadFile(){
         return;
      }else{
         while(query.next()){
+            QString onlyId = query.record().value("id").toString();
             QString fileID = query.record().value("file_id").toString();
-            QPushButton *b1 = ui->MidStaWidget->findChild<QPushButton*>(fileID+"btn");
+            QPushButton *b1 = ui->MidStaWidget->findChild<QPushButton*>(onlyId+"btn");
             if(!pt)
                 return;
             if(pt==b1){
-                bool updateRequest = query.exec("update Decryption set status = 1 where file_id = '"+fileID+"'");
+                bool updateRequest = query.exec("update Decryption set status = 1 where id = '"+onlyId+"'");
                 if(updateRequest){
                     qDebug()<<fileID;
                     QString enkey_id = fileID;
          //         DepDownThread *downThread = new DepDownThread();
                     downThread[threadNum] = new DepDownThread();
                     connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
-                    connect(this,SIGNAL(OSSfileDownFileID(QString)),downThread[threadNum],SLOT(DownContent(QString)));
+                    connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
                     connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),this,SLOT(ChangeItemBtnText(QString)));
                     downThread[threadNum]->start();
-                    emit OSSfileDownFileID(enkey_id);
+                    emit OSSfileDownFileID(onlyId,enkey_id);
                     threadNum++;
                     //更新按钮内容
-                    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
+                    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(onlyId+"decryption");
                     m1->downloadBtn->setText("正在下载");
                     disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));//删除原有信号槽
                 }
@@ -533,9 +535,9 @@ void MainWindow::ReceiveNewReq(){
                   pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                   v1->fileIcon->setScaledContents(true);
                   v1->fileIcon->setPixmap(pixmap);
-                  v1->checkBox->setObjectName((query.record().value("file_id").toString())+"Decheck");//设置checkbox的ID
-                  v1->setObjectName(query.record().value("file_id").toString()+"decryption");//设置Item的ID
-                  v1->downloadBtn->setObjectName((query.record().value("file_id").toString())+"btn");//设置downloadBtn的ID
+                  v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
+                  v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
+                  v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
                   //连接信号槽
                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
@@ -939,8 +941,9 @@ void MainWindow::FileIsAllowed(){
      bool success = query.exec("select * from Decryption where oemp_id = '"+User_ID+"' and status =3");
      if(success){
          while(query.next()){
+             QString onlyID = query.record().value("id").toString();
              QString file_id = query.record().value("file_id").toString();
-             DecryptionItem *f1 = ui->MidStaWidget->findChild<DecryptionItem *>(file_id+"decryption");
+             DecryptionItem *f1 = ui->MidStaWidget->findChild<DecryptionItem *>(onlyID+"decryption");
              if(f1==NULL){
                  continue;
              }
@@ -960,45 +963,23 @@ void MainWindow::FileIsAllowed(){
                      }
                  }
                  //开始下载文件
-//                 DepDownThread *downThread = new DepDownThread();
-//                 connect(downThread,SIGNAL(finished()),downThread,SLOT(deleteLater()));
-//                 downThread->start();
-//                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),downThread,SLOT(DownTread_RecvID(QString,QString,QString)));
-//                 emit sendFileID(enkey_id,file_id,fileName);
                  DecryptionThread  *depThread = new DecryptionThread();
                  connect(depThread,SIGNAL(finished()),depThread,SLOT(deleteLater()));
                  connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread,SLOT(DecryptionThread_RecvID(QString,QString,QString)));
                  depThread->start();
                  emit sendFileID(enkey_id,file_id,fileName);
-//                 QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
-//                 QByteArray down_oss_Path = downPath.toLatin1();
-//                 std::string enKeyID = enkey_id.toStdString();
-//                 downloadoss *downKey=new downloadoss;
-//                 downKey->OBJECT_NAME=enKeyID.c_str();
-//                 downKey->BUCKET_NAME="cloudsafe-pc-ykey";
-//                 downKey->download_filePath=down_oss_Path.data();
-//                 downKey->get_object_to_file();
-//                 //下载完成后开始解密
-//                 DecryptionFile *fileD = new DecryptionFile();
-//                 QString contentPath = "D://CloundSafeWindows//content//"+file_id;
-//                 QString filePath = "D://CloundSafeWindows//file//"+fileName;
-//                if((fileD->decryptFile(downPath,contentPath,filePath))==54){
-//                     qDebug()<<"success";
-//                 };//解密函数
                  //解密完成后将数据库该条数据状态status改成5
                  QSqlQuery updateQuery(db);
                  bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
                  if(updataSuccess){
+                     RequsetAllowNum--;
                      qDebug()<<"status=5 update success!";
                  }
                  else{
                      qDebug()<<"status=5 update failed";
                  }
                  //解密完成后删除本地密钥和密文
-//                 QFile contentFileTemp(file_id);
-//                 QFile keyTemp(enkey_id);
-//                 contentFileTemp.remove();
-//                 keyTemp.remove();
+
                  //解密完成后删除控件
                  delete f1;
                  //重新布局

@@ -7,6 +7,7 @@
 #include "decryptionfile.h"
 #include <QMessageBox>
 extern QString dekey_id;
+extern QString d_id;
 class DepDownThread : public QThread
 {
     Q_OBJECT
@@ -17,7 +18,7 @@ public:
     explicit DepDownThread(QObject *parent = 0);
 private slots:
     void DownTread_RecvID(QString enkey_id,QString file_id,QString file_name);
-    void DownContent(QString enkey_id);
+    void DownContent(QString id,QString enkey_id);
 signals:
     void ChangeBtnText(QString fileID);
 

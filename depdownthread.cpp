@@ -2,6 +2,7 @@
 #include <QThread>
 #include <QDebug>
 QString dekey_id = NULL;
+QString d_id = NULL;
 DepDownThread::DepDownThread(QObject *parent):QThread(parent)
 {
 
@@ -17,7 +18,7 @@ void DepDownThread::run(){
     downKey->BUCKET_NAME="cloudsafe-pc-yfile";
     downKey->download_filePath=down_oss_Path.data();
     downKey->get_object_to_file();
-    emit ChangeBtnText(dekey_id);
+    emit ChangeBtnText(d_id);
 }
 
 void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString file_name){
@@ -39,6 +40,7 @@ void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString fi
     };//解密函数
 }
 
-void DepDownThread::DownContent(QString enkey_id){
+void DepDownThread::DownContent(QString id,QString enkey_id){
       dekey_id = enkey_id;
+      d_id = id;
 }
