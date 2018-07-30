@@ -842,6 +842,7 @@ void MainWindow::on_pushButton_9_clicked()
                file_name = query.record().value("file_name").toString();
                file_size = query.record().value("article_size").toString();
 
+
                file_id = query.record().value("file_id").toString();
 
                file_discryption = "文件已成功解密。";
