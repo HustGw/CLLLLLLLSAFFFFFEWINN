@@ -6,8 +6,7 @@ QWaitCondition ConnectionPool::waitConnection;
 ConnectionPool* ConnectionPool::instance = NULL;
 
 ConnectionPool::ConnectionPool() {
-    // 创建数据库连接的这些信息在实际开发的时都需要通过读取配置文件得到，
-    // 这里为了演示方便所以写死在了代码里。
+    // 创建数据库连接的这些信息在实际开发的时都需要通过读取配置文件得到，。
     hostName     = "119.23.138.181";
     databaseName = "Cloud_Encryption";
     username     = "root";
@@ -58,7 +57,9 @@ QSqlDatabase ConnectionPool::openConnection() {
 
     // 已创建连接数
     int connectionCount = pool.unusedConnectionNames.size() + pool.usedConnectionNames.size();
-    qDebug()<<"连接个数";
+
+    qDebug()<<"输出连接";
+
     qDebug()<<connectionCount;
     // 如果连接已经用完，等待 waitInterval 毫秒看看是否有可用连接，最长等待 maxWaitTime 毫秒
     for (int i = 0;

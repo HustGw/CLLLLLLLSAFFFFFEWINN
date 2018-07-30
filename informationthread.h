@@ -9,7 +9,7 @@
 #include<QtSql/QSqlQuery>
 #include <connectionpool.h>
 #include <mainwindow.h>
-extern int informationNum;
+//extern int informationNum;
 class InformationThread : public QThread
 {
     Q_OBJECT
@@ -20,6 +20,7 @@ public:
     QSqlDatabase inforDB;
     int getInfNum();//获取数据库条目数量
     void listenInfNum();//监听数据库文件数量
+    void numDown();
 signals:
     void InformationChanged();
 

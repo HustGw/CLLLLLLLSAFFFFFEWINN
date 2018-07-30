@@ -6,7 +6,7 @@
 #include <QNetworkReply>
 #include <QDialog>
 #include <QMainWindow>
-
+#include <QFont>
 extern QString LoginUserID;
 namespace Ui {
 class TcpClient;

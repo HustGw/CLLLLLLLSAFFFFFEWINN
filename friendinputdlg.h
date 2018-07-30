@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QLineEdit>
+
 class friendInputDlg : public QDialog
 {
     Q_OBJECT

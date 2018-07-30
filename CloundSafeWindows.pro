@@ -1,4 +1,4 @@
-#-------------------------------------------------
+ #-------------------------------------------------
 #
 # Project created by QtCreator 2018-06-26T16:02:40
 #
@@ -26,16 +26,16 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -llibaprutil-1
 #LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
-#LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk -loss_c_sdk
-#LIBS += -LE:/CloundSafe/CLL/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release/ -loss_c_sdk
 
-#LIBS += -LE:/CloundSafe/aliyun-oss-c-sdk-3.5.0/aliyun-oss-c-sdk-3.5.0/Debug/ -loss_c_sdk
+
 
 
 LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(E:/CloundSafe/cloundsafewin/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
+#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+
+#LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
