@@ -22,6 +22,7 @@ bool initLableFlag;
 bool initPageFlag;
 
 int threadNum = 0;
+int DepThreadNum = 0;
 QFont f("ZYSong18030",12,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
@@ -974,11 +975,12 @@ void MainWindow::FileIsAllowed(){
                      }
                  }
                  //开始下载文件
-                 DecryptionThread  *depThread = new DecryptionThread();
-                 connect(depThread,SIGNAL(finished()),depThread,SLOT(deleteLater()));
-                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread,SLOT(DecryptionThread_RecvID(QString,QString,QString)));
-                 depThread->start();
+                 depThread[DepThreadNum] = new DecryptionThread();
+                 connect(depThread[DepThreadNum],SIGNAL(finished()),depThread[DepThreadNum],SLOT(deleteLater()));
+                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 depThread[DepThreadNum]->start();
                  emit sendFileID(enkey_id,file_id,fileName);
+                 DepThreadNum++;
                  //解密完成后将数据库该条数据状态status改成5
                  QSqlQuery updateQuery(db);
                  bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");

@@ -62,6 +62,7 @@ class MainWindow;
 extern QString User_ID;
 extern QString URL;
 extern int threadNum;
+extern int DepThreadNum;
 extern int isFinishedBtn;
 extern QFont f;
 extern int informationNum;
@@ -95,6 +96,7 @@ public:
     QLabel *friendListLab;
     informationDlg *inforDlg;
     DepDownThread *downThread[MAXSIZE];
+    DecryptionThread *depThread[MAXSIZE];
     QProgressBar *f_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
