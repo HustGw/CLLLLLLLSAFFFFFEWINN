@@ -464,16 +464,33 @@ void MainWindow::getFileID(){
 }
 
 void MainWindow::OssDownLoadFile(){
-    QDir *temp = new QDir;
-    bool exist = temp->exists("D://CloundSafeWindows//content");
-    if(exist){
-        qDebug()<<"the dir has existed";
+//    QDir *temp = new QDir;
+//    bool exist = temp->exists("C://CloundSafeWindows//content");
+//    qDebug()<<exist;
+//    if(exist){
+//        qDebug()<<"the dir has existed";
+//    }
+//    else {
+//        bool ojbk = temp->mkdir("C://CloundSafeWindows//content");//创建文件夹
+//        if(ojbk){
+//            qDebug()<<"the dir creat successfully!";
+//        }
+//        else{
+//            qDebug()<<"文件夹创建失败";
+//        }
+//    }
+    //创建CloundSafe 主目录
+    QDir dir;
+    dir.cd("D://CloundSafeWindows");  //进入某文件夹
+    if(!dir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("D://CloundSafeWindows"); //创建文件夹
     }
-    else {
-        bool ojbk = temp->mkdir("D://CloundSafeWindows//content");//创建文件夹
-        if(ojbk){
-            qDebug()<<"the dir creat successfully!";
-        }
+    //创建子目录
+    dir.cd("D://CloundSafeWindows//content");  //进入某文件夹
+    if(!dir.exists("D://CloundSafeWindows//content"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("D://CloundSafeWindows//content"); //创建文件夹
     }
     QSqlQuery query(db);
     QPushButton *pt = qobject_cast<QPushButton *>(sender());
@@ -904,27 +921,30 @@ void MainWindow::HeadChanged(){
 
 void MainWindow::FileIsAllowed(){
     //创建密钥文件夹
-    QDir *temp = new QDir;
-    bool exist = temp->exists("D://CloundSafeWindows//ykey");
-    if(exist){
-        qDebug()<<"the dir has existed";
+    QDir dir;
+    dir.cd("D://CloundSafeWindows");  //进入某文件夹
+    if(!dir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("D://CloundSafeWindows"); //创建文件夹
     }
-    else {
-        bool ojbk = temp->mkdir("D://CloundSafeWindows//ykey");//创建文件夹
-        if(ojbk){
-            qDebug()<<"the dir creat successfully!";
-        }
+    //创建子目录
+    dir.cd("D://CloundSafeWindows//ykey");  //进入某文件夹
+    if(!dir.exists("D://CloundSafeWindows//ykey"))//判断需要创建的文件夹是否存在
+    {
+        dir.mkdir("D://CloundSafeWindows//ykey"); //创建文件夹
     }
-    QDir *file_path = new QDir;
-    bool file_exist = file_path->exists("D://CloundSafeWindows//file");
-    if(file_exist){
-        qDebug()<<"the dir has existed";
+    //创建密文文件夹
+    QDir cdir;
+    cdir.cd("D://CloundSafeWindows");  //进入某文件夹
+    if(!cdir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
+    {
+        cdir.mkdir("D://CloundSafeWindows"); //创建文件夹
     }
-    else {
-        bool ok = file_path->mkdir("D://CloundSafeWindows//file");//创建文件夹
-        if(ok){
-            qDebug()<<"the dir creat successfully!";
-        }
+    //创建子目录
+    cdir.cd("D://CloundSafeWindows//file");  //进入某文件夹
+    if(!cdir.exists("D://CloundSafeWindows//file"))//判断需要创建的文件夹是否存在
+    {
+        cdir.mkdir("D://CloundSafeWindows//file"); //创建文件夹
     }
 
 
@@ -970,7 +990,6 @@ void MainWindow::FileIsAllowed(){
                      qDebug()<<"status=5 update failed";
                  }
                  //解密完成后删除本地密钥和密文
-
                  //解密完成后删除控件
                  delete f1;
                  //重新布局

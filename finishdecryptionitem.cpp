@@ -62,6 +62,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
            }
        }
     QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+    ConnectionPool::closeConnection(db);
 
 }
 
@@ -81,5 +82,6 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
            }
        }
     QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+    ConnectionPool::closeConnection(db);
 }
 

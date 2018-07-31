@@ -82,5 +82,6 @@ void FinishEncryptionItem::on_pathOpenBtn_clicked(){
            }
        }
         QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+        ConnectionPool::closeConnection(db);
 }
 
