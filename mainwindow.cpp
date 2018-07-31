@@ -694,7 +694,7 @@ void MainWindow::on_pushButton_8_clicked()
            while(query.next())
            {
                file_name = query.record().value("article_name").toString();
-               file_size = query.record().value("article_size").toString();
+               file_size = query.record().value("article_size").toString()+"kb";
                file_status = query.record().value("article_status").toString();
                file_id = query.record().value("article_id").toString();
 
@@ -846,7 +846,7 @@ void MainWindow::on_pushButton_9_clicked()
            while(query.next())
            {
                file_name = query.record().value("file_name").toString();
-               file_size = query.record().value("article_size").toString();
+               file_size = query.record().value("file_size").toString()+"kb";
 
 
                file_id = query.record().value("file_id").toString();
