@@ -33,11 +33,11 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
-LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -108,7 +108,8 @@ SOURCES += \
     encryptthread.cpp \
     decryptionthread.cpp \
     registerdialog.cpp \
-    tcpclient.cpp
+    tcpclient.cpp \
+    sharedialog.cpp
 
 
 
@@ -197,7 +198,8 @@ HEADERS += \
     encryptthread.h \
     decryptionthread.h \
     registerdialog.h \
-    tcpclient.h
+    tcpclient.h \
+    sharedialog.h
 
 
 
@@ -206,7 +208,8 @@ FORMS += \
     loginview.ui \
     senddialog.ui \
     registerdialog.ui \
-    tcpclient.ui
+    tcpclient.ui \
+    sharedialog.ui
 
 DISTFILES +=
 

@@ -59,9 +59,11 @@ void FinishEncryptionItem::on_transprotBtn_clicked(){
 }
 
 void FinishEncryptionItem::on_shareBtn_clicked(){
-    QString openPath = QString("file:///E:");
-//    QString openPath = QString("file:///") + filePath;
-    QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+    QPushButton* button = qobject_cast<QPushButton*>(sender());
+    QString name = button->objectName();
+    file_id = name;
+    share = new shareDialog();
+    share->show();
 }
 void FinishEncryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;

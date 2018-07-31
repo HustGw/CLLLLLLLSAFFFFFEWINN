@@ -729,7 +729,7 @@ void MainWindow::on_pushButton_8_clicked()
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->transprotBtn->setObjectName(file_id);
-               f1->shareBtn->setObjectName(file_id + "share");
+               f1->shareBtn->setObjectName(file_id);
                f1->deleteBtn->setObjectName(file_id);
 
                f1->fileName->setText(file_name);
@@ -749,6 +749,7 @@ void MainWindow::on_pushButton_8_clicked()
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
                connect(f1->deleteBtn,SIGNAL(clicked(bool)),this,SLOT(on_deleteBtn_clicked()));
                connect(f1->transprotBtn,SIGNAL(clicked(bool)),f1,SLOT(on_transprotBtn_clicked()));
+               connect(f1->shareBtn,SIGNAL(clicked(bool)),f1,SLOT(on_shareBtn_clicked()));
 
            }
            return;
