@@ -108,7 +108,8 @@ SOURCES += \
     encryptthread.cpp \
     decryptionthread.cpp \
     registerdialog.cpp \
-    tcpclient.cpp
+    tcpclient.cpp \
+    delinkdialog.cpp
 
 
 
@@ -197,7 +198,8 @@ HEADERS += \
     encryptthread.h \
     decryptionthread.h \
     registerdialog.h \
-    tcpclient.h
+    tcpclient.h \
+    delinkdialog.h
 
 
 

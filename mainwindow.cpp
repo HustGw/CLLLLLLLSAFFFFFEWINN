@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     User_ID = LoginUserID;
     ui->setupUi(this);
+
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -567,7 +568,7 @@ void MainWindow::ReceiveNewReq(){
               decryptionViewController->setLayout(newVbox);
     }
 }
-//进行数据库INSERT操作
+//进行数据库   操作
 void MainWindow::addFriendToDatabase(QString name){
     //判断是否是好友关系
     QSqlQuery query(db);
@@ -666,21 +667,10 @@ void MainWindow::showAddfriendWidget(){
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    DecryptionItem *v1 = new DecryptionItem();
-    v1->fileName->setText(tr("这是测试"));
-    v1->fileSize->setText(tr("222tB"));
-    v1->fileDescription->setText(tr("描述啊啊啊啊啊啊"));
-    v1->fileIcon->setText(tr("图片片"));
-    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
-    decryptionViewController->vbox->addWidget(v1);
-    delete decryptionViewController->layout();
-    QWidget *newItemWidget = new QWidget();
-    QScrollArea *newScrollArea = new QScrollArea();
-    newItemWidget->setLayout(decryptionViewController->vbox);
-    newScrollArea->setWidget(newItemWidget);
-    QVBoxLayout *newVbox = new QVBoxLayout();
-    newVbox->addWidget(newScrollArea);
-    decryptionViewController->setLayout(newVbox);
+    linkDialog = new DelinkDialog();
+    connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
+    linkDialog->show();
+
 }
 
 //已加密文件页面刷新按钮
@@ -1109,3 +1099,55 @@ void MainWindow::CleanButtonClicked(){
     ui->FinishedBtn->setStyleSheet("background-color:rgb(255,255,255);");
 }
 
+void MainWindow::LinkInsert(QString link){
+    QString GetLink = link;
+    QSqlQuery query(db);
+    QString Link_empid;
+    QString Link_filename;
+    QString Link_filesize;
+    QDateTime time = QDateTime::currentDateTime();
+    QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
+    bool success = query.exec("select * from varticle where article_id = '"+GetLink+"'");
+    if(!success){
+        qDebug()<<"linkSelectFailed";
+    }
+    else{
+        while(query.next()){
+            Link_empid = query.record().value("emp_id").toString();
+            Link_filename = query.record().value("article_name").toString();
+            Link_filesize = query.record().value("article_size").toString();
+        }
+    }
+    QUuid strid = QUuid::createUuid();
+    QString id = strid.toString();
+    QSqlQuery insertQuery(db);
+    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"')");
+    if(!insertSuccess){
+        qDebug()<<"LinkInsertFailed";
+    }
+    else{
+        DecryptionItem *a1 = new DecryptionItem();
+        a1->fileName->setText(Link_filename);
+        a1->fileSize->setText(Link_filesize);
+        QPixmap pixmap(":/new/src/finEncryption");
+        pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+        a1->fileIcon->setScaledContents(true);
+        a1->fileIcon->setPixmap(pixmap);
+        a1->checkBox->setObjectName(id+"Decheck");
+        a1->setObjectName(id+"decryption");
+        a1->downloadBtn->setObjectName(id+"btn");
+        connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
+        a1->fileDescription->setText("主体文件指定分享需确认下载.");
+        a1->downloadBtn->setText("确认下载");
+        connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
+        decryptionViewController->vbox->addWidget(a1);
+        delete decryptionViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setLayout(decryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(newScrollArea);
+        decryptionViewController->setLayout(newVbox);
+    }
+
+}

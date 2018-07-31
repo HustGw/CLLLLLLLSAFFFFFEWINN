@@ -54,6 +54,8 @@
 #include "decryptionthread.h"
 #include <QPalette>
 #include "tcpclient.h"
+#include "delinkdialog.h"
+#include <QDateTime>
 namespace Ui {
 class MainWindow;
 }
@@ -95,7 +97,7 @@ public:
     DepDownThread *downThread[MAXSIZE];
     QProgressBar *f_progressBar;
     encryption *contest = new encryption();
-
+    DelinkDialog *linkDialog;
 
 private slots:
 
@@ -167,6 +169,8 @@ private slots:
     void on_pushButton_10_clicked();
 
     void on_pushButton_11_clicked();
+
+    void LinkInsert(QString link);
 
 signals:
 //    void sendUserID(QString user_id);

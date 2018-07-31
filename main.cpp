@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     //判断是否点击登录按钮
     if(L.exec()==QDialog::Accepted){
         MainWindow w;
+        w.setWindowTitle("云加密");
         w.show();
         return a.exec();
     }

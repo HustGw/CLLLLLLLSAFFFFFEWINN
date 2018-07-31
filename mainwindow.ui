@@ -194,7 +194,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="allSelLab">
@@ -261,7 +261,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>批量下载</string>
+       <string>链接</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton">
