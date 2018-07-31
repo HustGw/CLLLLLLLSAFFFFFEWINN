@@ -109,7 +109,9 @@ SOURCES += \
     decryptionthread.cpp \
     registerdialog.cpp \
     tcpclient.cpp \
-    delinkdialog.cpp
+    delinkdialog.cpp  \
+    sharedialog.cpp
+
 
 
 
@@ -199,7 +201,9 @@ HEADERS += \
     decryptionthread.h \
     registerdialog.h \
     tcpclient.h \
-    delinkdialog.h
+    delinkdialog.h \
+    sharedialog.h
+
 
 
 
@@ -208,7 +212,8 @@ FORMS += \
     loginview.ui \
     senddialog.ui \
     registerdialog.ui \
-    tcpclient.ui
+    tcpclient.ui \
+    sharedialog.ui
 
 DISTFILES +=
 

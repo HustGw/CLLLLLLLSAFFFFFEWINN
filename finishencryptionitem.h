@@ -15,6 +15,7 @@
 #include "connectionpool.h"
 #include <QMessageBox>
 #include "senddialog.h"
+#include "sharedialog.h"
 extern QString file_id;
 class FinishEncryptionItem : public QWidget
 {
@@ -37,6 +38,7 @@ public:
     QPushButton *deleteBtn;
     QHBoxLayout *hbox1;
     sendDialog *dlg;
+    shareDialog *share;
 signals:
     void fileData(QString);
 public slots:
