@@ -9,7 +9,8 @@ shareDialog::shareDialog(QWidget *parent) :
     ui(new Ui::shareDialog)
 {
     ui->setupUi(this);
-    ui->textEdit->setPlainText(file_id);
+    QString fake_address = "https://youxinzhongwang.com/theRea1Fi1eId&&"+file_id;
+    ui->textEdit->setPlainText(fake_address);
     ui->textEdit->setReadOnly(true);
 }
 
