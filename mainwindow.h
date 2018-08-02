@@ -174,6 +174,10 @@ private slots:
 
     void LinkInsert(QString link);
 
+    void RecDecryptionFailed();
+
+    void ReLayout();
+
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);

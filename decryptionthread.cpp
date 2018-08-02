@@ -23,7 +23,10 @@ void DecryptionThread::run(){
     QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
-    };//解密函数
+    }//解密函数
+   else{
+       emit decryptionFailed();
+   }
 }
 
 void DecryptionThread::DecryptionThread_RecvID(QString enkey_id, QString file_id, QString file_name){
