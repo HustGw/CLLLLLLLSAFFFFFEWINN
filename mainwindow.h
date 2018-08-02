@@ -67,6 +67,9 @@ extern int isFinishedBtn;
 extern QFont f;
 extern int informationNum;
 extern int RequsetAllowNum;
+extern int RequestNum;
+//extern double proccessValue;
+extern int decryptionFlag;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -98,6 +101,7 @@ public:
     DepDownThread *downThread[MAXSIZE];
     DecryptionThread *depThread[MAXSIZE];
     QProgressBar *f_progressBar;
+    QProgressBar *d_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
 
@@ -177,6 +181,8 @@ private slots:
     void RecDecryptionFailed();
 
     void ReLayout();
+
+    void DeProgressBarStart();
 
 signals:
 //    void sendUserID(QString user_id);
