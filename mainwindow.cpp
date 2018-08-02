@@ -564,7 +564,7 @@ void MainWindow::ReceiveNewReq(){
                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
                   //设置fileIcon的图片
-                  QPixmap pixmap("icon.png");
+                  QPixmap pixmap(":/new/src/finEncryption");
                   pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                   v1->fileIcon->setScaledContents(true);
                   v1->fileIcon->setPixmap(pixmap);
