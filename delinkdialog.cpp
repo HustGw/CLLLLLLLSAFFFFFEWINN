@@ -20,9 +20,9 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 }
 
 void DelinkDialog::sendLink(){
-    QString link = inputLineEdit->text();
-    emit sendLinkToMain(link);
-    this->accept();
+        QString link = inputLineEdit->text().section("&&",1,1);
+        emit sendLinkToMain(link);
+        this->accept();
 }
 
 void DelinkDialog::cancel(){

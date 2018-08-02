@@ -690,10 +690,16 @@ void MainWindow::showAddfriendWidget(){
 
 void MainWindow::on_pushButton_4_clicked()
 {
+    QClipboard *clipboard = QApplication::clipboard();
+    QString originalText = clipboard->text().section("&&",1,1);
+    if(originalText.startsWith("{",Qt::CaseSensitive)){
+        LinkInsert(originalText);
+        QMessageBox::information(this,tr("Success"),tr("已读取链接信息"),QMessageBox::Yes);
+    }else{
     linkDialog = new DelinkDialog();
     connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
     linkDialog->show();
-
+    }
 }
 
 //已加密文件页面刷新按钮
