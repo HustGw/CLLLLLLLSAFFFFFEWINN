@@ -133,6 +133,7 @@ void sendDialog::on_pushButton_2_clicked()
                 }
             }
         }
+        QMessageBox::information(this,"提示","传输成功！");
         this->close();
     }
 

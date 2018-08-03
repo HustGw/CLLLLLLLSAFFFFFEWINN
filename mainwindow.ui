@@ -241,7 +241,7 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>470</x>
+        <x>340</x>
         <y>10</y>
         <width>90</width>
         <height>30</height>
@@ -275,6 +275,19 @@
       </property>
       <property name="text">
        <string>全选</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_12">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>10</y>
+        <width>90</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>二维码</string>
       </property>
      </widget>
     </widget>

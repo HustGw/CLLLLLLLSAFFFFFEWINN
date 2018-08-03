@@ -35,7 +35,7 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
-LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
@@ -112,7 +112,10 @@ SOURCES += \
     registerdialog.cpp \
     tcpclient.cpp \
     delinkdialog.cpp  \
-    sharedialog.cpp
+    sharedialog.cpp \
+    BitBuffer.cpp \
+    QrCode.cpp \
+    QrSegment.cpp
 
 
 
@@ -204,7 +207,10 @@ HEADERS += \
     registerdialog.h \
     tcpclient.h \
     delinkdialog.h \
-    sharedialog.h
+    sharedialog.h \
+    BitBuffer.hpp \
+    QrCode.hpp \
+    QrSegment.hpp
 
 
 
@@ -217,7 +223,10 @@ FORMS += \
     tcpclient.ui \
     sharedialog.ui
 
-DISTFILES +=
+DISTFILES += \
+    Makefile
 
 RESOURCES += \
     pictures.qrc
+
+include(QZXing/QZXing.pri)

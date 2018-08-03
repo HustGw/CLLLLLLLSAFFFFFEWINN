@@ -56,6 +56,7 @@
 #include "tcpclient.h"
 #include "delinkdialog.h"
 #include <QDateTime>
+#include  "QZXing/QZXing.h"
 namespace Ui {
 class MainWindow;
 }
@@ -183,6 +184,8 @@ private slots:
     void ReLayout();
 
     void DeProgressBarStart();
+
+    void on_pushButton_12_clicked();
 
 signals:
 //    void sendUserID(QString user_id);

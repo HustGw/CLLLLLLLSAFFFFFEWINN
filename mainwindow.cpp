@@ -1235,3 +1235,29 @@ void MainWindow::DeProgressBarStart(){
 
 
 
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    QString m_fileName = QFileDialog::getOpenFileName(this,"二维码打开文件","./","任何文件(*.*)"";;文本文件(*.png)");
+
+    if(m_fileName.isEmpty() == false)
+    {
+        QImage img;        //加载图像
+        if(!(img.load(m_fileName)))
+        {
+            QMessageBox::information(this,tr("打开图像失败"),tr("打开图像失败!"));
+            return;
+        }
+
+        QZXing *decoder = new QZXing(QZXing::DecoderFormat_QR_CODE);
+        QString strQRCode = decoder->decodeImage(img);
+        QString originalText = strQRCode.section("&&",1,1);
+        if(originalText.startsWith("{",Qt::CaseSensitive)){
+            LinkInsert(originalText);
+            QMessageBox::information(this,tr("Success"),tr("已读取二维码信息"),QMessageBox::Yes);
+        }else{
+            QMessageBox::warning(this,tr("fail"),tr("二维码读取失败"),QMessageBox::Yes);
+        }
+    }
+
+}
