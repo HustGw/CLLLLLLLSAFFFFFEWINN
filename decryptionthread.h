@@ -6,6 +6,7 @@
 #include "downloadoss.h"
 #include "decryptionfile.h"
 #include <QMessageBox>
+#include <QFile>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;

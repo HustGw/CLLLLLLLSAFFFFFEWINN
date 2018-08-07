@@ -23,6 +23,9 @@ void DecryptionThread::run(){
     QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
+        //解密成功后删除本地密文和密钥文件
+        QFile::remove(contentPath);//删除密文
+        QFile::remove(downPath);//删除密钥
     }//解密函数
    else{
        emit decryptionFailed();
