@@ -99,13 +99,24 @@ void encryption::encrypt(){
     ///
     ///
     //设置密钥地址
-    QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID);
+    QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
-    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+enfile_id;
+    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+enfile_id+".yfile";
     encryptfile *enfile = new encryptfile();
     //文件加密
-    enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
+    //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
 
+    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID)) {
+    case 41:
+        QMessageBox::critical(NULL,"错误","打开源文件失败！",QMessageBox::Yes,NULL);
+        break;
+    case 42:
+        QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        break;
+    case 43:
+        QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        break;
+    }
     //EncryptionItem *I1 = new EncryptionItem();
 
 

@@ -316,6 +316,7 @@ void MainWindow::handleResults(int value)
         EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         v1->encryptStaBtn->clicked();
 
+        QMessageBox::information(NULL,"成功","加密已完成！",QMessageBox::Yes,NULL);
 ///////////////////////////////删除加密完成的项目
 //        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
 //        //qDebug()<<name;
@@ -330,7 +331,7 @@ void MainWindow::handleResults(int value)
 //        newVbox->addWidget(newScrollArea);
 //        encryptionViewController->setLayout(newVbox);
 ///////////////////////////////////////////////////////////////////////
-        on_FinEnpBtn_clicked();
+        //on_FinEnpBtn_clicked();
     }
 }
 
