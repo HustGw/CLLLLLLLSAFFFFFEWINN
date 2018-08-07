@@ -22,7 +22,7 @@ public:
     void init_sample_request_options(oss_request_options_t *options, int is_cname);
     void get_object_to_file();
     //void percentage(int64_t consumed_bytes, int64_t total_bytes);
-
+//    static void percentage(int64_t consumed_bytes, int64_t total_bytes);
 signals:
     void progressBarValue(double value);
 };

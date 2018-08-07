@@ -4,6 +4,9 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QLineEdit>
+#include <QClipboard>
+#include <QMessageBox>
+#include <QApplication>
 
 class DelinkDialog : public QDialog
 {

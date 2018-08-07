@@ -15,7 +15,7 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->setupUi(this);
 
    flag = 0;
-
+   ui->passwardLineEdit->setEchoMode(QLineEdit::Password);
    qDebug()<<"hehe flag:"<<flag;
    //http
    m_accessManagerRegister = new QNetworkAccessManager(this);

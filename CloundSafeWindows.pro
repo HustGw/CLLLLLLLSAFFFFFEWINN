@@ -6,7 +6,9 @@
 
 QT       += core gui
 QT       += sql
-RC_FILE += icotest.rc
+
+#RC_FILE += icotest.rc
+
 QT       += sql
 QT       += network
 LIBS += -lWs2_32
@@ -35,9 +37,9 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
-LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -110,7 +112,10 @@ SOURCES += \
     registerdialog.cpp \
     tcpclient.cpp \
     delinkdialog.cpp  \
-    sharedialog.cpp
+    sharedialog.cpp \
+    BitBuffer.cpp \
+    QrCode.cpp \
+    QrSegment.cpp
 
 
 
@@ -202,7 +207,10 @@ HEADERS += \
     registerdialog.h \
     tcpclient.h \
     delinkdialog.h \
-    sharedialog.h
+    sharedialog.h \
+    BitBuffer.hpp \
+    QrCode.hpp \
+    QrSegment.hpp
 
 
 
@@ -215,7 +223,10 @@ FORMS += \
     tcpclient.ui \
     sharedialog.ui
 
-DISTFILES +=
+DISTFILES += \
+    Makefile
 
 RESOURCES += \
     pictures.qrc
+
+include(QZXing/QZXing.pri)

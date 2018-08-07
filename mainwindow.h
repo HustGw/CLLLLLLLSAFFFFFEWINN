@@ -56,6 +56,7 @@
 #include "tcpclient.h"
 #include "delinkdialog.h"
 #include <QDateTime>
+#include  "QZXing/QZXing.h"
 namespace Ui {
 class MainWindow;
 }
@@ -67,6 +68,9 @@ extern int isFinishedBtn;
 extern QFont f;
 extern int informationNum;
 extern int RequsetAllowNum;
+extern int RequestNum;
+//extern double proccessValue;
+extern int decryptionFlag;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -98,6 +102,7 @@ public:
     DepDownThread *downThread[MAXSIZE];
     DecryptionThread *depThread[MAXSIZE];
     QProgressBar *f_progressBar;
+    QProgressBar *d_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
 
@@ -173,6 +178,14 @@ private slots:
     void on_pushButton_11_clicked();
 
     void LinkInsert(QString link);
+
+    void RecDecryptionFailed();
+
+    void ReLayout();
+
+    void DeProgressBarStart();
+
+    void on_pushButton_12_clicked();
 
 signals:
 //    void sendUserID(QString user_id);

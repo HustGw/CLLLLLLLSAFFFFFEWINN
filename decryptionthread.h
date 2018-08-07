@@ -5,6 +5,7 @@
 #include <QDebug>
 #include "downloadoss.h"
 #include "decryptionfile.h"
+#include <QMessageBox>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;
@@ -17,10 +18,12 @@ protected:
 
 public:
     explicit DecryptionThread(QObject *parent = 0);
+    downloadoss *downKey;
 private slots:
     void DecryptionThread_RecvID(QString enkey_id,QString file_id,QString file_name);
+    void RecProgressValue(double recValue);
 signals:
-
+    void decryptionFailed();
 };
 
 #endif // DECRYPTIONTHREAD_H

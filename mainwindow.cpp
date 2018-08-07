@@ -20,7 +20,7 @@ QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
 bool initPageFlag;
-
+int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
 QFont f("ZYSong18030",12,75);
@@ -115,6 +115,14 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
+                       f_progressBar = new QProgressBar(this);
+                       f_progressBar->setObjectName(v1->objectName());
+                       f_progressBar->setMinimum(0);
+                       f_progressBar->setMaximum(100);
+                       f_progressBar->setOrientation(Qt::Horizontal);
+                       f_progressBar->hide();
+                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+                       decryptionViewController->vbox->addWidget(f_progressBar);
                    }
                    else if(query.record().value("status").toString()=="1"){//待申请状态
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -127,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("申请中");
                        decryptionViewController->vbox->addWidget(v1);
                    }
+
                }
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
@@ -399,6 +408,7 @@ void MainWindow::on_pushButton_3_clicked()
                               DecryptionItem *v1 = ui->MidStaWidget->findChild<DecryptionItem *>(fileID+"decryption");
                               delete v1;
                               qDebug()<<"delete success";
+                              RequestNum--;
                           }
 
                       }
@@ -466,21 +476,6 @@ void MainWindow::getFileID(){
 }
 
 void MainWindow::OssDownLoadFile(){
-//    QDir *temp = new QDir;
-//    bool exist = temp->exists("C://CloundSafeWindows//content");
-//    qDebug()<<exist;
-//    if(exist){
-//        qDebug()<<"the dir has existed";
-//    }
-//    else {
-//        bool ojbk = temp->mkdir("C://CloundSafeWindows//content");//创建文件夹
-//        if(ojbk){
-//            qDebug()<<"the dir creat successfully!";
-//        }
-//        else{
-//            qDebug()<<"文件夹创建失败";
-//        }
-//    }
     //创建CloundSafe 主目录
     QDir dir;
     dir.cd("D://CloundSafeWindows");  //进入某文件夹
@@ -505,6 +500,7 @@ void MainWindow::OssDownLoadFile(){
             QString onlyId = query.record().value("id").toString();
             QString fileID = query.record().value("file_id").toString();
             QPushButton *b1 = ui->MidStaWidget->findChild<QPushButton*>(onlyId+"btn");
+            QProgressBar *f_proccess = ui->MidStaWidget->findChild<QProgressBar*>(onlyId+"decryption");
             if(!pt)
                 return;
             if(pt==b1){
@@ -513,6 +509,12 @@ void MainWindow::OssDownLoadFile(){
                     qDebug()<<fileID;
                     QString enkey_id = fileID;
          //         DepDownThread *downThread = new DepDownThread();
+                    if(f_proccess==NULL){
+                        qDebug()<<"progressBARISnull";
+                        return;
+                    }
+                    f_proccess->show();
+                    f_proccess->setValue(20);
                     downThread[threadNum] = new DepDownThread();
                     connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
                     connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
@@ -526,12 +528,13 @@ void MainWindow::OssDownLoadFile(){
                     disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));//删除原有信号槽
                 }
                 else{
-                     QMessageBox::warning(this,tr("error"),tr("下载失败"),QMessageBox::Yes);
+                    QMessageBox::warning(this,tr("error"),tr("下载失败"),QMessageBox::Yes);
                 }
             }
         }
     }
-
+    //重新布局
+    ReLayout();
 }
 //收到有新请求后 将原有视图清空后重新布局
 void MainWindow::ReceiveNewReq(){
@@ -565,6 +568,14 @@ void MainWindow::ReceiveNewReq(){
                       v1->downloadBtn->setText("确认下载");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
+                      f_progressBar = new QProgressBar(this);
+                      f_progressBar->setObjectName(v1->objectName());
+                      f_progressBar->setMinimum(0);
+                      f_progressBar->setMaximum(100);
+                      f_progressBar->setOrientation(Qt::Horizontal);
+                      f_progressBar->hide();
+                      f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+                      decryptionViewController->vbox->addWidget(f_progressBar);
                   }
                   else if(query.record().value("status").toString()=="1"){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -578,13 +589,7 @@ void MainWindow::ReceiveNewReq(){
                       decryptionViewController->vbox->addWidget(v1);
                       }
               }
-              delete decryptionViewController->layout();
-              QWidget *newItemWidget = new QWidget();
-              newItemWidget->setLayout(decryptionViewController->vbox);
-              newScrollArea->setWidget(newItemWidget);
-              QVBoxLayout *newVbox = new QVBoxLayout();
-              newVbox->addWidget(newScrollArea);
-              decryptionViewController->setLayout(newVbox);
+              ReLayout();
     }
 }
 //进行数据库   操作
@@ -686,10 +691,16 @@ void MainWindow::showAddfriendWidget(){
 
 void MainWindow::on_pushButton_4_clicked()
 {
+    QClipboard *clipboard = QApplication::clipboard();
+    QString originalText = clipboard->text().section("&&",1,1);
+    if(originalText.startsWith("{",Qt::CaseSensitive)){
+        LinkInsert(originalText);
+        QMessageBox::information(this,tr("Success"),tr("已读取链接信息"),QMessageBox::Yes);
+    }else{
     linkDialog = new DelinkDialog();
     connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
     linkDialog->show();
-
+    }
 }
 
 //已加密文件页面刷新按钮
@@ -833,6 +844,7 @@ void MainWindow::on_deleteBtn2_clicked(){
     bool success = query.exec("delete from Decryption where file_id = '"+name+"'");
     if(success){
         QMessageBox::information(NULL, "success", "成功删除已解密文件条目！");
+        RequestNum--;
     }
 
     delete finishViewController2->layout();
@@ -979,31 +991,38 @@ void MainWindow::FileIsAllowed(){
                  depThread[DepThreadNum] = new DecryptionThread();
                  connect(depThread[DepThreadNum],SIGNAL(finished()),depThread[DepThreadNum],SLOT(deleteLater()));
                  connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 connect(depThread[DepThreadNum],SIGNAL(decryptionFailed()),this,SLOT(RecDecryptionFailed()));
                  depThread[DepThreadNum]->start();
                  emit sendFileID(enkey_id,file_id,fileName);
                  DepThreadNum++;
-                 //解密完成后将数据库该条数据状态status改成5
-                 QSqlQuery updateQuery(db);
-                 bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
-                 if(updataSuccess){
-                     RequsetAllowNum--;
-                     qDebug()<<"status=5 update success!";
+                 if(decryptionFlag == 0){
+                     //解密完成后将数据库该条数据状态status改成5
+                     QSqlQuery updateQuery(db);
+                     bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+                     if(updataSuccess){
+                         RequsetAllowNum--;
+                         qDebug()<<"status=5 update success!";
+                     }
+                     else{
+                         qDebug()<<"status=5 update failed";
+                     }
+                     //解密完成后删除本地密钥和密文
+
+                     //解密完成后删除控件
+                     delete f1;
+                     //重新布局
+                     delete decryptionViewController->layout();
+                     QWidget *newItemWidget = new QWidget();
+                     newItemWidget->setLayout(decryptionViewController->vbox);
+                     newScrollArea->setWidget(newItemWidget);
+                     QVBoxLayout *newVbox = new QVBoxLayout();
+                     newVbox->addWidget(newScrollArea);
+                     decryptionViewController->setLayout(newVbox);
+                     QMessageBox::warning(this,tr("Success"),tr("文件解密同意并成功解密"),QMessageBox::Yes);
                  }
                  else{
-                     qDebug()<<"status=5 update failed";
+                     return;
                  }
-                 //解密完成后删除本地密钥和密文
-                 //解密完成后删除控件
-                 delete f1;
-                 //重新布局
-                 delete decryptionViewController->layout();
-                 QWidget *newItemWidget = new QWidget();
-                 newItemWidget->setLayout(decryptionViewController->vbox);
-                 newScrollArea->setWidget(newItemWidget);
-                 QVBoxLayout *newVbox = new QVBoxLayout();
-                 newVbox->addWidget(newScrollArea);
-                 decryptionViewController->setLayout(newVbox);
-                 QMessageBox::warning(this,tr("Success"),tr("文件解密同意并成功解密"),QMessageBox::Yes);
              }
          }
      }
@@ -1014,6 +1033,18 @@ void MainWindow::FileIsAllowed(){
 void MainWindow::ChangeItemBtnText(QString fileID){
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
     m1->downloadBtn->setText("申请解密");
+    QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(fileID+"decryption");
+    int value = 21;
+    while(value<100){
+        n1->setValue(value);
+        value++;
+        Sleep(5);
+    }
+    delete n1;
+    ReLayout();
+    //f_progressBar->setValue(100);
+    //解除原有信号槽
+    disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(DeProgressBarStart()));
     //连接新的信号槽
     connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
 }
@@ -1060,9 +1091,11 @@ void MainWindow::on_pushButton_7_clicked()
                 if(checkcheck->isChecked()){
                     QSqlQuery query9(db);
                     query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                    RequestNum--;
                 }
                 FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
                 delete f2;
+
             }
          }
 
@@ -1136,10 +1169,15 @@ void MainWindow::LinkInsert(QString link){
     }
     else{
         while(query.next()){
+
             Link_empid = query.record().value("emp_id").toString();
             Link_filename = query.record().value("article_name").toString();
             Link_filesize = query.record().value("article_size").toString();
         }
+    }
+    if(Link_empid == NULL){
+        QMessageBox::warning(this,tr("ERROR"),tr("无效链接！"),QMessageBox::Yes);
+        return;
     }
     QUuid strid = QUuid::createUuid();
     QString id = strid.toString();
@@ -1164,13 +1202,63 @@ void MainWindow::LinkInsert(QString link){
         a1->downloadBtn->setText("确认下载");
         connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
         decryptionViewController->vbox->addWidget(a1);
-        delete decryptionViewController->layout();
-        QWidget *newItemWidget = new QWidget();
-        newItemWidget->setLayout(decryptionViewController->vbox);
-        newScrollArea->setWidget(newItemWidget);
-        QVBoxLayout *newVbox = new QVBoxLayout();
-        newVbox->addWidget(newScrollArea);
-        decryptionViewController->setLayout(newVbox);
+        f_progressBar = new QProgressBar(this);
+        f_progressBar->setObjectName(a1->objectName());
+        f_progressBar->setMinimum(0);
+        f_progressBar->setMaximum(100);
+        f_progressBar->setOrientation(Qt::Horizontal);
+        f_progressBar->hide();
+        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+        decryptionViewController->vbox->addWidget(f_progressBar);
+        ReLayout();
+    }
+
+}
+//信号槽：接收到解密线程发送的解密失败信号
+void MainWindow::RecDecryptionFailed(){
+    QMessageBox::warning(this,tr("error"),tr("文件解密失败"),QMessageBox::Yes);
+    decryptionFlag==1;
+}
+
+void MainWindow::ReLayout(){
+    delete decryptionViewController->layout();
+    QWidget *newItemWidget = new QWidget();
+    newItemWidget->setLayout(decryptionViewController->vbox);
+    newScrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(newScrollArea);
+    decryptionViewController->setLayout(newVbox);
+}
+
+void MainWindow::DeProgressBarStart(){
+    //d_progressBar->setValue(proccessValue);
+}
+
+
+
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    QString m_fileName = QFileDialog::getOpenFileName(this,"二维码打开文件","./","任何文件(*.*)"";;文本文件(*.png)");
+
+    if(m_fileName.isEmpty() == false)
+    {
+        QImage img;        //加载图像
+        if(!(img.load(m_fileName)))
+        {
+            QMessageBox::information(this,tr("打开图像失败"),tr("打开图像失败!"));
+            return;
+        }
+
+        QZXing *decoder = new QZXing(QZXing::DecoderFormat_QR_CODE);
+        QString strQRCode = decoder->decodeImage(img);
+        QString originalText = strQRCode.section("&&",1,1);
+        if(originalText.startsWith("{",Qt::CaseSensitive)){
+            LinkInsert(originalText);
+            QMessageBox::information(this,tr("Success"),tr("已读取二维码信息"),QMessageBox::Yes);
+        }else{
+            QMessageBox::warning(this,tr("fail"),tr("二维码读取失败"),QMessageBox::Yes);
+        }
     }
 
 }
