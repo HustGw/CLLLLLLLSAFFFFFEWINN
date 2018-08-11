@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>411</width>
+    <height>341</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>密  码：</string>
+       <string>密    码：</string>
       </property>
      </widget>
     </item>
@@ -39,7 +39,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>180</y>
+     <y>220</y>
      <width>189</width>
      <height>24</height>
     </rect>
@@ -48,7 +48,7 @@
     <item>
      <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>验证码：</string>
+       <string>验 证 码：</string>
       </property>
      </widget>
     </item>
@@ -61,7 +61,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>180</y>
+     <y>220</y>
      <width>71</width>
      <height>23</height>
     </rect>
@@ -83,7 +83,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>手机号：</string>
+       <string>手 机 号：</string>
       </property>
      </widget>
     </item>
@@ -96,7 +96,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>230</y>
+     <y>260</y>
      <width>72</width>
      <height>23</height>
     </rect>
@@ -109,7 +109,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>140</y>
+     <y>180</y>
      <width>189</width>
      <height>24</height>
     </rect>
@@ -118,7 +118,7 @@
     <item>
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>邮  箱：</string>
+       <string>邮    箱：</string>
       </property>
      </widget>
     </item>
@@ -140,12 +140,38 @@
     <item>
      <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>昵  称：</string>
+       <string>昵    称：</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="nichengLineEdit"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_6">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>140</y>
+     <width>189</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>确认密码：</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="passwardLineEdit_2">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
