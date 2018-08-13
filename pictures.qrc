@@ -5,4 +5,7 @@
         <file alias="head2">pictures/new.jpg</file>
         <file alias="fileIcon">pictures/icon_0.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>pictures/inforalarm.jpg</file>
+    </qresource>
 </RCC>

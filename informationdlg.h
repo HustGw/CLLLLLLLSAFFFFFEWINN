@@ -18,8 +18,12 @@
 #include <connectionpool.h>
 #include <QString>
 #include <QMessageBox>
+#include <mylabel.h>
 extern QString User_ID;
 extern int informationNum;
+extern int count;
+extern QString FriendNickNameArray[50];//存放好友昵称数组
+extern int FriendArrayIndex;//好友昵称数据目录
 class informationDlg : public QDialog
 {
     Q_OBJECT
@@ -34,6 +38,8 @@ public:
     QWidget *ItemWidget;
     QLabel *titleLabel;
     QSqlDatabase db;
+    QLabel *CleanStatusLabel;
+    Mylabel *cleanInforBtn;
     void setItem();
 private:
 
@@ -42,8 +48,12 @@ private slots:
     void recvReq();
     void ignoreReq();
     void newInformation();
+    void CleanAllInfor();
+    void NewRequestRec(QString name,QString fileName,QString time);
+    void NewFriend();
 signals:
     void statusChanged();
+    void InforNumDecrease();
 };
 
 #endif // INFORMATIONDLG_H

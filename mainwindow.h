@@ -69,8 +69,13 @@ extern QFont f;
 extern int informationNum;
 extern int RequsetAllowNum;
 extern int RequestNum;
-//extern double proccessValue;
 extern int decryptionFlag;
+extern int Infor_requestNum;
+extern QString UserPhoneNum;
+extern QString RequestIDArray[50];//存储消息ID数组
+extern QString FriendNickNameArray[50];//存放好友昵称数组
+extern int FriendArrayIndex;//好友昵称数据目录
+extern int RequsetIndex;//消息ID数组的目录
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -92,6 +97,8 @@ public:
     FinishDecryptionItem *finishDecryptionItem;
     QListWidget *list;
     Mylabel *userHead;
+    Mylabel *Infor_num_icon;
+    Mylabel *Infor_icon;
     QScrollArea *finScrollArea;
     QScrollArea *newScrollArea;
     QSqlDatabase db;
@@ -187,10 +194,18 @@ private slots:
 
     void on_pushButton_12_clicked();
 
+    void Init_InforIcon();
+
+    void InforNum_Changed();//消息数量改变响应函数
+
+
+    void on_pushButton_13_clicked();
+
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
     void OSSfileDownFileID(QString id,QString enkey_id);
+    void SendInforToInforDlg(QString nickname,QString fileName,QString time);
 private:
     Ui::MainWindow *ui;
 };

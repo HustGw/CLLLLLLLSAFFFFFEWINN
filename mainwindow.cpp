@@ -14,7 +14,12 @@
 
 int informationNum = 0;
 int RequsetAllowNum = 0;
+int Infor_requestNum = 0;
 int isFinishedBtn=0;//用于判断是否已经点击
+QString RequestIDArray[50] = {};//存放Request的数组
+int RequsetIndex = 0;//数组的INDEX
+QString FriendNickNameArray[50] = {};
+int FriendArrayIndex = 0;
 QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
@@ -32,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     User_ID = LoginUserID;
     ui->setupUi(this);
-
+    ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -74,13 +79,22 @@ MainWindow::MainWindow(QWidget *parent) :
     setEmp_name();
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
-    userHead->setGeometry(40,10,110,70);
-    QPixmap pixmap(":/new/src/head1");
-    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
-    userHead->setScaledContents(true);
-    userHead->setPixmap(pixmap);
+    userHead->setGeometry(40,10,80,80);
+    userHead->setStyleSheet("min-width:  80px;"
+                            "max-width:  80px;"
+                            "min-height: 80px;"
+                            "max-height: 80px;"
+
+                            "border-radius:40px;"
+                            "border-width: 0 0 0 0;"
+                            "border-image: url(:/new/src/head1) 0 0 0 0 stretch strectch;"
+                            );
+//    QPixmap pixmap(":/new/src/head1");
+//    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+//    userHead->setScaledContents(true);
+//    userHead->setPixmap(pixmap);
     //连接头像信号槽
-    connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
+    //connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     ui->FinDepBtn->hide();
     ui->FinEnpBtn->hide();
     this->setFixedSize(this->width(),this->height());
@@ -105,12 +119,15 @@ MainWindow::MainWindow(QWidget *parent) :
                    pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                    v1->fileIcon->setScaledContents(true);
                    v1->fileIcon->setPixmap(pixmap);
-                   v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
-                   v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
-                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
+                   QString initID = query.record().value("id").toString();
+                   v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
+                   v1->setObjectName(initID+"decryption");//设置Item的ID
+                   v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
                    //连接信号槽
                    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
+                       RequestIDArray[RequsetIndex]=initID;
+                       RequsetIndex++;
                        v1->fileDescription->setText("主体文件指定分享需确认下载.");
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
@@ -135,7 +152,6 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("申请中");
                        decryptionViewController->vbox->addWidget(v1);
                    }
-
                }
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
@@ -156,8 +172,21 @@ MainWindow::MainWindow(QWidget *parent) :
          //将查询的好友插入视图中
          int count = 0;
          while(query.next()){
-             friendListWidget->insertItem(count,query.record().value("friend_nickname").toString());
+             QString Friend_nickname = query.record().value("friend_nickname").toString();
+             friendListWidget->insertItem(count,Friend_nickname);
              count++;
+         }
+     }
+     QSqlQuery friendQuery(db);
+     bool FriendArraySuccess = friendQuery.exec("select * from friend where friend_id ='"+User_ID+"'");
+     if(!FriendArraySuccess){
+         qDebug()<<"初始化好友数组失败";
+     }
+     else{
+         while (friendQuery.next()) {
+             FriendNickNameArray[FriendArrayIndex]=friendQuery.record().value("user_id").toString();
+             FriendArrayIndex++;
+
          }
      }
 
@@ -166,9 +195,14 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
-     connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
+     //connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
+     connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(InforNum_Changed()));
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
+     connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
+     connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
+     connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
      inforThread->start();
+     Init_InforIcon();//初始化消息按钮
 }
 
 MainWindow::~MainWindow()
@@ -199,7 +233,7 @@ void MainWindow::on_FinishedBtn_clicked()
 }
 
 void MainWindow::on_DecryptionBtn_clicked()
-{   //点击加密按钮后，QMidStaWidget跳转到0号子页面
+{   //点击解密按钮后，MidStaWidget跳转到1号子页面
     CleanButtonClicked();
     ui->DecryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
@@ -209,7 +243,7 @@ void MainWindow::on_DecryptionBtn_clicked()
 
 
 void MainWindow::on_EncryptionBtn_clicked()
-{   //点击解密按钮后，MidStaWidget跳转到1号子页面
+{   //点击加密按钮后，QMidStaWidget跳转到0号子页面
     CleanButtonClicked();
     ui->EncryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
@@ -539,7 +573,15 @@ void MainWindow::OssDownLoadFile(){
 //收到有新请求后 将原有视图清空后重新布局
 void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
-    QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
+    //QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
+    Infor_requestNum++;
+    int newRequestNum = Infor_requestNum+informationNum;
+
+    QString s = QString::number(newRequestNum,10);
+    qDebug()<<"Infor_num_icon:";
+    qDebug()<<s;
+    Infor_num_icon->show();
+    Infor_num_icon->setText(s);
     QSqlQuery query(db);
     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
     if(!success){
@@ -551,6 +593,7 @@ void MainWindow::ReceiveNewReq(){
               decryptionViewController->vbox = new QVBoxLayout();//将原有视图清空
               while(query.next()){
                   DecryptionItem *v1 =  new DecryptionItem();
+
                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
                   //设置fileIcon的图片
@@ -564,6 +607,41 @@ void MainWindow::ReceiveNewReq(){
                   //连接信号槽
                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
+                      //查找新消息
+                      int isNEW = 1;
+                      QString Infor_ID = query.record().value("id").toString();
+                      for(int i=0;i<RequsetIndex;i++){
+                          if(Infor_ID==RequestIDArray[i]){
+                              isNEW =0;
+                              break;
+                          }
+                      }
+                      if(isNEW ==1){
+                          //如果是新消息则发送信号为InforDlg
+                          RequestIDArray[RequsetIndex]=Infor_ID;//将该ID加入到数组中
+                          RequsetIndex++;
+                          //发送信号给InforDlg让其重新布局
+                          QString SendUserid = query.record().value("emp_id").toString();
+                          QString SendFileName = query.record().value("file_name").toString();
+                          QString time = query.record().value("emp_createtime").toString();
+                          QSqlQuery nameQuery(db);
+                          bool success1 =nameQuery.exec("select * from employee where emp_id = '"+SendUserid+"'");
+                          if(!success1){
+                              qDebug()<<"查询发送者ID失败";
+                          }
+                          else{
+                              while (nameQuery.next()) {
+                                  QString SendID = nameQuery.record().value("emp_name").toString();
+                                  qDebug()<<"发送者姓名为：";
+                                  qDebug()<<SendID;
+                                  emit SendInforToInforDlg(SendID,SendFileName,time);//发送信号
+
+                              }
+                          }
+                          qDebug()<<"新消息ID为:";
+                          qDebug()<<Infor_ID;
+
+                      }
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
                       v1->downloadBtn->setText("确认下载");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
@@ -672,10 +750,12 @@ void MainWindow::addFriendToDatabase(QString name){
 
 //头像点击槽函数
 void MainWindow::HeadClickedSlot(){
-    QPixmap pixmap(":/new/src/head1");
-    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
-    userHead->setScaledContents(true);
-    userHead->setPixmap(pixmap);
+//    QPixmap pixmap(":/new/src/head1");
+//    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
+//    userHead->setScaledContents(true);
+//    userHead->setPixmap(pixmap);
+    Infor_requestNum = 0;
+    InforNum_Changed();
     inforDlg->show();
 }
 
@@ -1048,9 +1128,10 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     //连接新的信号槽
     connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
 }
-//设置主界面用户名
+//设置主界面用户名和用户个人信息
 void MainWindow::setEmp_name(){
     qDebug()<<"函数执行";
+
     QSqlQuery query(db);
     bool success = query.exec("select * from employee where emp_id = '"+User_ID+"'");
     if(success){
@@ -1059,6 +1140,7 @@ void MainWindow::setEmp_name(){
             qDebug()<<nickName;
             ui->nameLabel->setText(nickName);
         }
+        ui->UserPhonelabe->setText(UserPhoneNum);
     }
     else{
         qDebug()<<"查询用户名失败";
@@ -1261,4 +1343,61 @@ void MainWindow::on_pushButton_12_clicked()
         }
     }
 
+}
+//初始化消息按钮
+void MainWindow::Init_InforIcon(){
+    //初始化消息ICON
+    Infor_icon = new Mylabel(ui->TopWidget);
+    Infor_icon->setGeometry(930,30,60,60);
+    QPixmap Inforpixmap(":/pictures/inforalarm.jpg");
+    Inforpixmap.scaled(Infor_icon->size(),Qt::KeepAspectRatio);
+    Infor_icon->setScaledContents(true);
+    Infor_icon->setPixmap(Inforpixmap);
+    connect(Infor_icon,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
+    //初始化消息数量ICON
+    Infor_num_icon = new Mylabel(ui->TopWidget);
+    Infor_num_icon->setGeometry(960,15,30,30);
+    Infor_num_icon->setStyleSheet("background-color:red;"
+                                  "border-radius:15px");
+    Infor_num_icon->setAlignment(Qt::AlignCenter);
+    QSqlQuery query(db);
+    int num=0;
+    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2");
+    if(!success){
+        qDebug() << "Thread:查询user失败";
+    }else{
+         while(query.next()){
+             num++;
+         }
+    }
+    QString s = QString::number(num,10);
+    QFont font("Microsoft YaHei",10,75);
+    Infor_num_icon->setFont(font);
+    if(num==0){
+        Infor_num_icon->hide();
+    }
+    else{
+        Infor_num_icon->setText(s);
+    }
+
+}
+
+void MainWindow::InforNum_Changed(){
+    if(informationNum>0){
+        Infor_num_icon->show();
+    }
+    else{
+        Infor_num_icon->hide();//等于0的时候隐藏数量Label
+    }
+    QString s = QString::number(informationNum,10);
+    qDebug()<<"此时information数量为：";
+    qDebug()<<s;
+    Infor_num_icon->setText(s);
+
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+    QString searchcontent = ui->SearchEdit->text();
+    QList <QListWidgetItem *> item = friendListWidget->findItems(searchcontent,Qt::MatchContains);
 }

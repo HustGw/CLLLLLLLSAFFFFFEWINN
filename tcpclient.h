@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QFont>
 extern QString LoginUserID;
+extern QString UserPhoneNum;
 namespace Ui {
 class TcpClient;
 }

@@ -19,6 +19,8 @@ public:
     QPushButton *allowBtn;
     QPushButton *ignoreBtn;
     QLabel *titleLabel;
+    QLabel *InforKindsLabel;
+    QLabel *timeLabel;
 signals:
 
 public slots:

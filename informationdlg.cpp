@@ -1,16 +1,6 @@
 #include "informationdlg.h"
+int count = 0;
 
-//void informationDlg::setUserID(QString user_id){
-//    infor_User_ID = user_id;
-//    qDebug()<<infor_User_ID;
-//    setItem();//调用布局函数
-//    ItemWidget->setLayout(vbox);
-//    scrollArea = new QScrollArea();
-//    scrollLayout = new QVBoxLayout();
-//    scrollArea->setWidget(ItemWidget);
-//    scrollLayout->addWidget(scrollArea);
-//    this->setLayout(scrollLayout);
-//}
 informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 {
     db = ConnectionPool::openConnection();
@@ -18,12 +8,34 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     vbox = new QVBoxLayout();
     ItemWidget = new QWidget();
     setItem();//布局函数
-    ItemWidget->setLayout(vbox);
-    scrollArea = new QScrollArea();
-    scrollLayout = new QVBoxLayout();
-    scrollArea->setWidget(ItemWidget);
-    scrollLayout->addWidget(scrollArea);
-    this->setLayout(scrollLayout);
+    CleanStatusLabel = new QLabel(this);
+    cleanInforBtn = new Mylabel(this);
+    cleanInforBtn->setText("清空消息记录");
+    cleanInforBtn->setGeometry(0,0,100,50);
+    cleanInforBtn->setAlignment(Qt::AlignCenter);
+    connect(cleanInforBtn,SIGNAL(LabelClicked()),this,SLOT(CleanAllInfor()));
+    CleanStatusLabel->setText("暂无消息！");
+    CleanStatusLabel->setGeometry(250,180,100,40);
+    if(count==0){
+        CleanStatusLabel->show();
+        ItemWidget->setLayout(vbox);
+        scrollArea = new QScrollArea();
+        scrollLayout = new QVBoxLayout();
+        scrollArea->setWidget(CleanStatusLabel);
+        scrollLayout->addWidget(scrollArea);        
+        this->setLayout(scrollLayout);
+    }
+    else{
+        CleanStatusLabel->hide();
+        ItemWidget->setLayout(vbox);
+        scrollArea = new QScrollArea();
+        scrollLayout = new QVBoxLayout();
+        scrollArea->setWidget(ItemWidget);
+        scrollLayout->addWidget(scrollArea);
+        scrollLayout->addWidget(cleanInforBtn);
+        this->setLayout(scrollLayout);
+    }
+
 }
 
 void informationDlg::recvReq(){
@@ -45,17 +57,21 @@ void informationDlg::recvReq(){
                 bool updataSuccess = query.exec("update Decryption set status = 3 where id = '"+id+"'");
                 if(updataSuccess){
                     informationNum--;//发送数量减少信号
+                    emit InforNumDecrease(); //发送信号通知InformationNum更新
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
-                    delete q1;
-                    //删除成功重新布局
-                    delete this->layout();
-                    QWidget *newItemWidget = new QWidget();
-                    newItemWidget->setLayout(this->vbox);
-                    scrollArea->setWidget(newItemWidget);
-                    QVBoxLayout *newVbox = new QVBoxLayout();
-                    newVbox->addWidget(scrollArea);
-                    this->setLayout(newVbox);
-                     QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
+//                    delete q1;
+//                    //删除成功重新布局
+//                    delete this->layout();
+//                    QWidget *newItemWidget = new QWidget();
+//                    newItemWidget->setLayout(this->vbox);
+//                    scrollArea->setWidget(newItemWidget);
+//                    QVBoxLayout *newVbox = new QVBoxLayout();
+//                    newVbox->addWidget(scrollArea);
+//                    this->setLayout(newVbox);
+                     q1->allowBtn->setEnabled(false);
+                     q1->allowBtn->setText("已允许");
+                     q1->ignoreBtn->hide();
+                  //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
                 }
                 else{
                      QMessageBox::warning(this,tr("error"),tr("操作失败!"),QMessageBox::Yes);
@@ -85,16 +101,20 @@ void informationDlg::ignoreReq(){
                 if(updataSuccess){
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");                   
                     informationNum--;//发送信号数量减少
-                    delete q1;
-                    //删除成功重新布局
-                    delete this->layout();
-                    QWidget *newItemWidget = new QWidget();
-                    newItemWidget->setLayout(this->vbox);
-                    scrollArea->setWidget(newItemWidget);
-                    QVBoxLayout *newVbox = new QVBoxLayout();
-                    newVbox->addWidget(scrollArea);
-                    this->setLayout(newVbox);
-                     QMessageBox::warning(this,tr("Success"),tr("成功忽略"),QMessageBox::Yes);
+                    emit InforNumDecrease(); //发送信号通知InformationNum更新
+//                    delete q1;
+//                    //删除成功重新布局
+//                    delete this->layout();
+//                    QWidget *newItemWidget = new QWidget();
+//                    newItemWidget->setLayout(this->vbox);
+//                    scrollArea->setWidget(newItemWidget);
+//                    QVBoxLayout *newVbox = new QVBoxLayout();
+//                    newVbox->addWidget(scrollArea);
+//                    this->setLayout(newVbox);
+//                     QMessageBox::warning(this,tr("Success"),tr("成功忽略"),QMessageBox::Yes);
+                    q1->allowBtn->hide();
+                    q1->ignoreBtn->setEnabled(false);
+                    q1->ignoreBtn->setText("已忽略");
                 }
                 else{
                      QMessageBox::warning(this,tr("error"),tr("操作失败!"),QMessageBox::Yes);
@@ -105,7 +125,6 @@ void informationDlg::ignoreReq(){
 
 }
 void informationDlg::newInformation(){
-    qDebug()<<"有新消息";
     this->vbox = new QVBoxLayout();
     setItem();
     delete this->layout();
@@ -114,6 +133,7 @@ void informationDlg::newInformation(){
     scrollArea->setWidget(newItemWidget);
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(scrollArea);
+    newVbox->addWidget(cleanInforBtn);
     this->setLayout(newVbox);
 
 }
@@ -122,10 +142,11 @@ void informationDlg::setItem(){
     QSqlQuery query(db);
     QString sql = "select * from Decryption where emp_id = '"+User_ID+"' and status = '2'";
     qDebug()<<sql;
-    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and status = '2'");
+    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and status = '2' or status ='4' or status = '3' or status = '5'");
     if(success){
         qDebug()<<"查询数据库成功";
         while (query.next()) {
+            count++;
             InformationItem *m1 = new InformationItem();
             QString oemp_id= query.record().value("oemp_id").toString();
             qDebug()<<oemp_id;
@@ -143,17 +164,115 @@ void informationDlg::setItem(){
             }
             QString filename = query.record().value("file_name").toString();
             QString title = nickName+"请求文件"+filename+"密钥文件下载";
-            qDebug()<<title;
             m1->titleLabel->setText(title);
-            m1->setObjectName(query.record().value("id").toString()+"information");
-            m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
-            m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
-            connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(recvReq()));
-            connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(ignoreReq()));
-            vbox->addWidget(m1);
+            //判断当前状态 给予不同的按钮状态
+            QString nowStatus = query.record().value("status").toString();
+            if(nowStatus=="2"){
+                m1->setObjectName(query.record().value("id").toString()+"information");
+                m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
+                m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
+                connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(recvReq()));
+                connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(ignoreReq()));
+                vbox->addWidget(m1);
+            }
+            if(nowStatus=="3"||nowStatus=="5"){
+                m1->setObjectName(query.record().value("id").toString()+"information");
+                m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
+                m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
+                m1->allowBtn->setText("已允许");
+                m1->ignoreBtn->hide();
+                m1->allowBtn->setEnabled(false);
+                vbox->addWidget(m1);
+            }
+            if(nowStatus =="4"){
+                m1->setObjectName(query.record().value("id").toString()+"information");
+                m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
+                m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
+                m1->allowBtn->hide();
+                m1->ignoreBtn->setText("已忽略");
+                m1->ignoreBtn->setEnabled(false);
+                vbox->addWidget(m1);
+            }
         }
     }
     else{
         qDebug()<<"查询数据库失败";
     }
+}
+
+void informationDlg::CleanAllInfor(){
+    qDebug()<<"cleanClicked";
+    //清除所有
+    this->vbox = new QVBoxLayout();
+    delete this->layout();
+    QWidget *newItemWidget = new QWidget();
+    newItemWidget->setLayout(this->vbox);
+    scrollArea->setWidget(newItemWidget);
+    QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->addWidget(scrollArea);
+    newVbox->addWidget(cleanInforBtn);
+    this->setLayout(newVbox);
+
+}
+
+void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
+     InformationItem *m1 = new InformationItem();
+     QString s = name+"传输文件"+fileName;
+     m1->InforKindsLabel->setText("文件传输");
+     m1->titleLabel->setText(s);
+     m1->timeLabel->setText(time);
+     m1->allowBtn->hide();
+     m1->ignoreBtn->hide();
+     vbox->addWidget(m1);
+     QWidget *newItemWidget = new QWidget();
+     newItemWidget->setLayout(this->vbox);
+     scrollArea->setWidget(newItemWidget);
+     QVBoxLayout *newVbox = new QVBoxLayout();
+     newVbox->addWidget(scrollArea);
+     newVbox->addWidget(cleanInforBtn);
+     this->setLayout(newVbox);
+
+
+}
+
+void informationDlg::NewFriend(){
+    qDebug()<<"new friend";
+    FriendArrayIndex++;
+    QSqlQuery query(db);
+    bool success = query.exec("select * from friend where friend_id = '"+User_ID+"'");
+    if(!success){
+        qDebug()<<"informationdlg:查询失败";
+    }
+    else{
+        while(query.next()){
+            int isNew = 1;
+            QString sendId = query.record().value("user_id").toString();
+            for(int i = 0;i<FriendArrayIndex;i++){
+                if(sendId == FriendNickNameArray[i]){
+                    isNew = 0;
+                    break;
+                }
+            }
+            if(isNew ==1){
+                //如果是新的好友请求，则在InforDig中增加一个新的条目
+                QString SendName = query.record().value("user_nickname").toString();
+                InformationItem *m1 = new InformationItem();
+                m1->InforKindsLabel->setText("好友申请");
+                QString title = SendName+"添加您为好友";
+                m1->titleLabel->setText(title);
+                m1->allowBtn->hide();
+                m1->ignoreBtn->hide();
+                vbox->addWidget(m1);
+                QWidget *newItemWidget = new QWidget();
+                newItemWidget->setLayout(this->vbox);
+                scrollArea->setWidget(newItemWidget);
+                QVBoxLayout *newVbox = new QVBoxLayout();
+                newVbox->addWidget(scrollArea);
+                newVbox->addWidget(cleanInforBtn);
+                this->setLayout(newVbox);
+            }
+        }
+    }
+
+
 }

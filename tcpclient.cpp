@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 QString LoginUserID = NULL;
+QString UserPhoneNum = NULL;
 QNetworkAccessManager *m_accessManager;
 
 TcpClient::TcpClient(QWidget *parent) :
@@ -64,7 +65,7 @@ void TcpClient::on_sendBtn_clicked()
     QNetworkRequest request;
     //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
     flag = 3; //步骤：登录
-    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/Employee.do"));  //登录
+    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
     QByteArray postData;
     //emp_password  emp_email   code
     postData.append("emp_phone=");//参数手机
@@ -344,7 +345,10 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              else{
                                  accept();
                                  int index = content.lastIndexOf('_');
-                                 LoginUserID = content.mid(0,index);
+                                 QString midQString = content.mid(0,index);
+                                 index = midQString.lastIndexOf('_');
+                                 UserPhoneNum = midQString.mid(0,index);
+                                 LoginUserID = midQString.mid(index+1);
                                  qDebug()<<LoginUserID;
 
 //                                 QMessageBox::information(this,"警告","登录成功",QMessageBox::Ok);

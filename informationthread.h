@@ -9,7 +9,8 @@
 #include<QtSql/QSqlQuery>
 #include <connectionpool.h>
 #include <mainwindow.h>
-//extern int informationNum;
+extern int informationNum;
+extern int FriendArrayIndex;
 class InformationThread : public QThread
 {
     Q_OBJECT
@@ -21,8 +22,10 @@ public:
     int getInfNum();//获取数据库条目数量
     void listenInfNum();//监听数据库文件数量
     void numDown();
+    int getFriendNum();//获取好友数量
 signals:
     void InformationChanged();
+    void NewFriendRequest();
 
 };
 
