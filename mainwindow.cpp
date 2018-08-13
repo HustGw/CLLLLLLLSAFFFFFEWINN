@@ -200,6 +200,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
+     connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
      inforThread->start();
      Init_InforIcon();//初始化消息按钮
@@ -775,6 +776,7 @@ void MainWindow::on_pushButton_4_clicked()
     QString originalText = clipboard->text().section("&&",1,1);
     if(originalText.startsWith("{",Qt::CaseSensitive)){
         LinkInsert(originalText);
+        qDebug()<<originalText;
         QMessageBox::information(this,tr("Success"),tr("已读取链接信息"),QMessageBox::Yes);
     }else{
     linkDialog = new DelinkDialog();
@@ -1251,7 +1253,6 @@ void MainWindow::LinkInsert(QString link){
     }
     else{
         while(query.next()){
-
             Link_empid = query.record().value("emp_id").toString();
             Link_filename = query.record().value("article_name").toString();
             Link_filesize = query.record().value("article_size").toString();
@@ -1264,7 +1265,7 @@ void MainWindow::LinkInsert(QString link){
     QUuid strid = QUuid::createUuid();
     QString id = strid.toString();
     QSqlQuery insertQuery(db);
-    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"')");
+    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"',0)");
     if(!insertSuccess){
         qDebug()<<"LinkInsertFailed";
     }
@@ -1400,4 +1401,7 @@ void MainWindow::on_pushButton_13_clicked()
 {
     QString searchcontent = ui->SearchEdit->text();
     QList <QListWidgetItem *> item = friendListWidget->findItems(searchcontent,Qt::MatchContains);
+    QListWidgetItem *finditem = item[0];
+    friendListWidget->setCurrentItem(finditem);
+
 }
