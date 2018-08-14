@@ -18,6 +18,7 @@ int Infor_requestNum = 0;
 int isFinishedBtn=0;//用于判断是否已经点击
 QString RequestIDArray[50] = {};//存放Request的数组
 int RequsetIndex = 0;//数组的INDEX
+int FriendCount =0;
 QString FriendNickNameArray[50] = {};
 int FriendArrayIndex = 0;
 QString User_ID = NULL;
@@ -186,6 +187,7 @@ MainWindow::MainWindow(QWidget *parent) :
          while (friendQuery.next()) {
              FriendNickNameArray[FriendArrayIndex]=friendQuery.record().value("user_id").toString();
              FriendArrayIndex++;
+             FriendCount++;
 
          }
      }
@@ -200,7 +202,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
-     connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
+     connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(inforDlgaddFriend(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
      inforThread->start();
      Init_InforIcon();//初始化消息按钮
@@ -735,7 +737,9 @@ void MainWindow::addFriendToDatabase(QString name){
     //创建记录唯一标识
     QUuid id = QUuid::createUuid();
     QString strID = id.toString();
-    bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0)");
+    QDateTime time = QDateTime::currentDateTime();
+    QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取此刻时间
+    bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0,'"+time_str+"',0)");
     if(insertSuccess){
         //将好友插入到视图当中
         int i = friendListWidget->count();
@@ -746,6 +750,17 @@ void MainWindow::addFriendToDatabase(QString name){
     else{
         QMessageBox::warning(this,tr("Failed!"),tr("添加好友失败！"),QMessageBox::Yes);
     }
+}
+
+void MainWindow::inforDlgaddFriend(QString name){
+    addFriendToDatabase(name);
+    //将该条好友消息status置为1
+    QSqlQuery query(db);
+    bool success = query.exec("update friend set status = '1' where user_id = '"+User_ID+"' and friend_id ='"+name+"'");
+    if(!success){
+        qDebug()<<"update status error";
+    }
+
 }
 
 
@@ -1300,7 +1315,7 @@ void MainWindow::LinkInsert(QString link){
 //信号槽：接收到解密线程发送的解密失败信号
 void MainWindow::RecDecryptionFailed(){
     QMessageBox::warning(this,tr("error"),tr("文件解密失败"),QMessageBox::Yes);
-    decryptionFlag==1;
+    decryptionFlag=1;
 }
 
 void MainWindow::ReLayout(){
@@ -1363,7 +1378,7 @@ void MainWindow::Init_InforIcon(){
     Infor_num_icon->setAlignment(Qt::AlignCenter);
     QSqlQuery query(db);
     int num=0;
-    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2");
+    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and is_solved = '0'");
     if(!success){
         qDebug() << "Thread:查询user失败";
     }else{

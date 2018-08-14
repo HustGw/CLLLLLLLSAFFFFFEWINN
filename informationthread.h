@@ -11,6 +11,7 @@
 #include <mainwindow.h>
 extern int informationNum;
 extern int FriendArrayIndex;
+extern int FriendCount;
 class InformationThread : public QThread
 {
     Q_OBJECT

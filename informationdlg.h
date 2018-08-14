@@ -24,6 +24,7 @@ extern int informationNum;
 extern int count;
 extern QString FriendNickNameArray[50];//存放好友昵称数组
 extern int FriendArrayIndex;//好友昵称数据目录
+extern int FriendCount;
 class informationDlg : public QDialog
 {
     Q_OBJECT
@@ -51,9 +52,11 @@ private slots:
     void CleanAllInfor();
     void NewRequestRec(QString name,QString fileName,QString time);
     void NewFriend();
+    void AddFriendRequest();
 signals:
     void statusChanged();
     void InforNumDecrease();
+    void addFriendToMain(QString name);//向mainWindow发送添加好友的消息
 };
 
 #endif // INFORMATIONDLG_H

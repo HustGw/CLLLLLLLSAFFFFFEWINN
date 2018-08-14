@@ -142,7 +142,7 @@ void informationDlg::setItem(){
     QSqlQuery query(db);
     QString sql = "select * from Decryption where emp_id = '"+User_ID+"' and status = '2'";
     qDebug()<<sql;
-    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and status = '2' or status ='4' or status = '3' or status = '5'");
+    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and is_solved = '0' and (status = '2' or status ='4' or status = '3' or status = '5')");
     if(success){
         qDebug()<<"查询数据库成功";
         while (query.next()) {
@@ -198,11 +198,41 @@ void informationDlg::setItem(){
     else{
         qDebug()<<"查询数据库失败";
     }
+    QSqlQuery friendQuery(db);
+    bool friendSuccess = friendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0' and is_solved = '0'");
+    if(!friendSuccess){
+        qDebug()<<"初始化好友列表失败";
+    }
+    else{
+        while(friendQuery.next()){
+            //将查询到好友申请添加到InforDlg中
+            InformationItem *f1 = new InformationItem();
+            f1->InforKindsLabel->setText("好友申请");
+            QString userNickName = friendQuery.record().value("user_nickname").toString();
+            QString t = userNickName+"添加您为好友";
+            f1->titleLabel->setText(t);
+            f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+            f1->allowBtn->setText("添加好友");
+            f1->ignoreBtn->hide();
+            f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
+            f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
+            vbox->addWidget(f1);
+        }
+
+
+
+    }
 }
 
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
+    QSqlQuery query(db);
+    bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"'");
+    if(!success){
+        qDebug()<<"update failed!";
+    }
+    bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_nickname ='"+User_ID+"'");
     this->vbox = new QVBoxLayout();
     delete this->layout();
     QWidget *newItemWidget = new QWidget();
@@ -237,7 +267,7 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
 
 void informationDlg::NewFriend(){
     qDebug()<<"new friend";
-    FriendArrayIndex++;
+    FriendCount++;//
     QSqlQuery query(db);
     bool success = query.exec("select * from friend where friend_id = '"+User_ID+"'");
     if(!success){
@@ -256,12 +286,17 @@ void informationDlg::NewFriend(){
             if(isNew ==1){
                 //如果是新的好友请求，则在InforDig中增加一个新的条目
                 QString SendName = query.record().value("user_nickname").toString();
+                FriendNickNameArray[FriendArrayIndex] = SendName;
+                FriendArrayIndex++;
                 InformationItem *m1 = new InformationItem();
                 m1->InforKindsLabel->setText("好友申请");
                 QString title = SendName+"添加您为好友";
                 m1->titleLabel->setText(title);
-                m1->allowBtn->hide();
                 m1->ignoreBtn->hide();
+                m1->allowBtn->setText("添加好友");
+                m1->setObjectName(query.record().value("id").toString()+"friendInfor");
+                m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
+                connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
                 vbox->addWidget(m1);
                 QWidget *newItemWidget = new QWidget();
                 newItemWidget->setLayout(this->vbox);
@@ -275,4 +310,33 @@ void informationDlg::NewFriend(){
     }
 
 
+}
+
+void informationDlg::AddFriendRequest(){
+    QPushButton *pt = qobject_cast<QPushButton *>(sender());
+    QSqlQuery query(db);
+    bool success= query.exec("select * from friend where friend_id='"+User_ID+"'");
+    if(!success){
+        qDebug()<<"查询失败";
+        return;
+    }
+    else{
+        while (query.next()) {
+            QString ID = query.record().value("id").toString();
+            QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendBtn");
+            if(!pt)
+                return;
+            if(pt==b1){
+                QString name = query.record().value("user_nickname").toString();
+                emit addFriendToMain(name);
+                QSqlQuery updateQuery(db);
+                bool updatesuccess =updateQuery.exec("update friend set status = '1' where id = '"+ID+"'");
+                if(!updatesuccess){
+                    qDebug()<<"update friend failed";
+                }
+                b1->setText("已添加");
+                b1->setEnabled(false);
+            }
+        }
+    }
 }
