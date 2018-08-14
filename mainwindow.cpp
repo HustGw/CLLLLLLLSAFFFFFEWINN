@@ -753,14 +753,81 @@ void MainWindow::addFriendToDatabase(QString name){
 }
 
 void MainWindow::inforDlgaddFriend(QString name){
-    addFriendToDatabase(name);
-    //将该条好友消息status置为1
+    //判断是否是好友关系
     QSqlQuery query(db);
-    bool success = query.exec("update friend set status = '1' where user_id = '"+User_ID+"' and friend_id ='"+name+"'");
-    if(!success){
-        qDebug()<<"update status error";
+    bool judgeSuccess = query.exec("select * from friend where user_id='"+User_ID+"'");
+    if(!judgeSuccess){
+        qDebug()<<"查询失败";
     }
+    else{
+        while (query.next()) {
+            if(query.record().value("friend_nickname").toString()==name){
+                QMessageBox::warning(this,tr("Warning"),tr("已经是好友！"),QMessageBox::Yes);
+                return;
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    //将好友关系插入到数据库表中
+    QString userid;
+    bool success4 = query.exec("select * from employee where emp_name='"+name+"'");
+    qDebug()<<name;
+    if(success4){
+        if(query.size()==0){
+            QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+            return;
+        }
+        else{
+            while (query.next()) {
+                if(query.record().value("emp_id").toString().isEmpty()){
+                    QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+                    return;
+                }
+                else{
+                userid = query.record().value("emp_id").toString();
+                qDebug()<<userid;
+                }
+            }
 
+        }
+
+    }
+    else {
+        qDebug()<<"查询失败";
+        QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+        return;
+    }
+    bool success1 = query.exec("select *from employee where emp_id = '"+User_ID+"'");
+    QString friendname;
+    if(success1){
+        qDebug()<<"查询用户名成功";
+        while(query.next()){
+            friendname = query.record().value("emp_name").toString();
+            qDebug()<<friendname;
+        }
+
+    }
+    else{
+        qDebug()<<"查询失败";
+    }
+    //创建记录唯一标识
+    QUuid id = QUuid::createUuid();
+    QString strID = id.toString();
+    QDateTime time = QDateTime::currentDateTime();
+    QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取此刻时间
+    bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',1,'"+time_str+"',0)");
+    if(insertSuccess){
+        //将好友插入到视图当中
+        int i = friendListWidget->count();
+        i++;
+        friendListWidget->insertItem(i,name);
+         QMessageBox::warning(this,tr("Success"),tr("添加好友成功！"),QMessageBox::Yes);
+    }
+    else{
+        QMessageBox::warning(this,tr("Failed!"),tr("添加好友失败！"),QMessageBox::Yes);
+    }
 }
 
 
@@ -1415,6 +1482,16 @@ void MainWindow::Init_InforIcon(){
          while(query.next()){
              num++;
          }
+    }
+    QSqlQuery Init_FriendQuery(db);
+    bool Init_friendSuccess = Init_FriendQuery.exec("select * from friend where friend_nickname = '"+User_ID+"' and status = '0'");
+    if(!Init_friendSuccess){
+        qDebug()<<"init friendRequest num fail";
+    }
+    else {
+        while (Init_FriendQuery.next()) {
+            num++;
+        }
     }
     QString s = QString::number(num,10);
     QFont font("Microsoft YaHei",10,75);
