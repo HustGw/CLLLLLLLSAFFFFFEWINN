@@ -25,6 +25,7 @@ extern int count;
 extern QString FriendNickNameArray[50];//存放好友昵称数组
 extern int FriendArrayIndex;//好友昵称数据目录
 extern int FriendCount;
+extern int FriendRequestCount;
 class informationDlg : public QDialog
 {
     Q_OBJECT

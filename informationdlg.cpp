@@ -205,6 +205,7 @@ void informationDlg::setItem(){
     }
     else{
         while(friendQuery.next()){
+            count++;
             //将查询到好友申请添加到InforDlg中
             InformationItem *f1 = new InformationItem();
             f1->InforKindsLabel->setText("好友申请");
@@ -216,6 +217,7 @@ void informationDlg::setItem(){
             f1->ignoreBtn->hide();
             f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
             f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
+            connect(f1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
             vbox->addWidget(f1);
         }
 
@@ -298,6 +300,7 @@ void informationDlg::NewFriend(){
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
                 vbox->addWidget(m1);
+                delete this->layout();
                 QWidget *newItemWidget = new QWidget();
                 newItemWidget->setLayout(this->vbox);
                 scrollArea->setWidget(newItemWidget);
@@ -334,6 +337,7 @@ void informationDlg::AddFriendRequest(){
                 if(!updatesuccess){
                     qDebug()<<"update friend failed";
                 }
+                FriendRequestCount--;
                 b1->setText("已添加");
                 b1->setEnabled(false);
             }

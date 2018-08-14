@@ -75,6 +75,7 @@ extern QString UserPhoneNum;
 extern QString RequestIDArray[50];//存储消息ID数组
 extern QString FriendNickNameArray[50];//存放好友昵称数组
 extern int FriendCount;
+extern int FriendRequestCount;
 extern int FriendArrayIndex;//好友昵称数据目录
 extern int RequsetIndex;//消息ID数组的目录
 class MainWindow : public QMainWindow

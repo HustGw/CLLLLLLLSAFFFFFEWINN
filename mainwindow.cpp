@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <QtSql/QSqlError>
 #include "QProgressBar"
-
+int FriendRequestCount = 0;
 int informationNum = 0;
 int RequsetAllowNum = 0;
 int Infor_requestNum = 0;
@@ -578,7 +578,7 @@ void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
     //QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
     Infor_requestNum++;
-    int newRequestNum = Infor_requestNum+informationNum;
+    int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
 
     QString s = QString::number(newRequestNum,10);
     qDebug()<<"Infor_num_icon:";
@@ -1484,12 +1484,13 @@ void MainWindow::Init_InforIcon(){
          }
     }
     QSqlQuery Init_FriendQuery(db);
-    bool Init_friendSuccess = Init_FriendQuery.exec("select * from friend where friend_nickname = '"+User_ID+"' and status = '0'");
+    bool Init_friendSuccess = Init_FriendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0' and is_solved ='0'");
     if(!Init_friendSuccess){
         qDebug()<<"init friendRequest num fail";
     }
     else {
         while (Init_FriendQuery.next()) {
+            FriendRequestCount++;
             num++;
         }
     }
@@ -1512,7 +1513,8 @@ void MainWindow::InforNum_Changed(){
     else{
         Infor_num_icon->hide();//等于0的时候隐藏数量Label
     }
-    QString s = QString::number(informationNum,10);
+    int num = informationNum+FriendRequestCount;
+    QString s = QString::number(num,10);
     qDebug()<<"此时information数量为：";
     qDebug()<<s;
     Infor_num_icon->setText(s);
