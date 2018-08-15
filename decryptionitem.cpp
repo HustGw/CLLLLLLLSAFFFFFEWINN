@@ -8,13 +8,15 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     downloadBtn = new QPushButton(this);
     fileIcon = new QLabel(this);
     checkBox = new QCheckBox(this);
+    timeLabel = new QLabel(this);
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
     fileName->setGeometry(200,10,100,30);
     fileSize->setGeometry(200,40,100,30);
     fileDescription->setGeometry(200,80,250,30);
-    downloadBtn->setGeometry(500,50,100,30);
+    downloadBtn->setGeometry(500,70,100,30);
     checkBox->setGeometry(10,70,20,20);
     fileIcon->setGeometry(30,0,100,115);
+    timeLabel->setGeometry(450,10,200,30);
 
 }
 //每一个Item绘制边界框

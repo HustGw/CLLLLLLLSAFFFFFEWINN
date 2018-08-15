@@ -204,11 +204,15 @@ private slots:
 
     void on_pushButton_13_clicked();
 
+    void ShowNewDownDialog(QString id);
+
+
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
     void OSSfileDownFileID(QString id,QString enkey_id);
     void SendInforToInforDlg(QString nickname,QString fileName,QString time);
+    void showDownDialog(QString id);
 private:
     Ui::MainWindow *ui;
 };

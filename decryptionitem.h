@@ -25,6 +25,7 @@ public:
     QCheckBox *checkBox;
     QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
+    QLabel *timeLabel;
 
 signals:
 

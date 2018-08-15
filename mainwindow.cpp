@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
     //开始加密信号槽
     connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
+    connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
     initPageFlag=true;
@@ -103,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFont(font);
         //查询数据库  查询解密请求
      QSqlQuery query(db);
-     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
+     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
      if(!success){
          qDebug() << "查询user失败";
          return;
@@ -115,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
                    DecryptionItem *v1 =  new DecryptionItem();
                    v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
                    v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                   v1->timeLabel->setText(query.record().value("createtime").toString());
                    //设置fileIcon的图片
                    QPixmap pixmap(":/new/src/finEncryption");
                    pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
@@ -204,6 +206,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
      connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(inforDlgaddFriend(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
+     connect(inforDlg,SIGNAL(CleanInforNum()),this,SLOT(InforNum_Changed()));
      inforThread->start();
      Init_InforIcon();//初始化消息按钮
 }
@@ -498,6 +501,14 @@ void MainWindow::getFileID(){
                       bool updateRequest = query.exec("update Decryption set status = 2 where id = '"+fileID+"'");
                       if(updateRequest){
                           DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(fileID+"decryption");
+                          QDateTime time = QDateTime::currentDateTime();
+                          QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取当前时间
+                          QSqlQuery updatetime(db);
+
+                          bool updateTimeSuccess = updatetime.exec("update Decryption set apply_time = '"+time_str+"' where id ='"+fileID+"'");
+                          if(updateTimeSuccess){
+                              qDebug()<<"update failed";
+                          }
                           m1->downloadBtn->setText("申请中");
                           m1->fileDescription->setText("正在等待对方应答，请等待！");
                           disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
@@ -586,7 +597,8 @@ void MainWindow::ReceiveNewReq(){
     Infor_num_icon->show();
     Infor_num_icon->setText(s);
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
+    QString newID;
+    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
     if(!success){
         qDebug() << "查询user失败";
         return;
@@ -599,6 +611,7 @@ void MainWindow::ReceiveNewReq(){
 
                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                  v1->timeLabel->setText(query.record().value("createtime").toString());//设置创建时间
                   //设置fileIcon的图片
                   QPixmap pixmap(":/new/src/finEncryption");
                   pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
@@ -626,7 +639,7 @@ void MainWindow::ReceiveNewReq(){
                           //发送信号给InforDlg让其重新布局
                           QString SendUserid = query.record().value("emp_id").toString();
                           QString SendFileName = query.record().value("file_name").toString();
-                          QString time = query.record().value("emp_createtime").toString();
+                          QString time = query.record().value("createtime").toString();
                           QSqlQuery nameQuery(db);
                           bool success1 =nameQuery.exec("select * from employee where emp_id = '"+SendUserid+"'");
                           if(!success1){
@@ -643,6 +656,7 @@ void MainWindow::ReceiveNewReq(){
                           }
                           qDebug()<<"新消息ID为:";
                           qDebug()<<Infor_ID;
+                          newID = Infor_ID;
 
                       }
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
@@ -671,6 +685,9 @@ void MainWindow::ReceiveNewReq(){
                       }
               }
               ReLayout();
+              emit showDownDialog(newID);
+
+
     }
 }
 //进行数据库   操作
@@ -1377,7 +1394,7 @@ void MainWindow::LinkInsert(QString link){
     QUuid strid = QUuid::createUuid();
     QString id = strid.toString();
     QSqlQuery insertQuery(db);
-    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"',0)");
+    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"',0,0)");
     if(!insertSuccess){
         qDebug()<<"LinkInsertFailed";
     }
@@ -1507,13 +1524,13 @@ void MainWindow::Init_InforIcon(){
 }
 
 void MainWindow::InforNum_Changed(){
-    if(informationNum>0){
+    int num = informationNum+FriendRequestCount;
+    if(num>0){
         Infor_num_icon->show();
     }
     else{
         Infor_num_icon->hide();//等于0的时候隐藏数量Label
     }
-    int num = informationNum+FriendRequestCount;
     QString s = QString::number(num,10);
     qDebug()<<"此时information数量为：";
     qDebug()<<s;
@@ -1528,4 +1545,26 @@ void MainWindow::on_pushButton_13_clicked()
     QListWidgetItem *finditem = item[0];
     friendListWidget->setCurrentItem(finditem);
 
+}
+
+void MainWindow::ShowNewDownDialog(QString id){
+    qDebug()<<"shoudao";
+    QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("有新消息"),
+                                        "确定下载这条新消息？",
+                                        QMessageBox::Yes | QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            //跳转到解密页面，开始下载
+            DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
+            if(m1==NULL){
+                qDebug()<<"error";
+            }
+            else{
+                m1->downloadBtn->click();
+                on_DecryptionBtn_clicked();
+            }
+        }
+        else if(reply ==QMessageBox::No){
+
+        }
 }

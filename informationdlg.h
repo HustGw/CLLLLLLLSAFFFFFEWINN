@@ -58,6 +58,7 @@ signals:
     void statusChanged();
     void InforNumDecrease();
     void addFriendToMain(QString name);//向mainWindow发送添加好友的消息
+    void CleanInforNum();
 };
 
 #endif // INFORMATIONDLG_H

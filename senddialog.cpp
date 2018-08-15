@@ -115,7 +115,7 @@ void sendDialog::on_pushButton_2_clicked()
                 while(query.next()){
                      emp_phone = query.record().value("emp_phone").toString();
                 }
-                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status,createtime,file_size,is_solved) values (?,?,?,?,?,?,?,0,?,?,0)");
+                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status,createtime,file_size,is_solved,apply_time) values (?,?,?,?,?,?,?,0,?,?,0,0)");
                 query.bindValue(0,QUuid::createUuid().toString());
                 query.bindValue(1,file_id);
                 query.bindValue(2,fileName);

@@ -142,7 +142,7 @@ void informationDlg::setItem(){
     QSqlQuery query(db);
     QString sql = "select * from Decryption where emp_id = '"+User_ID+"' and status = '2'";
     qDebug()<<sql;
-    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and is_solved = '0' and (status = '2' or status ='4' or status = '3' or status = '5')");
+    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and is_solved = '0' and (status = '2' or status ='4' or status = '3' or status = '5') order by apply_time DESC");
     if(success){
         qDebug()<<"查询数据库成功";
         while (query.next()) {
@@ -166,6 +166,8 @@ void informationDlg::setItem(){
             QString title = nickName+"请求文件"+filename+"密钥文件下载";
             m1->titleLabel->setText(title);
             //判断当前状态 给予不同的按钮状态
+            QString time = query.record().value("apply_time").toString();
+            m1->timeLabel->setText(time);
             QString nowStatus = query.record().value("status").toString();
             if(nowStatus=="2"){
                 m1->setObjectName(query.record().value("id").toString()+"information");
@@ -199,7 +201,7 @@ void informationDlg::setItem(){
         qDebug()<<"查询数据库失败";
     }
     QSqlQuery friendQuery(db);
-    bool friendSuccess = friendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0' and is_solved = '0'");
+    bool friendSuccess = friendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0' and is_solved = '0' order by create_time DESC");
     if(!friendSuccess){
         qDebug()<<"初始化好友列表失败";
     }
@@ -235,6 +237,12 @@ void informationDlg::CleanAllInfor(){
         qDebug()<<"update failed!";
     }
     bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_nickname ='"+User_ID+"'");
+    if(upFriSuc){
+        qDebug()<<"update friend error";
+    }
+    informationNum=0;
+    FriendRequestCount = 0;
+    emit CleanInforNum();
     this->vbox = new QVBoxLayout();
     delete this->layout();
     QWidget *newItemWidget = new QWidget();
@@ -253,9 +261,11 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
      m1->InforKindsLabel->setText("文件传输");
      m1->titleLabel->setText(s);
      m1->timeLabel->setText(time);
+
      m1->allowBtn->hide();
      m1->ignoreBtn->hide();
      vbox->addWidget(m1);
+     delete this->layout();
      QWidget *newItemWidget = new QWidget();
      newItemWidget->setLayout(this->vbox);
      scrollArea->setWidget(newItemWidget);
@@ -271,7 +281,7 @@ void informationDlg::NewFriend(){
     qDebug()<<"new friend";
     FriendCount++;//
     QSqlQuery query(db);
-    bool success = query.exec("select * from friend where friend_id = '"+User_ID+"'");
+    bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
     if(!success){
         qDebug()<<"informationdlg:查询失败";
     }
