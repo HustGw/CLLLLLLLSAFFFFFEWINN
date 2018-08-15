@@ -34,6 +34,7 @@ sendDialog::sendDialog(QWidget *parent) :
 //            friendList->addItem(a1);
 //            friendList->setItemWidget(a1,b1);
             count++;
+            connect(b1,SIGNAL(stateChanged(int)),this,SLOT(onStageChanged(int)));
         }
     }
 
@@ -43,7 +44,7 @@ void sendDialog::getCheckedItems(){
     int count = ui->listWidget->count();
     qDebug()<<count;
     bool isChecked = false;
-int count2 = ui->listWidget_2->count();
+    int count2 = ui->listWidget_2->count();
     for (int j = 0;j<count2;j++){
         QListWidgetItem * item = ui->listWidget_2->takeItem(0);
         delete item;
@@ -75,10 +76,11 @@ void sendDialog::closeEvent(QCloseEvent *){
     ConnectionPool::closeConnection(db1);
 }
 
+void sendDialog::onStageChanged(int stage){
+        getCheckedItems();
+}
 void sendDialog::on_pushButton_clicked()
 {
-
-    getCheckedItems();
 
 }
 

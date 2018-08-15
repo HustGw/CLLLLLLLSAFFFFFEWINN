@@ -57,6 +57,7 @@
 #include "delinkdialog.h"
 #include <QDateTime>
 #include  "QZXing/QZXing.h"
+#include "groupsenddialog.h"
 namespace Ui {
 class MainWindow;
 }
@@ -114,7 +115,7 @@ public:
     QProgressBar *d_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
-
+    groupSendDialog *grpDlg;
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -207,6 +208,9 @@ private slots:
     void ShowNewDownDialog(QString id);
 
 
+    void on_pushButton_6_clicked();
+protected:
+    void closeEvent(QCloseEvent *event);
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);

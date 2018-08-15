@@ -233,7 +233,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="allSelLab">
@@ -280,7 +280,7 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>340</x>
+        <x>450</x>
         <y>10</y>
         <width>90</width>
         <height>30</height>
@@ -306,7 +306,7 @@
      <widget class="QPushButton" name="pushButton_12">
       <property name="geometry">
        <rect>
-        <x>480</x>
+        <x>600</x>
         <y>10</y>
         <width>90</width>
         <height>30</height>

@@ -35,11 +35,11 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
-LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -115,7 +115,8 @@ SOURCES += \
     sharedialog.cpp \
     BitBuffer.cpp \
     QrCode.cpp \
-    QrSegment.cpp
+    QrSegment.cpp \
+    groupsenddialog.cpp
 
 
 
@@ -210,7 +211,8 @@ HEADERS += \
     sharedialog.h \
     BitBuffer.hpp \
     QrCode.hpp \
-    QrSegment.hpp
+    QrSegment.hpp \
+    groupsenddialog.h
 
 
 
@@ -221,7 +223,8 @@ FORMS += \
     senddialog.ui \
     registerdialog.ui \
     tcpclient.ui \
-    sharedialog.ui
+    sharedialog.ui \
+    groupsenddialog.ui
 
 DISTFILES += \
     Makefile

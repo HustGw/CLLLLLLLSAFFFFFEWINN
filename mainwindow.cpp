@@ -32,6 +32,7 @@ int DepThreadNum = 0;
 QFont f("ZYSong18030",12,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
+QString file_id_list; //批量分享时用的文件表
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -994,6 +995,38 @@ void MainWindow::on_pushButton_5_clicked()
         }
         flag = 0;
 }
+//批量分享按钮响应
+void MainWindow::on_pushButton_6_clicked()
+{
+        int flag = 0;
+        QString file_id_d;
+        QSqlQuery query3(db);
+
+        bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
+        if(!success){
+            qDebug() << "查询密文失败";
+            return;
+        }else{
+            qDebug()<<"查询成功";
+            while(query3.next())
+            {
+                file_id_d = query3.record().value("article_id").toString();
+                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
+
+                if(checkcheck->isChecked()){
+                    flag = 1;
+                    file_id_list = file_id_list + "||" +file_id_d;
+                    }
+                }
+            }
+        if(flag == 1){
+            grpDlg = new groupSendDialog();
+            grpDlg->show();
+        }else if(flag == 0){
+            QMessageBox::warning(NULL, "warning", "请选择需要批量分享的条目！");
+        }
+        flag = 0;    
+}
 
 //已加密文件单独删除按钮
 void MainWindow::on_deleteBtn_clicked(){
@@ -1567,4 +1600,11 @@ void MainWindow::ShowNewDownDialog(QString id){
         else if(reply ==QMessageBox::No){
 
         }
+}
+void MainWindow::closeEvent(QCloseEvent *event){
+    if(QMessageBox::warning(this,"退出","确认退出吗？",QMessageBox::Yes | QMessageBox::No)==QMessageBox::Yes){
+        event->accept();
+    }else{
+        event->ignore();
+    }
 }

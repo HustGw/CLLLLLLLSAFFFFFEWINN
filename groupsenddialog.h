@@ -1,5 +1,5 @@
-#ifndef SENDDIALOG_H
-#define SENDDIALOG_H
+#ifndef GROUPSENDDIALOG_H
+#define GROUPSENDDIALOG_H
 
 #include <QDialog>
 #include <QApplication>
@@ -12,31 +12,29 @@
 #include <QCloseEvent>
 #include <QCheckBox>
 
-namespace Ui {
-class sendDialog;
-}
-extern QString file_id;
+extern QString file_id_list;
 extern QString user_id;
-class sendDialog : public QDialog
+namespace Ui {
+class groupSendDialog;
+}
+
+class groupSendDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit sendDialog(QWidget *parent = 0);
-    ~sendDialog();
+    explicit groupSendDialog(QWidget *parent = 0);
+    ~groupSendDialog();
     QSqlDatabase db1;
     void getCheckedItems();
+
 private slots:
     void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
     void onStageChanged(int stage);
-    void reciveData(QString Data);
-    void reciveUserId(QString data);
 protected:
     void closeEvent(QCloseEvent *);
 private:
-    Ui::sendDialog *ui;
+    Ui::groupSendDialog *ui;
 };
 
-#endif // SENDDIALOG_H
+#endif // GROUPSENDDIALOG_H
