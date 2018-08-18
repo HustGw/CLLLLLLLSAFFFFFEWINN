@@ -10,7 +10,7 @@ FinishViewController::FinishViewController(QWidget *parent) : QWidget(parent)
 
     scrollArea = new QScrollArea(this);
     scrollArea->setWidget(ItemWidget);
-
+    scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
     scrollLayout = new QVBoxLayout(this);
     scrollLayout->addWidget(scrollArea);
     this->setLayout(scrollLayout);

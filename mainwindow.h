@@ -58,6 +58,7 @@
 #include <QDateTime>
 #include  "QZXing/QZXing.h"
 #include "groupsenddialog.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -209,8 +210,15 @@ private slots:
 
 
     void on_pushButton_6_clicked();
+    void on_pushButton_15_clicked();
+
+    void on_pushButton_14_clicked();
+
 protected:
     void closeEvent(QCloseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 signals:
 //    void sendUserID(QString user_id);
     void sendFileID(QString enkey_id,QString file_id,QString file_name);
@@ -219,6 +227,8 @@ signals:
     void showDownDialog(QString id);
 private:
     Ui::MainWindow *ui;
+    QPoint dragPosition;
+    bool mouse_press;
 };
 
 #endif // MAINWINDOW_H

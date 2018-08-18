@@ -4,7 +4,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
     if (!initLableFlag){
         initPage = new QLabel(this);
-        initPage->setGeometry(300,150,300,100);
+        initPage->setGeometry(241,162,215,30);
         initPage->setText("请调取本地文件进行加密！");
     }
 
@@ -16,13 +16,13 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //checkBox = new QCheckBox(this);
         encryptStaBtn = new QPushButton(this);
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-        fileName->setGeometry(300,10,300,30);
-        fileSize->setGeometry(300,40,100,30);
-        fileDescription->setGeometry(300,80,200,30);
+        fileName->setGeometry(95,12,200,16);
+        fileSize->setGeometry(95,31,100,11);
+        fileDescription->setGeometry(95,47,100,12);
         //downloadBtn->setGeometry(500,50,100,30);
         //checkBox->setGeometry(10,70,20,20);
-        fileIcon->setGeometry(30,0,100,115);
-        encryptStaBtn->setGeometry(500,50,100,30);
+        fileIcon->setGeometry(50,13,38,46);
+        encryptStaBtn->setGeometry(95,47,100,12);
         encryptStaBtn->hide();
     //progressBar->setMinimum(0);
     //progressBar->setMaximum(0);
@@ -37,10 +37,10 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setPen(QColor(139,139,139));
-    painter.drawLine(31,0,this->width()-1,0);
-    painter.drawLine(31,0,31,this->height()-1);
-    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
-    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
+//    painter.drawLine(31,0,this->width()-1,0);
+//    painter.drawLine(31,0,31,this->height()-1);
+//    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
+//    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
 
 
 }

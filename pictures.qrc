@@ -6,6 +6,35 @@
         <file alias="fileIcon">pictures/icon_0.png</file>
     </qresource>
     <qresource prefix="/">
+        <file>mainWindow.qss</file>
         <file>pictures/inforalarm.jpg</file>
+    </qresource>
+    <qresource prefix="/new/mainwindow">
+        <file>pictures/link_download.png</file>
+        <file>pictures/exit_button.png</file>
+        <file>pictures/max_button.png</file>
+        <file>pictures/min_button.png</file>
+        <file>pictures/information_alarm.png</file>
+        <file>pictures/openfile.png</file>
+        <file>pictures/openfile_hover.png</file>
+        <file>pictures/openfile_pressed.png</file>
+        <file>pictures/groupdelete.png</file>
+        <file>pictures/groupdelete_hover.png</file>
+        <file>pictures/groupdelete_pressed.png</file>
+        <file>pictures/groupshare.png</file>
+        <file>pictures/groupshare_hover.png</file>
+        <file>pictures/groupshare_pressed.png</file>
+        <file>pictures/allselect.png</file>
+        <file>pictures/allselect_hover.png</file>
+        <file>pictures/allselect_pressed.png</file>
+        <file>pictures/search.png</file>
+        <file>pictures/encryption_icon.png</file>
+        <file>pictures/encryption_icon_selected.png</file>
+        <file>pictures/mainwindow_button_bg.png</file>
+        <file>pictures/mainwindow_button_bg_selected.png</file>
+        <file>pictures/decryption_icon.png</file>
+        <file>pictures/decryption_icon_selected.png</file>
+        <file>pictures/fin_icon.png</file>
+        <file>pictures/fin_icon_selected.png</file>
     </qresource>
 </RCC>

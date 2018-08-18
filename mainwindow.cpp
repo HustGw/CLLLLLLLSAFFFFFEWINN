@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QtSql/QSqlError>
 #include "QProgressBar"
+#include <qt_windows.h>
+#include <QFile>
 int FriendRequestCount = 0;
 int informationNum = 0;
 int RequsetAllowNum = 0;
@@ -29,7 +31,7 @@ bool initPageFlag;
 int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
-QFont f("ZYSong18030",12,75);
+QFont f("HiraginoSansGB",10,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString file_id_list; //批量分享时用的文件表
@@ -37,9 +39,35 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
     User_ID = LoginUserID;
     ui->setupUi(this);
+    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
+    ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_5->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_6->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_7->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_15->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_max->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->OpenFileBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->EncryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->DecryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
+
+
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -69,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
-    addFriendBtn->setGeometry(ui->RightWidget->width()/2-50,ui->RightWidget->height()-50,100,40);//设置添加好友BUTTON位置
+    addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(0,40,ui->RightWidget->width(),ui->RightWidget->height()-40);
     addFriendBtn->setText(tr("添加好友"));
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
@@ -82,13 +110,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setEmp_name();
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
-    userHead->setGeometry(40,10,80,80);
-    userHead->setStyleSheet("min-width:  80px;"
-                            "max-width:  80px;"
-                            "min-height: 80px;"
-                            "max-height: 80px;"
+    userHead->setGeometry(15,14,45,45);
+    userHead->setStyleSheet("min-width:  45px;"
+                            "max-width:  45px;"
+                            "min-height: 45px;"
+                            "max-height: 45px;"
 
-                            "border-radius:40px;"
+                            "border-radius:22px;"
                             "border-width: 0 0 0 0;"
                             "border-image: url(:/new/src/head1) 0 0 0 0 stretch strectch;"
                             );
@@ -100,6 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     ui->FinDepBtn->hide();
     ui->FinEnpBtn->hide();
+    ui->line_10->hide();
+    ui->line_11->hide();
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
@@ -161,6 +191,7 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea = new QScrollArea();
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
+                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
                decryptionViewController->setLayout(newVbox);          
@@ -210,6 +241,44 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforDlg,SIGNAL(CleanInforNum()),this,SLOT(InforNum_Changed()));
      inforThread->start();
      Init_InforIcon();//初始化消息按钮
+
+//     QString qss;
+//     QFile qssFile(":/mainWindow.qss");
+//     qssFile.open(QFile::ReadOnly);
+//     if(qssFile.isOpen()){
+//         qssFile.seek(0);
+//         qss = qssFile.readAll().toStdString().c_str();
+//         qApp->setStyleSheet(qss);
+//         qssFile.close();
+//     }
+     qApp->setStyleSheet("QPushButton#pushButton_4 { border-image: url(:/new/mainwindow/pictures/link_download.png); }"
+                         "QPushButton#pushButton_14 { border-image: url(:/new/mainwindow/pictures/min_button.png); }"
+                         "QPushButton#pushButton_max { border-image: url(:/new/mainwindow/pictures/max_button.png); }"
+                         "QPushButton#pushButton_15 { border-image: url(:/new/mainwindow/pictures/exit_button.png); }"
+                         "QPushButton#OpenFileBtn { border-image: url(:/new/mainwindow/pictures/openfile.png); }"
+                         "QPushButton#OpenFileBtn:hover { border-image: url(:/new/mainwindow/pictures/openfile_hover.png); }"
+                         "QPushButton#OpenFileBtn:pressed { border-image: url(:/new/mainwindow/pictures/openfile_pressed.png); }"
+                         "QPushButton#pushButton_3 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
+                         "QPushButton#pushButton_3:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
+                         "QPushButton#pushButton_3:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
+                         "QPushButton#pushButton_5 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
+                         "QPushButton#pushButton_5:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
+                         "QPushButton#pushButton_5:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
+                         "QPushButton#pushButton { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
+                         "QPushButton#pushButton_6 { border-image: url(:/new/mainwindow/pictures/groupshare.png);}"
+                         "QPushButton#pushButton_6:hover { border-image: url(:/new/mainwindow/pictures/groupshare_hover.png);}"
+                         "QPushButton#pushButton_6:pressed { border-image: url(:/new/mainwindow/pictures/groupshare_pressed.png);}"
+                         "QPushButton#pushButton_10 { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
+                         "QPushButton#pushButton_11 { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
+                         "QPushButton#pushButton_7 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
+                         "QPushButton#pushButton_7:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
+                         "QPushButton#pushButton_7:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
+                         "QPushButton#pushButton:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
+                         "QPushButton#pushButton_10:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
+                         "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }");
+     ui->pushButton_8->hide();
+     ui->pushButton_9->hide();
+
 }
 
 MainWindow::~MainWindow()
@@ -224,16 +293,22 @@ void MainWindow::on_FinishedBtn_clicked()
 //    pal.setColor(QColorGroup::ButtonText,QColor(255,0,0));
 //    ui->FinishedBtn->setPalette(pal);
     CleanButtonClicked();
-    ui->FinishedBtn->setStyleSheet("background-color:rgb(119,119,119);");
+    ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon_selected.png"));
+
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
         ui->FinDepBtn->show();
         ui->FinEnpBtn->show();
+        ui->line_10->show();
+        ui->line_11->show();
         isFinishedBtn=1;
     }
     else{
         ui->FinDepBtn->hide();
         ui->FinEnpBtn->hide();
+        ui->line_10->hide();
+        ui->line_11->hide();
         isFinishedBtn = 0;
     }
 
@@ -242,7 +317,8 @@ void MainWindow::on_FinishedBtn_clicked()
 void MainWindow::on_DecryptionBtn_clicked()
 {   //点击解密按钮后，MidStaWidget跳转到1号子页面
     CleanButtonClicked();
-    ui->DecryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
+    ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(1);
 }
@@ -252,7 +328,8 @@ void MainWindow::on_DecryptionBtn_clicked()
 void MainWindow::on_EncryptionBtn_clicked()
 {   //点击加密按钮后，QMidStaWidget跳转到0号子页面
     CleanButtonClicked();
-    ui->EncryptionBtn->setStyleSheet("background-color:rgb(119,119,119);");
+    ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
     if (encryptionViewController->vbox->count()==0||encryptionViewController->layout()->count()-1==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
@@ -267,7 +344,7 @@ void MainWindow::on_EncryptionBtn_clicked()
 void MainWindow::on_FinEnpBtn_clicked()
 {
     CleanButtonClicked();
-    ui->FinEnpBtn->setStyleSheet("background-color:rgb(119,119,119);");
+    ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
@@ -275,7 +352,7 @@ void MainWindow::on_FinEnpBtn_clicked()
 void MainWindow::on_FinDepBtn_clicked()
 {
     CleanButtonClicked();
-    ui->FinDepBtn->setStyleSheet("background-color:rgb(119,119,119);");
+    ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
     on_pushButton_9_clicked();
@@ -350,6 +427,7 @@ void MainWindow::on_OpenFileBtn_clicked()
         QWidget *newItemWidget = new QWidget();
         QScrollArea *newScrollArea = new QScrollArea();
         newItemWidget->setLayout(encryptionViewController->vbox);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         newScrollArea->setWidget(newItemWidget);
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->addWidget(newScrollArea);
@@ -463,6 +541,7 @@ void MainWindow::on_pushButton_3_clicked()
               delete decryptionViewController->layout();
               QWidget *newItemWidget = new QWidget();
               newItemWidget->setLayout(decryptionViewController->vbox);
+              newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
               newScrollArea->setWidget(newItemWidget);
               QVBoxLayout *newVbox = new QVBoxLayout();
               newVbox->addWidget(newScrollArea);
@@ -943,6 +1022,7 @@ void MainWindow::on_pushButton_8_clicked()
                QWidget *newItemWidget = new QWidget();
                //QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController->vbox);
+               finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                finScrollArea->setWidget(newItemWidget);
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(finScrollArea);
@@ -1052,6 +1132,7 @@ void MainWindow::on_deleteBtn_clicked(){
     delete finishViewController->layout();
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(finishViewController->vbox);
+    finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
     finScrollArea->setWidget(newItemWidget);
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(finScrollArea);
@@ -1087,6 +1168,7 @@ void MainWindow::on_deleteBtn2_clicked(){
            // QScrollArea *newScrollArea = new QScrollArea();
             newItemWidget->setLayout(finishViewController2->vbox);
             finScrollArea->setWidget(newItemWidget);
+            finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
             QVBoxLayout *newVbox = new QVBoxLayout();
             newVbox->addWidget(finScrollArea);
             finishViewController2->setLayout(newVbox);
@@ -1150,6 +1232,7 @@ void MainWindow::on_pushButton_9_clicked()
               // QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController2->vbox);
                finScrollArea->setWidget(newItemWidget);
+               finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(finScrollArea);
                finishViewController2->setLayout(newVbox);
@@ -1253,6 +1336,7 @@ void MainWindow::FileIsAllowed(){
                      QWidget *newItemWidget = new QWidget();
                      newItemWidget->setLayout(decryptionViewController->vbox);
                      newScrollArea->setWidget(newItemWidget);
+                     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                      QVBoxLayout *newVbox = new QVBoxLayout();
                      newVbox->addWidget(newScrollArea);
                      decryptionViewController->setLayout(newVbox);
@@ -1298,7 +1382,8 @@ void MainWindow::setEmp_name(){
             qDebug()<<nickName;
             ui->nameLabel->setText(nickName);
         }
-        ui->UserPhonelabe->setText(UserPhoneNum);
+        ui->UserPhonelabe->setText("手机号："+UserPhoneNum);
+        ui->UserIDlabel->hide();
     }
     else{
         qDebug()<<"查询用户名失败";
@@ -1394,11 +1479,14 @@ void MainWindow::CleanButtonClicked(){
     ui->EncryptionBtn->setFont(f);
     ui->FinishedBtn->setFont(f);
     ui->FinEnpBtn->setFont(f);
-    ui->FinDepBtn->setStyleSheet("background-color:rgb(255,255,255);");
-    ui->DecryptionBtn->setStyleSheet("background-color:rgb(255,255,255);");
-    ui->EncryptionBtn->setStyleSheet("background-color:rgb(255,255,255);");
-    ui->FinEnpBtn->setStyleSheet("background-color:rgb(255,255,255);");
-    ui->FinishedBtn->setStyleSheet("background-color:rgb(255,255,255);");
+    ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
+    ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
+    ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon.png"));
+    ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
+    ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon.png"));
+    ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
+    ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
+    ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon.png"));
 }
 
 void MainWindow::LinkInsert(QString link){
@@ -1470,6 +1558,7 @@ void MainWindow::ReLayout(){
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(decryptionViewController->vbox);
     newScrollArea->setWidget(newItemWidget);
+    newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(newScrollArea);
     decryptionViewController->setLayout(newVbox);
@@ -1511,17 +1600,18 @@ void MainWindow::on_pushButton_12_clicked()
 void MainWindow::Init_InforIcon(){
     //初始化消息ICON
     Infor_icon = new Mylabel(ui->TopWidget);
-    Infor_icon->setGeometry(930,30,60,60);
-    QPixmap Inforpixmap(":/pictures/inforalarm.jpg");
+    Infor_icon->setGeometry(952,29,12,15);
+    QPixmap Inforpixmap(":/new/mainwindow/pictures/information_alarm.png");
     Inforpixmap.scaled(Infor_icon->size(),Qt::KeepAspectRatio);
     Infor_icon->setScaledContents(true);
     Infor_icon->setPixmap(Inforpixmap);
+    Infor_icon->setCursor(QCursor(Qt::PointingHandCursor));
     connect(Infor_icon,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     //初始化消息数量ICON
     Infor_num_icon = new Mylabel(ui->TopWidget);
-    Infor_num_icon->setGeometry(960,15,30,30);
+    Infor_num_icon->setGeometry(957,21,17,17);
     Infor_num_icon->setStyleSheet("background-color:red;"
-                                  "border-radius:15px");
+                                  "border-radius:8px");
     Infor_num_icon->setAlignment(Qt::AlignCenter);
     QSqlQuery query(db);
     int num=0;
@@ -1545,7 +1635,7 @@ void MainWindow::Init_InforIcon(){
         }
     }
     QString s = QString::number(num,10);
-    QFont font("Microsoft YaHei",10,75);
+    QFont font("Microsoft YaHei",8,75);
     Infor_num_icon->setFont(font);
     if(num==0){
         Infor_num_icon->hide();
@@ -1607,4 +1697,33 @@ void MainWindow::closeEvent(QCloseEvent *event){
     }else{
         event->ignore();
     }
+}
+
+void MainWindow::on_pushButton_15_clicked()
+{
+    this->close();
+}
+
+void MainWindow::on_pushButton_14_clicked()
+{
+    this->showMinimized();
+}
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    if (event->button() == Qt::LeftButton) {
+        mouse_press = true;
+            dragPosition = event->globalPos() - frameGeometry().topLeft();
+            event->accept();
+        }
+}
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    if (event->buttons() & Qt::LeftButton) {
+        if(mouse_press == true){
+            move(event->globalPos() - dragPosition);
+            event->accept();
+        }
+        }
+
+}
+void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+    mouse_press = false;
 }
