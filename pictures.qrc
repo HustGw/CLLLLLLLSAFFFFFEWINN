@@ -36,5 +36,31 @@
         <file>pictures/decryption_icon_selected.png</file>
         <file>pictures/fin_icon.png</file>
         <file>pictures/fin_icon_selected.png</file>
+        <file>pictures/delete_button.png</file>
+        <file>pictures/delete_button_hover.png</file>
+        <file>pictures/pathopen_button.png</file>
+        <file>pictures/pathopen_button_hover.png</file>
+        <file>pictures/share_button.png</file>
+        <file>pictures/share_button_hover.png</file>
+        <file>pictures/trans_button.png</file>
+        <file>pictures/trans_button_hover.png</file>
+        <file>pictures/doc_icon.png</file>
+        <file>pictures/else_icon.png</file>
+        <file>pictures/music_icon.png</file>
+        <file>pictures/pic_icon.png</file>
+        <file>pictures/video_icon.png</file>
+        <file>pictures/zip_icon.png</file>
+    </qresource>
+    <qresource prefix="/new/login">
+        <file>pictures/login_account.png</file>
+        <file>pictures/login_account_hover.png</file>
+        <file>pictures/login_accounts_management.png</file>
+        <file>pictures/login_background.png</file>
+        <file>pictures/login_button.png</file>
+        <file>pictures/login_clear_password.png</file>
+        <file>pictures/login_headimage.png</file>
+        <file>pictures/login_main_logo.png</file>
+        <file>pictures/login_password.png</file>
+        <file>pictures/login_password_hover.png</file>
     </qresource>
 </RCC>
