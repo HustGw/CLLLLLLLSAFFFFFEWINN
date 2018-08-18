@@ -278,7 +278,7 @@ background-color: rgb(255, 255, 255);</string>
       <x>165</x>
       <y>115</y>
       <width>698</width>
-      <height>540</height>
+      <height>497</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -301,7 +301,7 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">

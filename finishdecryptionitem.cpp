@@ -6,42 +6,55 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
+    fileName->setFont(QFont("Timers",11,QFont::Bold));
+    fileSize->setFont(QFont("Timers",8));
+    fileDescription->setFont(QFont("Timers",8));
+    fileSize->setStyleSheet("color:#9999AB");
+    fileDescription->setStyleSheet("color:#9999AB");
+
     openBtn = new QPushButton(this);
     pathOpenBtn = new QPushButton(this);
     deleteBtn = new QPushButton(this);
 
     fileIcon = new QLabel(this);
     checkBox = new QCheckBox(this);
+    checkBox->setCursor(QCursor(Qt::PointingHandCursor));
 
     //location
+    openBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/open_button.png); }"
+                                       "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/open_button_hover.png); }");
+    pathOpenBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/pathopen_button.png); }"
+                                       "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/pathopen_button_hover.png); }");
+    deleteBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/delete_button.png); }"
+                                       "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/delete_button_hover.png); }");
 
-    openBtn ->setText("打开\n文件");
-    pathOpenBtn ->setText("路径\n打开");
-    deleteBtn->setText("删除");
+    openBtn->setToolTip("打开文件");
+    pathOpenBtn->setToolTip("打开路径");
+    deleteBtn->setToolTip("删除条目");
 
-    fileName->setGeometry(200,10,100,30);
-    fileSize->setGeometry(200,40,100,30);
-    fileDescription->setGeometry(200,80,200,30);
+    openBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    pathOpenBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
+    fileName->setGeometry(97,10,300,16);
+    fileSize->setGeometry(97,28,300,11);
+    fileDescription->setGeometry(97,41,400,12);
 
-    openBtn->setGeometry(480,20,50,80);
-    pathOpenBtn->setGeometry(540,20,50,80);
-    deleteBtn->setGeometry(600,20,50,80);
+    openBtn->setGeometry(540,10,14,16);
+    pathOpenBtn->setGeometry(575,11,15,14);
+    deleteBtn->setGeometry(614,12,13,13);
 
-    checkBox->setGeometry(10,70,20,20);
+    checkBox->setGeometry(15,25,13,13);
+    checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
-    fileIcon->setGeometry(32,2,100,115);
-
+    fileIcon->setGeometry(45,10,38,46);
 
 }
 
 void FinishDecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setPen(QColor(139,139,139));
-    painter.drawLine(31,0,this->width()-1,0);
-    painter.drawLine(31,0,31,this->height()-1);
-    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
-    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
+    painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
 
 

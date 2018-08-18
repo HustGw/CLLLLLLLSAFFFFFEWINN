@@ -13,6 +13,8 @@
 #include "QProgressBar"
 #include <qt_windows.h>
 #include <QFile>
+int findecrypt_flag = 0;//已解密全选判断变量
+int finencrypt_flag = 0;//已加密全选判断变量
 int FriendRequestCount = 0;
 int informationNum = 0;
 int RequsetAllowNum = 0;
@@ -149,10 +151,40 @@ MainWindow::MainWindow(QWidget *parent) :
                    v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
                    v1->timeLabel->setText(query.record().value("createtime").toString());
                    //设置fileIcon的图片
-                   QPixmap pixmap(":/new/src/finEncryption");
-                   pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
-                   v1->fileIcon->setScaledContents(true);
-                   v1->fileIcon->setPixmap(pixmap);
+
+                   QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
+                   if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+                       QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+                       QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+                       QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+                       QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+                       QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }else{
+                       QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+                       pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                       v1->fileIcon->setScaledContents(true);
+                       v1->fileIcon->setPixmap(pixmap);
+                   }
+
                    QString initID = query.record().value("id").toString();
                    v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
                    v1->setObjectName(initID+"decryption");//设置Item的ID
@@ -398,11 +430,38 @@ void MainWindow::on_OpenFileBtn_clicked()
         v1->setObjectName(orFileID);
         v1->fileName->setText(fName);
         v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
-
-        QPixmap pixmap(":/new/src/fileIcon");
-        pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
-        v1->fileIcon->setScaledContents(true);
-        v1->fileIcon->setPixmap(pixmap);
+        QString filetype = fName.section(".",1,1).trimmed().toStdString().c_str();
+        if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+            QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+            QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+            QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+            QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+            QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }else{
+            QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+            v1->fileIcon->setScaledContents(true);
+            v1->fileIcon->setPixmap(pixmap);
+        }
 
         v1->encryptStaBtn->setObjectName(orFileID);
         v1->encryptStaBtn->show();
@@ -1002,10 +1061,38 @@ void MainWindow::on_pushButton_8_clicked()
                FinishEncryptionItem *f1 = new FinishEncryptionItem();
                f1->setObjectName(file_id);
 
-               QPixmap pixmap(":/new/src/finEncryption");
-               pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
-               f1->fileIcon->setScaledContents(true);
-               f1->fileIcon->setPixmap(pixmap);
+               QString filetype = file_name.section(".",1,1).trimmed().toStdString().c_str();
+               if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else{
+                   QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }
 
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
@@ -1211,10 +1298,38 @@ void MainWindow::on_pushButton_9_clicked()
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
                f1->setObjectName(file_id);
 
-               QPixmap pixmap(":/new/src/finEncryption");
-               pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
-               f1->fileIcon->setScaledContents(true);
-               f1->fileIcon->setPixmap(pixmap);
+               QString filetype = file_name.section(".",1,1).trimmed().toStdString().c_str();
+               if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+                   QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }else{
+                   QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+                   pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
+                   f1->fileIcon->setScaledContents(true);
+                   f1->fileIcon->setPixmap(pixmap);
+               }
 
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
@@ -1433,9 +1548,11 @@ void MainWindow::on_pushButton_7_clicked()
         }
         flag = 0;
 }
+
 //已解密页面全选按钮
 void MainWindow::on_pushButton_10_clicked()
 {
+
     QSqlQuery query(db);
     bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
     if(!success){
@@ -1447,11 +1564,24 @@ void MainWindow::on_pushButton_10_clicked()
         {
             QString file_id = query.record().value("file_id").toString();
             QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
-            checkcheck->setChecked(true);
+            if(finencrypt_flag == 0){
+                checkcheck->setChecked(true);
+            }else if(finencrypt_flag == 1){
+                checkcheck->setChecked(false);
+            }
         }
     }
-
+    if(finencrypt_flag == 0){
+        finencrypt_flag = 1;
+        ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect_pressed.png);} "
+                                         " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    }else if(finencrypt_flag == 1){
+        finencrypt_flag =0;
+        ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                         " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    }
 }
+
 //已加密页面全选按钮
 void MainWindow::on_pushButton_11_clicked()
 {
@@ -1466,9 +1596,21 @@ void MainWindow::on_pushButton_11_clicked()
         {
             QString file_id = query.record().value("article_id").toString();
             QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
-            checkcheck->setChecked(true);
+            if(findecrypt_flag == 0){
+                checkcheck->setChecked(true);
+            }else if(findecrypt_flag == 1){
+                checkcheck->setChecked(false);
+            }
         }
-
+        if(findecrypt_flag == 0){
+            findecrypt_flag = 1;
+            ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect_pressed.png);} "
+                                             " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }else if(findecrypt_flag == 1){
+            findecrypt_flag =0;
+            ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                             " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }
 
     }
 }

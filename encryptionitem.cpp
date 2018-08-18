@@ -11,6 +11,13 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         fileName = new QLabel(this);
         fileSize = new QLabel(this);
         fileDescription = new QLabel(this);
+
+        fileName->setFont(QFont("Timers",11,QFont::Bold));
+        fileSize->setFont(QFont("Timers",8));
+        fileDescription->setFont(QFont("Timers",8));
+        fileSize->setStyleSheet("color:#9999AB");
+        fileDescription->setStyleSheet("color:#9999AB");
+
         //downloadBtn = new QPushButton(this);
         fileIcon = new QLabel(this);
         //checkBox = new QCheckBox(this);
@@ -23,6 +30,8 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //checkBox->setGeometry(10,70,20,20);
         fileIcon->setGeometry(50,13,38,46);
         encryptStaBtn->setGeometry(95,47,100,12);
+        encryptStaBtn->setFont(QFont("Timers",8));
+        encryptStaBtn->setStyleSheet("color:#9999AB");
         encryptStaBtn->hide();
     //progressBar->setMinimum(0);
     //progressBar->setMaximum(0);
@@ -37,7 +46,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setPen(QColor(139,139,139));
-//    painter.drawLine(31,0,this->width()-1,0);
+    painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 //    painter.drawLine(31,0,31,this->height()-1);
 //    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
 //    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);

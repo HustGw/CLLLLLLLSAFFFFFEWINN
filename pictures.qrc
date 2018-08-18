@@ -50,6 +50,8 @@
         <file>pictures/pic_icon.png</file>
         <file>pictures/video_icon.png</file>
         <file>pictures/zip_icon.png</file>
+        <file>pictures/open_button.png</file>
+        <file>pictures/open_button_hover.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

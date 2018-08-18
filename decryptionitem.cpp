@@ -5,31 +5,45 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
+
+    fileName->setFont(QFont("Timers",11,QFont::Bold));
+    fileSize->setFont(QFont("Timers",8));
+    fileDescription->setFont(QFont("Timers",8));
+    fileSize->setStyleSheet("color:#9999AB");
+    fileDescription->setStyleSheet("color:#9999AB");
+
     downloadBtn = new QPushButton(this);
     fileIcon = new QLabel(this);
     checkBox = new QCheckBox(this);
+    checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     timeLabel = new QLabel(this);
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-    fileName->setGeometry(200,10,100,30);
-    fileSize->setGeometry(200,40,100,30);
-    fileDescription->setGeometry(200,80,250,30);
-    downloadBtn->setGeometry(500,70,100,30);
-    checkBox->setGeometry(10,70,20,20);
-    fileIcon->setGeometry(30,0,100,115);
-    timeLabel->setGeometry(450,10,200,30);
 
+    fileName->setGeometry(97,10,300,16);
+    fileSize->setGeometry(97,28,300,11);
+    fileDescription->setGeometry(97,41,400,12);
+
+    downloadBtn->setGeometry(545,22,90,24);
+    downloadBtn->setCursor(QCursor(Qt::PointingHandCursor));
+
+    checkBox->setGeometry(15,25,13,13);
+    checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+
+    fileIcon->setGeometry(45,10,38,46);
+
+    timeLabel->setGeometry(294,31,230,10);
+    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setStyleSheet("color:#9999AB");
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setPen(QColor(139,139,139));
-    painter.drawLine(31,0,this->width()-1,0);
-    painter.drawLine(31,0,31,this->height()-1);
-    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
-    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);
+    painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
 
 void DecryptionItem::changeCheckBox(){
     checkBox->setCheckState(Qt::Checked);
+
 }
 

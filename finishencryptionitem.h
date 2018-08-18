@@ -23,7 +23,7 @@ class FinishEncryptionItem : public QWidget
 public:
     explicit FinishEncryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(660,120);
+        return QSize(630,71);
     }
 
     QLabel *fileName;

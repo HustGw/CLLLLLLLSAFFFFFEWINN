@@ -22,9 +22,6 @@ shareDialog::~shareDialog()
 
 void shareDialog::on_pushButton_clicked()
 {
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(ui->textEdit->toPlainText());
-    QMessageBox::information(this,"提示","拷贝成功");
 }
 
 void shareDialog::paintEvent(QPaintEvent *event){
@@ -76,4 +73,11 @@ void shareDialog::on_pushButton_2_clicked()
     screen->grabWindow(ui->label_2->winId()).save(filename1);
     QMessageBox::information(this,"提示","保存成功");
 
+}
+
+void shareDialog::on_pushButton_copy_clicked()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->setText(ui->textEdit->toPlainText());
+    QMessageBox::information(this,"提示","拷贝成功");
 }
