@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include "senddialog.h"
 #include "sharedialog.h"
+#include"msgbox.h"
 extern QString file_id;
 class FinishEncryptionItem : public QWidget
 {

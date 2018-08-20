@@ -52,6 +52,9 @@
         <file>pictures/zip_icon.png</file>
         <file>pictures/open_button.png</file>
         <file>pictures/open_button_hover.png</file>
+        <file>pictures/system_waring.png</file>
+        <file>pictures/system_icon.png</file>
+        <file>pictures/system_success.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

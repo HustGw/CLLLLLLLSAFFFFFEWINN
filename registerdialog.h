@@ -5,6 +5,7 @@
 #include <QtNetwork>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include "msgbox.h"
 
 
 

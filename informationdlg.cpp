@@ -74,7 +74,8 @@ void informationDlg::recvReq(){
                   //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
                 }
                 else{
-                     QMessageBox::warning(this,tr("error"),tr("操作失败!"),QMessageBox::Yes);
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"));
+                    msgbox->exec();
                 }
             }
         }
@@ -117,7 +118,8 @@ void informationDlg::ignoreReq(){
                     q1->ignoreBtn->setText("已忽略");
                 }
                 else{
-                     QMessageBox::warning(this,tr("error"),tr("操作失败!"),QMessageBox::Yes);
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"));
+                    msgbox->exec();
                 }
             }
         }

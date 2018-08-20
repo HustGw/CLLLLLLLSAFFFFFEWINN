@@ -1,4 +1,5 @@
 #include "loginview.h"
+#include "msgbox.h"
 #include "ui_loginview.h"
 #include <QMessageBox>
 
@@ -33,7 +34,8 @@ void LoginView::on_LoginBtn_clicked()
         accept();
     }
     else{
-        QMessageBox::warning(this,tr("error"),tr("user name or password error!"),QMessageBox::Yes);
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("用户名或密码错误！"));
+        msgbox->exec();
     }
 }
 

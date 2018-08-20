@@ -116,7 +116,8 @@ SOURCES += \
     BitBuffer.cpp \
     QrCode.cpp \
     QrSegment.cpp \
-    groupsenddialog.cpp
+    groupsenddialog.cpp \
+    msgbox.cpp
 
 
 
@@ -212,7 +213,8 @@ HEADERS += \
     BitBuffer.hpp \
     QrCode.hpp \
     QrSegment.hpp \
-    groupsenddialog.h
+    groupsenddialog.h \
+    msgbox.h
 
 
 

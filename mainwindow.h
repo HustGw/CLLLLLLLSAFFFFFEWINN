@@ -58,6 +58,7 @@
 #include <QDateTime>
 #include  "QZXing/QZXing.h"
 #include "groupsenddialog.h"
+#include "msgbox.h"
 
 namespace Ui {
 class MainWindow;

@@ -1,5 +1,6 @@
 #include "finishdecryptionItem.h"
 
+
 FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
 
     fileName = new QLabel(this);
@@ -67,7 +68,8 @@ void FinishDecryptionItem::on_openBtn_clicked(){
        bool success = query.exec("select * from Decryption where file_id='" + name+"'");
 
        if(!success){
-           QMessageBox::information(NULL, "warning", "未找到路径！");
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"));
+           msgbox->exec();
            return;
        }else{
            while(query.next()){
@@ -87,7 +89,8 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
     QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where file_id='" + name+"'");
        if(!success){
-           QMessageBox::information(NULL, "warning", "未找到路径！");
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"));
+           msgbox->exec();
            return;
        }else{
            while(query.next()){

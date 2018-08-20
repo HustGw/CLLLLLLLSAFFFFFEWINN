@@ -128,6 +128,7 @@ void groupSendDialog::on_pushButton_clicked()
             }
         }
     }
-    QMessageBox::information(this,"提示","传输成功！");
+    MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"));
+    msgbox->exec();
     this->close();
 }

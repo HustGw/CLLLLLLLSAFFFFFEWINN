@@ -63,7 +63,8 @@ void friendInputDlg::SearchFriend(){
     }
     else{
         if(query.size()==0){
-            QMessageBox::warning(this,tr("Failed!"),tr("好友不存在"),QMessageBox::Yes);
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+            msgbox->exec();
         }
         else{
             while(query.next()){

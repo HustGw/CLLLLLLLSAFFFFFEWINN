@@ -1,6 +1,5 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
-
 #include "registerdialog.h"
 
 #include <QNetworkReply>
