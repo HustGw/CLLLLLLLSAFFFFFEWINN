@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QMouseEvent>
 
+
 class MsgBox : public QDialog
 {
     Q_OBJECT

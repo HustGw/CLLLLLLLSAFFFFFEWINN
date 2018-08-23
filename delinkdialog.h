@@ -7,6 +7,8 @@
 #include <QClipboard>
 #include <QMessageBox>
 #include <QApplication>
+#include <qt_windows.h>
+#include <QMouseEvent>
 
 class DelinkDialog : public QDialog
 {
@@ -16,16 +18,27 @@ public:
     QSize sizeHint() const{
         return QSize(300,150);
     }
-    QLabel *titleLabel;
+    QLabel * titleLabel;
+    QLabel *askLabel;
+    QLabel * titleText;
+    QLabel *titleIcon;
     QLineEdit *inputLineEdit;
     QPushButton *okBtn;
-    QPushButton *cancelBtn;
+    QPushButton *cancleBtn;
+    QPushButton *closeBtn;
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 private slots:
     void cancel();
     void sendLink();
+    void closeBtn_press();
 signals:
     void sendLinkToMain(QString link);
 private:
+    bool mouse_press;
+    QPoint dragPosition;
 };
 
 #endif // DELINKDIALOG_H
