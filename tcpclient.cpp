@@ -1,12 +1,16 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
+
 #include "registerdialog.h"
+#include "resetdialog.h"
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonParseError>
+#include <QPushButton>
+#include <QMouseEvent>
 QString LoginUserID = NULL;
 QString UserPhoneNum = NULL;
 QNetworkAccessManager *m_accessManager;
@@ -16,15 +20,33 @@ TcpClient::TcpClient(QWidget *parent) :
     ui(new Ui::TcpClient)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->passwardLineEdit->setEchoMode(QLineEdit::Password);  //密码方式显示文本
-    ui->userLineEdit->setPlaceholderText(tr("请输入用户名/手机号"));
-    ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));
-    QFont f("ZYSong18030",12,75);
-    ui->label_3->setFont(f);
+    ui->userLineEdit->setPlaceholderText(tr("请输入用户名/手机号"));//设置用户名提示信息
+    ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
+
+    ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
+                "QPushButton{border:0px;color:rgb(102,102,102);}"
+                "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
+    ui->forgetBtn->setStyleSheet(               //调整忘记密码按钮样式
+                "QPushButton{border:0px;color:rgb(57,140,255);}"
+                "QPushButton:hover{border:0px;color:rgb(85,170,255);}");
+    ui->sendBtn->setStyleSheet(                 //调整登录按钮样式
+                "QPushButton{background-color: rgb(57, 140, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;}"
+                "QPushButton:hover{background-color: rgb(85, 170, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;}");
+    ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
+                "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
+                "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
+    ui->minBtn->setStyleSheet(                 //调整最小化按钮样式
+                "QPushButton{background-image: url(:/new/mainwindow/pictures/min_button.png);border:0px;}"
+                "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/min_button.png);border:0px;background-color:rgb(200,200,200);}");
+    ui->closeBtn->setStyleSheet(               //调整关闭按钮样式
+                "QPushButton{ background-image: url(:/new/mainwindow/pictures/exit_button.png);border:0px;}"
+                "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/exit_button.png);border:0px;background-color:rgb(200,200,200);}");
+
     flag = 0;
 
 
-    //http
     m_accessManager = new QNetworkAccessManager(this);
     QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
 
@@ -34,6 +56,7 @@ TcpClient::~TcpClient()
 {
     delete ui;
 }
+
 
 void TcpClient::init()
 {
@@ -50,41 +73,88 @@ void TcpClient::connectServer()
     connect(tcpSocket,SIGNAL(readyRead()),this,SLOT(readMessages()));
 }
 
+void TcpClient::on_forgetBtn_clicked()
+{   //点击忘记密码按钮的响应
+
+    resetDialog *resDlg = new resetDialog(this);
+    resDlg->exec();
+    return;
+}
+
 void TcpClient::on_sendBtn_clicked()
 {
     //点击登录按钮的响应
+
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
-    if(userName=="" || passward=="")//判断用户名密码是否为空，为空弹出警告
+    if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告
         QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
+    }else{
 
+        //先判断，手机号是否已经注册， 调用judge_phone.do
+        //然后再调用登录接口，登录，调用接口employee.do
+        QNetworkRequest request;
+        //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+        flag = 3; //步骤：登录
+        request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
+        QByteArray postData;
+        //emp_password  emp_email   code
+        postData.append("emp_phone=");//参数手机
+        postData.append(ui->userLineEdit->text());
+        postData.append("&emp_password=");//参数密码
+        postData.append(ui->passwardLineEdit->text());//
 
-    //先判断，手机号是否已经注册， 调用judge_phone.do
-    //然后再调用登录接口，登录，调用接口employee.do
-    QNetworkRequest request;
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-    flag = 3; //步骤：登录
-    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
-    QByteArray postData;
-    //emp_password  emp_email   code
-    postData.append("emp_phone=");//参数手机
-    postData.append(ui->userLineEdit->text());
-    postData.append("&emp_password=");//参数密码
-    postData.append(ui->passwardLineEdit->text());//
-
-    QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
+        QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
+    }
 }
 
+void TcpClient::on_clearBtn_clicked()
+{   //点击清除密码按钮的响应
+
+    ui->passwardLineEdit->setText("");
+    ui->passwardLineEdit->setFocus();
+}
 
 void TcpClient::on_signBtn_clicked()
 {
+    //点击注册账号按钮的响应
 
     registerDialog *regDlg = new registerDialog(this);
     regDlg->exec();
     return;
 
+}
 
+void TcpClient::on_userLineEdit_textChanged()
+{
+    //用户名输入框文本变化的响应
 
+    ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account_hover.png);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(57, 140, 255);"));
+}
+
+void TcpClient::on_userLineEdit_editingFinished()
+{
+    //用户名输入框停止输入的响应
+
+    ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account.png);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+}
+
+void TcpClient::on_passwardLineEdit_editingFinished()
+{
+    //密码输入框停止输入的响应
+
+    ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password.png);"));
+    ui->frame->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+}
+
+void TcpClient::on_passwardLineEdit_textChanged()
+{
+    //密码输入框文本变化的响应
+
+    ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password_hover.png);"));
+    ui->frame->setStyleSheet(tr("color: rgb(57, 140, 255);"));
 }
 
 
@@ -374,6 +444,16 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
      reply->deleteLater();
 }
 
+void TcpClient::on_minBtn_clicked()
+{
+    this->showMinimized();   //窗口最小化
+}
+
+void TcpClient::on_closeBtn_clicked()
+{
+    this->close();        //窗口关闭
+}
+
 //点击获取验证码
 void TcpClient::on_codeBtn_clicked()
 {
@@ -387,3 +467,16 @@ void TcpClient::on_codeBtn_clicked()
     postData.append(ui->userLineEdit->text());//参数
     QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
 }
+
+void TcpClient::mousePressEvent(QMouseEvent *event) //窗口鼠标按下事件
+{
+    this->windowPos = this->pos();                // 获得部件当前位置
+    this->mousePos = event->globalPos();     // 获得鼠标位置
+    this->dPos = mousePos - windowPos;
+}
+
+void TcpClient::mouseMoveEvent(QMouseEvent *event)  //窗口鼠标移动事件
+{
+     this->move(event->globalPos() - this->dPos);
+}
+
