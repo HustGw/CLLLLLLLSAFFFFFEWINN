@@ -4,6 +4,11 @@
         <file alias="finEncryption">pictures/icon.png</file>
         <file alias="head2">pictures/new.jpg</file>
         <file alias="fileIcon">pictures/icon_0.png</file>
+        <file>pictures/mainwindow_border.png</file>
+        <file>pictures/messagebox_border.png</file>
+        <file>pictures/system_fail.png</file>
+        <file>pictures/system_question.png</file>
+        <file>pictures/system_warning.png</file>
     </qresource>
     <qresource prefix="/">
         <file>mainWindow.qss</file>
@@ -52,9 +57,13 @@
         <file>pictures/zip_icon.png</file>
         <file>pictures/open_button.png</file>
         <file>pictures/open_button_hover.png</file>
-        <file>pictures/system_waring.png</file>
         <file>pictures/system_icon.png</file>
         <file>pictures/system_success.png</file>
+        <file>pictures/mainwindow_border.png</file>
+        <file>pictures/messagebox_border.png</file>
+        <file>pictures/system_fail.png</file>
+        <file>pictures/system_question.png</file>
+        <file>pictures/system_warning.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

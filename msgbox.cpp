@@ -11,13 +11,13 @@ MsgBox::MsgBox(int style,QString text)
   //设置标题栏隐藏
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     titleLabel = new QLabel(this);
-    titleLabel->setGeometry(0,0,width,38);
+    titleLabel->setGeometry(11,11,width-22,38);
     titleText = new QLabel(this);
-    titleText->setGeometry(48,13,200,15);
+    titleText->setGeometry(58,23,200,15);
     titleText->setFont(QFont("Timers",9,QFont::Bold));
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleIcon = new QLabel(this);
-    titleIcon->setGeometry(16,12,23,17);
+    titleIcon->setGeometry(26,22,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     if(style == 4){
@@ -31,7 +31,7 @@ MsgBox::MsgBox(int style,QString text)
     titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
 
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(430, 6, 13, 13);
+    closeBtn->setGeometry(419, 17, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
@@ -43,18 +43,18 @@ MsgBox::MsgBox(int style,QString text)
     //4 成功 √
     //2、3、4没有取消按钮
     if(style == 1){
-        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_waring.png);background: transparent;border:none;}");
+        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_question.png);background: transparent;border:none;}");
     }
     else if(style == 2){
-        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_waring.png);background: transparent;border:none;}");
+        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_fail.png);background: transparent;border:none;}");
     }
     else if(style == 3){
-        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_waring.png);background: transparent;border:none;}");
+        msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_warning.png);background: transparent;border:none;}");
     }else if(style == 4){
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_success.png);background: transparent;border:none;}");
     }
     askLabel = new QLabel(this);
-    askLabel->setGeometry(94,79,350,20);
+    askLabel->setGeometry(94,79,300,20);
     askLabel->setText(text);
 
     okBtn=new QPushButton(this);
@@ -130,4 +130,25 @@ void MsgBox::cancleBtn_press()
 void MsgBox::closeBtn_press()
 {
     close();
+}
+void MsgBox::paintEvent(QPaintEvent *event)
+{
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(10, 10, this->width()-20, this->height()-20);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<10; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
 }
