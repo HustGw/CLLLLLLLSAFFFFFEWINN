@@ -39,7 +39,7 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 
 #LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
-LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -117,7 +117,8 @@ SOURCES += \
     QrCode.cpp \
     QrSegment.cpp \
     groupsenddialog.cpp \
-    msgbox.cpp
+    msgbox.cpp \
+    resetDialog.cpp
 
 
 
@@ -214,7 +215,8 @@ HEADERS += \
     QrCode.hpp \
     QrSegment.hpp \
     groupsenddialog.h \
-    msgbox.h
+    msgbox.h \
+    resetDialog.h
 
 
 
@@ -226,7 +228,8 @@ FORMS += \
     registerdialog.ui \
     tcpclient.ui \
     sharedialog.ui \
-    groupsenddialog.ui
+    groupsenddialog.ui \
+    resetDialog.ui
 
 DISTFILES += \
     Makefile
