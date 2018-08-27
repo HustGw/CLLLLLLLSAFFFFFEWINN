@@ -10,7 +10,19 @@ sendDialog::sendDialog(QWidget *parent) :
     ui(new Ui::sendDialog)
 {
     db1 = ConnectionPool::openConnection();
+
+    this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->setupUi(this);
+
+    ui->label_3->setStyleSheet("QLabel{border:1px solid gray;}");
+    ui->label_7->setStyleSheet("QLabel{border:1px solid gray;}");
+    ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
+
+    ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
+    ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
     QSqlQuery query(db1);
     //QListWidget *friendList = new QListWidget(ui->listWidget);
     //friendList->setGeometry(0,0,251,351);
@@ -28,11 +40,11 @@ sendDialog::sendDialog(QWidget *parent) :
             QString nickName = query.record().value("friend_nickname").toString();
             QCheckBox * b1 = new QCheckBox(nickName);
             QListWidgetItem* a1 = new QListWidgetItem();
-
+            a1->setSizeHint(QSize(200,40));
+            b1->setFont(QFont("Timers",12,QFont::Bold));
+            b1->setCursor(QCursor(Qt::PointingHandCursor));
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
-//            friendList->addItem(a1);
-//            friendList->setItemWidget(a1,b1);
             count++;
             connect(b1,SIGNAL(stateChanged(int)),this,SLOT(onStageChanged(int)));
         }
@@ -42,6 +54,7 @@ sendDialog::sendDialog(QWidget *parent) :
 
 void sendDialog::getCheckedItems(){
     int count = ui->listWidget->count();
+    int reciever = 0;
     qDebug()<<count;
     bool isChecked = false;
     int count2 = ui->listWidget_2->count();
@@ -53,17 +66,22 @@ void sendDialog::getCheckedItems(){
     for (int i = 0;i<count;i++){
 
         QListWidgetItem * item = ui->listWidget->item(i);
+        item->setSizeHint(QSize(200,40));
         QWidget * widget = ui->listWidget->itemWidget(item);
         QCheckBox * box =(QCheckBox*) widget;
         QString nick_name = box->text();
-        isChecked = box ->isChecked();
-        qDebug()<<nick_name+"            "+isChecked;
 
+        isChecked = box ->isChecked();
         if(isChecked){
-            ui->listWidget_2->insertItem(i,nick_name);
+            QListWidgetItem *nick_name_item = new QListWidgetItem();
+            nick_name_item->setText(nick_name);
+            nick_name_item->setSizeHint(QSize(200,40));
+            nick_name_item->setFont(QFont("Timers",12,QFont::Bold));
+            ui->listWidget_2->insertItem(i,nick_name_item);
+            reciever++;
         }
     }
-
+    ui->label_2->setText(tr("已选择")+"<font color=green>"+QString::number(reciever)+"</font>"+tr("个收件人"));
 }
 
 sendDialog::~sendDialog()
@@ -85,6 +103,18 @@ void sendDialog::on_pushButton_clicked()
 }
 
 void sendDialog::on_pushButton_2_clicked()
+{
+
+}
+void sendDialog::reciveData(QString data){
+    file_id = data;
+}
+void sendDialog::reciveUserId(QString data){
+    User_ID = data;
+}
+
+
+void sendDialog::on_pushButton_trans_clicked()
 {
     QString fileName;
     int count = ui->listWidget_2->count();
@@ -142,10 +172,61 @@ void sendDialog::on_pushButton_2_clicked()
 
 
 }
-void sendDialog::reciveData(QString data){
-    file_id = data;
-}
-void sendDialog::reciveUserId(QString data){
-    User_ID = data;
+
+void sendDialog::on_pushButton_close2_clicked()
+{
+      this->close();
 }
 
+void sendDialog::on_pushButton_close_clicked()
+{
+      this->close();
+}
+
+void sendDialog::paintEvent(QPaintEvent *event)
+{
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
+}
+void sendDialog::mousePressEvent(QMouseEvent *qevent)
+{
+    if(qevent->button() == Qt::LeftButton)
+    {
+        mouse_press = true;
+        //鼠标相对于窗体的位置（或者使用event->globalPos() - this->pos()）
+        move_point = qevent->pos();;
+    }
+}
+void sendDialog::mouseMoveEvent(QMouseEvent *qevent)
+{
+    //若鼠标左键被按下
+    if(mouse_press)
+    {
+        //鼠标相对于屏幕的位置
+        QPoint move_pos = qevent->globalPos();
+
+        //移动主窗体位置
+        this->move(move_pos - move_point);
+    }
+}
+void sendDialog::mouseReleaseEvent(QMouseEvent *qevent)
+{
+    //设置鼠标为未被按下
+    mouse_press = false;
+}

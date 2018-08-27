@@ -9,6 +9,8 @@
 #include <QApplication>
 #include <qt_windows.h>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QtMath>
 
 class DelinkDialog : public QDialog
 {
@@ -30,6 +32,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
 private slots:
     void cancel();
     void sendLink();

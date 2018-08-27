@@ -132,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->FinEnpBtn->hide();
     ui->line_10->hide();
     ui->line_11->hide();
+    ui->pushButton_12->hide();
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
@@ -189,6 +190,7 @@ MainWindow::MainWindow(QWidget *parent) :
                    v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
                    v1->setObjectName(initID+"decryption");//设置Item的ID
                    v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
+                   v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                    //连接信号槽
                    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
@@ -773,6 +775,7 @@ void MainWindow::ReceiveNewReq(){
                   v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
                   v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
+                  v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                   //连接信号槽
                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
@@ -1714,6 +1717,7 @@ void MainWindow::LinkInsert(QString link){
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
+        a1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
         connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
         a1->fileDescription->setText("主体文件指定分享需确认下载.");
         a1->downloadBtn->setText("确认下载");
