@@ -12,6 +12,7 @@
 #include "QProgressBar"
 #include "enitemthread.h"
 #include <QPushButton>
+#include <qdatetime.h>
 
 class EncryptionItem : public QWidget
 {
@@ -25,10 +26,13 @@ public:
     QLabel *fileSize;
     QLabel *fileDescription;
     QLabel *fileIcon;
-    QCheckBox *checkBox;
+    QLabel *timeInfo;
+    //QCheckBox *checkBox;
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
-    //QProgressBar *progressBar = new QProgressBar(this);
+    QProgressBar *progressBar = new QProgressBar(this);
+
+
     QPushButton *encryptStaBtn;
     QLabel *initPage;
 

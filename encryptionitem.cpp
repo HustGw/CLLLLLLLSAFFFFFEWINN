@@ -1,40 +1,79 @@
 #include "encryptionitem.h"
-extern bool initLableFlag;
+extern bool initPageFlag;
+
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
-    if (!initLableFlag){
+     //QProgressBar{background: rgb(210, 225, 240);}
+//    progressBar->setStyleSheet(const QString &sheet);
+//    QProgressBar{
+
+//    };
+
+    //checkBox = new QCheckBox(this);
+    if (initPageFlag){
         initPage = new QLabel(this);
         initPage->setGeometry(241,162,215,30);
         initPage->setText("请调取本地文件进行加密！");
+        //checkBox->hide();
     }
-
+    else{
         fileName = new QLabel(this);
         fileSize = new QLabel(this);
         fileDescription = new QLabel(this);
+        timeInfo = new QLabel(this);
 
         fileName->setFont(QFont("Timers",11,QFont::Bold));
         fileSize->setFont(QFont("Timers",8));
         fileDescription->setFont(QFont("Timers",8));
         fileSize->setStyleSheet("color:#9999AB");
         fileDescription->setStyleSheet("color:#9999AB");
+        timeInfo->setFont(QFont("Timers",8));;
+        timeInfo->setStyleSheet("color:#9999AB");
+
+        fileDescription->setStyleSheet("background:transparent");
+        fileName->setStyleSheet("background:transparent");
+        fileSize->setStyleSheet("background:transparent");
+        timeInfo->setStyleSheet("background:transparent");
 
         //downloadBtn = new QPushButton(this);
         fileIcon = new QLabel(this);
-        //checkBox = new QCheckBox(this);
+
         encryptStaBtn = new QPushButton(this);
+
+
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
         fileName->setGeometry(95,12,200,16);
+        timeInfo->setGeometry(300,31,200,30 );
         fileSize->setGeometry(95,31,100,11);
         fileDescription->setGeometry(95,47,100,12);
         //downloadBtn->setGeometry(500,50,100,30);
+
         //checkBox->setGeometry(10,70,20,20);
         fileIcon->setGeometry(50,13,38,46);
         encryptStaBtn->setGeometry(95,47,100,12);
         encryptStaBtn->setFont(QFont("Timers",8));
         encryptStaBtn->setStyleSheet("color:#9999AB");
+        encryptStaBtn->setStyleSheet("background:transparent");
+
+        QDateTime time = QDateTime::currentDateTime();
+        QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
+        timeInfo->setText(time_str);
         encryptStaBtn->hide();
-    //progressBar->setMinimum(0);
-    //progressBar->setMaximum(0);
+
+    }
+
+    progressBar->setGeometry(20,0,this->width()-1,this->height()-1);
+    QString strQSS = "QProgressBar { \
+            text-align: center; \
+            border: 1px ; \
+            background: transparent; \
+        } \
+        QProgressBar::chunk { \
+            background-color: rgba(235, 241, 255,180); \
+        }";
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(100);
+    progressBar->setStyleSheet(strQSS);
     //progressBar->setValue(20);
    // progressBar->setGeometry(450,85,100,20);
 //    double dProgress = (progressBar->value() - progressBar->minimum()) * 100.0
@@ -53,5 +92,3 @@ void EncryptionItem::paintEvent(QPaintEvent *event){
 
 
 }
-
-

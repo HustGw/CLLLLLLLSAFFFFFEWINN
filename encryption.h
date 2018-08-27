@@ -44,7 +44,7 @@ public:
 public:
     encryption();
     void connect();
-    void encrypt();
+    int encrypt();
     void drawItem();
 };
 

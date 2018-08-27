@@ -2,9 +2,17 @@
 #define ENCRYPTIONBTNVIEW_H
 
 #include <QWidget>
-#include <QLabel>
 #include <QPushButton>
+#include <QLabel>
+#include <QCheckBox>
 #include <QHBoxLayout>
+#include <QSize>
+#include <QLine>
+#include <QPainter>
+#include "QProgressBar"
+#include "enitemthread.h"
+#include <QPushButton>
+#include <qdatetime.h>
 
 class EncryptionBtnView : public QWidget
 {
@@ -15,9 +23,10 @@ public:
 signals:
 
 public slots:
-private:
+public:
     QLabel *allSel;
     QPushButton *openDic;
+    QPushButton *selectAllBtn_ept;
     QHBoxLayout *hbox;
 
 };

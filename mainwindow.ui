@@ -301,10 +301,11 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
+
       <property name="geometry">
        <rect>
         <x>8</x>
@@ -315,6 +316,7 @@ background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string/>
+
       </property>
      </widget>
     </widget>
@@ -594,8 +596,10 @@ background-color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
+
      <width>1062</width>
      <height>26</height>
+
     </rect>
    </property>
   </widget>

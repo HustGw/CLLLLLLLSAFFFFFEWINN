@@ -3,6 +3,7 @@
 extern QString User_ID;
 extern QFileInfo openFileInfo;
 extern QString orfileUuid;
+extern QString yzipfileUuid;
 encryption::encryption()
 {
     conn = ConnectionPool::openConnection();
@@ -61,7 +62,7 @@ void encryption::connect(){
     }
 }
 
-void encryption::encrypt(){
+int encryption::encrypt(){
 
     oss_PutKey_Flag=2;
     oss_PutFile_Flag=2;
@@ -89,7 +90,7 @@ void encryption::encrypt(){
     QString orFileID = orfileUuid;
     //加密
     //生成密文唯一标识
-    QString enfile_id =QUuid::createUuid().toString();
+    QString enfile_id =yzipfileUuid;
     std::string enFileID = enfile_id.toStdString();
     //生成密钥唯一标识
     QString enkey_id = QUuid::createUuid().toString();
@@ -139,7 +140,9 @@ void encryption::encrypt(){
     oss_PutKey_Flag = upKey->put_object_from_file();
     if (oss_PutKey_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
-        QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
+        //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
+        qDebug()<<"网络中断";
+        return 2;
     }else if (oss_PutKey_Flag==1){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::Ok(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
@@ -161,20 +164,23 @@ void encryption::encrypt(){
         else{
           qDebug()<<"error";
         }
+        QFile keyFile (ykeyAbPath);
+        if (keyFile.exists())
+            {
+                keyFile.remove();
+            }
     }
-
-
-
-
     //密文上传OSS
     uploadoss *upFile = new uploadoss;
     upFile->OBJECT_NAME=enFileID.c_str();
     upFile->BUCKET_NAME="cloudsafe-pc-yfile";
     upFile->filepath=yFile_oss_Path.data();
     oss_PutFile_Flag = upFile->put_object_from_file();
-    if (oss_PutFile_Flag==0){
+    if (oss_PutFile_Flag==2){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
-        QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
+        //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
+        qDebug()<<"网络中断";
+        return  2;
     }else if (oss_PutFile_Flag==1){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::Ok(NULL,"错误","密文上传错误",QMessageBox::Yes,NULL);
@@ -194,7 +200,7 @@ void encryption::encrypt(){
         }
     }
     ConnectionPool::closeConnection(conn);
-
+    return  1;
     /////////////////////////////////密文下载测试
     /// 密钥下载
     /// 密文下载

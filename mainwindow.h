@@ -6,6 +6,7 @@
 #include "decryptionitem.h"
 #include <QStackedWidget>
 #include "encryptionitem.h"
+
 #include <QListWidget>
 #include <QVBoxLayout>
 #include "encryptionbtnview.h"
@@ -92,6 +93,7 @@ public:
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
     EncryptionViewController *encryptionViewController;
+    EncryptionViewController *encryptionViewController2;
     EncryptionBtnView *encryptionBtnItem; //加密单元
     DecryptionBtnView *decryptionBtnItem; //解密单元
     DecryptionViewController *decryptionViewController; //解密界面控制器 对解密单元进行布局管理
@@ -116,7 +118,12 @@ public:
     QProgressBar *d_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
+
     groupSendDialog *grpDlg;
+
+
+
+
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -132,6 +139,10 @@ private slots:
     void on_FinDepBtn_clicked();
 
     void on_OpenFileBtn_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_selectAllBtn_ept_clicked();
 
     void on_pushButton_3_clicked();
 

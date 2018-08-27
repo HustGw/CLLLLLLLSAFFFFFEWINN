@@ -29,14 +29,18 @@ QString User_ID = NULL;
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
-bool initPageFlag;
+bool initPageFlag = true;
 int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
 QFont f("HiraginoSansGB",10,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
+
 QString file_id_list; //批量分享时用的文件表
+
+QString yzipfileUuid;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -76,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     decryptionBtnItem = new DecryptionBtnView();
     decryptionViewController = new DecryptionViewController();
     encryptionViewController = new EncryptionViewController();
+    encryptionViewController2 = new EncryptionViewController();
     finishViewController = new FinishViewController();
     finishViewController2 = new FinishViewController2();
     finishEncryptionItem = new FinishEncryptionItem();
@@ -104,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addFriendBtn->setText(tr("添加好友"));
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
     ui->MidStaWidget->addWidget(encryptionViewController);
+     ui->MidStaWidget->addWidget(encryptionViewController2);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
@@ -366,8 +372,10 @@ void MainWindow::on_EncryptionBtn_clicked()
     if (encryptionViewController->vbox->count()==0||encryptionViewController->layout()->count()-1==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
         ui->BtnStaWidget->setCurrentIndex(0);
-        ui->MidStaWidget->setCurrentWidget(encryptionPage);
         //initPageFlag=true;
+        ui->MidStaWidget->setCurrentWidget(encryptionPage);
+        //ui->MidStaWidget->addWidget(encryptionPage);
+
     }else {
         ui->BtnStaWidget->setCurrentIndex(0);
     }
@@ -425,9 +433,13 @@ void MainWindow::on_OpenFileBtn_clicked()
         QUuid orfile_id =QUuid::createUuid();
         QString orFileID = orfile_id.toString();
         orfileUuid = orFileID;
+        //生成密文UUID
+        QUuid yzipfile_id =QUuid::createUuid();
+        QString yzipFileID = yzipfile_id.toString();
+        yzipfileUuid = yzipFileID;
         //contest->fInfo=fInfo;
         EncryptionItem *v1 = new EncryptionItem();
-        v1->setObjectName(orFileID);
+        v1->setObjectName(fName);
         v1->fileName->setText(fName);
         v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
         QString filetype = fName.section(".",1,1).trimmed().toStdString().c_str();
@@ -463,23 +475,43 @@ void MainWindow::on_OpenFileBtn_clicked()
             v1->fileIcon->setPixmap(pixmap);
         }
 
-        v1->encryptStaBtn->setObjectName(orFileID);
+        v1->encryptStaBtn->setObjectName(fName);
         v1->encryptStaBtn->show();
         v1->encryptStaBtn->setEnabled(false);
         v1->encryptStaBtn->setText("正在加密...");
         v1->encryptStaBtn->setFlat(true);
+        v1->encryptStaBtn->setStyleSheet("background:transparent");
 
+        //v1->checkBox->setObjectName(fName);
+
+        //qDebug()<<v1->checkBox->objectName();
+
+        v1->progressBar->setObjectName(fName);
         encryptionViewController->vbox->addWidget(v1);
 
+        //ecptProgressbarItem *v2 = new ecptProgressbarItem();
+
+        //encryptionViewController2->vbox->addWidget(v2);
+
         f_progressBar = new QProgressBar(this);
-        f_progressBar->setObjectName(v1->objectName());
-        f_progressBar->setMinimum(0);
-        f_progressBar->setMaximum(100);
-        //f_progressBar->setValue(20);
-        f_progressBar->setOrientation(Qt::Horizontal);
-        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+        f_progressBar = v1->progressBar;
+        QString strQSS = "QProgressBar { \
+                text-align: center; \
+                border: 1px ; \
+                background: transparent; \
+            } \
+            QProgressBar::chunk { \
+                background-color: rgba(230, 277, 255,180); \
+            }";
+//        f_progressBar->setStyleSheet(strQSS);
+//        f_progressBar->setObjectName(fName);
+//        f_progressBar->setMinimum(0);
+//        f_progressBar->setMaximum(100);
+//        //f_progressBar->setValue(20);
+//        f_progressBar->setOrientation(Qt::Horizontal);
+//        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
         connect(v1->encryptStaBtn,SIGNAL(clicked(bool)),this,SLOT(on_encryptStaBtn_clicked()));
-        encryptionViewController->vbox->addWidget(f_progressBar);
+        //encryptionViewController->vbox->addWidget(f_progressBar);
         //encryptionViewController->vbox->setGeometry(100);
 
         delete encryptionViewController->layout();
@@ -491,6 +523,16 @@ void MainWindow::on_OpenFileBtn_clicked()
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
+
+//        delete encryptionViewController2->layout();
+//        QWidget *newItemWidget2 = new QWidget();
+//        QScrollArea *newScrollArea2 = new QScrollArea();
+//        newItemWidget->setLayout(encryptionViewController2->vbox);
+//        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+//        newScrollArea->setWidget(newItemWidget);
+//        QVBoxLayout *newVbox2 = new QVBoxLayout();
+//        newVbox->addWidget(newScrollArea);
+//        encryptionViewController2->setLayout(newVbox);
     }
 }
 
@@ -502,23 +544,27 @@ void MainWindow::handleResults(int value)
     if (value==100){
         EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         v1->encryptStaBtn->clicked();
-
+        //on_encryptStaBtn_clicked();
         QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
 ///////////////////////////////删除加密完成的项目
-//        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
-//        //qDebug()<<name;
-//        delete v1;
-//        delete f_progressBar;
-//        delete encryptionViewController->layout();
-//        QWidget *newItemWidget = new QWidget();
-//        QScrollArea *newScrollArea = new QScrollArea();
-//        newItemWidget->setLayout(encryptionViewController->vbox);
-//        newScrollArea->setWidget(newItemWidget);
-//        QVBoxLayout *newVbox = new QVBoxLayout();
-//        newVbox->addWidget(newScrollArea);
-//        encryptionViewController->setLayout(newVbox);
+        //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
+        //qDebug()<<name;
+        delete v1;
+        //delete f_progressBar;
+        delete encryptionViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        QScrollArea *newScrollArea = new QScrollArea();
+        newItemWidget->setLayout(encryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(newScrollArea);
+        encryptionViewController->setLayout(newVbox);
 ///////////////////////////////////////////////////////////////////////
-        //on_FinEnpBtn_clicked();
+        //initPageFlag=true;
+        on_FinEnpBtn_clicked();
+    }
+    if (value==0){
+        QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
     }
 }
 
@@ -559,6 +605,105 @@ void MainWindow::startEncryptThread(){
     connect(ecpThread, SIGNAL(finished()), ecpThread, SLOT(deleteLater()));
     ecpThread->start();
 }
+
+//加密界面全选
+//void MainWindow::on_selectAllBtn_ept_clicked(){
+//    if (ui->selectAllBtn_ept->text()=="全选"){
+//        QSqlQuery query(db);
+//        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+//        if(!success){
+//            qDebug() << "查询密文失败";
+//            return;
+//        }else{
+//            qDebug()<<"查询成功";
+//            while(query.next())
+//            {
+//                QString file_name = query.record().value("article_name").toString();
+//    //            for(int i= 0;i<encryptionViewController->vbox->count();i++){
+//    //                encryptionViewController->vbox->findChild
+
+//    //            }
+//                qDebug()<<ui->MidStaWidget->findChild<QCheckBox*>(file_name);
+//                if(ui->MidStaWidget->findChild<QCheckBox*>(file_name)){
+//                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_name);
+//                    checkcheck->setChecked(true);
+//                }
+
+//            }
+//            //encryptionBtnItem->selectAllBtn_ept->setText("全不选");
+//            ui->selectAllBtn_ept->setText("全不选");
+//        }
+//    }
+//    else if (ui->selectAllBtn_ept->text()=="全不选"){
+//        QSqlQuery query(db);
+//        bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+//        if(!success){
+//            qDebug() << "查询密文失败";
+//            return;
+//        }else{
+//            qDebug()<<"查询成功";
+//            while(query.next())
+//            {
+//                QString file_name = query.record().value("article_name").toString();
+//    //            for(int i= 0;i<encryptionViewController->vbox->count();i++){
+//    //                encryptionViewController->vbox->findChild
+
+//    //            }
+//                qDebug()<<ui->MidStaWidget->findChild<QCheckBox*>(file_name);
+//                if(ui->MidStaWidget->findChild<QCheckBox*>(file_name)){
+//                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_name);
+//                    checkcheck->setChecked(false);
+//                }
+
+//            }
+
+//        }
+//        ui->selectAllBtn_ept->setText("全选");
+
+//    }
+
+//}
+//加密界面批量删除
+//void MainWindow::on_pushButton_2_clicked(){
+//    QSqlQuery query(db);
+//    bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+//    if(!success){
+//        qDebug() << "查询密文失败";
+//        return;
+//    }else{
+//        qDebug()<<"查询成功";
+//        while(query.next())
+//        {
+//            QString file_name = query.record().value("article_name").toString();
+//            for(int i= 0;i<encryptionViewController->vbox->count();i++){
+//                encryptionViewController->vbox->findChild
+
+//            }
+//            qDebug()<<ui->MidStaWidget->findChild<EncryptionItem*>(file_name);
+//            if(ui->MidStaWidget->findChild<EncryptionItem*>(file_name)){
+//                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_name);
+//                if(checkcheck->checkState()){
+//                    EncryptionItem *s1 = ui->MidStaWidget->findChild<EncryptionItem*>(file_name);
+//                    QProgressBar *p1 = ui->MidStaWidget->findChild<QProgressBar*>(file_name);
+//                    delete s1;
+//                    delete p1;
+//                }
+
+//                //checkcheck->setChecked(false);
+//            }
+
+//        }
+//        //ui->selectAllBtn_ept->setText("全选");
+//        delete encryptionViewController->layout();
+//        QWidget *newItemWidget = new QWidget();
+//        QScrollArea *newScrollArea = new QScrollArea();
+//        newItemWidget->setLayout(encryptionViewController->vbox);
+//        newScrollArea->setWidget(newItemWidget);
+//        QVBoxLayout *newVbox = new QVBoxLayout();
+//        newVbox->addWidget(newScrollArea);
+//        encryptionViewController->setLayout(newVbox);
+//    }
+//}
 
 //批量删除按钮
 void MainWindow::on_pushButton_3_clicked()
