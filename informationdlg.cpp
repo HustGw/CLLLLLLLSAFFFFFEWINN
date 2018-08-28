@@ -164,9 +164,10 @@ void informationDlg::ignoreReq(){
 
 }
 void informationDlg::newInformation(){
+    CleanStatusLabel->hide();
     this->vbox = new QVBoxLayout();
     setItem();
-    delete this->layout();
+    delete bottomWidget->layout();
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(this->vbox);
     scrollArea->setWidget(newItemWidget);
@@ -270,6 +271,7 @@ void informationDlg::setItem(){
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
+    CleanStatusLabel->show();
     QSqlQuery query(db);
     bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"'");
     if(!success){
@@ -283,7 +285,7 @@ void informationDlg::CleanAllInfor(){
     FriendRequestCount = 0;
     emit CleanInforNum();
     this->vbox = new QVBoxLayout();
-    delete this->layout();
+    delete bottomWidget->layout();
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(this->vbox);
     scrollArea->setWidget(newItemWidget);
@@ -296,15 +298,15 @@ void informationDlg::CleanAllInfor(){
 
 void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
      InformationItem *m1 = new InformationItem();
+     CleanStatusLabel->hide();
      QString s = name+"传输文件"+fileName;
      m1->InforKindsLabel->setText("文件传输");
      m1->titleLabel->setText(s);
      m1->timeLabel->setText(time);
-
      m1->allowBtn->hide();
      m1->ignoreBtn->hide();
      vbox->addWidget(m1);
-     delete this->layout();
+     delete bottomWidget->layout();
      QWidget *newItemWidget = new QWidget();
      newItemWidget->setLayout(this->vbox);
      scrollArea->setWidget(newItemWidget);
@@ -319,6 +321,7 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
 void informationDlg::NewFriend(){
     qDebug()<<"new friend";
     FriendCount++;//
+    CleanStatusLabel->hide();
     QSqlQuery query(db);
     bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
     if(!success){
@@ -349,7 +352,7 @@ void informationDlg::NewFriend(){
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
                 vbox->addWidget(m1);
-                delete this->layout();
+                delete bottomWidget->layout();
                 QWidget *newItemWidget = new QWidget();
                 newItemWidget->setLayout(this->vbox);
                 scrollArea->setWidget(newItemWidget);
