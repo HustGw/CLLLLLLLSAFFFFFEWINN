@@ -1,5 +1,6 @@
 #include "requestrecthread.h"
 int RequestNum = 0;
+int erroFlag = 0;
 RequestRecThread::RequestRecThread(QObject *parent):QThread(parent)
 {
 
@@ -52,6 +53,11 @@ int RequestRecThread::ReqAllowNum(){
     int num = 0;
     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' and status = 3");
     if(!success){
+        if (!erroFlag)
+        {
+            emit thread_Disconnected();
+            erroFlag = 1;
+        }
         qDebug()<<"Thread:allow查询失败";
     }
     else{

@@ -232,13 +232,14 @@ MainWindow::MainWindow(QWidget *parent) :
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                        f_progressBar = new QProgressBar(this);
+                      f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
-                       f_progressBar->setMinimum(0);
-                       f_progressBar->setMaximum(100);
-                       f_progressBar->setOrientation(Qt::Horizontal);
+//                       f_progressBar->setMinimum(0);
+//                       f_progressBar->setMaximum(100);
+//                       f_progressBar->setOrientation(Qt::Horizontal);
                        f_progressBar->hide();
                        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-                       decryptionViewController->vbox->addWidget(f_progressBar);
+                       //decryptionViewController->vbox->addWidget(f_progressBar);
                    }
                    else if(query.record().value("status").toString()=="1"){//待申请状态
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -300,6 +301,7 @@ MainWindow::MainWindow(QWidget *parent) :
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
+     connect(recThread,SIGNAL(thread_Disconnected()),this,SLOT(internet_Disconnected()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
      //connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
@@ -594,7 +596,20 @@ void MainWindow::handleResults(int value)
         on_FinEnpBtn_clicked();
     }
     if (value==0){
-        QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
+        //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+        msgbox->exec();
+        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
+        delete v1;
+        //delete f_progressBar;
+        delete encryptionViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        QScrollArea *newScrollArea = new QScrollArea();
+        newItemWidget->setLayout(encryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(newScrollArea);
+        encryptionViewController->setLayout(newVbox);
     }
 }
 
@@ -889,13 +904,14 @@ void MainWindow::ReceiveNewReq(){
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
+                      f_progressBar = v1->progressBar;
                       f_progressBar->setObjectName(v1->objectName());
-                      f_progressBar->setMinimum(0);
-                      f_progressBar->setMaximum(100);
-                      f_progressBar->setOrientation(Qt::Horizontal);
+//                      f_progressBar->setMinimum(0);
+//                      f_progressBar->setMaximum(100);
+//                      f_progressBar->setOrientation(Qt::Horizontal);
                       f_progressBar->hide();
                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-                      decryptionViewController->vbox->addWidget(f_progressBar);
+                      //decryptionViewController->vbox->addWidget(f_progressBar);
                   }
                   else if(query.record().value("status").toString()=="1"){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -1806,12 +1822,12 @@ void MainWindow::LinkInsert(QString link){
         decryptionViewController->vbox->addWidget(a1);
         f_progressBar = new QProgressBar(this);
         f_progressBar->setObjectName(a1->objectName());
-        f_progressBar->setMinimum(0);
-        f_progressBar->setMaximum(100);
-        f_progressBar->setOrientation(Qt::Horizontal);
+//        f_progressBar->setMinimum(0);
+//        f_progressBar->setMaximum(100);
+//        f_progressBar->setOrientation(Qt::Horizontal);
         f_progressBar->hide();
         f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-        decryptionViewController->vbox->addWidget(f_progressBar);
+        //decryptionViewController->vbox->addWidget(f_progressBar);
         ReLayout();
     }
 
@@ -2045,4 +2061,9 @@ void MainWindow::FriendListWidgetHide(){
       friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
       isFriendListHide = 0;
     }
+}
+
+void MainWindow::internet_Disconnected(){
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+    msgbox->exec();
 }

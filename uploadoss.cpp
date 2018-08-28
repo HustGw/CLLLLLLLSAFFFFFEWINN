@@ -65,8 +65,7 @@ int uploadoss::put_object_from_file()
              qDebug()<<"put object from file failed"<<s->code<<s->error_code<<s->error_msg<<s->req_id;
                        //code:%d, error_code:%s, error_msg:%s, request_id:%s\n",
                 //s->code, s->error_code, s->error_msg, s->req_id;
-
-             return 2;
+             return 0;
         }
 
         aos_pool_destroy(p);

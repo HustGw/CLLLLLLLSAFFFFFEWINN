@@ -11,7 +11,11 @@ void encryptthread::run(){
     ecptFlag = encpt->encrypt();
 
     int nValue = 21;
-    if (ecptFlag==1){
+    if (ecptFlag==2){
+         emit result(0);
+    }
+    else{
+
         while (nValue < 100)
         {
             // 休眠50毫秒
@@ -20,9 +24,6 @@ void encryptthread::run(){
             // 准备更新
             emit result(nValue);
         }
-    }
-    else{
-        emit result(0);
     }
 
 

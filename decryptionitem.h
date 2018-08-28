@@ -9,6 +9,7 @@
 #include <QSize>
 #include <QLine>
 #include <QPainter>
+#include <QProgressBar>
 class DecryptionItem : public QWidget
 {
     Q_OBJECT
@@ -26,6 +27,7 @@ public:
     QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
     QLabel *timeLabel;
+    QProgressBar *progressBar = new QProgressBar(this);
 
 signals:
 
