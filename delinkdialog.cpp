@@ -2,7 +2,7 @@
 
 DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 {
-    this->resize(450,190);
+    this->resize(462,202);
 
   //获取主界面的宽度
     int width = this->width();
@@ -12,13 +12,13 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
   //设置标题栏隐藏
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     titleLabel = new QLabel(this);
-    titleLabel->setGeometry(0,0,width,38);
+    titleLabel->setGeometry(6,6,width-12,38);
     titleText = new QLabel(this);
-    titleText->setGeometry(48,13,200,15);
+    titleText->setGeometry(54,19,200,15);
     titleText->setFont(QFont("Timers",9,QFont::Bold));
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleIcon = new QLabel(this);
-    titleIcon->setGeometry(16,12,23,17);
+    titleIcon->setGeometry(22,18,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("链接下载"));
@@ -26,27 +26,27 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
 
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(430, 6, 13, 13);
+    closeBtn->setGeometry(436, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
 
     askLabel = new QLabel(this);
-    askLabel->setGeometry(22,50,150,15);
+    askLabel->setGeometry(28,56,150,15);
     askLabel->setText(QStringLiteral("链接地址："));
 
     okBtn=new QPushButton(this);
-    okBtn->setGeometry(222,138,89,27);
+    okBtn->setGeometry(228,144,89,27);
     okBtn->setText(QStringLiteral("确认下载"));
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
 
     cancleBtn=new QPushButton(this);
-    cancleBtn->setGeometry(336,138,89,27);
+    cancleBtn->setGeometry(342,144,89,27);
     cancleBtn->setText(QStringLiteral("取消下载"));
     cancleBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
 
     inputLineEdit = new QLineEdit(this);
-    inputLineEdit->setGeometry(34,74,391,31);
+    inputLineEdit->setGeometry(40,80,391,31);
     inputLineEdit->setPlaceholderText(tr("输入链接"));
 
     connect(okBtn,SIGNAL(clicked(bool)),this,SLOT(sendLink()));
@@ -86,6 +86,27 @@ void DelinkDialog::mouseMoveEvent(QMouseEvent *event){
 }
 void DelinkDialog::mouseReleaseEvent(QMouseEvent *event){
     mouse_press = false;
+}
+void DelinkDialog::paintEvent(QPaintEvent *event)
+{
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
 }
 
 
