@@ -5,7 +5,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
-
+    progressBar = new QProgressBar(this);
 
 
     fileName->setFont(QFont("Timers",11,QFont::Bold));

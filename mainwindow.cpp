@@ -98,9 +98,9 @@ MainWindow::MainWindow(QWidget *parent) :
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
-    friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
+    friendListLab->setGeometry(ui->RightWidget->width()/2-55,5,80,30);
     friendIcon = new QLabel(ui->RightWidget);
-    friendIcon->setGeometry(ui->RightWidget->width()/2-66,14,15,10);
+    friendIcon->setGeometry(ui->RightWidget->width()/2-85,14,10,10);
     friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
@@ -231,12 +231,9 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
-                       f_progressBar = new QProgressBar(this);
-                      f_progressBar = v1->progressBar;
+                       f_progressBar = new QProgressBar();
+                       f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
-//                       f_progressBar->setMinimum(0);
-//                       f_progressBar->setMaximum(100);
-//                       f_progressBar->setOrientation(Qt::Horizontal);
                        f_progressBar->hide();
                        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
                        //decryptionViewController->vbox->addWidget(f_progressBar);
@@ -257,7 +254,7 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea = new QScrollArea();
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
-                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+               newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
                decryptionViewController->setLayout(newVbox);          
@@ -740,9 +737,8 @@ void MainWindow::getFileID(){
                           QDateTime time = QDateTime::currentDateTime();
                           QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取当前时间
                           QSqlQuery updatetime(db);
-
                           bool updateTimeSuccess = updatetime.exec("update Decryption set apply_time = '"+time_str+"' where id ='"+fileID+"'");
-                          if(updateTimeSuccess){
+                          if(!updateTimeSuccess){
                               qDebug()<<"update failed";
                           }
                           m1->downloadBtn->setText("申请中");
@@ -1821,6 +1817,7 @@ void MainWindow::LinkInsert(QString link){
         connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
         decryptionViewController->vbox->addWidget(a1);
         f_progressBar = new QProgressBar(this);
+        f_progressBar = a1->progressBar;
         f_progressBar->setObjectName(a1->objectName());
 //        f_progressBar->setMinimum(0);
 //        f_progressBar->setMaximum(100);

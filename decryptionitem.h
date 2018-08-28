@@ -27,7 +27,7 @@ public:
     QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
     QLabel *timeLabel;
-    QProgressBar *progressBar = new QProgressBar(this);
+    QProgressBar *progressBar;
 
 signals:
 
