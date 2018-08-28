@@ -128,8 +128,6 @@ private slots:
 
     void on_DecryptionBtn_clicked();
 
-    void on_MidStaWidget_currentChanged(int arg1);
-
     void on_EncryptionBtn_clicked();
 
     void on_FinEnpBtn_clicked();
