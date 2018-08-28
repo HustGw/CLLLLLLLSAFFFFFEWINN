@@ -12,6 +12,7 @@
 #include <connectionpool.h>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include"msgbox.h"
 class friendInputDlg : public QDialog
 {
     Q_OBJECT

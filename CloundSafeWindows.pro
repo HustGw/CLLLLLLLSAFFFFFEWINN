@@ -116,7 +116,9 @@ SOURCES += \
     BitBuffer.cpp \
     QrCode.cpp \
     QrSegment.cpp \
-    groupsenddialog.cpp
+    groupsenddialog.cpp \
+    msgbox.cpp \
+    resetDialog.cpp
 
 
 
@@ -212,7 +214,9 @@ HEADERS += \
     BitBuffer.hpp \
     QrCode.hpp \
     QrSegment.hpp \
-    groupsenddialog.h
+    groupsenddialog.h \
+    msgbox.h \
+    resetDialog.h
 
 
 
@@ -224,7 +228,8 @@ FORMS += \
     registerdialog.ui \
     tcpclient.ui \
     sharedialog.ui \
-    groupsenddialog.ui
+    groupsenddialog.ui \
+    resetDialog.ui
 
 DISTFILES += \
     Makefile

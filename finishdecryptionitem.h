@@ -14,6 +14,7 @@
 #include <qdebug.h>
 #include "connectionpool.h"
 #include <QMessageBox>
+#include"msgbox.h"
 
 class FinishDecryptionItem : public QWidget
 {

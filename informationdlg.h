@@ -19,6 +19,7 @@
 #include <QString>
 #include <QMessageBox>
 #include <mylabel.h>
+#include"msgbox.h"
 extern QString User_ID;
 extern int informationNum;
 extern int count;

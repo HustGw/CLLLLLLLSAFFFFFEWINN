@@ -90,7 +90,8 @@ void FinishEncryptionItem::on_pathOpenBtn_clicked(){
     QSqlQuery query(db);
        bool success = query.exec("select * from varticle where article_id='" + name + "'");
        if(!success){
-           QMessageBox::information(NULL, "warning", "未找到路径！");
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"));
+           msgbox->exec();
            return;
        }else{
            while(query.next()){
