@@ -11,6 +11,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finen_label.png); }");
     label->hide();
 
+    progressBar = new QProgressBar(this);
+
+
     elseLabel = new QLabel(this);
     elseLabel->setGeometry(49,25,30,16);
     elseLabel->setStyleSheet("QLabel{background-color:#91A7B9 ; color:white;}");
