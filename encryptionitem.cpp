@@ -10,6 +10,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //checkBox->hide();
     }
     else{
+
         fileName = new QLabel(this);
         fileSize = new QLabel(this);
         fileDescription = new QLabel(this);

@@ -7,6 +7,19 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileDescription = new QLabel(this);
 
 
+    label = new QLabel(this);
+    label->setGeometry(0,0,34,16);
+    label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finen_label.png); }");
+    label->hide();
+
+    progressBar = new QProgressBar(this);
+
+
+    elseLabel = new QLabel(this);
+    elseLabel->setGeometry(49,25,30,16);
+    elseLabel->setStyleSheet("QLabel{background-color:#91A7B9 ; color:white;}");
+    elseLabel->setAlignment(Qt::AlignCenter);
+
 
     fileName->setFont(QFont("Timers",11,QFont::Bold));
     fileSize->setFont(QFont("Timers",8));

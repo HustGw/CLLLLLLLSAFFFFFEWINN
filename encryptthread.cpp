@@ -12,7 +12,9 @@ void encryptthread::run(){
 
     int nValue = 21;
     if (ecptFlag==2){
+
          emit result(0,item);
+
     }
     else{
 

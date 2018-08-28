@@ -124,16 +124,15 @@ public:
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
     groupSendDialog *grpDlg;
+
     encryptthread *encptThreadArr[MAXSIZE];
     enItemThread *enitemArr[MAXSIZE];
-    //encryptthread *EncptThread;
+
 private slots:
 
     void on_FinishedBtn_clicked();
 
     void on_DecryptionBtn_clicked();
-
-    void on_MidStaWidget_currentChanged(int arg1);
 
     void on_EncryptionBtn_clicked();
 

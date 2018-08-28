@@ -8,6 +8,10 @@
 #include <QMainWindow>
 #include <QFont>
 #include <QPoint>
+#include <QMouseEvent>
+#include <QtMath>
+#include <QPainter>
+
 extern QString LoginUserID;
 extern QString UserPhoneNum;
 namespace Ui {
@@ -32,12 +36,14 @@ public:
 protected:
     void init();
     void connectServer();
-
+    QPoint move_point;                                    //移动的距离
+    bool mouse_press;                                    //鼠标按下
+    void mousePressEvent(QMouseEvent *qevent);            //鼠标按下事件
+    void mouseReleaseEvent(QMouseEvent *qevent);         //鼠标释放事件
+    void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
+    void paintEvent(QPaintEvent *event);
 
 private slots:
-    void mousePressEvent(QMouseEvent *event);
-
-    void mouseMoveEvent(QMouseEvent *event);
 
     void on_userLineEdit_textChanged();
 

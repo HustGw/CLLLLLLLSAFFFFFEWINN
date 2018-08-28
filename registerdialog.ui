@@ -6,174 +6,423 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>411</width>
-    <height>341</height>
+    <width>462</width>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>注册</string>
+   <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>100</y>
-     <width>189</width>
-     <height>24</height>
+     <x>6</x>
+     <y>6</y>
+     <width>450</width>
+     <height>608</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>密    码：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="passwardLineEdit"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_3">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>220</y>
-     <width>189</width>
-     <height>24</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_4">
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>验 证 码：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="code"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QPushButton" name="codeBtn">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>220</y>
-     <width>71</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>获取</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_2">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>60</y>
-     <width>189</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>手 机 号：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="userLineEdit"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QPushButton" name="signBtn">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>260</y>
-     <width>72</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>注册</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_4">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>180</y>
-     <width>189</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>邮    箱：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="email"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_5">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>20</y>
-     <width>189</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_5">
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>昵    称：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="nichengLineEdit"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_6">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>140</y>
-     <width>189</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_6">
-    <item>
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>确认密码：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="passwardLineEdit_2">
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>450</width>
+      <height>37</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(238, 240, 245);</string>
+    </property>
+    <widget class="QPushButton" name="closeBtn">
+     <property name="geometry">
+      <rect>
+       <x>425</x>
+       <y>6</y>
+       <width>14</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/new/mainwindow/pictures/delete_button.png);
+border:none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="icon_words">
+     <property name="geometry">
+      <rect>
+       <x>47</x>
+       <y>12</y>
+       <width>105</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size:13px;
+font-weight:bold;
+color:rgb(61,57,57);</string>
+     </property>
+     <property name="text">
+      <string>注册云加密账号</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="nichengLabel">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>90</y>
+      <width>39</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>昵称：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="nichengLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>81</y>
+      <width>220</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="passwardLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>159</y>
+      <width>66</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>登录密码：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwardLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>151</y>
+      <width>220</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="passwardLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>229</y>
+      <width>66</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>密码确认：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwardLineEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>221</y>
+      <width>220</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="userLabel">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>299</y>
+      <width>54</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>手机号：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="userLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>291</y>
+      <width>220</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="emailLabel">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>369</y>
+      <width>39</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>邮箱：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="email">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>361</y>
+      <width>220</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="codeLabel">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>439</y>
+      <width>60</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>验证码：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="code">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>431</y>
+      <width>99</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="codeBtn">
+    <property name="geometry">
+     <rect>
+      <x>239</x>
+      <y>431</y>
+      <width>109</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(247, 247, 247);
+color:rgb(153,153,171);
+border:1px solid rgb(214,216,221);
+border-radius:4px;</string>
+    </property>
+    <property name="text">
+     <string>获取短信验证码</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>506</y>
+      <width>271</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 8pt &quot;04b_21&quot;;</string>
+    </property>
+    <property name="text">
+     <string>  阅读并接受  《云加密用户协议》</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="signBtn">
+    <property name="geometry">
+     <rect>
+      <x>126</x>
+      <y>549</y>
+      <width>222</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius:4px;
+background-color: rgb(46, 130, 255);
+font-size:14pt;
+font-weight:bold;
+color:white;</string>
+    </property>
+    <property name="text">
+     <string>注册</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="line">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>533</y>
+      <width>428</width>
+      <height>1</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(238,240,245);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::HLine</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="nichengAlert">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>118</y>
+      <width>200</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;
+</string>
+    </property>
+    <property name="text">
+     <string>昵称已被注册</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="passwardAlert">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>259</y>
+      <width>200</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;</string>
+    </property>
+    <property name="text">
+     <string>密码不一致，请重新输入</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="userAlert">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>329</y>
+      <width>200</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;</string>
+    </property>
+    <property name="text">
+     <string>手机号码格式不正确</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="codeAlert">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>469</y>
+      <width>200</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;
+</string>
+    </property>
+    <property name="text">
+     <string>验证码不正确</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="emailAlert">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>399</y>
+      <width>200</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;</string>
+    </property>
+    <property name="text">
+     <string>邮箱格式不正确</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="icon">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>11</y>
+      <width>23</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/new/mainwindow/pictures/system_icon.png);
+background-color: rgb(238, 240, 245);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

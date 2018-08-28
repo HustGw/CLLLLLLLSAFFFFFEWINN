@@ -14,7 +14,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     bottomWidget->setGeometry(7,43,540,463);
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     titleText = new QLabel(topWidget);
-    titleText->setGeometry(54,19,200,15);
+    titleText->setGeometry(54,11,200,15);
     titleText->setFont(QFont("Timers",9,QFont::Bold));
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("消息"));
@@ -22,7 +22,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 //    titleLabel = new QLabel(topWidget);
 //    titleLabel->setGeometry(0,0,width-100,50);
     titleIcon = new QLabel(topWidget);
-    titleIcon->setGeometry(22,18,23,17);
+    titleIcon->setGeometry(22,10,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     titleIcon->show();
@@ -40,7 +40,9 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     CleanStatusLabel = new QLabel(this);
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
+    cleanInforBtn->setStyleSheet("color:#3D6CFE");
     cleanInforBtn->setGeometry(6,6,100,50);
+    cleanInforBtn->setCursor(QCursor(Qt::PointingHandCursor));
     cleanInforBtn->setAlignment(Qt::AlignCenter);
     connect(cleanInforBtn,SIGNAL(LabelClicked()),this,SLOT(CleanAllInfor()));
     CleanStatusLabel->setText("暂无消息！");
@@ -164,9 +166,10 @@ void informationDlg::ignoreReq(){
 
 }
 void informationDlg::newInformation(){
+    CleanStatusLabel->hide();
     this->vbox = new QVBoxLayout();
     setItem();
-    delete this->layout();
+    delete bottomWidget->layout();
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(this->vbox);
     scrollArea->setWidget(newItemWidget);
@@ -270,6 +273,7 @@ void informationDlg::setItem(){
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
+    CleanStatusLabel->show();
     QSqlQuery query(db);
     bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"'");
     if(!success){
@@ -283,7 +287,7 @@ void informationDlg::CleanAllInfor(){
     FriendRequestCount = 0;
     emit CleanInforNum();
     this->vbox = new QVBoxLayout();
-    delete this->layout();
+    delete bottomWidget->layout();
     QWidget *newItemWidget = new QWidget();
     newItemWidget->setLayout(this->vbox);
     scrollArea->setWidget(newItemWidget);
@@ -296,15 +300,15 @@ void informationDlg::CleanAllInfor(){
 
 void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
      InformationItem *m1 = new InformationItem();
+     CleanStatusLabel->hide();
      QString s = name+"传输文件"+fileName;
      m1->InforKindsLabel->setText("文件传输");
      m1->titleLabel->setText(s);
      m1->timeLabel->setText(time);
-
      m1->allowBtn->hide();
      m1->ignoreBtn->hide();
      vbox->addWidget(m1);
-     delete this->layout();
+     delete bottomWidget->layout();
      QWidget *newItemWidget = new QWidget();
      newItemWidget->setLayout(this->vbox);
      scrollArea->setWidget(newItemWidget);
@@ -319,6 +323,7 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
 void informationDlg::NewFriend(){
     qDebug()<<"new friend";
     FriendCount++;//
+    CleanStatusLabel->hide();
     QSqlQuery query(db);
     bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
     if(!success){
@@ -349,7 +354,7 @@ void informationDlg::NewFriend(){
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
                 vbox->addWidget(m1);
-                delete this->layout();
+                delete bottomWidget->layout();
                 QWidget *newItemWidget = new QWidget();
                 newItemWidget->setLayout(this->vbox);
                 scrollArea->setWidget(newItemWidget);
