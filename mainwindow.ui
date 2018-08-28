@@ -66,6 +66,9 @@ background-color: rgb(255, 255, 255);</string>
       <height>21</height>
      </rect>
     </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="Line" name="line">
     <property name="geometry">
@@ -107,6 +110,9 @@ background-color: rgb(255, 255, 255);</string>
     </property>
    </widget>
    <widget class="QWidget" name="RightWidget" native="true">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>873</x>

@@ -15,7 +15,7 @@ class DecryptionItem : public QWidget
 public:
     explicit DecryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(648,71);
+        return QSize(644,71);
     }
 
     QLabel *fileName;

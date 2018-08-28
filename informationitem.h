@@ -14,7 +14,7 @@ class InformationItem : public QWidget
 public:
     explicit InformationItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(525,120);
+        return QSize(487,110);
     }
     QPushButton *allowBtn;
     QPushButton *ignoreBtn;

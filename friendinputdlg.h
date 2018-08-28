@@ -19,7 +19,7 @@ class friendInputDlg : public QDialog
 public:
     friendInputDlg(QWidget* parent= 0);
     QSize sizeHint() const{
-        return QSize(500,400);
+        return QSize(512,412);
     }
     QLabel *titleLabel;
     QLineEdit *inputLineEdit;
@@ -32,18 +32,29 @@ public:
     QLabel *userTitle;
     QLabel *userId;
     QPushButton *addFriendBtn;
+    QWidget *topWidget;
+    QWidget *bottomWidget;
+    QLabel *titleIcon;
+    QLabel * titleText;
+    QPushButton *closeBtn;
 private slots:
     void sendName();
     void cancel();
     void ShowDetail();
     void SearchFriend();
+    void closeBtn_press();
 signals:
     void sendNameToMain(QString name);
 
 private:
+    QPoint mLastMousePosition;
+    bool mMoving;
 protected:
     void paintEvent(QPaintEvent *event);
     void closeEvent(QCloseEvent *event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
 };
 
 #endif // FRIENDINPUTDLG_H
