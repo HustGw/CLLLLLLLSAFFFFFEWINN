@@ -18,6 +18,8 @@ public:
     QSize sizeHint() const{
         return QSize(644,71);
     }
+    QLabel *label;
+    QLabel *elseLabel;
 
     QLabel *fileName;
     QLabel *fileSize;

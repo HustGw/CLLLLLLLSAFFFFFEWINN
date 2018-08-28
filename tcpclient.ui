@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
-    <height>440</height>
+    <width>583</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,14 @@
   <widget class="QWidget" name="centralWidget" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>6</x>
+     <y>6</y>
      <width>571</width>
-     <height>531</height>
+     <height>440</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 10pt
+    <string notr="true">background-color: rgb(255, 255, 255);
 </string>
    </property>
    <widget class="QPushButton" name="sendBtn">
@@ -47,7 +47,7 @@
      <rect>
       <x>126</x>
       <y>304</y>
-      <width>83</width>
+      <width>100</width>
       <height>17</height>
      </rect>
     </property>
@@ -64,7 +64,7 @@ font: 10pt </string>
      <rect>
       <x>252</x>
       <y>304</y>
-      <width>83</width>
+      <width>100</width>
       <height>17</height>
      </rect>
     </property>
@@ -109,6 +109,7 @@ border-bottom:1px solid rgb(238,240,245)</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/new/login/pictures/login_main_logo.png);
+background-color: rgb(238, 240, 245);
 </string>
      </property>
      <property name="text">
@@ -129,7 +130,8 @@ border-bottom:1px solid rgb(238,240,245)</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/new/mainwindow/pictures/min_button.png);
-border:0px;</string>
+background-color: rgb(238, 240, 245);
+border:0px</string>
      </property>
      <property name="text">
       <string/>
@@ -152,6 +154,7 @@ border:0px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/new/mainwindow/pictures/exit_button.png);
+background-color: rgb(238, 240, 245);
 border:0px;</string>
      </property>
      <property name="text">
@@ -294,9 +297,9 @@ background:transparent;</string>
     <property name="geometry">
      <rect>
       <x>21</x>
-      <y>407</y>
-      <width>62</width>
-      <height>20</height>
+      <y>402</y>
+      <width>70</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -315,9 +318,9 @@ background:transparent;</string>
    <widget class="QPushButton" name="forgetBtn">
     <property name="geometry">
      <rect>
-      <x>374</x>
+      <x>364</x>
       <y>302</y>
-      <width>70</width>
+      <width>100</width>
       <height>20</height>
      </rect>
     </property>

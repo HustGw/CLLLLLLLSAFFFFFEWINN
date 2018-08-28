@@ -215,6 +215,8 @@ MainWindow::MainWindow(QWidget *parent) :
                        pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                        v1->fileIcon->setScaledContents(true);
                        v1->fileIcon->setPixmap(pixmap);
+                       v1->elseLabel->setText(filetype);
+                       v1->elseLabel->raise();
                    }
 
                    QString initID = query.record().value("id").toString();
@@ -244,12 +246,14 @@ MainWindow::MainWindow(QWidget *parent) :
                    else if(query.record().value("status").toString()=="1"){//待申请状态
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
                        v1->downloadBtn->setText("申请解密");
+                       v1->label->show();
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                    }
                    else if(query.record().value("status").toString()=="2"){//申请等待状态
                        v1->fileDescription->setText("正在申请解密，请等待！");
                        v1->downloadBtn->setText("申请中");
+                       v1->label->show();
                        decryptionViewController->vbox->addWidget(v1);
                    }
                }
@@ -1219,6 +1223,8 @@ void MainWindow::on_pushButton_8_clicked()
                    pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
+                   f1->elseLabel->setText(filetype);
+                   f1->elseLabel->raise();
                }
 
                f1->checkBox->setObjectName(file_id + "check");
@@ -1461,6 +1467,8 @@ void MainWindow::on_pushButton_9_clicked()
                    pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
+                   f1->elseLabel->setText(filetype);
+                   f1->elseLabel->raise();
                }
 
                f1->checkBox->setObjectName(file_id + "check");

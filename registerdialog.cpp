@@ -32,6 +32,11 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->userAlert->setVisible(false);
    ui->codeAlert->setVisible(false);
    ui->emailAlert->setVisible(false);
+   ui->checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+   ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
+   ui->codeBtn->setCursor(QCursor(Qt::PointingHandCursor));
+   ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
+   ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
@@ -40,8 +45,8 @@ registerDialog::registerDialog(QWidget *parent) :
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->closeBtn->setStyleSheet(               //调整关闭按钮样式
-               "QPushButton{background-image: url(:/new/mainwindow/pictures/delete_button.png);border:none;}"
-               "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button.png);border:none;background-color:rgb(200,200,200)}");
+               "QPushButton{border-image: url(:/new/mainwindow/pictures/delete_button.png);border:none;background-color:#EEF0F5;}"
+               "QPushButton:hover{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
    ui->nichengLineEdit->setStyleSheet(                 //调整登录按钮样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -467,15 +472,51 @@ void registerDialog::on_closeBtn_clicked()
     this->close();        //窗口关闭
 }
 
-void registerDialog::mousePressEvent(QMouseEvent *event) //窗口鼠标按下事件
+void registerDialog::paintEvent(QPaintEvent *event)
 {
-    this->windowPos = this->pos();                // 获得部件当前位置
-    this->mousePos = event->globalPos();     // 获得鼠标位置
-    this->dPos = mousePos - windowPos;
-}
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
 
-void registerDialog::mouseMoveEvent(QMouseEvent *event)  //窗口鼠标移动事件
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
+}
+void registerDialog::mousePressEvent(QMouseEvent *qevent)
 {
-     this->move(event->globalPos() - this->dPos);
+    if(qevent->button() == Qt::LeftButton)
+    {
+        mouse_press = true;
+        //鼠标相对于窗体的位置（或者使用event->globalPos() - this->pos()）
+        move_point = qevent->pos();;
+    }
+}
+void registerDialog::mouseMoveEvent(QMouseEvent *qevent)
+{
+    //若鼠标左键被按下
+    if(mouse_press)
+    {
+        //鼠标相对于屏幕的位置
+        QPoint move_pos = qevent->globalPos();
+
+        //移动主窗体位置
+        this->move(move_pos - move_point);
+    }
+}
+void registerDialog::mouseReleaseEvent(QMouseEvent *qevent)
+{
+    //设置鼠标为未被按下
+    mouse_press = false;
 }
 
