@@ -14,7 +14,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     bottomWidget->setGeometry(7,43,540,463);
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     titleText = new QLabel(topWidget);
-    titleText->setGeometry(54,19,200,15);
+    titleText->setGeometry(54,11,200,15);
     titleText->setFont(QFont("Timers",9,QFont::Bold));
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("消息"));
@@ -22,7 +22,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 //    titleLabel = new QLabel(topWidget);
 //    titleLabel->setGeometry(0,0,width-100,50);
     titleIcon = new QLabel(topWidget);
-    titleIcon->setGeometry(22,18,23,17);
+    titleIcon->setGeometry(22,10,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     titleIcon->show();
@@ -40,7 +40,9 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     CleanStatusLabel = new QLabel(this);
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
+    cleanInforBtn->setStyleSheet("color:#3D6CFE");
     cleanInforBtn->setGeometry(6,6,100,50);
+    cleanInforBtn->setCursor(QCursor(Qt::PointingHandCursor));
     cleanInforBtn->setAlignment(Qt::AlignCenter);
     connect(cleanInforBtn,SIGNAL(LabelClicked()),this,SLOT(CleanAllInfor()));
     CleanStatusLabel->setText("暂无消息！");
