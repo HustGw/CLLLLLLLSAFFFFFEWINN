@@ -3,13 +3,6 @@ extern bool initPageFlag;
 
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
-     //QProgressBar{background: rgb(210, 225, 240);}
-//    progressBar->setStyleSheet(const QString &sheet);
-//    QProgressBar{
-
-//    };
-
-    //checkBox = new QCheckBox(this);
     if (initPageFlag){
         initPage = new QLabel(this);
         initPage->setGeometry(241,162,215,30);
@@ -71,6 +64,8 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         QProgressBar::chunk { \
             background-color: rgba(235, 241, 255,180); \
         }";
+    //progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+    progressBar->setOrientation(Qt::Horizontal);
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
     progressBar->setStyleSheet(strQSS);

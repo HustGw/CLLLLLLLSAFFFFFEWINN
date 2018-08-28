@@ -90,7 +90,7 @@ int encryption::encrypt(){
     QString orFileID = orfileUuid;
     //加密
     //生成密文唯一标识
-    QString enfile_id =yzipfileUuid;
+    QString enfile_id =QUuid::createUuid().toString();
     std::string enFileID = enfile_id.toStdString();
     //生成密钥唯一标识
     QString enkey_id = QUuid::createUuid().toString();
@@ -131,7 +131,7 @@ int encryption::encrypt(){
     QSqlQuery query(conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
-
+    qDebug()<<originalFileName;
     //密钥上传OSS
     uploadoss *upKey = new uploadoss;
     upKey->OBJECT_NAME=enKeyID.c_str();
@@ -141,7 +141,7 @@ int encryption::encrypt(){
     if (oss_PutKey_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
-        qDebug()<<"网络中断";
+        qDebug()<<"网络错误！";
         return 2;
     }else if (oss_PutKey_Flag==1){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
@@ -164,23 +164,23 @@ int encryption::encrypt(){
         else{
           qDebug()<<"error";
         }
-        QFile keyFile (ykeyAbPath);
-        if (keyFile.exists())
-            {
-                keyFile.remove();
-            }
     }
+
+
+
+
     //密文上传OSS
+
     uploadoss *upFile = new uploadoss;
     upFile->OBJECT_NAME=enFileID.c_str();
     upFile->BUCKET_NAME="cloudsafe-pc-yfile";
     upFile->filepath=yFile_oss_Path.data();
     oss_PutFile_Flag = upFile->put_object_from_file();
-    if (oss_PutFile_Flag==2){
+    if (oss_PutFile_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
-        qDebug()<<"网络中断";
-        return  2;
+        qDebug()<<"网络错误！";
+        return 2;
     }else if (oss_PutFile_Flag==1){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::Ok(NULL,"错误","密文上传错误",QMessageBox::Yes,NULL);
@@ -200,7 +200,8 @@ int encryption::encrypt(){
         }
     }
     ConnectionPool::closeConnection(conn);
-    return  1;
+    return 1;
+
     /////////////////////////////////密文下载测试
     /// 密钥下载
     /// 密文下载

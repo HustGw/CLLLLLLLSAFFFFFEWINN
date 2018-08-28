@@ -34,11 +34,15 @@ bool initPageFlag=true;
 int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
+int encptThreadNum = 0;
+int enitemNum = 0;
 QFont f("HiraginoSansGB",10,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
+
+QString file_item_name;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -89,9 +93,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //使用连接池 管理数据库连接
     db = ConnectionPool::openConnection();
     // 连接进度条信号槽
-    connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
+    //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
+   //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
     //开始加密信号槽
-    connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
+    //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
@@ -232,13 +237,14 @@ MainWindow::MainWindow(QWidget *parent) :
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                        f_progressBar = new QProgressBar(this);
+                      f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
-                       f_progressBar->setMinimum(0);
-                       f_progressBar->setMaximum(100);
-                       f_progressBar->setOrientation(Qt::Horizontal);
+//                       f_progressBar->setMinimum(0);
+//                       f_progressBar->setMaximum(100);
+//                       f_progressBar->setOrientation(Qt::Horizontal);
                        f_progressBar->hide();
                        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-                       decryptionViewController->vbox->addWidget(f_progressBar);
+                       //decryptionViewController->vbox->addWidget(f_progressBar);
                    }
                    else if(query.record().value("status").toString()=="1"){//待申请状态
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -300,6 +306,7 @@ MainWindow::MainWindow(QWidget *parent) :
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
+     connect(recThread,SIGNAL(thread_Disconnected()),this,SLOT(internet_Disconnected()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
      //connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
@@ -402,7 +409,7 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
-    if (encryptionViewController->vbox->count()==0||encryptionViewController->layout()->count()-1==0){
+    if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
         ui->BtnStaWidget->setCurrentIndex(0);
         //initPageFlag=true;
@@ -437,10 +444,16 @@ void MainWindow::on_OpenFileBtn_clicked()
     QString file_full,fName,fPath,amfSize;
     qint64 fSize;
     double mfSize;
+    int fileNumFlag;
     QFileInfo fInfo;
-
-    file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
-    if (file_full.isEmpty()){
+    QFileDialog *selectFiles =new QFileDialog ();
+    selectFiles ->setFileMode(QFileDialog::ExistingFiles);
+    //selectFiles->getOpenFileNames(this,"Open File",QDir::currentPath());
+    QStringList file_full_list;
+    file_full_list = selectFiles->getOpenFileNames(this,"Open File",QDir::currentPath());
+    //file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
+    qDebug()<<file_full_list;
+    if (file_full_list.isEmpty()){
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"));
             msgbox->exec();
     //        QMessageBox message(QMessageBox::NoIcon,"Erro Message","请选择文件");
@@ -458,7 +471,9 @@ void MainWindow::on_OpenFileBtn_clicked()
             initPageFlag=false;
         }
 
-        fInfo=QFileInfo(file_full);
+      for (int i=0;i<file_full_list.size();++i){
+          //if ()
+        fInfo=QFileInfo(file_full_list.at(i));
         openFileInfo=fInfo;
         fName=fInfo.fileName();
         fPath=fInfo.filePath();
@@ -475,6 +490,7 @@ void MainWindow::on_OpenFileBtn_clicked()
         QString yzipFileID = yzipfile_id.toString();
         yzipfileUuid = yzipFileID;
         //contest->fInfo=fInfo;
+        emit starEcptItem(fName);
         EncryptionItem *v1 = new EncryptionItem();
         v1->setObjectName(fName);
         v1->fileName->setText(fName);
@@ -530,7 +546,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         //encryptionViewController2->vbox->addWidget(v2);
 
-        f_progressBar = new QProgressBar(this);
+        f_progressBar = new QProgressBar();
         f_progressBar = v1->progressBar;
         QString strQSS = "QProgressBar { \
                 text-align: center; \
@@ -541,15 +557,27 @@ void MainWindow::on_OpenFileBtn_clicked()
                 background-color: rgba(230, 277, 255,180); \
             }";
 //        f_progressBar->setStyleSheet(strQSS);
-//        f_progressBar->setObjectName(fName);
+        f_progressBar->setObjectName(fName);
+
+
 //        f_progressBar->setMinimum(0);
 //        f_progressBar->setMaximum(100);
 //        //f_progressBar->setValue(20);
 //        f_progressBar->setOrientation(Qt::Horizontal);
 //        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
         connect(v1->encryptStaBtn,SIGNAL(clicked(bool)),this,SLOT(on_encryptStaBtn_clicked()));
+        //connect(this,SIGNAL(starEncptItem(QString)),this,SLOT(startProgressBarThread(QString)));
+        //startEncryptThread(fName);
+        startProgressBarThread(fName);
         //encryptionViewController->vbox->addWidget(f_progressBar);
         //encryptionViewController->vbox->setGeometry(100);
+
+        //开始加密
+        //encptThreadArr[encptThreadNum] = new encryptthread(this);
+
+        //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
+        //encptThreadArr[encptThreadNum]->start();
+        //encptThreadNum++;
 
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
@@ -561,17 +589,20 @@ void MainWindow::on_OpenFileBtn_clicked()
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
 
-
+}
     }
 }
 
 // 更新进度条
-void MainWindow::handleResults(int value)
+void MainWindow::handleResults(int value,QString itemName)
 {
+    EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
+    //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
+    //f_progressBar->setValue(value);
+    v1->progressBar->setValue(value);
 
-    f_progressBar->setValue(value);
     if (value==100){
-        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
+
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密完成！"));
@@ -579,6 +610,26 @@ void MainWindow::handleResults(int value)
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         //qDebug()<<name;
+        delete v1;
+        //ReLayout();
+        delete encryptionViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        QScrollArea *newScrollArea = new QScrollArea();
+        newItemWidget->setLayout(encryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(newScrollArea);
+        encryptionViewController->setLayout(newVbox);
+
+///////////////////////////////////////////////////////////////////////
+        //initPageFlag=true;
+        //on_FinEnpBtn_clicked();
+    }
+    if (value==0){
+        //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+        msgbox->exec();
+        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         delete v1;
         //delete f_progressBar;
         delete encryptionViewController->layout();
@@ -589,12 +640,6 @@ void MainWindow::handleResults(int value)
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
-///////////////////////////////////////////////////////////////////////
-        //initPageFlag=true;
-        on_FinEnpBtn_clicked();
-    }
-    if (value==0){
-        QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
     }
 }
 
@@ -609,26 +654,37 @@ void MainWindow::on_encryptStaBtn_clicked(){
 }
 
 // 开启进度条
-void MainWindow::startProgressBarThread()
+void MainWindow::startProgressBarThread( QString  itemName)
 {
     if (fileOpenFlag){
-        enItemThread *workerThread = new enItemThread(this);
-        connect(workerThread, SIGNAL(resultReady(int)), this, SLOT(handleResults(int)));
+
+        encryptthread *ecry = new encryptthread(this);
+        file_item_name = itemName;
+        //ecry->itemName = itemName;
+        enItemThread *enit = new enItemThread(this);
+        //enit->item = itemName;
+        enitemArr[enitemNum] = new enItemThread(this);
+        //enItemThread *workerThread = new enItemThread(this);
+        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString)), this, SLOT(handleResults(int,QString)));
         // 线程结束后，自动销毁
-        //connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
-        workerThread->start();
+        connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
+       enitemArr[enitemNum]->start();
+       enitemNum++;
         //startEncryptThread();
-        encryptthread *ecpThread = new encryptthread(this);
-        connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
+        encptThreadArr[encptThreadNum] = new encryptthread(this);
+        //encryptthread *ecpThread = new encryptthread(this);
+        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString)),this,SLOT(handleResults(int,QString)));
         // 线程结束后，自动销毁
-        connect(ecpThread, SIGNAL(finished()), ecpThread, SLOT(deleteLater()));
-        ecpThread->start();
+        connect(encptThreadArr[encptThreadNum], SIGNAL(finished()), encptThreadArr[encptThreadNum], SLOT(deleteLater()));
+        //ecpThread->start();
+        encptThreadArr[encptThreadNum]->start();
+        encptThreadNum++;
     }
 
 }
 
 //开始加密
-void MainWindow::startEncryptThread(){
+void MainWindow::startEncryptThread(QString itemName){
     encryptthread *ecpThread = new encryptthread(this);
     connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
     // 线程结束后，自动销毁
@@ -889,13 +945,14 @@ void MainWindow::ReceiveNewReq(){
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
+                      f_progressBar = v1->progressBar;
                       f_progressBar->setObjectName(v1->objectName());
-                      f_progressBar->setMinimum(0);
-                      f_progressBar->setMaximum(100);
-                      f_progressBar->setOrientation(Qt::Horizontal);
+//                      f_progressBar->setMinimum(0);
+//                      f_progressBar->setMaximum(100);
+//                      f_progressBar->setOrientation(Qt::Horizontal);
                       f_progressBar->hide();
                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-                      decryptionViewController->vbox->addWidget(f_progressBar);
+                      //decryptionViewController->vbox->addWidget(f_progressBar);
                   }
                   else if(query.record().value("status").toString()=="1"){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
@@ -1806,12 +1863,12 @@ void MainWindow::LinkInsert(QString link){
         decryptionViewController->vbox->addWidget(a1);
         f_progressBar = new QProgressBar(this);
         f_progressBar->setObjectName(a1->objectName());
-        f_progressBar->setMinimum(0);
-        f_progressBar->setMaximum(100);
-        f_progressBar->setOrientation(Qt::Horizontal);
+//        f_progressBar->setMinimum(0);
+//        f_progressBar->setMaximum(100);
+//        f_progressBar->setOrientation(Qt::Horizontal);
         f_progressBar->hide();
         f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
-        decryptionViewController->vbox->addWidget(f_progressBar);
+        //decryptionViewController->vbox->addWidget(f_progressBar);
         ReLayout();
     }
 
@@ -2045,4 +2102,9 @@ void MainWindow::FriendListWidgetHide(){
       friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
       isFriendListHide = 0;
     }
+}
+
+void MainWindow::internet_Disconnected(){
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+    msgbox->exec();
 }

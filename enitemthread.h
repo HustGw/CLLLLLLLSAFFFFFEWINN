@@ -1,6 +1,7 @@
 #ifndef ENITEMTHREAD_H
 #define ENITEMTHREAD_H
 #include <QThread>
+#include <QDebug>
 
 class enItemThread : public QThread
 {
@@ -8,11 +9,12 @@ class enItemThread : public QThread
 public:
     enItemThread();
     explicit enItemThread(QObject *parent = 0);
+    QString item;
 
 protected:
     void run() ;
 signals:
-    void resultReady(int value);
+    void resultReady(int value,QString itemName);
 
 };
 

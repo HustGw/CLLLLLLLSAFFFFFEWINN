@@ -59,14 +59,14 @@ int uploadoss::put_object_from_file()
         s = oss_put_object_from_file(options, &bucket, &object, &file,headers, &resp_headers);
 
         if (aos_status_is_ok(s)) {
+            qDebug()<< OBJECT_NAME;
             qDebug()<< "put object from file succeeded";
             return 1;
         } else {
              qDebug()<<"put object from file failed"<<s->code<<s->error_code<<s->error_msg<<s->req_id;
                        //code:%d, error_code:%s, error_msg:%s, request_id:%s\n",
                 //s->code, s->error_code, s->error_msg, s->req_id;
-
-             return 2;
+             return 0;
         }
 
         aos_pool_destroy(p);

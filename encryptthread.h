@@ -13,11 +13,12 @@ public:
     encryptthread();
     explicit encryptthread(QObject *parent = 0);
     encryption *encpt= new encryption();
+    QString item ;
 
 
 
 signals:
-    void result(int value);
+    void result(int value,QString itemName);
 };
 
 #endif // ENCRYPTTHREAD_H

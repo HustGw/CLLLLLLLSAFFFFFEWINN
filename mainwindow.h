@@ -6,7 +6,6 @@
 #include "decryptionitem.h"
 #include <QStackedWidget>
 #include "encryptionitem.h"
-
 #include <QListWidget>
 #include <QVBoxLayout>
 #include "encryptionbtnview.h"
@@ -62,6 +61,8 @@
 #include "msgbox.h"
 #include<QPainter>
 #include<QtMath>
+#include <enitemthread.h>
+#include <encryptthread.h>
 
 namespace Ui {
 class MainWindow;
@@ -97,7 +98,6 @@ public:
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
     EncryptionViewController *encryptionViewController;
-    EncryptionViewController *encryptionViewController2;
     EncryptionBtnView *encryptionBtnItem; //加密单元
     DecryptionBtnView *decryptionBtnItem; //解密单元
     DecryptionViewController *decryptionViewController; //解密界面控制器 对解密单元进行布局管理
@@ -123,12 +123,10 @@ public:
     QProgressBar *d_progressBar;
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
-
     groupSendDialog *grpDlg;
-
-
-
-
+    encryptthread *encptThreadArr[MAXSIZE];
+    enItemThread *enitemArr[MAXSIZE];
+    //encryptthread *EncptThread;
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -144,10 +142,6 @@ private slots:
     void on_FinDepBtn_clicked();
 
     void on_OpenFileBtn_clicked();
-
-    void on_pushButton_2_clicked();
-
-    void on_selectAllBtn_ept_clicked();
 
     void on_pushButton_3_clicked();
 
@@ -186,11 +180,13 @@ private slots:
     void ChangeItemBtnText(QString fileID);
 
     // 更新进度条
-    void handleResults(int value);
+    void handleResults(int value,QString itemName);
     // 开启进度条线程
-    void startProgressBarThread();
+    void startProgressBarThread(QString itemName);
     //开启加密进程
-    void startEncryptThread();
+    void startEncryptThread(QString itemName);
+
+
     //设置主界面用户名称
     void setEmp_name();
     //清楚左侧Button点击效果
@@ -232,6 +228,8 @@ private slots:
 
     void FriendListWidgetHide();
 
+    void internet_Disconnected();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -244,6 +242,7 @@ signals:
     void OSSfileDownFileID(QString id,QString enkey_id);
     void SendInforToInforDlg(QString nickname,QString fileName,QString time);
     void showDownDialog(QString id);
+    void starEcptItem(QString itemName);
 private:
     Ui::MainWindow *ui;
     QPoint dragPosition;

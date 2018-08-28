@@ -26,6 +26,7 @@ public:
 signals:
     void numChanged();
     void ReqIsAlliowed();
+    void thread_Disconnected();
 };
 
 #endif // REQUESTRECTHREAD_H

@@ -6,6 +6,8 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
+
+
     fileName->setFont(QFont("Timers",11,QFont::Bold));
     fileSize->setFont(QFont("Timers",8));
     fileDescription->setFont(QFont("Timers",8));
@@ -18,6 +20,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     timeLabel = new QLabel(this);
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
+
+    downloadBtn->setStyleSheet("background:transparent");
+    timeLabel->setStyleSheet("background:transparent");
 
     fileName->setGeometry(97,10,300,16);
     fileSize->setGeometry(97,28,300,11);
@@ -34,6 +39,23 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     timeLabel->setGeometry(294,31,230,10);
     timeLabel->setFont(QFont("Timers",8));
     timeLabel->setStyleSheet("color:#9999AB");
+    progressBar->setGeometry(20,0,this->width()-1,this->height()-1);
+    QString strQSS = "QProgressBar { \
+            text-align: center; \
+            border: 1px ; \
+            background: transparent; \
+        } \
+        QProgressBar::chunk { \
+            background-color: rgba(235, 241, 255,180); \
+        }";
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(100);
+    progressBar->setStyleSheet(strQSS);
+    fileName->setStyleSheet("background:transparent");
+    fileDescription->setStyleSheet("background:transparent");
+    fileSize->setStyleSheet("background:transparent");
+    downloadBtn->setStyleSheet("background:transparent");
+    timeLabel->setStyleSheet("background:transparent");
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
