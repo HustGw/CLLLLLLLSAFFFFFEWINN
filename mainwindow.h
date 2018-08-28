@@ -84,6 +84,7 @@ extern int FriendCount;
 extern int FriendRequestCount;
 extern int FriendArrayIndex;//好友昵称数据目录
 extern int RequsetIndex;//消息ID数组的目录
+extern int isFriendListHide;//判断消息列表是否隐藏
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -113,7 +114,8 @@ public:
     QSqlDatabase db;
     QListWidget *friendListWidget;
     QPushButton *addFriendBtn;
-    QLabel *friendListLab;
+    Mylabel *friendListLab;
+    QLabel *friendIcon;
     informationDlg *inforDlg;
     DepDownThread *downThread[MAXSIZE];
     DecryptionThread *depThread[MAXSIZE];
@@ -227,6 +229,8 @@ private slots:
     void on_pushButton_15_clicked();
 
     void on_pushButton_14_clicked();
+
+    void FriendListWidgetHide();
 
 protected:
     void closeEvent(QCloseEvent *event);

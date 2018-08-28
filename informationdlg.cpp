@@ -3,6 +3,35 @@ int count = 0;
 
 informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 {
+    setStyleSheet("QWidget{background-color: #FFFFFF;}");
+    //设置标题栏隐藏
+    topWidget = new QWidget(this);
+    topWidget->setGeometry(6,6,540,37);
+    topWidget->setStyleSheet("background-color:#EEF0F5");
+    this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    topWidget->show();
+    bottomWidget = new QWidget(this);
+    bottomWidget->setGeometry(7,43,540,463);
+    bottomWidget->setStyleSheet("background-color: #FFFFFF");
+    titleText = new QLabel(topWidget);
+    titleText->setGeometry(54,19,200,15);
+    titleText->setFont(QFont("Timers",9,QFont::Bold));
+    titleText->setStyleSheet("background-color: #EEF0F5;");
+    titleText->setText(QStringLiteral("消息"));
+    titleText->show();
+//    titleLabel = new QLabel(topWidget);
+//    titleLabel->setGeometry(0,0,width-100,50);
+    titleIcon = new QLabel(topWidget);
+    titleIcon->setGeometry(22,18,23,17);
+    titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
+                             "background-color: #EEF0F5;");
+    titleIcon->show();
+ //   titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
+    closeBtn = new QPushButton(this);
+    closeBtn->setGeometry(506, 12, 13, 13);
+    closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
+    closeBtn->setCursor(QCursor(Qt::PointingHandCursor));   
+    connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));
     db = ConnectionPool::openConnection();
     setWindowTitle(tr("消息"));
     vbox = new QVBoxLayout();
@@ -11,29 +40,37 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     CleanStatusLabel = new QLabel(this);
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
-    cleanInforBtn->setGeometry(0,0,100,50);
+    cleanInforBtn->setGeometry(6,6,100,50);
     cleanInforBtn->setAlignment(Qt::AlignCenter);
     connect(cleanInforBtn,SIGNAL(LabelClicked()),this,SLOT(CleanAllInfor()));
     CleanStatusLabel->setText("暂无消息！");
-    CleanStatusLabel->setGeometry(250,180,100,40);
+    CleanStatusLabel->setGeometry(256,186,100,40);
     if(count==0){
         CleanStatusLabel->show();
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
+        //scrollArea->setFrameRect(0,50,width-20,this->height()-50);
+        //scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
+        scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         scrollLayout = new QVBoxLayout();
-        scrollArea->setWidget(CleanStatusLabel);
-        scrollLayout->addWidget(scrollArea);        
-        this->setLayout(scrollLayout);
+       // scrollArea->setWidget(CleanStatusLabel);
+       // scrollLayout->addWidget(titleLabel);
+        scrollLayout->addWidget(scrollArea);
+        scrollLayout->addWidget(cleanInforBtn);
+        bottomWidget->setLayout(scrollLayout);
     }
     else{
         CleanStatusLabel->hide();
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
+       // scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
+        scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         scrollLayout = new QVBoxLayout();
         scrollArea->setWidget(ItemWidget);
+        //scrollLayout->addWidget(titleLabel);
         scrollLayout->addWidget(scrollArea);
         scrollLayout->addWidget(cleanInforBtn);
-        this->setLayout(scrollLayout);
+        bottomWidget->setLayout(scrollLayout);
     }
 
 }
@@ -136,7 +173,7 @@ void informationDlg::newInformation(){
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(scrollArea);
     newVbox->addWidget(cleanInforBtn);
-    this->setLayout(newVbox);
+    bottomWidget->setLayout(newVbox);
 
 }
 
@@ -183,7 +220,7 @@ void informationDlg::setItem(){
                 m1->setObjectName(query.record().value("id").toString()+"information");
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
                 m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
-                m1->allowBtn->setText("已允许");
+                m1->allowBtn->setText(QStringLiteral("已允许"));
                 m1->ignoreBtn->hide();
                 m1->allowBtn->setEnabled(false);
                 vbox->addWidget(m1);
@@ -193,7 +230,7 @@ void informationDlg::setItem(){
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"inforAllowBtn");
                 m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"inforIgnoreBtn");
                 m1->allowBtn->hide();
-                m1->ignoreBtn->setText("已忽略");
+                m1->ignoreBtn->setText(QStringLiteral("已忽略"));
                 m1->ignoreBtn->setEnabled(false);
                 vbox->addWidget(m1);
             }
@@ -253,7 +290,7 @@ void informationDlg::CleanAllInfor(){
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->addWidget(scrollArea);
     newVbox->addWidget(cleanInforBtn);
-    this->setLayout(newVbox);
+    bottomWidget->setLayout(newVbox);
 
 }
 
@@ -274,7 +311,7 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
      QVBoxLayout *newVbox = new QVBoxLayout();
      newVbox->addWidget(scrollArea);
      newVbox->addWidget(cleanInforBtn);
-     this->setLayout(newVbox);
+     bottomWidget->setLayout(newVbox);
 
 
 }
@@ -319,7 +356,7 @@ void informationDlg::NewFriend(){
                 QVBoxLayout *newVbox = new QVBoxLayout();
                 newVbox->addWidget(scrollArea);
                 newVbox->addWidget(cleanInforBtn);
-                this->setLayout(newVbox);
+                bottomWidget->setLayout(newVbox);
             }
         }
     }
@@ -354,5 +391,55 @@ void informationDlg::AddFriendRequest(){
                 b1->setEnabled(false);
             }
         }
+    }
+}
+
+void informationDlg::closeBtn_press(){
+    close();
+}
+
+void informationDlg::mousePressEvent(QMouseEvent *event){
+    if(event->button() == Qt::LeftButton)
+        {
+            mMoving = true;
+            mLastMousePosition = event->globalPos();
+        }
+
+}
+
+void informationDlg::mouseMoveEvent(QMouseEvent *event){
+
+    if( event->buttons().testFlag(Qt::LeftButton) && mMoving)
+    {
+        this->move(this->pos() + (event->globalPos() - mLastMousePosition));
+        mLastMousePosition = event->globalPos();
+    }
+
+}
+
+void informationDlg::mouseReleaseEvent(QMouseEvent *event){
+
+    if(event->button() == Qt::LeftButton)
+    {
+        mMoving = false;
+    }
+}
+
+void informationDlg::paintEvent(QPaintEvent *event){
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
     }
 }

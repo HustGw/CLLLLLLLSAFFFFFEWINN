@@ -20,6 +20,7 @@
 #include <QMessageBox>
 #include <mylabel.h>
 #include"msgbox.h"
+#include <QMouseEvent>
 extern QString User_ID;
 extern int informationNum;
 extern int count;
@@ -33,7 +34,7 @@ class informationDlg : public QDialog
 public:
     informationDlg(QWidget* parent = 0);
     QSize sizeHint() const{
-        return QSize(600,400);
+        return QSize(552,512);
     }
     QVBoxLayout *vbox;//用于放置Item的Layout
     QVBoxLayout *scrollLayout;//用于放置scrollArea的Layout
@@ -43,9 +44,20 @@ public:
     QSqlDatabase db;
     QLabel *CleanStatusLabel;
     Mylabel *cleanInforBtn;
+    QLabel *titleIcon;
+    QLabel * titleText;
+    QPushButton *closeBtn;
+    QWidget *topWidget;
+    QWidget *bottomWidget;
     void setItem();
+protected:
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void paintEvent(QPaintEvent *event);
 private:
-
+    QPoint mLastMousePosition;
+    bool mMoving;
 private slots:
 //    void setUserID(QString user_id);
     void recvReq();
@@ -55,6 +67,7 @@ private slots:
     void NewRequestRec(QString name,QString fileName,QString time);
     void NewFriend();
     void AddFriendRequest();
+    void closeBtn_press();
 signals:
     void statusChanged();
     void InforNumDecrease();

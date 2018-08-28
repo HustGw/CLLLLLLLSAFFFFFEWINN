@@ -11,6 +11,9 @@
 #include <connectionpool.h>
 #include <QCloseEvent>
 #include <QCheckBox>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QtMath>
 
 namespace Ui {
 class sendDialog;
@@ -33,8 +36,20 @@ private slots:
     void onStageChanged(int stage);
     void reciveData(QString Data);
     void reciveUserId(QString data);
+    void on_pushButton_trans_clicked();
+
+    void on_pushButton_close2_clicked();
+
+    void on_pushButton_close_clicked();
+
 protected:
+    QPoint move_point;                                    //移动的距离
+    bool mouse_press;                                    //鼠标按下
+    void mousePressEvent(QMouseEvent *qevent);            //鼠标按下事件
+    void mouseReleaseEvent(QMouseEvent *qevent);         //鼠标释放事件
+    void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
     void closeEvent(QCloseEvent *);
+    void paintEvent(QPaintEvent *event);
 private:
     Ui::sendDialog *ui;
 };

@@ -15,6 +15,7 @@
 #include <QFile>
 int findecrypt_flag = 0;//已解密全选判断变量
 int finencrypt_flag = 0;//已加密全选判断变量
+int isFriendListHide = 0;
 int FriendRequestCount = 0;
 int informationNum = 0;
 int RequsetAllowNum = 0;
@@ -95,20 +96,49 @@ MainWindow::MainWindow(QWidget *parent) :
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
     initPageFlag=true;
-    friendListLab = new QLabel(ui->RightWidget);
+    friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
     friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
+    friendIcon = new QLabel(ui->RightWidget);
+    friendIcon->setGeometry(ui->RightWidget->width()/2-66,14,15,10);
+    friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
+    connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
     addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
-    friendListWidget->setGeometry(0,40,ui->RightWidget->width(),ui->RightWidget->height()-40);
-    addFriendBtn->setText(tr("添加好友"));
+    friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
+    friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
+    friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
+    addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
     ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->SearchEdit->setPlaceholderText(tr("好友搜索"));
+    ui->SearchEdit->setPlaceholderText(tr("好友昵称/手机号"));
+    QSize editSize(190,20);
+    QSize btsize(30,20);
+    ui->SearchEdit->setFixedSize(editSize);
+    QPushButton *m_bt = new QPushButton();
+    Mylabel *bt_icon = new Mylabel(this);
+    bt_icon->setGeometry(1047,100,10,11);
+    bt_icon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/search.png);background-color:#398CFF;");
+    bt_icon->setCursor(QCursor(Qt::PointingHandCursor));
+    connect(bt_icon,SIGNAL(LabelClicked()),m_bt,SLOT(click()));
+    m_bt->setFixedSize(btsize);
+    m_bt->setStyleSheet("background-color:#398CFF;");
+    QHBoxLayout *m_layout=new QHBoxLayout();
+    m_layout->setContentsMargins(0,0,0,0);
+    m_layout->setSpacing(0);
+    m_layout->addStretch();
+    m_layout->addWidget(m_bt);
+    ui->SearchEdit->setLayout(m_layout);
+    ui->SearchEdit->setTextMargins(0,0,m_bt->width()-1,0);
+    m_bt->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_13->hide();
+    connect(m_bt,SIGNAL(clicked(bool)),this,SLOT(on_pushButton_13_clicked()));
+    //ui->SearchEdit->setStyleSheet("border-radius:10px;");
     //查询数据库 获取用户名称
     setEmp_name();
     //使用Mylabel添加头像
@@ -133,6 +163,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->FinEnpBtn->hide();
     ui->line_10->hide();
     ui->line_11->hide();
+    ui->pushButton_12->hide();
     this->setFixedSize(this->width(),this->height());
     QFont font("Microsoft YaHei",10,75);
     this->setFont(font);
@@ -190,6 +221,7 @@ MainWindow::MainWindow(QWidget *parent) :
                    v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
                    v1->setObjectName(initID+"decryption");//设置Item的ID
                    v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
+                   v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                    //连接信号槽
                    connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
@@ -241,7 +273,13 @@ MainWindow::MainWindow(QWidget *parent) :
          int count = 0;
          while(query.next()){
              QString Friend_nickname = query.record().value("friend_nickname").toString();
-             friendListWidget->insertItem(count,Friend_nickname);
+             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+             add_item->setText(Friend_nickname);
+             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+             friendListWidget->insertItem(count,add_item);
              count++;
          }
      }
@@ -806,6 +844,7 @@ void MainWindow::ReceiveNewReq(){
                   v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
                   v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
+                  v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                   //连接信号槽
                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
@@ -951,7 +990,13 @@ void MainWindow::addFriendToDatabase(QString name){
         //将好友插入到视图当中
         int i = friendListWidget->count();
         i++;
-        friendListWidget->insertItem(i,name);
+        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+        add_item->setText(name);
+        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+        friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
         msgbox->exec();
     }
@@ -1035,7 +1080,13 @@ void MainWindow::inforDlgaddFriend(QString name){
         //将好友插入到视图当中
         int i = friendListWidget->count();
         i++;
-        friendListWidget->insertItem(i,name);
+        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+        add_item->setText(name);
+        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+        friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
         msgbox->exec();
     }
@@ -1747,6 +1798,7 @@ void MainWindow::LinkInsert(QString link){
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
+        a1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
         connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
         a1->fileDescription->setText("主体文件指定分享需确认下载.");
         a1->downloadBtn->setText("确认下载");
@@ -1885,9 +1937,21 @@ void MainWindow::InforNum_Changed(){
 void MainWindow::on_pushButton_13_clicked()
 {
     QString searchcontent = ui->SearchEdit->text();
+    QListWidgetItem *finditem = new QListWidgetItem();
     QList <QListWidgetItem *> item = friendListWidget->findItems(searchcontent,Qt::MatchContains);
-    QListWidgetItem *finditem = item[0];
-    friendListWidget->setCurrentItem(finditem);
+    if(item.size()==0){
+        qDebug()<<"查找0失败";
+    }
+    else{
+        finditem = item[0];
+    }
+    if(finditem ==NULL){
+        qDebug()<<"查找失败！";
+    }
+    else{
+     friendListWidget->setCurrentItem(finditem);
+    }
+
 
 }
 
@@ -1970,3 +2034,15 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 }
 
+void MainWindow::FriendListWidgetHide(){
+    if(isFriendListHide == 0){
+      friendListWidget->hide();
+      friendIcon->setStyleSheet("border-image: url(://pictures/login_accounts_management_hide.png);");
+      isFriendListHide = 1;
+    }
+    else{
+      friendListWidget->show();
+      friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
+      isFriendListHide = 0;
+    }
+}
