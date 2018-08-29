@@ -110,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
-    addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
+    addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
     friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
