@@ -13,6 +13,14 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include"msgbox.h"
+#include <QtNetwork>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
+
+
 class friendInputDlg : public QDialog
 {
     Q_OBJECT
@@ -43,6 +51,7 @@ private slots:
     void ShowDetail();
     void SearchFriend();
     void closeBtn_press();
+    void finishedSlot(QNetworkReply *reply);
 signals:
     void sendNameToMain(QString name);
 
