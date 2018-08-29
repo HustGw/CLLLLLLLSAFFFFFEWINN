@@ -52,7 +52,6 @@ TcpClient::TcpClient(QWidget *parent) :
 
     m_accessManager = new QNetworkAccessManager(this);
     QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
-
 }
 
 TcpClient::~TcpClient()
@@ -87,7 +86,6 @@ void TcpClient::on_forgetBtn_clicked()
 void TcpClient::on_sendBtn_clicked()
 {
     //点击登录按钮的响应
-
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
     if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告

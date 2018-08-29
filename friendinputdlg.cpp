@@ -1,5 +1,6 @@
 #include "friendinputdlg.h"
-
+QNetworkAccessManager *f_accessManager;
+QString ddd =NULL;
 friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 {
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
@@ -63,11 +64,13 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     cancelBtn->hide();
     connect(cancelBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(sendName()));
+
+    f_accessManager = new QNetworkAccessManager(this);
+    connect(f_accessManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(finishedSlot(QNetworkReply*)));
 }
 void friendInputDlg::sendName(){
-    QString name = inputLineEdit->text();
     qDebug()<<"send";
-    emit sendNameToMain(name);
+    emit sendNameToMain(ddd);
     this->accept();
 
 }
@@ -104,54 +107,62 @@ void friendInputDlg::ShowDetail(){
 
 }
 void friendInputDlg::SearchFriend(){
+    //点击搜索按钮响应
+
     QSqlQuery query(db);
     QString name = inputLineEdit->text();
-    bool success = query.exec("select * from employee where emp_name='"+name+"'");
-    if(!success){
-        qDebug()<<"查询好友失败";
-    }
-    else{
-        if(query.size()==0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
-            msgbox->exec();
-        }
-        else{
-            while(query.next()){
-                QString nickname = query.record().value("emp_name").toString();
-                userHead->setGeometry(60,110,80,80);
-                userHead->setStyleSheet("min-width:  80px;"
-                                        "max-width:  80px;"
-                                        "min-height: 80px;"
-                                        "max-height: 80px;"
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Employee/FindUser.do"));
+    QByteArray postData;
+    postData.append("data=");//请求参数名
+    postData.append(name);
+    QNetworkReply *reply = f_accessManager->post(request,postData);
+//    bool success = query.exec("select * from employee where emp_name='"+name+"'");
+//    if(!success){
+//        qDebug()<<"查询好友失败";
+//    }
+//    else{
+//        if(query.size()==0){
+//            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+//            msgbox->exec();
+//        }
+//        else{
+//            while(query.next()){
+//                QString nickname = query.record().value("emp_name").toString();
+//                userHead->setGeometry(60,110,80,80);
+//                userHead->setStyleSheet("min-width:  80px;"
+//                                        "max-width:  80px;"
+//                                        "min-height: 80px;"
+//                                        "max-height: 80px;"
 
-                                        "border-radius:40px;"
-                                        "border-width: 0 0 0 0;"
-                                        "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
-                                        );
-                userHead->show();
-                userName->setGeometry(150,110,80,30);
-                userName->setText(nickname);
-                userName->show();
-                userPhone->setGeometry(240,110,80,30);
-                userPhone->setText("111111111111");
-                userPhone->show();
-                userTitle->setGeometry(150,160,50,30);
-                userTitle->setText("用户名");
-                userTitle->show();
-                userId->setGeometry(220,160,80,30);
-                userId->setText("8462023464");
-                userId->show();
-                addFriendBtn->setGeometry(180,220,80,40);
-                addFriendBtn->setText("添加好友");
-                addFriendBtn->show();
-                cancelBtn->setGeometry(280,220,50,40);
-                cancelBtn->setText("取消");
-                cancelBtn->show();
+//                                        "border-radius:40px;"
+//                                        "border-width: 0 0 0 0;"
+//                                        "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
+//                                        );
+//                userHead->show();
+//                userName->setGeometry(150,110,80,30);
+//                userName->setText(nickname);
+//                userName->show();
+//                userPhone->setGeometry(240,110,80,30);
+//                userPhone->setText("111111111111");
+//                userPhone->show();
+//                userTitle->setGeometry(150,160,50,30);
+//                userTitle->setText("用户名");
+//                userTitle->show();
+//                userId->setGeometry(220,160,80,30);
+//                userId->setText("8462023464");
+//                userId->show();
+//                addFriendBtn->setGeometry(180,220,80,40);
+//                addFriendBtn->setText("添加好友");
+//                addFriendBtn->show();
+//                cancelBtn->setGeometry(280,220,50,40);
+//                cancelBtn->setText("取消");
+//                cancelBtn->show();
 
-            }
-        }
+//            }
+//        }
 
-    }
+//    }
 
 
 
@@ -188,4 +199,99 @@ void friendInputDlg::mouseReleaseEvent(QMouseEvent *event){
     {
         mMoving = false;
     }
+}
+
+void friendInputDlg::finishedSlot(QNetworkReply *reply){
+    if(reply->error()==QNetworkReply::NoError){
+        QByteArray bytes = reply->readAll();
+        qDebug()<<bytes;
+        QJsonParseError jsonError;//Qt5新类
+        QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
+        if(jsonError.error==QJsonParseError::NoError){
+            if(json.isObject()){
+                QJsonObject rootObj = json.object();
+                QString rootpath;
+                if(rootObj.contains("status")){
+                    QJsonValue value = rootObj.value("status");
+                    if(value.isString()){
+                        rootpath = value.toString();
+                        if(rootpath=="success"){
+                            QJsonObject contentValue = rootObj.value("content").toObject();
+                            QJsonValue CV = rootObj.value("content");
+                            QJsonValue a = contentValue.take("emp_name");
+                            QString output = a.toString();
+                            qDebug()<<output;
+                            output = CV.toString();
+                            qDebug()<<output;
+                            QString ename = "emp_name";
+                            QString lastindex = "emp_password";
+                            int index = output.indexOf(ename);
+                            int last = output.indexOf(lastindex);
+                            //last-=5;
+                            qDebug()<<last;
+                            index+=11;
+                            qDebug()<<index;
+                            int lenth = last-index-3;
+                            ddd = output.mid(index,lenth);
+                            qDebug()<<ddd;
+                            if(output==NULL){
+                                //好友不存在
+                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+                                msgbox->exec();
+                            }
+                            else{
+                                //好友存在 对output进行处理
+                                userHead->setGeometry(60,110,80,80);
+                                userHead->setStyleSheet("min-width:  80px;"
+                                                        "max-width:  80px;"
+                                                        "min-height: 80px;"
+                                                        "max-height: 80px;"
+
+                                                        "border-radius:40px;"
+                                                        "border-width: 0 0 0 0;"
+                                                        "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
+                                                        );
+                                userHead->show();
+                                userName->setGeometry(150,110,80,30);
+                                userName->setText(ddd);
+                                userName->show();
+                                userPhone->setGeometry(240,110,80,30);
+                                userPhone->setText("111111111111");
+                                userPhone->show();
+                                userTitle->setGeometry(150,160,50,30);
+                                userTitle->setText("用户名");
+                                userTitle->show();
+                                userId->setGeometry(220,160,80,30);
+                                userId->setText("8462023464");
+                                userId->show();
+                                addFriendBtn->setGeometry(180,220,80,40);
+                                addFriendBtn->setText("添加好友");
+                                addFriendBtn->show();
+                                cancelBtn->setGeometry(280,220,50,40);
+                                cancelBtn->setText("取消");
+                                cancelBtn->show();
+
+                            }
+
+                        }
+                        else{
+                            //查询失败
+                            qDebug()<<"查询失败";
+
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+    else{
+        qDebug()<<"handle errors here";
+        QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        qDebug( "found error ....code: %d %d\n", statusCodeV.toInt(), (int)reply->error());
+        qDebug(qPrintable(reply->errorString()));
+
+    }
+    reply->deleteLater();
 }
