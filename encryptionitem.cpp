@@ -36,7 +36,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 
 
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-        fileName->setGeometry(95,12,200,16);
+        fileName->setGeometry(95,12,150,16);
         timeInfo->setGeometry(300,31,200,30 );
         fileSize->setGeometry(95,31,100,11);
         fileDescription->setGeometry(95,47,100,12);
@@ -56,7 +56,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 
     }
 
-    progressBar->setGeometry(20,0,this->width()-1,this->height()-1);
+    progressBar->setGeometry(10,0,650,65);
     QString strQSS = "QProgressBar { \
             text-align: center; \
             border: 1px ; \

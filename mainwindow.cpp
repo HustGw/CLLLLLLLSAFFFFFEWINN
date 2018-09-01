@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
-    addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
+    addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
     friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -185,7 +185,16 @@ MainWindow::MainWindow(QWidget *parent) :
                while(query.next())
                {
                    DecryptionItem *v1 =  new DecryptionItem();
-                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
+                   QString fName = query.record().value("file_name").toString();
+                   int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+                   if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                   {
+                       QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                       v1->fileName->setText( str );       //重新设置label上的字符串
+                   }else{
+                       v1->fileName->setText(fName);
+                   }
+
                    QString m_filesize = query.record().value("file_size").toString();
                    v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                    v1->timeLabel->setText(query.record().value("createtime").toString());
@@ -270,7 +279,7 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
-               decryptionViewController->setLayout(newVbox);          
+               decryptionViewController->setLayout(newVbox);
            }
      //好友列表加载
      bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
@@ -500,7 +509,15 @@ void MainWindow::on_OpenFileBtn_clicked()
         emit starEcptItem(fName);
         EncryptionItem *v1 = new EncryptionItem();
         v1->setObjectName(fName);
-        v1->fileName->setText(fName);
+        int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+        if( fontSize >= v1->fileName->width() ) //与label自身相比较
+        {
+            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+            v1->fileName->setText( str );       //重新设置label上的字符串
+        }else{
+            v1->fileName->setText(fName);
+        }
+
         v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
         QString filetype = fName.section(".",1,1).trimmed().toStdString().c_str();
         if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
@@ -613,7 +630,9 @@ void MainWindow::handleResults(int value,QString itemName)
 
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密完成！"));
+        QString str = itemName + "加密已完成！";
+        str.toStdString();
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"));
         msgbox->exec();
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
@@ -913,7 +932,16 @@ void MainWindow::ReceiveNewReq(){
               while(query.next()){
                   DecryptionItem *v1 =  new DecryptionItem();
 
-                  v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
+                  QString fName;
+                  fName = query.record().value("file_name").toString();
+                  int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+                  if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                  {
+                      QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                      v1->fileName->setText( str );       //重新设置label上的字符串
+                  }else{
+                      v1->fileName->setText(fName);
+                  }
                   QString m_filesize = query.record().value("file_size").toString();
                   v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                   v1->timeLabel->setText(query.record().value("createtime").toString());//设置创建时间
@@ -1333,7 +1361,16 @@ void MainWindow::on_pushButton_8_clicked()
                f1->shareBtn->setObjectName(file_id);
                f1->deleteBtn->setObjectName(file_id);
 
-               f1->fileName->setText(file_name);
+               int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               {
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   f1->fileName->setText( str );       //重新设置label上的字符串
+               }else{
+                   f1->fileName->setText(file_name);
+               }
+
+               //f1->fileName->setText(file_name);
                f1->fileSize->setText(file_size);
                f1->fileDescription->setText(file_discryption);
 
@@ -1434,7 +1471,7 @@ void MainWindow::on_pushButton_6_clicked()
             MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"));
             msgbox->exec();
         }
-        flag = 0;    
+        flag = 0;
 }
 
 //已加密文件单独删除按钮
@@ -1574,7 +1611,16 @@ void MainWindow::on_pushButton_9_clicked()
                f1->openBtn->setObjectName(file_id);
                f1->deleteBtn->setObjectName(file_id);
 
-               f1->fileName->setText(file_name);
+               int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               {
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   f1->fileName->setText( str );       //重新设置label上的字符串
+               }else{
+                   f1->fileName->setText(file_name);
+               }
+
+               //f1->fileName->setText(file_name);
                f1->fileSize->setText(file_size);
                f1->fileDescription->setText(file_discryption);
 
@@ -1947,10 +1993,15 @@ void MainWindow::LinkInsert(QString link){
             a1->elseLabel->setText(filetype.left(3));
             a1->elseLabel->raise();
         }
-
-        a1->fileName->setText(Link_filename);
+        int fontSize = fontMetrics().width( Link_filename );//获取之前设置的字符串的像素大小
+        if( fontSize >= a1->fileName->width()-50 ) //与label自身相比较
+        {
+            QString str = fontMetrics().elidedText( Link_filename, Qt::ElideRight, a1->fileName->width()-50 );//返回一个带有省略号的字符串
+            a1->fileName->setText( str );       //重新设置label上的字符串
+        }else{
+            a1->fileName->setText(Link_filename);
+        }
         a1->fileSize->setText(Link_filesize+"KB");
-
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
