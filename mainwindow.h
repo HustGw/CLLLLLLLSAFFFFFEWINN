@@ -229,6 +229,8 @@ private slots:
 
     void internet_Disconnected();
 
+    void RecvNewFriendReq();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);

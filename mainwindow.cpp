@@ -185,10 +185,10 @@ MainWindow::MainWindow(QWidget *parent) :
                {
                    DecryptionItem *v1 =  new DecryptionItem();
                    v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
-                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                   QString m_filesize = query.record().value("file_size").toString();
+                   v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                    v1->timeLabel->setText(query.record().value("createtime").toString());
                    //设置fileIcon的图片
-
                    QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
                    if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
                        QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
@@ -223,14 +223,13 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->elseLabel->setText(filetype.left(3));
                        v1->elseLabel->raise();
                    }
-
                    QString initID = query.record().value("id").toString();
                    v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
                    v1->setObjectName(initID+"decryption");//设置Item的ID
                    v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
                    v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                    //连接信号槽
-                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                 connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
                        RequestIDArray[RequsetIndex]=initID;
                        RequsetIndex++;
@@ -238,7 +237,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
-
+                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        f_progressBar = new QProgressBar();
                        f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
@@ -251,6 +250,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
                        v1->downloadBtn->setText("申请解密");
                        v1->label->show();
+                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                    }
@@ -258,6 +258,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->fileDescription->setText("正在申请解密，请等待！");
                        v1->downloadBtn->setText("申请中");
                        v1->label->show();
+                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        decryptionViewController->vbox->addWidget(v1);
                    }
                }
@@ -316,6 +317,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(InforNum_Changed()));
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
+     connect(inforThread,SIGNAL(NewFriendRequest()),this,SLOT(RecvNewFriendReq()));
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
      connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(inforDlgaddFriend(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
@@ -895,7 +897,8 @@ void MainWindow::ReceiveNewReq(){
                   DecryptionItem *v1 =  new DecryptionItem();
 
                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
-                  v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                  QString m_filesize = query.record().value("file_size").toString();
+                  v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                   v1->timeLabel->setText(query.record().value("createtime").toString());//设置创建时间
                   //设置fileIcon的图片
                   QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
@@ -938,7 +941,7 @@ void MainWindow::ReceiveNewReq(){
                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
                   v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                   //连接信号槽
-                  connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                  connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
                       //查找新消息
                       int isNEW = 1;
@@ -979,13 +982,11 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
                       v1->downloadBtn->setText("确认下载");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
+                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
                       f_progressBar = v1->progressBar;
                       f_progressBar->setObjectName(v1->objectName());
-//                      f_progressBar->setMinimum(0);
-//                      f_progressBar->setMaximum(100);
-//                      f_progressBar->setOrientation(Qt::Horizontal);
                       f_progressBar->hide();
                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
                       //decryptionViewController->vbox->addWidget(f_progressBar);
@@ -994,11 +995,13 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
                       v1->downloadBtn->setText("申请解密");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
+                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                   }
                   else if(query.record().value("status").toString()=="2"){//申请等待状态
                       v1->fileDescription->setText("正在申请解密，请等待！");
                       v1->downloadBtn->setText("申请中");
+                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);
                       }
               }
@@ -1710,6 +1713,7 @@ void MainWindow::setEmp_name(){
             ui->nameLabel->setText(nickName);
         }
         ui->UserPhonelabe->setText("手机号："+UserPhoneNum);
+        ui->UserPhonelabe->hide();
         ui->UserIDlabel->hide();
     }
     else{
@@ -1921,7 +1925,7 @@ void MainWindow::LinkInsert(QString link){
         }
 
         a1->fileName->setText(Link_filename);
-        a1->fileSize->setText(Link_filesize);
+        a1->fileSize->setText(Link_filesize+"KB");
 
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
@@ -2179,4 +2183,9 @@ void MainWindow::FriendListWidgetHide(){
 void MainWindow::internet_Disconnected(){
     MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
     msgbox->exec();
+}
+
+void MainWindow::RecvNewFriendReq(){
+    FriendRequestCount++;
+    InforNum_Changed();
 }

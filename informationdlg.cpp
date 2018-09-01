@@ -65,11 +65,9 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         CleanStatusLabel->hide();
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
-       // scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
         scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         scrollLayout = new QVBoxLayout();
         scrollArea->setWidget(ItemWidget);
-        //scrollLayout->addWidget(titleLabel);
         scrollLayout->addWidget(scrollArea);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
@@ -98,15 +96,6 @@ void informationDlg::recvReq(){
                     informationNum--;//发送数量减少信号
                     emit InforNumDecrease(); //发送信号通知InformationNum更新
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
-//                    delete q1;
-//                    //删除成功重新布局
-//                    delete this->layout();
-//                    QWidget *newItemWidget = new QWidget();
-//                    newItemWidget->setLayout(this->vbox);
-//                    scrollArea->setWidget(newItemWidget);
-//                    QVBoxLayout *newVbox = new QVBoxLayout();
-//                    newVbox->addWidget(scrollArea);
-//                    this->setLayout(newVbox);
                      q1->allowBtn->setEnabled(false);
                      q1->allowBtn->setText("已允许");
                      q1->ignoreBtn->hide();
@@ -268,6 +257,41 @@ void informationDlg::setItem(){
 
 
     }
+    //设置消息种类为文件传输
+    QSqlQuery transforQuery(db);
+    bool transforSuccess = transforQuery.exec("select * from Decryption where emp_id = '"+User_ID+"' and apply_time<> '0' and is_solved = '0' order by apply_time DESC");
+    if(!transforSuccess){
+        qDebug()<<"查询消息种类失败";
+    }
+    else{
+        while(transforQuery.next()){
+            count++;
+            //将查询到的传输消息添加到InforDlg中
+            InformationItem *m1 = new InformationItem();
+            QString m_id = transforQuery.record().value("emp_id").toString();
+            QString name;
+            QString fileName = transforQuery.record().value("file_name").toString();
+            QString time = transforQuery.record().value("apply_time").toString();
+            QSqlQuery nameQuery(db);
+            bool nameSuccess = nameQuery.exec("select * from employee where emp_id = '"+m_id+"'");
+            if(!nameSuccess){
+                qDebug()<<"infordlg:查找用户名失败";
+            }
+            else{
+                while(nameQuery.next()){
+                    name = nameQuery.record().value("emp_name").toString();
+                }
+            }
+            QString s = name+"传输文件"+fileName;
+            m1->InforKindsLabel->setText("文件传输");
+            m1->titleLabel->setText(s);
+            m1->timeLabel->setText(time);
+            m1->allowBtn->hide();
+            m1->ignoreBtn->hide();
+            vbox->addWidget(m1);
+        }
+    }
+
 }
 
 void informationDlg::CleanAllInfor(){
