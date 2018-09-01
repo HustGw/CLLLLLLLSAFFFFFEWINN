@@ -1,5 +1,5 @@
 #include "decryptionitem.h"
-
+int flag = 0;
 DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 {
     fileName = new QLabel(this);
@@ -78,7 +78,17 @@ void DecryptionItem::paintEvent(QPaintEvent *event){
 }
 
 void DecryptionItem::changeCheckBox(){
-    checkBox->setCheckState(Qt::Checked);
+    if(flag==0){
+        checkBox->setCheckState(Qt::Checked);
+        flag = 1;
+        qDebug()<<"1";
+    }
+    else if(flag ==1){
+        checkBox->setCheckState(Qt::Unchecked);
+        flag = 0;
+        qDebug()<<"2";
+    }
+
 
 }
 

@@ -15,6 +15,7 @@
 #include <QFile>
 int findecrypt_flag = 0;//已解密全选判断变量
 int finencrypt_flag = 0;//已加密全选判断变量
+int DeSelect_flag = 0;//解密全选判断变量
 int isFriendListHide = 0;
 int FriendRequestCount = 0;
 int informationNum = 0;
@@ -237,7 +238,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
-                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+ //                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        f_progressBar = new QProgressBar();
                        f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
@@ -250,7 +251,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
                        v1->downloadBtn->setText("申请解密");
                        v1->label->show();
-                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                    }
@@ -258,7 +259,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->fileDescription->setText("正在申请解密，请等待！");
                        v1->downloadBtn->setText("申请中");
                        v1->label->show();
-                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        decryptionViewController->vbox->addWidget(v1);
                    }
                }
@@ -757,12 +758,37 @@ void MainWindow::on_pushButton_3_clicked()
 //点击全选按钮 QCheckbox处于被选择状态
 void MainWindow::on_pushButton_clicked()
 {
-   // QVBoxLayout *SelLayout = decryptionViewController->vbox;
-    if(decryptionViewController->vbox){
-        //遍历layout中的Item
-        for(int i= 0;i<decryptionViewController->vbox->count();i++){
-
-
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where oemp_id = '"+User_ID+"'");
+    if(!success){
+        qDebug()<<"checkBox:查询数据库失败";
+        return;
+    }
+    else{
+        while(query.next()){
+            QString m_ID = query.record().value("id").toString();
+            QCheckBox *checkbox = ui->MidStaWidget->findChild<QCheckBox *>(m_ID+"Decheck");
+            if(checkbox==NULL){
+                continue;
+            }
+            else{
+                if(DeSelect_flag==0){
+                    checkbox->setChecked(true);
+                }
+                else if(DeSelect_flag == 1){
+                    checkbox->setChecked(false);
+                }
+            }
+        }
+        if(DeSelect_flag ==0){
+            DeSelect_flag =1;
+            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect_pressed.png);} "
+                                          " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }
+        else{
+            DeSelect_flag =0;
+            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                             " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
         }
     }
 }
@@ -874,15 +900,6 @@ void MainWindow::OssDownLoadFile(){
 //收到有新请求后 将原有视图清空后重新布局
 void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
-    //QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
-    Infor_requestNum++;
-    int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
-
-    QString s = QString::number(newRequestNum,10);
-    qDebug()<<"Infor_num_icon:";
-    qDebug()<<s;
-    Infor_num_icon->show();
-    Infor_num_icon->setText(s);
     QSqlQuery query(db);
     QString newID;
     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
@@ -970,6 +987,7 @@ void MainWindow::ReceiveNewReq(){
                                   QString SendID = nameQuery.record().value("emp_name").toString();
                                   qDebug()<<"发送者姓名为：";
                                   qDebug()<<SendID;
+                                  Infor_requestNum++;
                                   emit SendInforToInforDlg(SendID,SendFileName,time);//发送信号
 
                               }
@@ -982,7 +1000,7 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
                       v1->downloadBtn->setText("确认下载");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
-                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
                       f_progressBar = v1->progressBar;
@@ -995,13 +1013,13 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
                       v1->downloadBtn->setText("申请解密");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
-                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+ //                     connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                   }
                   else if(query.record().value("status").toString()=="2"){//申请等待状态
                       v1->fileDescription->setText("正在申请解密，请等待！");
                       v1->downloadBtn->setText("申请中");
-                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);
                       }
               }
@@ -1010,6 +1028,12 @@ void MainWindow::ReceiveNewReq(){
 
 
     }
+    int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
+    QString s = QString::number(newRequestNum,10);
+    qDebug()<<"Infor_num_icon:";
+    qDebug()<<s;
+    Infor_num_icon->show();
+    Infor_num_icon->setText(s);
 }
 //进行数据库   操作
 void MainWindow::addFriendToDatabase(QString name){
@@ -1931,7 +1955,7 @@ void MainWindow::LinkInsert(QString link){
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
         a1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
-        connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
+//        connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
         a1->fileDescription->setText("主体文件指定分享需确认下载.");
         a1->downloadBtn->setText("确认下载");
         connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));

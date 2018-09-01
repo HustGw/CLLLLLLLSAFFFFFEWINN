@@ -259,7 +259,7 @@ void informationDlg::setItem(){
     }
     //设置消息种类为文件传输
     QSqlQuery transforQuery(db);
-    bool transforSuccess = transforQuery.exec("select * from Decryption where emp_id = '"+User_ID+"' and apply_time<> '0' and is_solved = '0' order by apply_time DESC");
+    bool transforSuccess = transforQuery.exec("select * from Decryption where oemp_id = '"+User_ID+"' and apply_time<> '0' and is_solved = '0' order by apply_time DESC");
     if(!transforSuccess){
         qDebug()<<"查询消息种类失败";
     }
