@@ -246,10 +246,12 @@ void informationDlg::setItem(){
             QString t = userNickName+"添加您为好友";
             f1->titleLabel->setText(t);
             f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
-            f1->allowBtn->setText("添加好友");
-            f1->ignoreBtn->hide();
+            f1->allowBtn->setText("允许");
+            f1->ignoreBtn->setText("忽略");
             f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
             f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
+            f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
+            connect(f1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
             connect(f1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
             vbox->addWidget(f1);
         }
@@ -372,11 +374,13 @@ void informationDlg::NewFriend(){
                 m1->InforKindsLabel->setText("好友申请");
                 QString title = SendName+"添加您为好友";
                 m1->titleLabel->setText(title);
-                m1->ignoreBtn->hide();
-                m1->allowBtn->setText("添加好友");
+                m1->ignoreBtn->setText("忽略");
+                m1->allowBtn->setText("允许");
                 m1->setObjectName(query.record().value("id").toString()+"friendInfor");
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
+                m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"friendIgn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
+                connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
                 vbox->addWidget(m1);
                 delete bottomWidget->layout();
                 QWidget *newItemWidget = new QWidget();
@@ -416,7 +420,8 @@ void informationDlg::AddFriendRequest(){
                     qDebug()<<"update friend failed";
                 }
                 FriendRequestCount--;
-                b1->setText("已添加");
+                FriendStatusNum--;
+                b1->setText("已允许");
                 b1->setEnabled(false);
             }
         }
@@ -471,4 +476,33 @@ void informationDlg::paintEvent(QPaintEvent *event){
         painter.setPen(color);
         painter.drawPath(path);
     }
+}
+
+void informationDlg::AddFriendIgnore(){
+    QPushButton *pt = qobject_cast<QPushButton *>(sender());
+    QSqlQuery query(db);
+    bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
+    if(!success){
+        qDebug()<<"inforDlg:查询失败";
+        return;
+    }
+    else{
+        while(query.next()){
+            QString ID = query.record().value("id").toString();
+            QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendIgn");
+            if(!pt)
+                return;
+            if(pt==b1){
+                QSqlQuery updateQuery(db);
+                bool updateSuccess = updateQuery.exec("update friend set status = '2' where id = '"+ID+"'");
+                if(!updateSuccess){
+                    qDebug()<<"update friend failed";
+                }
+                FriendRequestCount--;//消息数量减一
+                FriendStatusNum--;
+                b1->setText("已忽略");
+                b1->setEnabled(false);
+                    }
+                }
+        }
 }

@@ -231,6 +231,8 @@ private slots:
 
     void RecvNewFriendReq();
 
+    void NewFriendAgree();//添加好友，对方同意函数
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);

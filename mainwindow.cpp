@@ -282,7 +282,7 @@ MainWindow::MainWindow(QWidget *parent) :
                decryptionViewController->setLayout(newVbox);
            }
      //好友列表加载
-     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
+     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = '1'");
      if(!friendSelSuc){
          qDebug()<<"查询好友失败";
          return;
@@ -328,6 +328,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
      connect(inforThread,SIGNAL(NewFriendRequest()),this,SLOT(RecvNewFriendReq()));
+     connect(inforThread,SIGNAL(NewAgreeFriend()),this,SLOT(NewFriendAgree()));
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
      connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(inforDlgaddFriend(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
@@ -904,6 +905,7 @@ void MainWindow::OssDownLoadFile(){
                     //更新按钮内容
                     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(onlyId+"decryption");
                     m1->downloadBtn->setText("正在下载");
+                    m1->fileDescription->setText("下载中...");
                     disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));//删除原有信号槽
                 }
                 else{
@@ -1052,16 +1054,14 @@ void MainWindow::ReceiveNewReq(){
                       }
               }
               ReLayout();
+              int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
+              QString s = QString::number(newRequestNum,10);
+              qDebug()<<"Infor_num_icon:";
+              qDebug()<<s;
+              Infor_num_icon->show();
+              Infor_num_icon->setText(s);
               emit showDownDialog(newID);
-
-
     }
-    int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
-    QString s = QString::number(newRequestNum,10);
-    qDebug()<<"Infor_num_icon:";
-    qDebug()<<s;
-    Infor_num_icon->show();
-    Infor_num_icon->setText(s);
 }
 //进行数据库   操作
 void MainWindow::addFriendToDatabase(QString name){
@@ -1135,16 +1135,16 @@ void MainWindow::addFriendToDatabase(QString name){
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取此刻时间
     bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0,'"+time_str+"',0)");
     if(insertSuccess){
-        //将好友插入到视图当中
-        int i = friendListWidget->count();
-        i++;
-        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
-        add_item->setText(name);
-        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
-        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
-        friendListWidget->insertItem(i,add_item);
+//        //将好友插入到视图当中
+//        int i = friendListWidget->count();
+//        i++;
+//        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+//        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+//        add_item->setText(name);
+//        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+//        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+//        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+//        friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
         msgbox->exec();
     }
@@ -1754,6 +1754,7 @@ void MainWindow::FileIsAllowed(){
 }
 void MainWindow::ChangeItemBtnText(QString fileID){
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
+    m1->fileDescription->setText("文件已加密需下载密钥文件");
     m1->downloadBtn->setText("申请解密");
     QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(fileID+"decryption");
     int value = 21;
@@ -2175,10 +2176,14 @@ void MainWindow::ShowNewDownDialog(QString id){
             }
             else{
                 m1->downloadBtn->click();
+                Infor_requestNum--;
+                InforNum_Changed();
                 on_DecryptionBtn_clicked();
             }
         }
         else if(reply == QDialog::Rejected){
+            Infor_requestNum--;
+            InforNum_Changed();
 
         }
 }
@@ -2263,4 +2268,33 @@ void MainWindow::internet_Disconnected(){
 void MainWindow::RecvNewFriendReq(){
     FriendRequestCount++;
     InforNum_Changed();
+}
+//同意添加好友处理函数
+void MainWindow::NewFriendAgree(){
+    //刷新好友列表
+    friendListWidget->clear();//清空好友列表
+    //重新加载好友列表
+    QSqlQuery query(db);
+    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = '1'");
+    if(!friendSelSuc){
+        qDebug()<<"查询好友失败";
+        return;
+    }
+    else{
+        qDebug()<<"查询好友成功";
+        //将查询的好友插入视图中
+        int count = 0;
+        while(query.next()){
+            QString Friend_nickname = query.record().value("friend_nickname").toString();
+            QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+            add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+            add_item->setText(Friend_nickname);
+            add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+            add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+            friendListWidget->insertItem(count,add_item);
+            count++;
+        }
+    }
+
 }
