@@ -10,6 +10,7 @@
 #include <QLine>
 #include <QPainter>
 #include <QProgressBar>
+#include <QDebug>
 class DecryptionItem : public QWidget
 {
     Q_OBJECT
@@ -18,6 +19,8 @@ public:
     QSize sizeHint() const{
         return QSize(644,71);
     }
+    QLabel *label;
+    QLabel *elseLabel;
 
     QLabel *fileName;
     QLabel *fileSize;
@@ -27,7 +30,9 @@ public:
     QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
     QLabel *timeLabel;
-    QProgressBar *progressBar = new QProgressBar(this);
+    int flag;
+    QProgressBar *progressBar;
+
 
 signals:
 

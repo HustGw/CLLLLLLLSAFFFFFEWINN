@@ -61,6 +61,8 @@
 #include "msgbox.h"
 #include<QPainter>
 #include<QtMath>
+#include <enitemthread.h>
+#include <encryptthread.h>
 
 namespace Ui {
 class MainWindow;
@@ -122,13 +124,15 @@ public:
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
     groupSendDialog *grpDlg;
+
+    encryptthread *encptThreadArr[MAXSIZE];
+    enItemThread *enitemArr[MAXSIZE];
+
 private slots:
 
     void on_FinishedBtn_clicked();
 
     void on_DecryptionBtn_clicked();
-
-    void on_MidStaWidget_currentChanged(int arg1);
 
     void on_EncryptionBtn_clicked();
 
@@ -175,11 +179,13 @@ private slots:
     void ChangeItemBtnText(QString fileID);
 
     // 更新进度条
-    void handleResults(int value);
+    void handleResults(int value,QString itemName);
     // 开启进度条线程
-    void startProgressBarThread();
+    void startProgressBarThread(QString itemName);
     //开启加密进程
-    void startEncryptThread();
+    void startEncryptThread(QString itemName);
+
+
     //设置主界面用户名称
     void setEmp_name();
     //清楚左侧Button点击效果
@@ -223,6 +229,10 @@ private slots:
 
     void internet_Disconnected();
 
+    void RecvNewFriendReq();
+
+    void NewFriendAgree();//添加好友，对方同意函数
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -235,6 +245,7 @@ signals:
     void OSSfileDownFileID(QString id,QString enkey_id);
     void SendInforToInforDlg(QString nickname,QString fileName,QString time);
     void showDownDialog(QString id);
+    void starEcptItem(QString itemName);
 private:
     Ui::MainWindow *ui;
     QPoint dragPosition;

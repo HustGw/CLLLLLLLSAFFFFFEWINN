@@ -6,56 +6,59 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>548</width>
-    <height>415</height>
+    <width>462</width>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QTextEdit" name="textEdit">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>371</width>
-     <height>51</height>
+     <x>102</x>
+     <y>131</y>
+     <width>328</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_copy">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>80</y>
-     <width>93</width>
-     <height>28</height>
+     <x>341</x>
+     <y>179</y>
+     <width>89</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="text">
-    <string>复制</string>
+    <string>复制链接</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>30</y>
-     <width>221</width>
-     <height>31</height>
+     <x>38</x>
+     <y>143</y>
+     <width>70</width>
+     <height>15</height>
     </rect>
    </property>
    <property name="text">
-    <string>请复制下方字符串，发送给好友</string>
+    <string>链接：</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>190</y>
-     <width>181</width>
-     <height>181</height>
+     <x>98</x>
+     <y>237</y>
+     <width>130</width>
+     <height>130</height>
     </rect>
    </property>
    <property name="text">
@@ -65,29 +68,154 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>140</y>
-     <width>221</width>
-     <height>31</height>
+     <x>38</x>
+     <y>294</y>
+     <width>70</width>
+     <height>15</height>
     </rect>
    </property>
    <property name="text">
-    <string>请保存下方二维码，发送给好友</string>
+    <string>二维码：</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="pushButton_sav">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>280</y>
-     <width>93</width>
-     <height>28</height>
+     <x>341</x>
+     <y>286</y>
+     <width>89</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="text">
-    <string>保存</string>
+    <string>保存图片</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButtonclos">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>400</y>
+     <width>89</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>关闭</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>6</y>
+     <width>449</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 240, 245);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonclos2">
+   <property name="geometry">
+    <rect>
+     <x>436</x>
+     <y>12</y>
+     <width>13</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/new/mainwindow/pictures/exit_button.png);
+background-color: rgb(238, 240, 245);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>22</x>
+     <y>18</y>
+     <width>23</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 240, 245);
+border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>16</y>
+     <width>200</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 240, 245);
+font: 75 9pt &quot;Arial&quot;;</string>
+   </property>
+   <property name="text">
+    <string>批量分享</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>71</y>
+     <width>36</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/new/mainwindow/pictures/system_success.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>115</x>
+     <y>73</y>
+     <width>300</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(58, 140, 255);</string>
+   </property>
+   <property name="text">
+    <string>链接及二维码已成功生成！</string>
+   </property>
+  </widget>
+  <zorder>label_3</zorder>
+  <zorder>pushButton_copy</zorder>
+  <zorder>label</zorder>
+  <zorder>pushButton_sav</zorder>
+  <zorder>label_2</zorder>
+  <zorder>pushButtonclos</zorder>
+  <zorder>textEdit</zorder>
+  <zorder>label_4</zorder>
+  <zorder>pushButtonclos2</zorder>
+  <zorder>label_5</zorder>
+  <zorder>label_6</zorder>
+  <zorder>label_7</zorder>
+  <zorder>label_8</zorder>
  </widget>
  <resources/>
  <connections/>

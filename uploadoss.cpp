@@ -59,6 +59,7 @@ int uploadoss::put_object_from_file()
         s = oss_put_object_from_file(options, &bucket, &object, &file,headers, &resp_headers);
 
         if (aos_status_is_ok(s)) {
+            qDebug()<< OBJECT_NAME;
             qDebug()<< "put object from file succeeded";
             return 1;
         } else {

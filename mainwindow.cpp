@@ -15,6 +15,7 @@
 #include <QFile>
 int findecrypt_flag = 0;//已解密全选判断变量
 int finencrypt_flag = 0;//已加密全选判断变量
+int DeSelect_flag = 0;//解密全选判断变量
 int isFriendListHide = 0;
 int FriendRequestCount = 0;
 int informationNum = 0;
@@ -34,11 +35,15 @@ bool initPageFlag=true;
 int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
+int encptThreadNum = 0;
+int enitemNum = 0;
 QFont f("HiraginoSansGB",10,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
+
+QString file_item_name;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -89,23 +94,24 @@ MainWindow::MainWindow(QWidget *parent) :
     //使用连接池 管理数据库连接
     db = ConnectionPool::openConnection();
     // 连接进度条信号槽
-    connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
+    //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
+   //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
     //开始加密信号槽
-    connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
+    //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
-    friendListLab->setGeometry(ui->RightWidget->width()/2-40,5,80,30);
+    friendListLab->setGeometry(ui->RightWidget->width()/2-55,5,80,30);
     friendIcon = new QLabel(ui->RightWidget);
-    friendIcon->setGeometry(ui->RightWidget->width()/2-66,14,15,10);
+    friendIcon->setGeometry(ui->RightWidget->width()/2-85,14,10,10);
     friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
-    addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
+    addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
     friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -179,11 +185,20 @@ MainWindow::MainWindow(QWidget *parent) :
                while(query.next())
                {
                    DecryptionItem *v1 =  new DecryptionItem();
-                   v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
-                   v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                   QString fName = query.record().value("file_name").toString();
+                   int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+                   if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                   {
+                       QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                       v1->fileName->setText( str );       //重新设置label上的字符串
+                   }else{
+                       v1->fileName->setText(fName);
+                   }
+
+                   QString m_filesize = query.record().value("file_size").toString();
+                   v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                    v1->timeLabel->setText(query.record().value("createtime").toString());
                    //设置fileIcon的图片
-
                    QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
                    if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
                        QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
@@ -191,7 +206,7 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->fileIcon->setScaledContents(true);
                        v1->fileIcon->setPixmap(pixmap);
                    }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
-                       QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                       QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
                        pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                        v1->fileIcon->setScaledContents(true);
                        v1->fileIcon->setPixmap(pixmap);
@@ -215,15 +230,16 @@ MainWindow::MainWindow(QWidget *parent) :
                        pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
                        v1->fileIcon->setScaledContents(true);
                        v1->fileIcon->setPixmap(pixmap);
+                       v1->elseLabel->setText(filetype.left(3));
+                       v1->elseLabel->raise();
                    }
-
                    QString initID = query.record().value("id").toString();
                    v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
                    v1->setObjectName(initID+"decryption");//设置Item的ID
                    v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
                    v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                    //连接信号槽
-                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                 connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                    if(query.record().value("status").toString()=="0"){//待下载状态
                        RequestIDArray[RequsetIndex]=initID;
                        RequsetIndex++;
@@ -231,12 +247,11 @@ MainWindow::MainWindow(QWidget *parent) :
                        v1->downloadBtn->setText("确认下载");
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
-                       f_progressBar = new QProgressBar(this);
-                      f_progressBar = v1->progressBar;
+ //                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                       f_progressBar = new QProgressBar();
+                       f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
-//                       f_progressBar->setMinimum(0);
-//                       f_progressBar->setMaximum(100);
-//                       f_progressBar->setOrientation(Qt::Horizontal);
+
                        f_progressBar->hide();
                        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
                        //decryptionViewController->vbox->addWidget(f_progressBar);
@@ -244,12 +259,16 @@ MainWindow::MainWindow(QWidget *parent) :
                    else if(query.record().value("status").toString()=="1"){//待申请状态
                        v1->fileDescription->setText("文件已加密需下载密钥文件.");
                        v1->downloadBtn->setText("申请解密");
+                       v1->label->show();
+//                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
                        decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                    }
                    else if(query.record().value("status").toString()=="2"){//申请等待状态
                        v1->fileDescription->setText("正在申请解密，请等待！");
                        v1->downloadBtn->setText("申请中");
+                       v1->label->show();
+//                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        decryptionViewController->vbox->addWidget(v1);
                    }
                }
@@ -257,13 +276,13 @@ MainWindow::MainWindow(QWidget *parent) :
                newScrollArea = new QScrollArea();
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
-                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+               newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->addWidget(newScrollArea);
-               decryptionViewController->setLayout(newVbox);          
+               decryptionViewController->setLayout(newVbox);
            }
      //好友列表加载
-     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
+     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = '1'");
      if(!friendSelSuc){
          qDebug()<<"查询好友失败";
          return;
@@ -308,6 +327,8 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(InforNum_Changed()));
      connect(inforThread,SIGNAL(InformationChanged()),inforDlg,SLOT(newInformation()));
      connect(inforThread,SIGNAL(NewFriendRequest()),inforDlg,SLOT(NewFriend()));
+     connect(inforThread,SIGNAL(NewFriendRequest()),this,SLOT(RecvNewFriendReq()));
+     connect(inforThread,SIGNAL(NewAgreeFriend()),this,SLOT(NewFriendAgree()));
      connect(inforDlg,SIGNAL(InforNumDecrease()),this,SLOT(InforNum_Changed()));
      connect(inforDlg,SIGNAL(addFriendToMain(QString)),this,SLOT(inforDlgaddFriend(QString)));
      connect(this,SIGNAL(SendInforToInforDlg(QString,QString,QString)),inforDlg,SLOT(NewRequestRec(QString,QString,QString)));
@@ -404,7 +425,7 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
-    if (encryptionViewController->vbox->count()==0||encryptionViewController->layout()->count()-1==0){
+    if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
         ui->BtnStaWidget->setCurrentIndex(0);
         //initPageFlag=true;
@@ -423,6 +444,7 @@ void MainWindow::on_FinEnpBtn_clicked()
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
+
 }
 void MainWindow::on_FinDepBtn_clicked()
 {
@@ -439,10 +461,16 @@ void MainWindow::on_OpenFileBtn_clicked()
     QString file_full,fName,fPath,amfSize;
     qint64 fSize;
     double mfSize;
+    int fileNumFlag;
     QFileInfo fInfo;
-
-    file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
-    if (file_full.isEmpty()){
+    QFileDialog *selectFiles =new QFileDialog ();
+    selectFiles ->setFileMode(QFileDialog::ExistingFiles);
+    //selectFiles->getOpenFileNames(this,"Open File",QDir::currentPath());
+    QStringList file_full_list;
+    file_full_list = selectFiles->getOpenFileNames(this,"Open File",QDir::currentPath());
+    //file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
+    qDebug()<<file_full_list;
+    if (file_full_list.isEmpty()){
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"));
             msgbox->exec();
     //        QMessageBox message(QMessageBox::NoIcon,"Erro Message","请选择文件");
@@ -460,7 +488,9 @@ void MainWindow::on_OpenFileBtn_clicked()
             initPageFlag=false;
         }
 
-        fInfo=QFileInfo(file_full);
+      for (int i=0;i<file_full_list.size();++i){
+          //if ()
+        fInfo=QFileInfo(file_full_list.at(i));
         openFileInfo=fInfo;
         fName=fInfo.fileName();
         fPath=fInfo.filePath();
@@ -477,9 +507,18 @@ void MainWindow::on_OpenFileBtn_clicked()
         QString yzipFileID = yzipfile_id.toString();
         yzipfileUuid = yzipFileID;
         //contest->fInfo=fInfo;
+        emit starEcptItem(fName);
         EncryptionItem *v1 = new EncryptionItem();
         v1->setObjectName(fName);
-        v1->fileName->setText(fName);
+        int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+        if( fontSize >= v1->fileName->width() ) //与label自身相比较
+        {
+            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+            v1->fileName->setText( str );       //重新设置label上的字符串
+        }else{
+            v1->fileName->setText(fName);
+        }
+
         v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
         QString filetype = fName.section(".",1,1).trimmed().toStdString().c_str();
         if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
@@ -488,7 +527,7 @@ void MainWindow::on_OpenFileBtn_clicked()
             v1->fileIcon->setScaledContents(true);
             v1->fileIcon->setPixmap(pixmap);
         }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
-            QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+            QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
             pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
             v1->fileIcon->setScaledContents(true);
             v1->fileIcon->setPixmap(pixmap);
@@ -532,7 +571,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         //encryptionViewController2->vbox->addWidget(v2);
 
-        f_progressBar = new QProgressBar(this);
+        f_progressBar = new QProgressBar();
         f_progressBar = v1->progressBar;
         QString strQSS = "QProgressBar { \
                 text-align: center; \
@@ -543,15 +582,27 @@ void MainWindow::on_OpenFileBtn_clicked()
                 background-color: rgba(230, 277, 255,180); \
             }";
 //        f_progressBar->setStyleSheet(strQSS);
-//        f_progressBar->setObjectName(fName);
+        f_progressBar->setObjectName(fName);
+
+
 //        f_progressBar->setMinimum(0);
 //        f_progressBar->setMaximum(100);
 //        //f_progressBar->setValue(20);
 //        f_progressBar->setOrientation(Qt::Horizontal);
 //        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
         connect(v1->encryptStaBtn,SIGNAL(clicked(bool)),this,SLOT(on_encryptStaBtn_clicked()));
+        //connect(this,SIGNAL(starEncptItem(QString)),this,SLOT(startProgressBarThread(QString)));
+        //startEncryptThread(fName);
+        startProgressBarThread(fName);
         //encryptionViewController->vbox->addWidget(f_progressBar);
         //encryptionViewController->vbox->setGeometry(100);
+
+        //开始加密
+        //encptThreadArr[encptThreadNum] = new encryptthread(this);
+
+        //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
+        //encptThreadArr[encptThreadNum]->start();
+        //encptThreadNum++;
 
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
@@ -563,37 +614,45 @@ void MainWindow::on_OpenFileBtn_clicked()
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
 
-
+}
     }
+
 }
 
 // 更新进度条
-void MainWindow::handleResults(int value)
+void MainWindow::handleResults(int value,QString itemName)
 {
+    EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
+    //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
+    //f_progressBar->setValue(value);
+    v1->progressBar->setValue(value);
 
-    f_progressBar->setValue(value);
     if (value==100){
-        EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
+
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密完成！"));
+        QString str = itemName + "加密已完成！";
+        str.toStdString();
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"));
         msgbox->exec();
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         //qDebug()<<name;
         delete v1;
-        //delete f_progressBar;
+        //ReLayout();
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
         QScrollArea *newScrollArea = new QScrollArea();
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
+
 ///////////////////////////////////////////////////////////////////////
         //initPageFlag=true;
-        on_FinEnpBtn_clicked();
+        //on_FinEnpBtn_clicked();
     }
     if (value==0){
         //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
@@ -624,26 +683,37 @@ void MainWindow::on_encryptStaBtn_clicked(){
 }
 
 // 开启进度条
-void MainWindow::startProgressBarThread()
+void MainWindow::startProgressBarThread( QString  itemName)
 {
     if (fileOpenFlag){
-        enItemThread *workerThread = new enItemThread(this);
-        connect(workerThread, SIGNAL(resultReady(int)), this, SLOT(handleResults(int)));
+
+        encryptthread *ecry = new encryptthread(this);
+        file_item_name = itemName;
+        //ecry->itemName = itemName;
+        enItemThread *enit = new enItemThread(this);
+        //enit->item = itemName;
+        enitemArr[enitemNum] = new enItemThread(this);
+        //enItemThread *workerThread = new enItemThread(this);
+        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString)), this, SLOT(handleResults(int,QString)));
         // 线程结束后，自动销毁
-        //connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
-        workerThread->start();
+        connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
+       enitemArr[enitemNum]->start();
+       enitemNum++;
         //startEncryptThread();
-        encryptthread *ecpThread = new encryptthread(this);
-        connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
+        encptThreadArr[encptThreadNum] = new encryptthread(this);
+        //encryptthread *ecpThread = new encryptthread(this);
+        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString)),this,SLOT(handleResults(int,QString)));
         // 线程结束后，自动销毁
-        connect(ecpThread, SIGNAL(finished()), ecpThread, SLOT(deleteLater()));
-        ecpThread->start();
+        connect(encptThreadArr[encptThreadNum], SIGNAL(finished()), encptThreadArr[encptThreadNum], SLOT(deleteLater()));
+        //ecpThread->start();
+        encptThreadArr[encptThreadNum]->start();
+        encptThreadNum++;
     }
 
 }
 
 //开始加密
-void MainWindow::startEncryptThread(){
+void MainWindow::startEncryptThread(QString itemName){
     encryptthread *ecpThread = new encryptthread(this);
     connect(ecpThread,SIGNAL(result(int)),this,SLOT(handleResults(int)));
     // 线程结束后，自动销毁
@@ -708,12 +778,37 @@ void MainWindow::on_pushButton_3_clicked()
 //点击全选按钮 QCheckbox处于被选择状态
 void MainWindow::on_pushButton_clicked()
 {
-   // QVBoxLayout *SelLayout = decryptionViewController->vbox;
-    if(decryptionViewController->vbox){
-        //遍历layout中的Item
-        for(int i= 0;i<decryptionViewController->vbox->count();i++){
-
-
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where oemp_id = '"+User_ID+"'");
+    if(!success){
+        qDebug()<<"checkBox:查询数据库失败";
+        return;
+    }
+    else{
+        while(query.next()){
+            QString m_ID = query.record().value("id").toString();
+            QCheckBox *checkbox = ui->MidStaWidget->findChild<QCheckBox *>(m_ID+"Decheck");
+            if(checkbox==NULL){
+                continue;
+            }
+            else{
+                if(DeSelect_flag==0){
+                    checkbox->setChecked(true);
+                }
+                else if(DeSelect_flag == 1){
+                    checkbox->setChecked(false);
+                }
+            }
+        }
+        if(DeSelect_flag ==0){
+            DeSelect_flag =1;
+            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect_pressed.png);} "
+                                          " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }
+        else{
+            DeSelect_flag =0;
+            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                             " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
         }
     }
 }
@@ -740,9 +835,8 @@ void MainWindow::getFileID(){
                           QDateTime time = QDateTime::currentDateTime();
                           QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取当前时间
                           QSqlQuery updatetime(db);
-
                           bool updateTimeSuccess = updatetime.exec("update Decryption set apply_time = '"+time_str+"' where id ='"+fileID+"'");
-                          if(updateTimeSuccess){
+                          if(!updateTimeSuccess){
                               qDebug()<<"update failed";
                           }
                           m1->downloadBtn->setText("申请中");
@@ -811,6 +905,7 @@ void MainWindow::OssDownLoadFile(){
                     //更新按钮内容
                     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(onlyId+"decryption");
                     m1->downloadBtn->setText("正在下载");
+                    m1->fileDescription->setText("下载中...");
                     disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));//删除原有信号槽
                 }
                 else{
@@ -826,15 +921,6 @@ void MainWindow::OssDownLoadFile(){
 //收到有新请求后 将原有视图清空后重新布局
 void MainWindow::ReceiveNewReq(){
     qDebug()<<"MainWindow:recv!";
-    //QMessageBox::warning(this,tr("ATTTENTION!"),tr("有新请求!"),QMessageBox::Yes);
-    Infor_requestNum++;
-    int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
-
-    QString s = QString::number(newRequestNum,10);
-    qDebug()<<"Infor_num_icon:";
-    qDebug()<<s;
-    Infor_num_icon->show();
-    Infor_num_icon->setText(s);
     QSqlQuery query(db);
     QString newID;
     bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
@@ -848,20 +934,61 @@ void MainWindow::ReceiveNewReq(){
               while(query.next()){
                   DecryptionItem *v1 =  new DecryptionItem();
 
-                  v1->fileName->setText(query.record().value("file_name").toString());//设置文件名
-                  v1->fileSize->setText(query.record().value("file_size").toString());//设置文件大小
+                  QString fName;
+                  fName = query.record().value("file_name").toString();
+                  int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+                  if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                  {
+                      QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                      v1->fileName->setText( str );       //重新设置label上的字符串
+                  }else{
+                      v1->fileName->setText(fName);
+                  }
+                  QString m_filesize = query.record().value("file_size").toString();
+                  v1->fileSize->setText(m_filesize+"KB");//设置文件大小
                   v1->timeLabel->setText(query.record().value("createtime").toString());//设置创建时间
                   //设置fileIcon的图片
-                  QPixmap pixmap(":/new/src/finEncryption");
-                  pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
-                  v1->fileIcon->setScaledContents(true);
-                  v1->fileIcon->setPixmap(pixmap);
+                  QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
+                  if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+                      QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                  }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+                      QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                  }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+                      QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                  }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+                      QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                  }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+                      QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                  }else{
+                      QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+                      pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                      v1->fileIcon->setScaledContents(true);
+                      v1->fileIcon->setPixmap(pixmap);
+                      v1->elseLabel->setText(filetype.left(3));
+                      v1->elseLabel->raise();
+                  }
+
                   v1->checkBox->setObjectName((query.record().value("id").toString())+"Decheck");//设置checkbox的ID
                   v1->setObjectName(query.record().value("id").toString()+"decryption");//设置Item的ID
                   v1->downloadBtn->setObjectName((query.record().value("id").toString())+"btn");//设置downloadBtn的ID
                   v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
                   //连接信号槽
-                  connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+//                  connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                   if(query.record().value("status").toString()=="0"){
                       //查找新消息
                       int isNEW = 1;
@@ -890,6 +1017,7 @@ void MainWindow::ReceiveNewReq(){
                                   QString SendID = nameQuery.record().value("emp_name").toString();
                                   qDebug()<<"发送者姓名为：";
                                   qDebug()<<SendID;
+                                  Infor_requestNum++;
                                   emit SendInforToInforDlg(SendID,SendFileName,time);//发送信号
 
                               }
@@ -902,13 +1030,11 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
                       v1->downloadBtn->setText("确认下载");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
+//                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
                       f_progressBar = v1->progressBar;
                       f_progressBar->setObjectName(v1->objectName());
-//                      f_progressBar->setMinimum(0);
-//                      f_progressBar->setMaximum(100);
-//                      f_progressBar->setOrientation(Qt::Horizontal);
                       f_progressBar->hide();
                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
                       //decryptionViewController->vbox->addWidget(f_progressBar);
@@ -917,18 +1043,24 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
                       v1->downloadBtn->setText("申请解密");
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
+ //                     connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                   }
                   else if(query.record().value("status").toString()=="2"){//申请等待状态
                       v1->fileDescription->setText("正在申请解密，请等待！");
                       v1->downloadBtn->setText("申请中");
+//                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);
                       }
               }
               ReLayout();
+              int newRequestNum = Infor_requestNum+informationNum+FriendRequestCount;
+              QString s = QString::number(newRequestNum,10);
+              qDebug()<<"Infor_num_icon:";
+              qDebug()<<s;
+              Infor_num_icon->show();
+              Infor_num_icon->setText(s);
               emit showDownDialog(newID);
-
-
     }
 }
 //进行数据库   操作
@@ -1003,17 +1135,17 @@ void MainWindow::addFriendToDatabase(QString name){
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取此刻时间
     bool insertSuccess = query.exec("insert into friend values('"+strID+"','"+User_ID+"','"+friendname+"','"+userid+"','"+name+"',0,'"+time_str+"',0)");
     if(insertSuccess){
-        //将好友插入到视图当中
-        int i = friendListWidget->count();
-        i++;
-        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
-        add_item->setText(name);
-        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
-        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
-        friendListWidget->insertItem(i,add_item);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
+//        //将好友插入到视图当中
+//        int i = friendListWidget->count();
+//        i++;
+//        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+//        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+//        add_item->setText(name);
+//        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+//        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+//        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+//        friendListWidget->insertItem(i,add_item);
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("发送请求成功！"));
         msgbox->exec();
     }
     else{
@@ -1219,6 +1351,8 @@ void MainWindow::on_pushButton_8_clicked()
                    pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
+                   f1->elseLabel->setText(filetype.left(3));
+                   f1->elseLabel->raise();
                }
 
                f1->checkBox->setObjectName(file_id + "check");
@@ -1227,7 +1361,16 @@ void MainWindow::on_pushButton_8_clicked()
                f1->shareBtn->setObjectName(file_id);
                f1->deleteBtn->setObjectName(file_id);
 
-               f1->fileName->setText(file_name);
+               int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               {
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   f1->fileName->setText( str );       //重新设置label上的字符串
+               }else{
+                   f1->fileName->setText(file_name);
+               }
+
+               //f1->fileName->setText(file_name);
                f1->fileSize->setText(file_size);
                f1->fileDescription->setText(file_discryption);
 
@@ -1328,7 +1471,7 @@ void MainWindow::on_pushButton_6_clicked()
             MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"));
             msgbox->exec();
         }
-        flag = 0;    
+        flag = 0;
 }
 
 //已加密文件单独删除按钮
@@ -1395,7 +1538,6 @@ void MainWindow::on_deleteBtn2_clicked(){
         else if (nRes == QDialog::Rejected){
         }
 }
-
 //已解密文件刷新按钮
 void MainWindow::on_pushButton_9_clicked()
 {
@@ -1405,7 +1547,7 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_size;
     QString file_discryption;
     finishViewController2->vbox = new QVBoxLayout();
-   QSqlQuery query(db);
+    QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
        if(!success){
            qDebug() << "查询密文失败";
@@ -1424,7 +1566,6 @@ void MainWindow::on_pushButton_9_clicked()
                file_discryption = "文件已成功解密。";
 
                FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
-
                delete f2;
 
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
@@ -1437,7 +1578,7 @@ void MainWindow::on_pushButton_9_clicked()
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
                }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
-                   QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                   QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
                    pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
@@ -1461,6 +1602,8 @@ void MainWindow::on_pushButton_9_clicked()
                    pixmap.scaled(f1->fileIcon->size(),Qt::KeepAspectRatio);
                    f1->fileIcon->setScaledContents(true);
                    f1->fileIcon->setPixmap(pixmap);
+                   f1->elseLabel->setText(filetype.left(3));
+                   f1->elseLabel->raise();
                }
 
                f1->checkBox->setObjectName(file_id + "check");
@@ -1468,7 +1611,16 @@ void MainWindow::on_pushButton_9_clicked()
                f1->openBtn->setObjectName(file_id);
                f1->deleteBtn->setObjectName(file_id);
 
-               f1->fileName->setText(file_name);
+               int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               {
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   f1->fileName->setText( str );       //重新设置label上的字符串
+               }else{
+                   f1->fileName->setText(file_name);
+               }
+
+               //f1->fileName->setText(file_name);
                f1->fileSize->setText(file_size);
                f1->fileDescription->setText(file_discryption);
 
@@ -1602,6 +1754,7 @@ void MainWindow::FileIsAllowed(){
 }
 void MainWindow::ChangeItemBtnText(QString fileID){
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
+    m1->fileDescription->setText("文件已加密需下载密钥文件");
     m1->downloadBtn->setText("申请解密");
     QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(fileID+"decryption");
     int value = 21;
@@ -1631,6 +1784,7 @@ void MainWindow::setEmp_name(){
             ui->nameLabel->setText(nickName);
         }
         ui->UserPhonelabe->setText("手机号："+UserPhoneNum);
+        ui->UserPhonelabe->hide();
         ui->UserIDlabel->hide();
     }
     else{
@@ -1805,22 +1959,61 @@ void MainWindow::LinkInsert(QString link){
     }
     else{
         DecryptionItem *a1 = new DecryptionItem();
-        a1->fileName->setText(Link_filename);
-        a1->fileSize->setText(Link_filesize);
-        QPixmap pixmap(":/new/src/finEncryption");
-        pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
-        a1->fileIcon->setScaledContents(true);
-        a1->fileIcon->setPixmap(pixmap);
+
+        QString filetype = Link_filename.section(".",1,1).trimmed().toStdString().c_str();
+        if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+            QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+            QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+            QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+            QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+        }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+            QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+        }else{
+            QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+            pixmap.scaled(a1->fileIcon->size(),Qt::KeepAspectRatio);
+            a1->fileIcon->setScaledContents(true);
+            a1->fileIcon->setPixmap(pixmap);
+            a1->elseLabel->setText(filetype.left(3));
+            a1->elseLabel->raise();
+        }
+        int fontSize = fontMetrics().width( Link_filename );//获取之前设置的字符串的像素大小
+        if( fontSize >= a1->fileName->width()-50 ) //与label自身相比较
+        {
+            QString str = fontMetrics().elidedText( Link_filename, Qt::ElideRight, a1->fileName->width()-50 );//返回一个带有省略号的字符串
+            a1->fileName->setText( str );       //重新设置label上的字符串
+        }else{
+            a1->fileName->setText(Link_filename);
+        }
+        a1->fileSize->setText(Link_filesize+"KB");
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
         a1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
-        connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
+//        connect(ui->pushButton,SIGNAL(clicked(bool)),a1,SLOT(changeCheckBox()));
         a1->fileDescription->setText("主体文件指定分享需确认下载.");
         a1->downloadBtn->setText("确认下载");
         connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
         decryptionViewController->vbox->addWidget(a1);
         f_progressBar = new QProgressBar(this);
+        f_progressBar = a1->progressBar;
         f_progressBar->setObjectName(a1->objectName());
 //        f_progressBar->setMinimum(0);
 //        f_progressBar->setMaximum(100);
@@ -1983,10 +2176,14 @@ void MainWindow::ShowNewDownDialog(QString id){
             }
             else{
                 m1->downloadBtn->click();
+                Infor_requestNum--;
+                InforNum_Changed();
                 on_DecryptionBtn_clicked();
             }
         }
         else if(reply == QDialog::Rejected){
+            Infor_requestNum--;
+            InforNum_Changed();
 
         }
 }
@@ -2066,4 +2263,38 @@ void MainWindow::FriendListWidgetHide(){
 void MainWindow::internet_Disconnected(){
     MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
     msgbox->exec();
+}
+
+void MainWindow::RecvNewFriendReq(){
+    FriendRequestCount++;
+    InforNum_Changed();
+}
+//同意添加好友处理函数
+void MainWindow::NewFriendAgree(){
+    //刷新好友列表
+    friendListWidget->clear();//清空好友列表
+    //重新加载好友列表
+    QSqlQuery query(db);
+    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = '1'");
+    if(!friendSelSuc){
+        qDebug()<<"查询好友失败";
+        return;
+    }
+    else{
+        qDebug()<<"查询好友成功";
+        //将查询的好友插入视图中
+        int count = 0;
+        while(query.next()){
+            QString Friend_nickname = query.record().value("friend_nickname").toString();
+            QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+            add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+            add_item->setText(Friend_nickname);
+            add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+            add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+            friendListWidget->insertItem(count,add_item);
+            count++;
+        }
+    }
+
 }

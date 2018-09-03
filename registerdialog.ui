@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>451</width>
-    <height>609</height>
+    <width>462</width>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,21 +19,21 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>6</x>
+     <y>6</y>
      <width>450</width>
      <height>608</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>448</width>
+      <width>450</width>
       <height>37</height>
      </rect>
     </property>
@@ -88,7 +88,7 @@ color:rgb(61,57,57);</string>
       <x>70</x>
       <y>90</y>
       <width>39</width>
-      <height>13</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -115,7 +115,7 @@ border-radius:4px;</string>
       <x>50</x>
       <y>159</y>
       <width>66</width>
-      <height>14</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -142,7 +142,7 @@ border-radius:4px;</string>
       <x>50</x>
       <y>229</y>
       <width>66</width>
-      <height>14</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -172,7 +172,7 @@ border-radius:4px;</string>
       <x>60</x>
       <y>299</y>
       <width>54</width>
-      <height>12</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -199,7 +199,7 @@ border-radius:4px;</string>
       <x>70</x>
       <y>369</y>
       <width>39</width>
-      <height>13</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -225,8 +225,8 @@ border-radius:4px;</string>
      <rect>
       <x>60</x>
       <y>439</y>
-      <width>54</width>
-      <height>12</height>
+      <width>60</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="text">
@@ -272,11 +272,14 @@ border-radius:4px;</string>
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>508</y>
-      <width>220</width>
-      <height>14</height>
+      <x>90</x>
+      <y>506</y>
+      <width>271</width>
+      <height>18</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 8pt &quot;04b_21&quot;;</string>
     </property>
     <property name="text">
      <string>  阅读并接受  《云加密用户协议》</string>
@@ -413,7 +416,8 @@ color:white;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
+     <string notr="true">background-image: url(:/new/mainwindow/pictures/system_icon.png);
+background-color: rgb(238, 240, 245);</string>
     </property>
     <property name="text">
      <string/>

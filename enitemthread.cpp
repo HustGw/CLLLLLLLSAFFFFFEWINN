@@ -1,8 +1,9 @@
 #include "enitemthread.h"
+extern QString file_item_name;
 
 enItemThread::enItemThread(QObject *parent):QThread(parent)
 {
-
+    item = file_item_name;
 }
 
 void enItemThread::run()
@@ -12,10 +13,11 @@ void enItemThread::run()
     while (nValue < 20)
     {
         // 休眠50毫秒
-        msleep(5);
+        msleep(20);
         ++nValue;
 
         // 准备更新
-        emit resultReady(nValue);
+        //qDebug()<<item;
+        emit resultReady(nValue,item);
     }
 }

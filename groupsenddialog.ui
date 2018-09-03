@@ -60,7 +60,7 @@ background-color: rgb(238, 240, 245);</string>
 background-color: rgb(238, 240, 245);</string>
    </property>
    <property name="text">
-    <string>好友传输</string>
+    <string>批量分享</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_8">

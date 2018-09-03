@@ -10,10 +10,23 @@ shareDialog::shareDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::shareDialog)
 {
+    this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->setupUi(this);
     QString fake_address = "https://youxinzhongwang.com/theRea1Fi1eId&&"+file_id;
+    ui->pushButtonclos->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButton_copy->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButton_sav->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButtonclos2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
+
+    ui->pushButtonclos->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButtonclos2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_copy->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_sav->setCursor(QCursor(Qt::PointingHandCursor));
+
     ui->textEdit->setPlainText(fake_address);
     ui->textEdit->setReadOnly(true);
+
+
 }
 
 shareDialog::~shareDialog()
@@ -26,17 +39,36 @@ void shareDialog::on_pushButton_clicked()
 }
 
 void shareDialog::paintEvent(QPaintEvent *event){
-    QString link = "https://youxinzhongwang.com/theRea1Fi1eId&&"+file_id;
-    QPixmap pix(180,180);
+    QString link = "https://youxinzhongwang.com/f113&&"+file_id;
+    QPixmap pix(130,130);
     pix.fill(Qt::white);
-    QPainter painter(&pix);
-    QSize size(180,180);
+    QPainter painter1(&pix);
+    QSize size(130,130);
     QColor fg = Qt::black;
 
-    paintQR(painter,size,link,fg);
-    painter.end();
+    paintQR(painter1,size,link,fg);
+    painter1.end();
 
     ui->label_2->setPixmap(pix);
+
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
 
 }
 
@@ -69,11 +101,7 @@ void shareDialog::paintQR(QPainter &painter,const QSize sz, const QString &data,
 
 void shareDialog::on_pushButton_2_clicked()
 {
-    QString filename1 = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Images (*.png)")); //选择路径
-    QScreen *screen = QGuiApplication::primaryScreen();
-    screen->grabWindow(ui->label_2->winId()).save(filename1);
-    MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"));
-    msgbox->exec();
+
 
 }
 
@@ -82,5 +110,54 @@ void shareDialog::on_pushButton_copy_clicked()
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textEdit->toPlainText());
     MsgBox *msgbox = new MsgBox(2,QStringLiteral("拷贝成功！"));
+    ui->label_8->setText("分享链接已复制！");
     msgbox->exec();
 }
+
+void shareDialog::on_pushButton_sav_clicked()
+{
+    QString filename1 = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Images (*.png)")); //选择路径
+    QScreen *screen = QGuiApplication::primaryScreen();
+    screen->grabWindow(ui->label_2->winId()).save(filename1);
+    MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"));
+    ui->label_8->setText("二维码已保存！");
+    msgbox->exec();
+}
+
+void shareDialog::on_pushButtonclos_clicked()
+{
+    this->close();
+}
+
+void shareDialog::on_pushButtonclos2_clicked()
+{
+    this->close();
+}
+
+void shareDialog::mousePressEvent(QMouseEvent *qevent)
+{
+    if(qevent->button() == Qt::LeftButton)
+    {
+        mouse_press = true;
+        //鼠标相对于窗体的位置（或者使用event->globalPos() - this->pos()）
+        move_point = qevent->pos();;
+    }
+}
+void shareDialog::mouseMoveEvent(QMouseEvent *qevent)
+{
+    //若鼠标左键被按下
+    if(mouse_press)
+    {
+        //鼠标相对于屏幕的位置
+        QPoint move_pos = qevent->globalPos();
+
+        //移动主窗体位置
+        this->move(move_pos - move_point);
+    }
+}
+void shareDialog::mouseReleaseEvent(QMouseEvent *qevent)
+{
+    //设置鼠标为未被按下
+    mouse_press = false;
+}
+

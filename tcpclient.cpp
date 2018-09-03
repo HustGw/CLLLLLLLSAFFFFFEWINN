@@ -37,19 +37,21 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
                 "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
                 "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
-    ui->minBtn->setStyleSheet(                 //调整最小化按钮样式
-                "QPushButton{background-image: url(:/new/mainwindow/pictures/min_button.png);border:0px;}"
-                "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/min_button.png);border:0px;background-color:rgb(200,200,200);}");
-    ui->closeBtn->setStyleSheet(               //调整关闭按钮样式
-                "QPushButton{ background-image: url(:/new/mainwindow/pictures/exit_button.png);border:0px;}"
-                "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/exit_button.png);border:0px;background-color:rgb(200,200,200);}");
+
+    ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
+
+    ui->forgetBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->sendBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->clearBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->minBtn->setCursor(QCursor(Qt::PointingHandCursor));
+
 
     flag = 0;
 
 
     m_accessManager = new QNetworkAccessManager(this);
     QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
-
 }
 
 TcpClient::~TcpClient()
@@ -84,7 +86,6 @@ void TcpClient::on_forgetBtn_clicked()
 void TcpClient::on_sendBtn_clicked()
 {
     //点击登录按钮的响应
-
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
     if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告
@@ -468,15 +469,52 @@ void TcpClient::on_codeBtn_clicked()
     QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
 }
 
-void TcpClient::mousePressEvent(QMouseEvent *event) //窗口鼠标按下事件
+void TcpClient::mousePressEvent(QMouseEvent *qevent)
 {
-    this->windowPos = this->pos();                // 获得部件当前位置
-    this->mousePos = event->globalPos();     // 获得鼠标位置
-    this->dPos = mousePos - windowPos;
+    if(qevent->button() == Qt::LeftButton)
+    {
+        mouse_press = true;
+        //鼠标相对于窗体的位置（或者使用event->globalPos() - this->pos()）
+        move_point = qevent->pos();;
+    }
+}
+void TcpClient::mouseMoveEvent(QMouseEvent *qevent)
+{
+    //若鼠标左键被按下
+    if(mouse_press)
+    {
+        //鼠标相对于屏幕的位置
+        QPoint move_pos = qevent->globalPos();
+
+        //移动主窗体位置
+        this->move(move_pos - move_point);
+    }
+}
+void TcpClient::mouseReleaseEvent(QMouseEvent *qevent)
+{
+    //设置鼠标为未被按下
+    mouse_press = false;
 }
 
-void TcpClient::mouseMoveEvent(QMouseEvent *event)  //窗口鼠标移动事件
+void TcpClient::paintEvent(QPaintEvent *event)
 {
-     this->move(event->globalPos() - this->dPos);
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    path.addRect(5, 5, this->width()-10, this->height()-10);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+
+    QColor color(0, 0, 0, 50);
+    for(int i=0; i<5; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
 }
 

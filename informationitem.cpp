@@ -13,13 +13,13 @@ InformationItem::InformationItem(QWidget *parent) : QWidget(parent)
     ignoreBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     InforKindsLabel->setText("申请授权");
     timeLabel->setText("2018-8-2 14:33:59");
-    allowBtn->setGeometry(290,75,80,30);
-    ignoreBtn->setGeometry(405,75,80,30);
+    allowBtn->setGeometry(285,75,80,30);
+    ignoreBtn->setGeometry(395,75,80,30);
     titleLabel->setGeometry(10,30,400,45);
     QFont font("Microsoft YaHei",10,75);
     InforKindsLabel->setGeometry(10,5,80,20);
     InforKindsLabel->setFont(font);
-    timeLabel->setGeometry(280,5,200,40);
+    timeLabel->setGeometry(275,5,200,40);
 
 }
 

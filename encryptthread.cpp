@@ -1,8 +1,8 @@
 #include "encryptthread.h"
-
+extern QString file_item_name;
 encryptthread::encryptthread(QObject *parent):QThread(parent)
 {
-
+    item = file_item_name;
 }
 
 void encryptthread::run(){
@@ -12,7 +12,9 @@ void encryptthread::run(){
 
     int nValue = 21;
     if (ecptFlag==2){
-         emit result(0);
+
+         emit result(0,item);
+
     }
     else{
 
@@ -22,7 +24,7 @@ void encryptthread::run(){
             msleep(5);
             ++nValue;
             // 准备更新
-            emit result(nValue);
+            emit result(nValue,item);
         }
     }
 

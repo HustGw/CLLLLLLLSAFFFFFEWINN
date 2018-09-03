@@ -131,7 +131,7 @@ int encryption::encrypt(){
     QSqlQuery query(conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
-
+    qDebug()<<originalFileName;
     //密钥上传OSS
     uploadoss *upKey = new uploadoss;
     upKey->OBJECT_NAME=enKeyID.c_str();
@@ -170,6 +170,7 @@ int encryption::encrypt(){
 
 
     //密文上传OSS
+
     uploadoss *upFile = new uploadoss;
     upFile->OBJECT_NAME=enFileID.c_str();
     upFile->BUCKET_NAME="cloudsafe-pc-yfile";

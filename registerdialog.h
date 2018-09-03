@@ -5,6 +5,10 @@
 #include <QtNetwork>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include <QMouseEvent>
+#include <QtMath>
+#include <QPainter>
+
 #include "msgbox.h"
 
 
@@ -52,15 +56,18 @@ private slots:
 
 //    void on_code_editingFinished();
 
-    void mousePressEvent(QMouseEvent *event);
-
-    void mouseMoveEvent(QMouseEvent *event);
 
     void on_signBtn_clicked();
 
     void on_codeBtn_clicked();
     void finishedSlot(QNetworkReply *reply);
-
+protected:
+    QPoint move_point;                                    //移动的距离
+    bool mouse_press;                                    //鼠标按下
+    void mousePressEvent(QMouseEvent *qevent);            //鼠标按下事件
+    void mouseReleaseEvent(QMouseEvent *qevent);         //鼠标释放事件
+    void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
+    void paintEvent(QPaintEvent *event);
 private:
     Ui::registerDialog *ui;
 };

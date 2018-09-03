@@ -8,6 +8,10 @@
 #include <QWidget>
 #include <QFileDialog>
 #include  <QScreen>
+#include <QMouseEvent>
+#include <QtMath>
+#include <QScrollBar>
+
 namespace Ui {
 class shareDialog;
 }
@@ -19,7 +23,6 @@ class shareDialog : public QDialog
 public:
     explicit shareDialog(QWidget *parent = 0);
     ~shareDialog();
-    void paintEvent(QPaintEvent *event);
     void paintQR(QPainter &painter,const QSize sz, const QString &data, QColor fg);
 
 private slots:
@@ -29,6 +32,18 @@ private slots:
 
     void on_pushButton_copy_clicked();
 
+    void on_pushButton_sav_clicked();
+
+    void on_pushButtonclos_clicked();
+
+    void on_pushButtonclos2_clicked();
+protected:
+    QPoint move_point;                                    //移动的距离
+    bool mouse_press;                                    //鼠标按下
+    void mousePressEvent(QMouseEvent *qevent);            //鼠标按下事件
+    void mouseReleaseEvent(QMouseEvent *qevent);         //鼠标释放事件
+    void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
+    void paintEvent(QPaintEvent *event);
 private:
     Ui::shareDialog *ui;
 };
