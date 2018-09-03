@@ -1145,7 +1145,7 @@ void MainWindow::addFriendToDatabase(QString name){
 //        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 //        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
 //        friendListWidget->insertItem(i,add_item);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("发送请求成功！"));
         msgbox->exec();
     }
     else{

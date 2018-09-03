@@ -409,6 +409,7 @@ void informationDlg::AddFriendRequest(){
         while (query.next()) {
             QString ID = query.record().value("id").toString();
             QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendBtn");
+            InformationItem *m1 = this->findChild<InformationItem *>(ID+"friendInfor");
             if(!pt)
                 return;
             if(pt==b1){
@@ -422,6 +423,7 @@ void informationDlg::AddFriendRequest(){
                 FriendRequestCount--;
                 FriendStatusNum--;
                 b1->setText("已允许");
+                m1->ignoreBtn->hide();
                 b1->setEnabled(false);
             }
         }
@@ -490,6 +492,7 @@ void informationDlg::AddFriendIgnore(){
         while(query.next()){
             QString ID = query.record().value("id").toString();
             QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendIgn");
+            InformationItem *m1 = this->findChild<InformationItem *>(ID+"friendInfor");
             if(!pt)
                 return;
             if(pt==b1){
@@ -501,6 +504,7 @@ void informationDlg::AddFriendIgnore(){
                 FriendRequestCount--;//消息数量减一
                 FriendStatusNum--;
                 b1->setText("已忽略");
+                m1->allowBtn->hide();
                 b1->setEnabled(false);
                     }
                 }
