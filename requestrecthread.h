@@ -23,10 +23,12 @@ public:
     int getReqNum();//获取数据库条目数量
     void listenReqNum();//监听数据库文件数量
     int ReqAllowNum();
+    int ReqIgnoreNum();
 signals:
     void numChanged();
     void ReqIsAlliowed();
     void thread_Disconnected();
+    void ReqIsIgnored();
 };
 
 #endif // REQUESTRECTHREAD_H
