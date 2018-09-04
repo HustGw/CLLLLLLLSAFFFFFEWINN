@@ -11,6 +11,8 @@
 #include <QJsonParseError>
 #include <QPushButton>
 #include <QMouseEvent>
+#include <QSettings>
+
 QString LoginUserID = NULL;
 QString UserPhoneNum = NULL;
 QNetworkAccessManager *m_accessManager;
@@ -21,8 +23,22 @@ TcpClient::TcpClient(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+
+    //登录初始化时设置已记住的账号密码
+    QString RemeberPasswd;
+    QSettings cfg("user.ini",QSettings::IniFormat);
+    usersname= cfg.value("usersname").toString();
+    passwd= cfg.value("passwd").toString();
+    RemeberPasswd= cfg.value("remeberPasswd").toString();
+    if(RemeberPasswd == "true"){
+        ui->userLineEdit->setText(usersname);
+        ui->passwardLineEdit->setText(passwd);
+        ui->Rem_Passwd->setChecked(true);
+    }
+
+
     ui->passwardLineEdit->setEchoMode(QLineEdit::Password);  //密码方式显示文本
-    ui->userLineEdit->setPlaceholderText(tr("请输入用户名/手机号"));//设置用户名提示信息
+    ui->userLineEdit->setPlaceholderText(tr("请输入手机号"));//设置用户名提示信息
     ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
 
     ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
@@ -82,6 +98,7 @@ void TcpClient::on_forgetBtn_clicked()
     resDlg->exec();
     return;
 }
+
 
 void TcpClient::on_sendBtn_clicked()
 {
@@ -421,6 +438,8 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                                  LoginUserID = midQString.mid(index+1);
                                  qDebug()<<LoginUserID;
 
+                                 savecfg();
+
 //                                 QMessageBox::information(this,"警告","登录成功",QMessageBox::Ok);
                              }
                          }
@@ -518,3 +537,24 @@ void TcpClient::paintEvent(QPaintEvent *event)
     }
 }
 
+
+//勾选记住密码,定义一个标志位
+void TcpClient::on_Rem_Passwd_clicked(){
+    if(ui->Rem_Passwd->isChecked()){
+        remeberPasswd = true;
+    }else{
+        remeberPasswd = false;
+        ui->passwardLineEdit->clear();
+    }
+}
+
+//登录成功后保存登录信息
+void TcpClient::savecfg(){
+    QSettings cfg("user.ini",QSettings::IniFormat);
+    usersname = ui->userLineEdit->text();
+    passwd = ui->passwardLineEdit->text();
+    cfg.setValue("usersname",usersname);
+    cfg.setValue("passwd",passwd);
+    cfg.setValue("remeberPasswd",remeberPasswd);
+    cfg.sync();
+}
