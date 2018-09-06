@@ -13,6 +13,7 @@
 #include "enitemthread.h"
 #include <QPushButton>
 #include <qdatetime.h>
+#include "QDir"
 
 class EncryptionItem : public QWidget
 {
@@ -35,9 +36,12 @@ public:
 
 
     QPushButton *encryptStaBtn;
+    QPushButton *starEncptBtn;
     QLabel *initPage;
 
+    QFileInfo fInfo;
 signals:
+    //void starEcptItem(QString itemName);
 
 public slots:
     //void on_encryptStaBtn_clicked();

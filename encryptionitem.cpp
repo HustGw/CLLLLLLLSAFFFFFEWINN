@@ -1,6 +1,6 @@
 #include "encryptionitem.h"
 extern bool initPageFlag;
-
+extern QFileInfo openFileInfo;
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
     if (initPageFlag){
@@ -33,7 +33,9 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         fileIcon = new QLabel(this);
 
         encryptStaBtn = new QPushButton(this);
-
+        starEncptBtn = new QPushButton(this);
+        starEncptBtn->setGeometry(10,10,10,12);
+        starEncptBtn->hide();
 
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
         fileName->setGeometry(95,12,150,16);
@@ -52,6 +54,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         QDateTime time = QDateTime::currentDateTime();
         QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
         timeInfo->setText(time_str);
+
         encryptStaBtn->hide();
 
     }
@@ -70,6 +73,9 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
     progressBar->setStyleSheet(strQSS);
+    fInfo=openFileInfo;
+    QString fName = fInfo.fileName();
+    //emit starEcptItem(fName);
     //progressBar->setValue(20);
    // progressBar->setGeometry(450,85,100,20);
 //    double dProgress = (progressBar->value() - progressBar->minimum()) * 100.0
@@ -80,6 +86,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 //每一个Item绘制边界框
 void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
+
     painter.setPen(QColor(139,139,139));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 //    painter.drawLine(31,0,31,this->height()-1);

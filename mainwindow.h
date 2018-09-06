@@ -167,6 +167,8 @@ private slots:
 
     void on_encryptStaBtn_clicked();
 
+    void on_starEncptBtn_clicked();
+
     void getFileID();
 
     void OssDownLoadFile();//解密下载OSS文件
@@ -237,6 +239,9 @@ private slots:
     void FriendListWidgetHide();
 
     void internet_Disconnected();
+
+
+    void starEcpt(QString);
 
     void RecvNewFriendReq();
 
