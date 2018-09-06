@@ -247,6 +247,7 @@ private slots:
 
     void NewFriendAgree();//添加好友，对方同意函数
 
+    void on_pushButton_groupshare_clicked();
 
 protected:
     void closeEvent(QCloseEvent *event);

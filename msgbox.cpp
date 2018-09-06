@@ -22,6 +22,8 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
                              "background-color: #EEF0F5;");
     if(style == 4){
         titleText->setText(QStringLiteral("成功"));
+    }else if(style==5){
+        titleText->setText(QStringLiteral("删除"));
     }
     else if(style == 2){
         titleText->setText(QStringLiteral("文件传输"));
@@ -42,7 +44,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     //3 提示 ！（蓝）
     //4 成功 √
     //2、3、4没有取消按钮
-    if(style == 1){
+    if((style == 1)||(style == 5)){
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_question.png);background: transparent;border:none;}");
     }
     else if(style == 2){
@@ -57,6 +59,12 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     askLabel->setGeometry(89,74,300,20);
     askLabel->setText(text);
 
+    deleteBtn = new QPushButton(this);
+    deleteBtn->setText(QStringLiteral("删除条目及文件"));
+    deleteBtn->setGeometry(73,133,119,27);
+    deleteBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    deleteBtn->hide();
+
     okBtn=new QPushButton(this);
     if((style==2)||(style==3)||(style == 4)){
         okBtn->setGeometry(331,133,89,27);
@@ -64,9 +72,15 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     else{
         okBtn->setGeometry(217,133,89,27);
     }
-    okBtn->setText(QStringLiteral("确定"));
+    if(style == 5){
+        okBtn->setText(QStringLiteral("删除条目"));
+        deleteBtn->show();
+    }else{
+        okBtn->setText(QStringLiteral("确定"));
+    }
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     okBtn->setCursor(QCursor(Qt::PointingHandCursor));
+
     cancleBtn=new QPushButton(this);
     cancleBtn->setGeometry(331,133,89,27);
     cancleBtn->setText(QStringLiteral("取消"));
@@ -80,6 +94,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     cancleBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     connect(okBtn,SIGNAL(clicked()),this,SLOT(okBtn_press()));
+    connect(deleteBtn,SIGNAL(clicked()),this,SLOT(deletBtn_press()));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));
     connect(cancleBtn,SIGNAL(clicked()),this,SLOT(cancleBtn_press()));
 }
@@ -132,6 +147,9 @@ void MsgBox::cancleBtn_press()
 void MsgBox::closeBtn_press()
 {
     close();
+}
+void MsgBox::deletBtn_press(){
+    this->done(5);
 }
 void MsgBox::paintEvent(QPaintEvent *event)
 {
