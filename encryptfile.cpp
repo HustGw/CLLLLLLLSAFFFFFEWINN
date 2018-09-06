@@ -1,10 +1,5 @@
 #include "encryptfile.h"
-#include <iostream>
-#include <windows.h>
-#include <stdio.h>
-#include <time.h>
-#include <string>
-#include <QDebug>
+#include <QFile>
 
 #define BUFFER_SIZE 52428800
 #define MAX_FILE_ADDRESS_LENGTH 512
@@ -38,9 +33,23 @@ int file_count = 0;
 char file_buffer[BUFFER_SIZE];
 char key_buffer[BUFFER_SIZE];
 
+//QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
 encryptfile::encryptfile()
 {
+    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
+    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+}
+
+QByteArray qstr2str(QString qstr)
+{
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    QByteArray cdata = qstr.toUtf8();
+    //qstr.toLocal8Bit();
+    //.toUtf8()
+    //cdata.toStdString().c_str();
+     const char *s = cdata.toStdString().data();
+    return cdata;
 }
 
 int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify){
@@ -54,10 +63,33 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     encryptPercent = percent / 100;
     int extractionRate = 100;
     qDebug()<<'2';
-    strcpy_s(originalFileLocalPath, fileAbPath.toStdString().c_str());
+
+
+    QString SaveFilePath = fileAbPath.toUtf8();
+    const char * finalFilePath = SaveFilePath.toStdString().c_str();
+    char* cSaveFilePath = new char[strlen(finalFilePath)+1];
+    memset(cSaveFilePath,0,sizeof(cSaveFilePath));
+
+    strcpy(cSaveFilePath,finalFilePath);
+
+    QByteArray ypath;
+    //ypath = fileAbPath.toStdString().c_str();
+
+    strcpy_s(originalFileLocalPath, fileAbPath.toUtf8());
     strcpy_s(keyLocalPath, ykeyAbPath.toStdString().c_str());
     strcpy_s(ciphertextPath, yzipAbPath.toStdString().c_str());
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QString filePath;
+    filePath = codec->fromUnicode(QString(originalFileLocalPath)).data();
 
+    ypath = qstr2str(fileAbPath);
+    const char *s = ypath.data();
+    //char *temp = filePath.toLatin1().data();
+    int i ;
+//    for (i=0;i<filePath.length();i++)
+//       originalFileLocalPath[i] = path[i];
+//    originalFileLocalPath[i] = '\0';
+    //originalFileLocalPath = filePath.toLatin1().data();
     err1 = fopen_s(&origin_file, originalFileLocalPath, "rb+");
     if (err1 != 0)
     {

@@ -94,12 +94,13 @@ MainWindow::MainWindow(QWidget *parent) :
     db = ConnectionPool::openConnection();
     // 连接进度条信号槽
     //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
-   //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), this, SLOT(startProgressBarThread()));
+    //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
     //开始加密信号槽
     //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     ui->MidStaWidget->addWidget(encryptionPage);
+    ui->EncryptionBtn->clicked();
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
@@ -110,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
-    addFriendBtn->setGeometry(22,505,156,27);//设置添加好友BUTTON位置
+    addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
     friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -455,8 +456,9 @@ void MainWindow::on_FinDepBtn_clicked()
 
 void MainWindow::on_OpenFileBtn_clicked()
 {
-    QTextCodec *codec = QTextCodec::codecForName("GB18030");
-    QString file_full,fName,fPath,amfSize;
+    QTextCodec *codec = QTextCodec::codecForName("utf8");//18030
+    //QString file_full,fName,fPath,amfSize;
+    QString file_full,fPath,amfSize;
     qint64 fSize;
     double mfSize;
     int fileNumFlag;
@@ -469,8 +471,8 @@ void MainWindow::on_OpenFileBtn_clicked()
     //file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
     qDebug()<<file_full_list;
     if (file_full_list.isEmpty()){
-            MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"));
-            msgbox->exec();
+//            MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"));
+//            msgbox->exec();
     //        QMessageBox message(QMessageBox::NoIcon,"Erro Message","请选择文件");
     //        message.setIconPixmap(QPixmap(":/new/mainwindow/pictures/system_waring.png"));
     //        message.exec();
@@ -490,7 +492,10 @@ void MainWindow::on_OpenFileBtn_clicked()
           //if ()
         fInfo=QFileInfo(file_full_list.at(i));
         openFileInfo=fInfo;
-        fName=fInfo.fileName();
+        //fName=fInfo.fileName();
+        std::string name = codec->fromUnicode(fInfo.fileName()).data();
+        //name.
+        QString fName = codec->fromUnicode(fInfo.fileName()).data();
         fPath=fInfo.filePath();
         fSize=fInfo.size();
         mfSize=(double)(fSize/1024.);//字节转换为KB
@@ -505,8 +510,10 @@ void MainWindow::on_OpenFileBtn_clicked()
         QString yzipFileID = yzipfile_id.toString();
         yzipfileUuid = yzipFileID;
         //contest->fInfo=fInfo;
-        emit starEcptItem(fName);
+        //emit starEcptItem(fName);
+
         EncryptionItem *v1 = new EncryptionItem();
+
         v1->setObjectName(fName);
         int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
         if( fontSize >= v1->fileName->width() ) //与label自身相比较
@@ -557,7 +564,7 @@ void MainWindow::on_OpenFileBtn_clicked()
         v1->encryptStaBtn->setText("正在加密...");
         v1->encryptStaBtn->setFlat(true);
         v1->encryptStaBtn->setStyleSheet("background:transparent");
-
+        v1->starEncptBtn->setFlat(true);
         //v1->checkBox->setObjectName(fName);
 
         //qDebug()<<v1->checkBox->objectName();
@@ -581,17 +588,22 @@ void MainWindow::on_OpenFileBtn_clicked()
             }";
 //        f_progressBar->setStyleSheet(strQSS);
         f_progressBar->setObjectName(fName);
-
-
+        //emit starEcptItem(fName);
+        //connect(v1,SIGNAL(starEncptItem(QString)),on_OpenFileBtn_clicked(),SLOT(startProgressBarThread(QString)));
 //        f_progressBar->setMinimum(0);
 //        f_progressBar->setMaximum(100);
 //        //f_progressBar->setValue(20);
 //        f_progressBar->setOrientation(Qt::Horizontal);
 //        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
         connect(v1->encryptStaBtn,SIGNAL(clicked(bool)),this,SLOT(on_encryptStaBtn_clicked()));
-        //connect(this,SIGNAL(starEncptItem(QString)),this,SLOT(startProgressBarThread(QString)));
+
+
+        connect(v1->starEncptBtn,SIGNAL(clicked(bool)),this,SLOT(on_starEncptBtn_clicked()));
+
+        v1->starEncptBtn->clicked(true);
+        //starEcpt(fName);
         //startEncryptThread(fName);
-        startProgressBarThread(fName);
+        //startProgressBarThread(fName);
         //encryptionViewController->vbox->addWidget(f_progressBar);
         //encryptionViewController->vbox->setGeometry(100);
 
@@ -650,7 +662,8 @@ void MainWindow::handleResults(int value,QString itemName)
 
 ///////////////////////////////////////////////////////////////////////
         //initPageFlag=true;
-        //on_FinEnpBtn_clicked();
+        if (encryptionViewController->vbox->count()==0)
+            on_FinEnpBtn_clicked();
     }
     if (value==0){
         //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
@@ -670,6 +683,13 @@ void MainWindow::handleResults(int value,QString itemName)
     }
 }
 
+void MainWindow::starEcpt(QString fName){
+    //connect()
+    //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
+    emit starEcptItem(fName);
+
+}
+
 void MainWindow::on_encryptStaBtn_clicked(){
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
@@ -678,6 +698,11 @@ void MainWindow::on_encryptStaBtn_clicked(){
     v1->encryptStaBtn->show();
     v1->encryptStaBtn->setEnabled(false);
     v1->encryptStaBtn->setText("加密已完成！");
+}
+
+void MainWindow::on_starEncptBtn_clicked(){
+    QString fName = openFileInfo.fileName();
+    startProgressBarThread(fName);
 }
 
 // 开启进度条

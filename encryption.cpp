@@ -68,8 +68,12 @@ int encryption::encrypt(){
     oss_PutFile_Flag=2;
     //drawItem(50);
     fInfo=openFileInfo;
-    originalFileName=fInfo.fileName();
-    originalFilePath=fInfo.filePath();
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    originalFileName = codec->fromUnicode(fInfo.fileName()).data();
+    //originalFileName=fInfo.fileName();
+    //originalFilePath=fInfo.filePath();
+    originalFilePath = codec->fromUnicode(fInfo.filePath()).data();
+    //originalFilePath = originalFilePath.toLocal8Bit().constData();
     qint64 fSize;
     fSize=fInfo.size();
     originalFileSize = (double)(fSize/1024.);
@@ -102,20 +106,32 @@ int encryption::encrypt(){
     //设置密钥地址
     QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
-    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+enfile_id+".yfile";
+    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+originalFileName+".yfile";
     encryptfile *enfile = new encryptfile();
     //文件加密
     //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
-
-    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID)) {
+    MsgBox *msgbox01 ;
+    MsgBox *msgbox02;
+    MsgBox *msgbox03;
+    //QString path = fInfo.filePath();
+    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,originalFileName,userID)) {
     case 41:
-        QMessageBox::critical(NULL,"错误","打开源文件失败！",QMessageBox::Yes,NULL);
+        //QMessageBox::critical(NULL,"错误","打开源文件失败！",QMessageBox::Yes,NULL);
+        msgbox01 = new MsgBox(2,QStringLiteral("打开源文件失败！"));
+        msgbox01->exec();
+        return 2;
         break;
     case 42:
-        QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        //QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        msgbox02 = new MsgBox(2,QStringLiteral("加密失败！"));
+        msgbox02->exec();
+        return 2;
         break;
     case 43:
-        QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        //QMessageBox::critical(NULL,"错误","加密失败！",QMessageBox::Yes,NULL);
+        msgbox03 = new MsgBox(2,QStringLiteral("加密失败！"));
+        msgbox03->exec();
+        return 2;
         break;
     }
     //EncryptionItem *I1 = new EncryptionItem();
@@ -141,18 +157,15 @@ int encryption::encrypt(){
     if (oss_PutKey_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+        msgbox->exec();
         qDebug()<<"网络错误！";
         return 2;
     }else if (oss_PutKey_Flag==1){
-        //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
-        //QMessageBox::Ok(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
         //密钥上传成功
         //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
         //上传至密钥信息表
         //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
-        //connect();
-
-
         QString savesql_key = QString ("INSERT INTO vfile(file_id,file_uploadtime,file_name,emp_id,emp_phone)");
         savesql_key+=QString("VALUES ('"+ enkey_id +"','"+time_str+"','"+enkey_id+"','"+userID+"','"+111+"')");
         //QSqlQuery query;
@@ -164,6 +177,13 @@ int encryption::encrypt(){
         else{
           qDebug()<<"error";
         }
+
+        QFile file(ykeyAbPath);
+        if (file.exists())
+        {
+            file.remove();
+        }
+
     }
 
 

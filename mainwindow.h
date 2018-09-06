@@ -160,6 +160,8 @@ private slots:
 
     void on_encryptStaBtn_clicked();
 
+    void on_starEncptBtn_clicked();
+
     void getFileID();
 
     void OssDownLoadFile();
@@ -228,6 +230,8 @@ private slots:
     void FriendListWidgetHide();
 
     void internet_Disconnected();
+
+    void starEcpt(QString);
 
 protected:
     void closeEvent(QCloseEvent *event);

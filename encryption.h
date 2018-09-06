@@ -23,6 +23,7 @@
 #include "connectionpool.h"
 #include "QMessageBox"
 #include "QtWidgets"
+#include <msgbox.h>
 
 class encryption
 {
