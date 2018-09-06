@@ -112,7 +112,7 @@ void friendInputDlg::SearchFriend(){
 
     QSqlQuery query(db);
     QString name = inputLineEdit->text();
-    if(name.isEmpty()){
+    if(!name.isEmpty()){
     QNetworkRequest request;
     request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Employee/FindUser.do"));
     QByteArray postData;
