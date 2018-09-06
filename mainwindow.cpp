@@ -13,6 +13,8 @@
 #include "QProgressBar"
 #include <qt_windows.h>
 #include <QFile>
+int AddFriendFlag = 0;
+int LinkInsertFlag = 0;
 int findecrypt_flag = 0;//已解密全选判断变量
 int finencrypt_flag = 0;//已加密全选判断变量
 int DeSelect_flag = 0;//解密全选判断变量
@@ -471,7 +473,7 @@ void MainWindow::on_OpenFileBtn_clicked()
     //file_full = QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath());//打开文件选择
     qDebug()<<file_full_list;
     if (file_full_list.isEmpty()){
-            MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"));
+            MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择文件"),this);
             msgbox->exec();
     //        QMessageBox message(QMessageBox::NoIcon,"Erro Message","请选择文件");
     //        message.setIconPixmap(QPixmap(":/new/mainwindow/pictures/system_waring.png"));
@@ -633,7 +635,7 @@ void MainWindow::handleResults(int value,QString itemName)
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
         QString str = itemName + "加密已完成！";
         str.toStdString();
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"));
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"),this);
         msgbox->exec();
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
@@ -656,7 +658,7 @@ void MainWindow::handleResults(int value,QString itemName)
     }
     if (value==0){
         //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"),this);
         msgbox->exec();
         EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
         delete v1;
@@ -725,7 +727,7 @@ void MainWindow::startEncryptThread(QString itemName){
 void MainWindow::on_pushButton_3_clicked()
 
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
     QSqlQuery query(db);
@@ -842,11 +844,11 @@ void MainWindow::getFileID(){
                           m1->downloadBtn->setText("申请中");
                           m1->fileDescription->setText("正在等待对方应答，请等待！");
                           disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
-                          MsgBox *msgbox = new MsgBox(4,QStringLiteral("申请成功，请等待！"));
+                          MsgBox *msgbox = new MsgBox(4,QStringLiteral("申请成功，请等待！"),this);
                           msgbox->exec();
                       }
                       else{
-                          MsgBox *msgbox = new MsgBox(2,QStringLiteral("申请失败！"));
+                          MsgBox *msgbox = new MsgBox(2,QStringLiteral("申请失败！"),this);
                           msgbox->exec();
                       }
                   }
@@ -909,7 +911,7 @@ void MainWindow::OssDownLoadFile(){
                     disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));//删除原有信号槽
                 }
                 else{
-                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("下载失败！"));
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("下载失败！"),this);
                     msgbox->exec();
                 }
             }
@@ -1074,7 +1076,7 @@ void MainWindow::addFriendToDatabase(QString name){
     else{
         while (query.next()) {
             if(query.record().value("friend_nickname").toString()==name){
-                MsgBox *msgbox = new MsgBox(3,QStringLiteral("已经是你的好友了！"));
+                MsgBox *msgbox = new MsgBox(3,QStringLiteral("已经是你的好友了！"),this);
                 msgbox->exec();
                 return;
             }
@@ -1089,14 +1091,14 @@ void MainWindow::addFriendToDatabase(QString name){
     qDebug()<<name;
     if(success4){
         if(query.size()==0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
             msgbox->exec();
             return;
         }
         else{
             while (query.next()) {
                 if(query.record().value("emp_id").toString().isEmpty()){
-                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
                     msgbox->exec();
                     return;
                 }
@@ -1111,7 +1113,7 @@ void MainWindow::addFriendToDatabase(QString name){
     }
     else {
         qDebug()<<"查询失败";
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
         msgbox->exec();
         return;
     }
@@ -1145,11 +1147,11 @@ void MainWindow::addFriendToDatabase(QString name){
 //        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 //        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
 //        friendListWidget->insertItem(i,add_item);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("发送请求成功！"));
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("发送请求成功！"),this);
         msgbox->exec();
     }
     else{
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("添加好友失败！"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("添加好友失败！"),this);
         msgbox->exec();
     }
 }
@@ -1164,7 +1166,7 @@ void MainWindow::inforDlgaddFriend(QString name){
     else{
         while (query.next()) {
             if(query.record().value("friend_nickname").toString()==name){
-                MsgBox *msgbox = new MsgBox(2,QStringLiteral("已经是你的好友了"));
+                MsgBox *msgbox = new MsgBox(2,QStringLiteral("已经是你的好友了"),this);
                 msgbox->exec();
                 return;
             }
@@ -1179,14 +1181,14 @@ void MainWindow::inforDlgaddFriend(QString name){
     qDebug()<<name;
     if(success4){
         if(query.size()==0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在！"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在！"),this);
             msgbox->exec();
             return;
         }
         else{
             while (query.next()) {
                 if(query.record().value("emp_id").toString().isEmpty()){
-                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在！"));
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在！"),this);
                     msgbox->exec();
                     return;
                 }
@@ -1201,7 +1203,7 @@ void MainWindow::inforDlgaddFriend(QString name){
     }
     else {
         qDebug()<<"查询失败";
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在!"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在!"),this);
         msgbox->exec();
         return;
     }
@@ -1235,11 +1237,11 @@ void MainWindow::inforDlgaddFriend(QString name){
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
         friendListWidget->insertItem(i,add_item);
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"));
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"),this);
         msgbox->exec();
     }
     else{
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("添加好友失败！"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("添加好友失败！"),this);
         msgbox->exec();
     }
 }
@@ -1259,10 +1261,17 @@ void MainWindow::HeadClickedSlot(){
 
 //显示添加好友窗口槽函数
 void MainWindow::showAddfriendWidget(){
-    friendInputDlg *friendAdd = new friendInputDlg();
-    connect(friendAdd,SIGNAL(sendNameToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
-    friendAdd->show();
 
+        if(AddFriendFlag)//如果存在
+        {
+//            MsgBox *msgbox = new MsgBox(4,QStringLiteral("已有一个添加好友窗口哟！"),this);
+//            msgbox->exec();
+        }else{
+            friendInputDlg *friendAdd = new friendInputDlg();
+            connect(friendAdd,SIGNAL(sendNameToMain(QString)),this,SLOT(addFriendToDatabase(QString)));
+            friendAdd->show();
+            AddFriendFlag = 1;
+        }
 }
 
 
@@ -1271,14 +1280,31 @@ void MainWindow::on_pushButton_4_clicked()
     QClipboard *clipboard = QApplication::clipboard();
     QString originalText = clipboard->text().section("&&",1,1);
     if(originalText.startsWith("{",Qt::CaseSensitive)){
+        MsgBox *msgbox = new MsgBox(1,QStringLiteral("是否读取剪贴板中的链接信息？"),this);
+        int nRes = msgbox->exec();
+        if (nRes == QDialog::Accepted){
         LinkInsert(originalText);
-        qDebug()<<originalText;
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("已读取链接信息！"));
-        msgbox->exec();
+//        qDebug()<<originalText;
+//        MsgBox *msgbox = new MsgBox(4,QStringLiteral("已读取链接信息！"),this);
+//        msgbox->exec();
+        }else{
+            if(LinkInsertFlag){
+            }else{
+            linkDialog = new DelinkDialog();
+            connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
+            linkDialog->show();
+            LinkInsertFlag = 1;
+            }
+
+        }
     }else{
-    linkDialog = new DelinkDialog();
-    connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
-    linkDialog->show();
+        if(LinkInsertFlag){
+        }else{
+        linkDialog = new DelinkDialog();
+        connect(linkDialog,SIGNAL(sendLinkToMain(QString)),this,SLOT(LinkInsert(QString)));
+        linkDialog->show();
+        LinkInsertFlag = 1;
+        }
     }
 }
 
@@ -1398,7 +1424,7 @@ void MainWindow::on_pushButton_8_clicked()
 //已加密文件批量删除按钮
 void MainWindow::on_pushButton_5_clicked()
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
     int flag = 0;
@@ -1429,10 +1455,10 @@ void MainWindow::on_pushButton_5_clicked()
          }
         on_pushButton_8_clicked();
         if(flag == 1){
-            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"));
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"),this);
             msgbox->exec();
         }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目"),this);
             msgbox->exec();
         }
         flag = 0;
@@ -1468,7 +1494,7 @@ void MainWindow::on_pushButton_6_clicked()
             grpDlg = new groupSendDialog();
             grpDlg->show();
         }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"),this);
             msgbox->exec();
         }
         flag = 0;
@@ -1476,7 +1502,7 @@ void MainWindow::on_pushButton_6_clicked()
 
 //已加密文件单独删除按钮
 void MainWindow::on_deleteBtn_clicked(){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已加密条目吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已加密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
         QPushButton* button = qobject_cast<QPushButton*>(sender());
@@ -1490,7 +1516,7 @@ void MainWindow::on_deleteBtn_clicked(){
         QSqlQuery query(db);
         bool success = query.exec("delete from varticle where article_id = '"+name+"'");
         if(success){
-            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已加密条目！"));
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已加密条目！"),this);
             msgbox->exec();
         }
 
@@ -1508,7 +1534,7 @@ void MainWindow::on_deleteBtn_clicked(){
 }
 //已解密文件单独删除按钮
 void MainWindow::on_deleteBtn2_clicked(){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已解密条目吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已解密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
             QPushButton* button = qobject_cast<QPushButton*>(sender());
@@ -1521,7 +1547,7 @@ void MainWindow::on_deleteBtn2_clicked(){
             QSqlQuery query(db);
             bool success = query.exec("delete from Decryption where file_id = '"+name+"'");
             if(success){
-                MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已解密条目！"));
+                MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已解密条目！"),this);
                 msgbox->exec();
             }
 
@@ -1739,7 +1765,7 @@ void MainWindow::FileIsAllowed(){
                      QVBoxLayout *newVbox = new QVBoxLayout();
                      newVbox->addWidget(newScrollArea);
                      decryptionViewController->setLayout(newVbox);
-                     MsgBox *msgbox = new MsgBox(4,QStringLiteral("文件解密同意并成功解密"));
+                     MsgBox *msgbox = new MsgBox(4,QStringLiteral("文件解密同意并成功解密"),this);
                      msgbox->exec();
                  }
                  else{
@@ -1801,7 +1827,7 @@ void MainWindow::NumDown(){
 //已解密文件批量删除按钮
 void MainWindow::on_pushButton_7_clicked()
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已解密条目吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已解密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
     int flag = 0;
@@ -1832,10 +1858,10 @@ void MainWindow::on_pushButton_7_clicked()
          }
         on_pushButton_9_clicked();
         if(flag == 1){
-            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"));
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"),this);
             msgbox->exec();
         }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
             msgbox->exec();
         }
         flag = 0;
@@ -1946,7 +1972,7 @@ void MainWindow::LinkInsert(QString link){
         }
     }
     if(Link_empid == NULL){
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("无效链接！"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("无效链接！"),this);
         msgbox->exec();
         return;
     }
@@ -2027,7 +2053,7 @@ void MainWindow::LinkInsert(QString link){
 }
 //信号槽：接收到解密线程发送的解密失败信号
 void MainWindow::RecDecryptionFailed(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件解密失败"));
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件解密失败"),this);
     msgbox->exec();
     decryptionFlag=1;
 }
@@ -2059,7 +2085,7 @@ void MainWindow::on_pushButton_12_clicked()
         QImage img;        //加载图像
         if(!(img.load(m_fileName)))
         {
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("打开图像失败！"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("打开图像失败！"),this);
             msgbox->exec();
             return;
         }
@@ -2069,10 +2095,10 @@ void MainWindow::on_pushButton_12_clicked()
         QString originalText = strQRCode.section("&&",1,1);
         if(originalText.startsWith("{",Qt::CaseSensitive)){
             LinkInsert(originalText);
-            MsgBox *msgbox = new MsgBox(4,QStringLiteral("已读取二维码信息！"));
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("已读取二维码信息！"),this);
             msgbox->exec();
         }else{
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("二维码读取失败！"));
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("二维码读取失败！"),this);
             msgbox->exec();
         }
     }
@@ -2166,7 +2192,7 @@ void MainWindow::on_pushButton_13_clicked()
 
 void MainWindow::ShowNewDownDialog(QString id){
     qDebug()<<"shoudao";
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认下载这一待解密文件吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认下载这一待解密文件吗？"),this);
     int reply = msgbox->exec();
         if(reply == QDialog::Accepted){
             //跳转到解密页面，开始下载
@@ -2188,7 +2214,7 @@ void MainWindow::ShowNewDownDialog(QString id){
         }
 }
 void MainWindow::closeEvent(QCloseEvent *event){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"));
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"),this);
     int reply = msgbox->exec();
     if(reply == QDialog::Accepted){
         event->accept();
@@ -2261,7 +2287,7 @@ void MainWindow::FriendListWidgetHide(){
 }
 
 void MainWindow::internet_Disconnected(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"));
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("网络连接错误！"),this);
     msgbox->exec();
 }
 

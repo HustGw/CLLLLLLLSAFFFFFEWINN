@@ -109,7 +109,7 @@ void shareDialog::on_pushButton_copy_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textEdit->toPlainText());
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("拷贝成功！"));
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("拷贝成功！"),this);
     ui->label_8->setText("分享链接已复制！");
     msgbox->exec();
 }
@@ -119,7 +119,7 @@ void shareDialog::on_pushButton_sav_clicked()
     QString filename1 = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Images (*.png)")); //选择路径
     QScreen *screen = QGuiApplication::primaryScreen();
     screen->grabWindow(ui->label_2->winId()).save(filename1);
-    MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"));
+    MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"),this);
     ui->label_8->setText("二维码已保存！");
     msgbox->exec();
 }

@@ -64,9 +64,16 @@
 #include <enitemthread.h>
 #include <encryptthread.h>
 
+
+
 namespace Ui {
 class MainWindow;
 }
+extern int AddFriendFlag;
+extern int LinkInsertFlag;
+extern int findecrypt_flag;//已解密全选判断变量
+extern int finencrypt_flag;//已加密全选判断变量
+extern int DeSelect_flag;//解密全选判断变量
 extern QString User_ID;
 extern QString URL;
 extern int threadNum;

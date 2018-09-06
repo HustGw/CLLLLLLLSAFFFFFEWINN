@@ -11,7 +11,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtMath>
-
+extern int LinkInsertFlag;
 class DelinkDialog : public QDialog
 {
     Q_OBJECT
@@ -33,6 +33,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
+    void closeEvent(QCloseEvent * event);
 private slots:
     void cancel();
     void sendLink();

@@ -16,7 +16,7 @@ class MsgBox : public QDialog
 {
     Q_OBJECT
 public:
-    MsgBox(int style,QString text);
+    MsgBox(int style,QString text,QWidget* parent= 0);
     ~MsgBox(void);
 public:
     QPushButton *okBtn;

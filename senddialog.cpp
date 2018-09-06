@@ -165,7 +165,7 @@ void sendDialog::on_pushButton_trans_clicked()
                 }
             }
         }
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"));
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
         msgbox->exec();
         this->close();
     }

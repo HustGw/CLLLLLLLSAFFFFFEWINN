@@ -341,12 +341,12 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                else if(content.contains("invalid",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::information(this,"警告","验证码失败",QMessageBox::Ok);
+                                    QMessageBox::warning(this,"警告","验证码失败",QMessageBox::Ok);
 
 
                                }
                                else{
-                                   QMessageBox::information(this,"警告","注册成功",QMessageBox::Ok);
+                                   QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
                                }
                            }
 
@@ -358,7 +358,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                qDebug()<<"获取验证码";
                if(content.contains("success",Qt::CaseSensitive))
                {
-                   QMessageBox::information(this,"警告","验证码已发送！",QMessageBox::Ok);
+                   QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
                }else{
                     QMessageBox::information(this,"警告","验证码发送失败！",QMessageBox::Ok);
                }
@@ -425,7 +425,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
 
                                }
                                else{
-                                   QMessageBox::information(this,"警告","注册成功",QMessageBox::Ok);
+                                   QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
                                }
                            }
 
