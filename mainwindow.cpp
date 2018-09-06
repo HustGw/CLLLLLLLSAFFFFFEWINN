@@ -323,6 +323,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
      connect(recThread,SIGNAL(thread_Disconnected()),this,SLOT(internet_Disconnected()));
+     connect(recThread,SIGNAL(ReqIsIgnored()),this,SLOT(FileIsIgnored()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
      //connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
@@ -2321,6 +2322,40 @@ void MainWindow::NewFriendAgree(){
             friendListWidget->insertItem(count,add_item);
             count++;
         }
+    }
+
+}
+
+void MainWindow::FileIsIgnored(){
+    //查询数据库找到当前状态为4的数据
+    QSqlQuery query(db);
+    QString DeleteID;
+    bool success = query.exec("select * from Decryption where oemp_id = '"+User_ID+"' and status = 4");
+    if(!success){
+        qDebug()<<"MainWindow:FileIsIgnore查询失败";
+        return;
+    }else{
+        while(query.next()){
+            DeleteID = query.record().value("id").toString();
+            DecryptionItem *d1 = ui->MidStaWidget->findChild<DecryptionItem *>(DeleteID+"decryption");
+            if(d1 ==NULL){
+                continue;
+                qDebug()<<"FileIsIgnored:查找Item失败";
+            }
+            else{
+                //找到被忽略的Item,并删除Item
+                delete d1;
+            }
+        }
+        //在删除完成后重新布局
+        delete decryptionViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setLayout(decryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(newScrollArea);
+        decryptionViewController->setLayout(newVbox);
     }
 
 }

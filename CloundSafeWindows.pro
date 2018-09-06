@@ -36,7 +36,7 @@ LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLL
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
-#LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 

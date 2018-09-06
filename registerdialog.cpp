@@ -41,28 +41,28 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
                "QPushButton:hover{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
-   ui->codeBtn->setStyleSheet(                 //调整登录按钮样式
+   ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->closeBtn->setStyleSheet(               //调整关闭按钮样式
                "QPushButton{border-image: url(:/new/mainwindow/pictures/delete_button.png);border:none;background-color:#EEF0F5;}"
                "QPushButton:hover{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
-   ui->nichengLineEdit->setStyleSheet(                 //调整登录按钮样式
+   ui->nichengLineEdit->setStyleSheet(                 //调整昵称输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->passwardLineEdit->setStyleSheet(                 //调整登录按钮样式
+   ui->passwardLineEdit->setStyleSheet(                 //调整密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->passwardLineEdit_2->setStyleSheet(                 //调整登录按钮样式
+   ui->passwardLineEdit_2->setStyleSheet(                 //调整确认密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->userLineEdit->setStyleSheet(                 //调整登录按钮样式
+   ui->userLineEdit->setStyleSheet(                 //调整手机号输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->email->setStyleSheet(                 //调整登录按钮样式
+   ui->email->setStyleSheet(                 //调整邮箱输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->code->setStyleSheet(                 //调整登录按钮样式
+   ui->code->setStyleSheet(                 //调整验证码样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
 
@@ -99,15 +99,18 @@ void registerDialog::on_signBtn_clicked()
    QString nicheng=ui->nichengLineEdit->text();//获取昵称
    QString email=ui->email->text();
    if(userName=="" || passward==""|| nicheng==""){//判断用户名、密码是否为空，为空弹出警告
+       if(passward != passward_2){
+           ui->passwardAlert->setVisible(true);
+       }
        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
    }
    else{
-       if(QValidator::Acceptable!=v.validate(userName,pos)){
-           ui->userAlert->setVisible(true);
-       }else if(QValidator::Acceptable!=v2.validate(email,pos)){
-           ui->emailAlert->setVisible(true);
-       }else if(passward!=passward_2){
+       if(passward != passward_2){
            ui->passwardAlert->setVisible(true);
+       }else if(QValidator::Acceptable!=v.validate(userName,pos)){
+           ui->userAlert->setVisible(true);
+       }else if(email != "" && (QValidator::Acceptable!=v2.validate(email,pos))){
+           ui->emailAlert->setVisible(true);
        }else if(ui->checkBox->isChecked()==true){
            //http 判断手机号是否注册
            QNetworkRequest request;
@@ -138,93 +141,11 @@ void registerDialog::on_signBtn_clicked()
            postData.append(ui->code->text());//
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
            */
+       }else{
+           QMessageBox::information(this,"警告","您未阅读并接受《云加密用户协议》！",QMessageBox::Ok);
        }
    }
 }
-
-//void registerDialog::on_userLineEdit_textChanged()
-//{
-//    //用户名输入框文本变化的响应
-
-//    ui->userLineEdit->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_userLineEdit_editingFinished()
-//{
-//    //用户名输入框停止输入的响应
-
-//    ui->userLineEdit->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
-
-//void registerDialog::on_passwardLineEdit_textChanged()
-//{
-//    //密码输入框文本变化的响应
-
-//    ui->passwardLineEdit->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_passwardLineEdit_editingFinished()
-//{
-//    //密码输入框停止输入的响应
-
-//    ui->passwardLineEdit->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
-
-//void registerDialog::on_passwardLineEdit_2_textChanged()
-//{
-//    //确认密码框文本变化的响应
-
-//    ui->passwardLineEdit_2->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_passwardLineEdit_2_editingFinished()
-//{
-//    //确认密码框停止输入的响应
-
-//    ui->passwardLineEdit_2->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
-
-//void registerDialog::on_nichengLineEdit_textChanged()
-//{
-//    //昵称输入框文本变化的响应
-
-//    ui->nichengLineEdit->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_nichengLineEdit_editingFinished()
-//{
-//    //昵称输入框停止输入的响应
-
-//    ui->nichengLineEdit->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
-
-//void registerDialog::on_email_textChanged()
-//{
-//    //邮箱输入框文本变化的响应
-
-//    ui->email->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_email_editingFinished()
-//{
-//    //邮箱输入框停止输入的响应
-
-//    ui->email->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
-
-//void registerDialog::on_code_textChanged()
-//{
-//    //验证码框文本变化的响应
-
-//    ui->code->setStyleSheet(tr("border:1px solid rgb(46,130,225);border-radius:4px;"));
-//}
-
-//void registerDialog::on_code_editingFinished()
-//{
-//    //验证码框停止输入的响应
-
-//    ui->code->setStyleSheet(tr("border:1px solid rgb(214,216,221);border-radius:4px;"));
-//}
 
 void registerDialog::on_codeBtn_clicked(){
     //http 获取验证码
@@ -242,9 +163,6 @@ void registerDialog::on_codeBtn_clicked(){
 //http 返回响应
 void registerDialog::finishedSlot(QNetworkReply *reply)
 {
-
-
-
 
     if (reply->error() == QNetworkReply::NoError)
     {
@@ -342,11 +260,14 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                {
                                    //验证码错误。
                                     QMessageBox::warning(this,"警告","验证码失败",QMessageBox::Ok);
+                                    ui->codeAlert->setVisible(true);
 
 
                                }
                                else{
                                    QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
+                                   this->close();
+
                                }
                            }
 
@@ -360,7 +281,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                {
                    QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
                }else{
-                    QMessageBox::information(this,"警告","验证码发送失败！",QMessageBox::Ok);
+                    QMessageBox::warning(this,"警告","验证码发送失败！",QMessageBox::Ok);
                }
                return;
 
@@ -406,26 +327,28 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                if(content.contains("phonenull",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::information(this,"警告","电话号不存在",QMessageBox::Ok);
+                                    QMessageBox::warning(this,"警告","电话号不存在",QMessageBox::Ok);
 
 
                                }
                                else if(content.contains("passworderror",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::information(this,"警告","密码错误",QMessageBox::Ok);
+                                    QMessageBox::warning(this,"警告","密码错误",QMessageBox::Ok);
 
 
                                }
                                else if(content.contains("freezing",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::information(this,"警告","账号已冻结",QMessageBox::Ok);
+                                    QMessageBox::warning(this,"警告","账号已冻结",QMessageBox::Ok);
 
 
                                }
                                else{
                                    QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
+                                   this->close();
+
                                }
                            }
 
@@ -447,7 +370,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                 postData_2.append(ui->nichengLineEdit->text());
                 QNetworkReply* reply_2 = m_accessManagerRegister->post(request_2,postData_2);
             }else{
-                QMessageBox::information(this,"警告","手机号已注册！",QMessageBox::Ok);
+                QMessageBox::warning(this,"警告","手机号已注册！",QMessageBox::Ok);
             }
             return;
            }
@@ -518,5 +441,54 @@ void registerDialog::mouseReleaseEvent(QMouseEvent *qevent)
 {
     //设置鼠标为未被按下
     mouse_press = false;
+}
+
+void registerDialog::on_passwardLineEdit_textChanged(){
+    QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
+    QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
+
+    if(passward_2 != ""){
+        if(passward != passward_2){
+            ui->passwardAlert->setVisible(true);
+        }else{
+            ui->passwardAlert->setVisible(false);
+        }
+    }
+}
+
+void registerDialog::on_passwardLineEdit_editingFinished(){
+    QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
+    QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
+
+    if(passward_2 != ""){
+        if(passward != passward_2){
+            ui->passwardAlert->setVisible(true);
+        }else{
+            ui->passwardAlert->setVisible(false);
+        }
+    }
+}
+
+void registerDialog::on_passwardLineEdit_2_textChanged(){
+    QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
+    QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
+
+    if(passward != passward_2){
+        ui->passwardAlert->setVisible(true);  //两次密码不一样，出现提示行
+    }else{
+        ui->passwardAlert->setVisible(false);
+    }
+}
+
+void registerDialog::on_passwardLineEdit_2_editingFinished(){
+
+    QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
+    QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
+
+    if(passward != passward_2){
+        ui->passwardAlert->setVisible(true);  //两次密码不一样，出现提示行
+    }else{
+        ui->passwardAlert->setVisible(false);
+    }
 }
 
