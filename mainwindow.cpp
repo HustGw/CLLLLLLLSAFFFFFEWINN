@@ -1467,7 +1467,7 @@ void MainWindow::on_pushButton_5_clicked()
 
     }
 }
-//批量分享按钮响应
+//批量分传输按钮响应
 void MainWindow::on_pushButton_6_clicked()
 {
         int flag = 0;
@@ -1535,7 +1535,7 @@ void MainWindow::on_deleteBtn_clicked(){
 }
 //已解密文件单独删除按钮
 void MainWindow::on_deleteBtn2_clicked(){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已解密条目吗？"),this);
+    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这一已解密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
             QPushButton* button = qobject_cast<QPushButton*>(sender());
@@ -1551,7 +1551,6 @@ void MainWindow::on_deleteBtn2_clicked(){
                 MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已解密条目！"),this);
                 msgbox->exec();
             }
-
             delete finishViewController2->layout();
             QWidget *newItemWidget = new QWidget();
            // QScrollArea *newScrollArea = new QScrollArea();
@@ -1563,7 +1562,42 @@ void MainWindow::on_deleteBtn2_clicked(){
             finishViewController2->setLayout(newVbox);
         }
         else if (nRes == QDialog::Rejected){
+    }else if(nRes == 5){
+        QPushButton* button = qobject_cast<QPushButton*>(sender());
+        QString name = button->objectName();
+
+        FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(name);
+        delete f2;
+        qDebug()<<name;
+
+        QSqlQuery query(db);
+        bool success1 = query.exec("select * from Decryption where file_id = '"+name+"'");
+        if(success1){
+            while(query.next()){
+                QString address = "D:/CloundSafeWindows/file/" +query.record().value("file_name").toString();
+                qDebug()<<address;
+                QFileInfo d_file(address);
+                if(d_file.isFile()){
+                QFile::remove(address);
+                }
+            }
         }
+        bool success = query.exec("delete from Decryption where file_id = '"+name+"'");
+        if(success){
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已解密条目及文件！"),this);
+            msgbox->exec();
+        }
+
+        delete finishViewController2->layout();
+        QWidget *newItemWidget = new QWidget();
+       // QScrollArea *newScrollArea = new QScrollArea();
+        newItemWidget->setLayout(finishViewController2->vbox);
+        finScrollArea->setWidget(newItemWidget);
+        finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(finScrollArea);
+        finishViewController2->setLayout(newVbox);
+    }
 }
 //已解密文件刷新按钮
 void MainWindow::on_pushButton_9_clicked()
@@ -1828,11 +1862,11 @@ void MainWindow::NumDown(){
 //已解密文件批量删除按钮
 void MainWindow::on_pushButton_7_clicked()
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已解密条目吗？"),this);
+    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这些已解密条目吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
-    int flag = 0;
-    QString file_id;
+        int flag = 0;
+        QString file_id;
         QSqlQuery query3(db);
         bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
         if(!success){
@@ -1843,9 +1877,7 @@ void MainWindow::on_pushButton_7_clicked()
             while(query3.next())
             {
                 file_id = query3.record().value("file_id").toString();
-
                 QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
-
                 if(checkcheck->isChecked()){
                     flag = 1;
                     QSqlQuery query9(db);
@@ -1854,7 +1886,6 @@ void MainWindow::on_pushButton_7_clicked()
                 }
                 FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
                 delete f2;
-
             }
          }
         on_pushButton_9_clicked();
@@ -1866,6 +1897,45 @@ void MainWindow::on_pushButton_7_clicked()
             msgbox->exec();
         }
         flag = 0;
+    }else if(nRes == 5){
+        int flag = 0;
+        QString file_id;
+        QSqlQuery query3(db);
+        bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+        if(!success){
+            qDebug() << "查询密文失败";
+            return;
+        }else{
+            qDebug()<<"查询成功";
+            while(query3.next())
+            {
+                file_id = query3.record().value("file_id").toString();
+                QString d_address ="D:/CloundSafeWindows/file/" + query3.record().value("file_name").toString();
+                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
+                if(checkcheck->isChecked()){
+                    flag = 1;
+                    QSqlQuery query9(db);
+                    query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                    QFileInfo d_file(d_address);
+                    if(d_file.isFile()){
+                        QFile::remove(d_address);
+                    }
+                    RequestNum--;
+                }
+                FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+                delete f2;
+             }
+         }
+         on_pushButton_9_clicked();
+         if(flag == 1){
+             MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目及文件！"),this);
+             msgbox->exec();
+         }else if(flag == 0){
+             MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
+             msgbox->exec();
+         }
+         flag = 0;
     }else{
 
     }
@@ -2338,7 +2408,7 @@ void MainWindow::FileIsIgnored(){
         while(query.next()){
             DeleteID = query.record().value("id").toString();
             DecryptionItem *d1 = ui->MidStaWidget->findChild<DecryptionItem *>(DeleteID+"decryption");
-            if(d1 ==NULL){
+            if(d1 == NULL){
                 continue;
                 qDebug()<<"FileIsIgnored:查找Item失败";
             }
@@ -2357,5 +2427,11 @@ void MainWindow::FileIsIgnored(){
         newVbox->addWidget(newScrollArea);
         decryptionViewController->setLayout(newVbox);
     }
+
+}
+
+
+void MainWindow::on_pushButton_groupshare_clicked()
+{
 
 }

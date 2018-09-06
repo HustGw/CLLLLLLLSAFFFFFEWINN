@@ -23,6 +23,7 @@ public:
     QPushButton *cancleBtn;
     QPushButton *closeBtn;
     QPushButton * msgBtn;
+    QPushButton *deleteBtn;
     QLabel * titleLabel;
     QLabel *askLabel;
     QLabel * titleText;
@@ -38,5 +39,6 @@ public slots:
     void okBtn_press();
     void cancleBtn_press();
     void closeBtn_press();
+    void deletBtn_press();
 };
 #endif // MSGBOX_H
