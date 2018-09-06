@@ -27,7 +27,7 @@ sendDialog::sendDialog(QWidget *parent) :
     //QListWidget *friendList = new QListWidget(ui->listWidget);
     //friendList->setGeometry(0,0,251,351);
     //ui->listWidget->setGeometry(0,0,251,351);
-    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
+    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");
     if(!friendSelSuc){
         qDebug()<<"查询好友失败";
         return;
