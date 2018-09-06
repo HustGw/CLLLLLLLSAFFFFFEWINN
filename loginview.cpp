@@ -34,7 +34,7 @@ void LoginView::on_LoginBtn_clicked()
         accept();
     }
     else{
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("用户名或密码错误！"));
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("用户名或密码错误！"),this);
         msgbox->exec();
     }
 }

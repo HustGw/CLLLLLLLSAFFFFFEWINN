@@ -60,12 +60,16 @@ void DelinkDialog::sendLink(){
         emit sendLinkToMain(link);
         this->accept();
 }
-
+void DelinkDialog::closeEvent(QCloseEvent * event){
+    LinkInsertFlag = 0;
+}
 void DelinkDialog::cancel(){
+    LinkInsertFlag = 0;
     this->accept();
 }
 void DelinkDialog::closeBtn_press()
 {
+    LinkInsertFlag = 0;
     close();
 }
 void DelinkDialog::mousePressEvent(QMouseEvent *event){

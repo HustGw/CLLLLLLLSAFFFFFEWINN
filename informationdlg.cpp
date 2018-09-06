@@ -65,11 +65,9 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         CleanStatusLabel->hide();
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
-       // scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
         scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         scrollLayout = new QVBoxLayout();
         scrollArea->setWidget(ItemWidget);
-        //scrollLayout->addWidget(titleLabel);
         scrollLayout->addWidget(scrollArea);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
@@ -98,22 +96,13 @@ void informationDlg::recvReq(){
                     informationNum--;//发送数量减少信号
                     emit InforNumDecrease(); //发送信号通知InformationNum更新
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
-//                    delete q1;
-//                    //删除成功重新布局
-//                    delete this->layout();
-//                    QWidget *newItemWidget = new QWidget();
-//                    newItemWidget->setLayout(this->vbox);
-//                    scrollArea->setWidget(newItemWidget);
-//                    QVBoxLayout *newVbox = new QVBoxLayout();
-//                    newVbox->addWidget(scrollArea);
-//                    this->setLayout(newVbox);
                      q1->allowBtn->setEnabled(false);
                      q1->allowBtn->setText("已允许");
                      q1->ignoreBtn->hide();
                   //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
                 }
                 else{
-                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"));
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"),this);
                     msgbox->exec();
                 }
             }
@@ -157,7 +146,7 @@ void informationDlg::ignoreReq(){
                     q1->ignoreBtn->setText("已忽略");
                 }
                 else{
-                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"));
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"),this);
                     msgbox->exec();
                 }
             }
@@ -243,31 +232,100 @@ void informationDlg::setItem(){
         qDebug()<<"查询数据库失败";
     }
     QSqlQuery friendQuery(db);
-    bool friendSuccess = friendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0' and is_solved = '0' order by create_time DESC");
+    bool friendSuccess = friendQuery.exec("select * from friend where friend_id = '"+User_ID+"' and is_solved = '0' order by create_time DESC");
     if(!friendSuccess){
         qDebug()<<"初始化好友列表失败";
     }
     else{
         while(friendQuery.next()){
-            count++;
-            //将查询到好友申请添加到InforDlg中
-            InformationItem *f1 = new InformationItem();
-            f1->InforKindsLabel->setText("好友申请");
-            QString userNickName = friendQuery.record().value("user_nickname").toString();
-            QString t = userNickName+"添加您为好友";
-            f1->titleLabel->setText(t);
-            f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
-            f1->allowBtn->setText("添加好友");
-            f1->ignoreBtn->hide();
-            f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
-            f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
-            connect(f1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
-            vbox->addWidget(f1);
+            if(friendQuery.record().value("status").toString()=="0"){
+                count++;
+                //将查询到好友申请添加到InforDlg中
+                InformationItem *f1 = new InformationItem();
+                f1->InforKindsLabel->setText("好友申请");
+                QString userNickName = friendQuery.record().value("user_nickname").toString();
+                QString t = userNickName+"添加您为好友";
+                f1->titleLabel->setText(t);
+                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->allowBtn->setText("允许");
+                f1->ignoreBtn->setText("忽略");
+                f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
+                f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
+                f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
+                connect(f1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
+                connect(f1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
+                vbox->addWidget(f1);
+            }
+            else if(friendQuery.record().value("status").toString()=="1"){
+                count++;
+                InformationItem *f1 = new InformationItem();
+                f1->InforKindsLabel->setText("好友申请");
+                QString userNickName = friendQuery.record().value("user_nickname").toString();
+                QString t = userNickName+"添加您为好友";
+                f1->titleLabel->setText(t);
+                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->allowBtn->setText("已允许");
+                f1->allowBtn->setEnabled(false);
+                f1->ignoreBtn->hide();
+                f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
+                f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
+                vbox->addWidget(f1);
+            }
+            else if(friendQuery.record().value("status").toString()=="2"){
+                count++;
+                InformationItem *f1 = new InformationItem();
+                f1->InforKindsLabel->setText("好友申请");
+                QString userNickName = friendQuery.record().value("user_nickname").toString();
+                QString t = userNickName+"添加您为好友";
+                f1->titleLabel->setText(t);
+                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->ignoreBtn->setText("已忽略");
+                f1->ignoreBtn->setEnabled(false);
+                f1->ignoreBtn->hide();
+                f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
+                f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
+                vbox->addWidget(f1);
+            }
         }
 
 
 
     }
+    //设置消息种类为文件传输
+    QSqlQuery transforQuery(db);
+    bool transforSuccess = transforQuery.exec("select * from Decryption where oemp_id = '"+User_ID+"' and apply_time<> '0' and is_solved = '0' order by apply_time DESC");
+    if(!transforSuccess){
+        qDebug()<<"查询消息种类失败";
+    }
+    else{
+        while(transforQuery.next()){
+            count++;
+            //将查询到的传输消息添加到InforDlg中
+            InformationItem *m1 = new InformationItem();
+            QString m_id = transforQuery.record().value("emp_id").toString();
+            QString name;
+            QString fileName = transforQuery.record().value("file_name").toString();
+            QString time = transforQuery.record().value("apply_time").toString();
+            QSqlQuery nameQuery(db);
+            bool nameSuccess = nameQuery.exec("select * from employee where emp_id = '"+m_id+"'");
+            if(!nameSuccess){
+                qDebug()<<"infordlg:查找用户名失败";
+            }
+            else{
+                while(nameQuery.next()){
+                    name = nameQuery.record().value("emp_name").toString();
+                }
+            }
+            QString s = name+"传输文件"+fileName;
+            m1->InforKindsLabel->setText("文件传输");
+            m1->titleLabel->setText(s);
+            m1->timeLabel->setText(time);
+            m1->allowBtn->hide();
+            m1->ignoreBtn->hide();
+            vbox->addWidget(m1);
+        }
+    }
+
 }
 
 void informationDlg::CleanAllInfor(){
@@ -279,7 +337,7 @@ void informationDlg::CleanAllInfor(){
     if(!success){
         qDebug()<<"update failed!";
     }
-    bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_nickname ='"+User_ID+"'");
+    bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_id ='"+User_ID+"'");
     if(upFriSuc){
         qDebug()<<"update friend error";
     }
@@ -348,11 +406,13 @@ void informationDlg::NewFriend(){
                 m1->InforKindsLabel->setText("好友申请");
                 QString title = SendName+"添加您为好友";
                 m1->titleLabel->setText(title);
-                m1->ignoreBtn->hide();
-                m1->allowBtn->setText("添加好友");
+                m1->ignoreBtn->setText("忽略");
+                m1->allowBtn->setText("允许");
                 m1->setObjectName(query.record().value("id").toString()+"friendInfor");
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
+                m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"friendIgn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
+                connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
                 vbox->addWidget(m1);
                 delete bottomWidget->layout();
                 QWidget *newItemWidget = new QWidget();
@@ -381,6 +441,7 @@ void informationDlg::AddFriendRequest(){
         while (query.next()) {
             QString ID = query.record().value("id").toString();
             QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendBtn");
+            InformationItem *m1 = this->findChild<InformationItem *>(ID+"friendInfor");
             if(!pt)
                 return;
             if(pt==b1){
@@ -392,7 +453,10 @@ void informationDlg::AddFriendRequest(){
                     qDebug()<<"update friend failed";
                 }
                 FriendRequestCount--;
-                b1->setText("已添加");
+                FriendStatusNum--;
+                emit InforNumDecrease();
+                b1->setText("已允许");
+                m1->ignoreBtn->hide();
                 b1->setEnabled(false);
             }
         }
@@ -447,4 +511,36 @@ void informationDlg::paintEvent(QPaintEvent *event){
         painter.setPen(color);
         painter.drawPath(path);
     }
+}
+
+void informationDlg::AddFriendIgnore(){
+    QPushButton *pt = qobject_cast<QPushButton *>(sender());
+    QSqlQuery query(db);
+    bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
+    if(!success){
+        qDebug()<<"inforDlg:查询失败";
+        return;
+    }
+    else{
+        while(query.next()){
+            QString ID = query.record().value("id").toString();
+            QPushButton *b1 = this->findChild<QPushButton *>(ID+"friendIgn");
+            InformationItem *m1 = this->findChild<InformationItem *>(ID+"friendInfor");
+            if(!pt)
+                return;
+            if(pt==b1){
+                QSqlQuery updateQuery(db);
+                bool updateSuccess = updateQuery.exec("update friend set status = '2' where id = '"+ID+"'");
+                if(!updateSuccess){
+                    qDebug()<<"update friend failed";
+                }
+                emit InforNumDecrease();
+                FriendRequestCount--;//消息数量减一
+                FriendStatusNum--;
+                b1->setText("已忽略");
+                m1->allowBtn->hide();
+                b1->setEnabled(false);
+                    }
+                }
+        }
 }

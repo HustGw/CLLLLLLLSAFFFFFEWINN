@@ -11,6 +11,7 @@
 #include <QMouseEvent>
 #include <QtMath>
 #include <QPainter>
+#include <QSettings>
 
 extern QString LoginUserID;
 extern QString UserPhoneNum;
@@ -27,10 +28,10 @@ public:
     ~TcpClient();
 
     int flag;  //步骤
-    QPoint windowPos;
-    QPoint mousePos;
-    QPoint dPos;
-
+    bool remeberPasswd;
+    QString usersname;
+    QString passwd;
+    void savecfg();
 
 
 protected:
@@ -71,6 +72,8 @@ private slots:
     void finishedSlot(QNetworkReply *reply);
 
     void on_codeBtn_clicked();
+
+    void on_Rem_Passwd_clicked();
 
 private:
     Ui::TcpClient *ui;

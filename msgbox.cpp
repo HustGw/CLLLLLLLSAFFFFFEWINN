@@ -1,5 +1,5 @@
 #include "msgbox.h"
-MsgBox::MsgBox(int style,QString text)
+MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
 {
     this->resize(450,190);
 

@@ -11,7 +11,9 @@
 #include <mainwindow.h>
 extern int informationNum;
 extern int FriendArrayIndex;
-extern int FriendCount;
+extern int FriendCount;//废弃变量 无作用
+extern int FriendStatusNum;//记录status为0的记录数量
+extern int Agr_fiendCount;
 class InformationThread : public QThread
 {
     Q_OBJECT
@@ -24,9 +26,11 @@ public:
     void listenInfNum();//监听数据库文件数量
     void numDown();
     int getFriendNum();//获取好友数量
+    int AgreeFriendNum();//获取已同意请求好友数量
 signals:
     void InformationChanged();
     void NewFriendRequest();
+    void NewAgreeFriend();
 
 };
 

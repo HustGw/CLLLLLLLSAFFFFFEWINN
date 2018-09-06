@@ -20,6 +20,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 
+extern int AddFriendFlag;
 
 class friendInputDlg : public QDialog
 {

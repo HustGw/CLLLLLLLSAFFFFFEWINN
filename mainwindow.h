@@ -64,9 +64,16 @@
 #include <enitemthread.h>
 #include <encryptthread.h>
 
+
+
 namespace Ui {
 class MainWindow;
 }
+extern int AddFriendFlag;
+extern int LinkInsertFlag;
+extern int findecrypt_flag;//已解密全选判断变量
+extern int finencrypt_flag;//已加密全选判断变量
+extern int DeSelect_flag;//解密全选判断变量
 extern QString User_ID;
 extern QString URL;
 extern int threadNum;
@@ -164,19 +171,21 @@ private slots:
 
     void getFileID();
 
-    void OssDownLoadFile();
+    void OssDownLoadFile();//解密下载OSS文件
 
-    void ReceiveNewReq();
+    void ReceiveNewReq();//接收到新消息
 
-    void showAddfriendWidget();
+    void showAddfriendWidget();//显示或隐藏好友列表
 
-    void addFriendToDatabase(QString name);
+    void addFriendToDatabase(QString name);//添加好友槽函数
 
-    void HeadClickedSlot();
+    void HeadClickedSlot();//头像点击函数
 
     void HeadChanged();
 
-    void FileIsAllowed();
+    void FileIsAllowed();//请求同意槽函数
+
+    void FileIsIgnored();//请求忽略槽函数
 
     void ChangeItemBtnText(QString fileID);
 
@@ -231,7 +240,13 @@ private slots:
 
     void internet_Disconnected();
 
+
     void starEcpt(QString);
+
+    void RecvNewFriendReq();
+
+    void NewFriendAgree();//添加好友，对方同意函数
+
 
 protected:
     void closeEvent(QCloseEvent *event);

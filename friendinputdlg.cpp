@@ -77,6 +77,7 @@ void friendInputDlg::sendName(){
 void friendInputDlg::cancel(){
     this->accept();
     //取消关闭时断开数据库连接
+    AddFriendFlag = 0;
     ConnectionPool::closeConnection(db);
 
 }
@@ -111,6 +112,7 @@ void friendInputDlg::SearchFriend(){
 
     QSqlQuery query(db);
     QString name = inputLineEdit->text();
+    if(name.isEmpty()){
     QNetworkRequest request;
     request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Employee/FindUser.do"));
     QByteArray postData;
@@ -123,7 +125,7 @@ void friendInputDlg::SearchFriend(){
 //    }
 //    else{
 //        if(query.size()==0){
-//            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+//            MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
 //            msgbox->exec();
 //        }
 //        else{
@@ -164,17 +166,22 @@ void friendInputDlg::SearchFriend(){
 
 //    }
 
-
+    }else{
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请输入好友ID！"),this);
+        msgbox->exec();
+    }
 
 }
 void friendInputDlg::closeEvent(QCloseEvent *event){
     qDebug()<<"点击关闭按钮";
+    AddFriendFlag = 0;
     ConnectionPool::closeConnection(db);
 
 }
 
 void friendInputDlg::closeBtn_press(){
     close();
+    AddFriendFlag = 0;
     ConnectionPool::closeConnection(db);
 }
 
@@ -236,7 +243,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                             qDebug()<<ddd;
                             if(output==NULL){
                                 //好友不存在
-                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"));
+                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
                                 msgbox->exec();
                             }
                             else{

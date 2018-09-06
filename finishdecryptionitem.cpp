@@ -76,7 +76,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
        bool success = query.exec("select * from Decryption where file_id='" + name+"'");
 
        if(!success){
-           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"));
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"),this);
            msgbox->exec();
            return;
        }else{
@@ -97,7 +97,7 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
     QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where file_id='" + name+"'");
        if(!success){
-           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"));
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到路径"),this);
            msgbox->exec();
            return;
        }else{
