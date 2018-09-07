@@ -120,7 +120,8 @@ SOURCES += \
     QrSegment.cpp \
     groupsenddialog.cpp \
     msgbox.cpp \
-    resetDialog.cpp
+    resetDialog.cpp \
+    groupsharedialog.cpp
 
 
 
@@ -218,7 +219,8 @@ HEADERS += \
     QrSegment.hpp \
     groupsenddialog.h \
     msgbox.h \
-    resetDialog.h
+    resetDialog.h \
+    groupsharedialog.h
 
 
 
@@ -231,7 +233,8 @@ FORMS += \
     tcpclient.ui \
     sharedialog.ui \
     groupsenddialog.ui \
-    resetDialog.ui
+    resetDialog.ui \
+    groupsharedialog.ui
 
 DISTFILES += \
     Makefile

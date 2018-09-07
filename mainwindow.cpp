@@ -29,7 +29,7 @@ int RequsetIndex = 0;//数组的INDEX
 int FriendCount =0;
 QString FriendNickNameArray[50] = {};
 int FriendArrayIndex = 0;
-QString User_ID = NULL;
+QString User_ID = nullptr;
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
-
+    ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
 
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
@@ -363,9 +363,9 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_5:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
                          "QPushButton#pushButton_5:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
                          "QPushButton#pushButton { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
-                         "QPushButton#pushButton_6 { border-image: url(:/new/mainwindow/pictures/groupshare.png);}"
-                         "QPushButton#pushButton_6:hover { border-image: url(:/new/mainwindow/pictures/groupshare_hover.png);}"
-                         "QPushButton#pushButton_6:pressed { border-image: url(:/new/mainwindow/pictures/groupshare_pressed.png);}"
+                         "QPushButton#pushButton_groupshare { border-image: url(:/new/mainwindow/pictures/groupshare.png);}"
+                         "QPushButton#pushButton_groupshare:hover { border-image: url(:/new/mainwindow/pictures/groupshare_hover.png);}"
+                         "QPushButton#pushButton_groupshare:pressed { border-image: url(:/new/mainwindow/pictures/groupshare_pressed.png);}"
                          "QPushButton#pushButton_10 { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
                          "QPushButton#pushButton_11 { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
                          "QPushButton#pushButton_7 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
@@ -466,7 +466,6 @@ void MainWindow::on_OpenFileBtn_clicked()
     QString file_full,fPath,amfSize;
     qint64 fSize;
     double mfSize;
-    int fileNumFlag;
     QFileInfo fInfo;
     QFileDialog *selectFiles =new QFileDialog ();
     selectFiles ->setFileMode(QFileDialog::ExistingFiles);
@@ -768,7 +767,7 @@ void MainWindow::on_pushButton_3_clicked()
               while(query.next()){
                   QString fileID = query.record().value("id").toString();
                   QCheckBox *check = ui->MidStaWidget->findChild<QCheckBox*>(fileID+"Decheck");
-                  if(check!=NULL){//判断是否找到相应控件
+                  if(check!=nullptr){//判断是否找到相应控件
                       if(check->isChecked()){
                           QString deleteQuest = "delete from Decryption where id ='"+fileID+"'";
                           QSqlQuery queryDelete(db);
@@ -817,7 +816,7 @@ void MainWindow::on_pushButton_clicked()
         while(query.next()){
             QString m_ID = query.record().value("id").toString();
             QCheckBox *checkbox = ui->MidStaWidget->findChild<QCheckBox *>(m_ID+"Decheck");
-            if(checkbox==NULL){
+            if(checkbox==nullptr){
                 continue;
             }
             else{
@@ -918,7 +917,7 @@ void MainWindow::OssDownLoadFile(){
                     qDebug()<<fileID;
                     QString enkey_id = fileID;
          //         DepDownThread *downThread = new DepDownThread();
-                    if(f_proccess==NULL){
+                    if(f_proccess==nullptr){
                         qDebug()<<"progressBARISnull";
                         return;
                     }
@@ -1306,11 +1305,16 @@ void MainWindow::on_pushButton_4_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     QString originalText = clipboard->text().section("&&",1,1);
-    if(originalText.startsWith("{",Qt::CaseSensitive)){
+    if(originalText.startsWith("||",Qt::CaseSensitive)){
         MsgBox *msgbox = new MsgBox(1,QStringLiteral("是否读取剪贴板中的链接信息？"),this);
         int nRes = msgbox->exec();
         if (nRes == QDialog::Accepted){
-        LinkInsert(originalText);
+            QString split_file_id;
+            QStringList list = originalText.split("||");
+            for(int j = 1;j<list.count();j++){
+                split_file_id = list[j];
+                LinkInsert(split_file_id);
+            }
 //        qDebug()<<originalText;
 //        MsgBox *msgbox = new MsgBox(4,QStringLiteral("已读取链接信息！"),this);
 //        msgbox->exec();
@@ -1776,7 +1780,7 @@ void MainWindow::FileIsAllowed(){
              QString onlyID = query.record().value("id").toString();
              QString file_id = query.record().value("file_id").toString();
              DecryptionItem *f1 = ui->MidStaWidget->findChild<DecryptionItem *>(onlyID+"decryption");
-             if(f1==NULL){
+             if(f1==nullptr){
                  continue;
              }
              else{
@@ -2068,7 +2072,7 @@ void MainWindow::LinkInsert(QString link){
             Link_filesize = query.record().value("article_size").toString();
         }
     }
-    if(Link_empid == NULL){
+    if(Link_empid == nullptr){
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("无效链接！"),this);
         msgbox->exec();
         return;
@@ -2277,7 +2281,7 @@ void MainWindow::on_pushButton_13_clicked()
     else{
         finditem = item[0];
     }
-    if(finditem ==NULL){
+    if(finditem ==nullptr){
         qDebug()<<"查找失败！";
     }
     else{
@@ -2294,7 +2298,7 @@ void MainWindow::ShowNewDownDialog(QString id){
         if(reply == QDialog::Accepted){
             //跳转到解密页面，开始下载
             DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
-            if(m1==NULL){
+            if(m1==nullptr){
                 qDebug()<<"error";
             }
             else{
@@ -2310,10 +2314,40 @@ void MainWindow::ShowNewDownDialog(QString id){
 
         }
 }
+bool MainWindow::DeleteFileOrFolder( const QString& strPath )
+{
+    if( strPath.isEmpty() || !QDir().exists( strPath ) )
+        return false;
+    QFileInfo fileInfo( strPath );
+    if( fileInfo.isFile() )
+        QFile::remove( strPath );
+    else if( fileInfo.isDir() )
+    {
+        QDir qDir( strPath );
+        qDir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
+        QFileInfoList fileInfoLst = qDir.entryInfoList();
+        foreach( QFileInfo qFileInfo, fileInfoLst )
+        {
+            if( qFileInfo.isFile() )
+                qDir.remove( qFileInfo.absoluteFilePath() );
+            else
+            {
+                DeleteFileOrFolder( qFileInfo.absoluteFilePath() );
+                qDir.rmdir( qFileInfo.absoluteFilePath() );
+            }
+        }
+        qDir.rmdir( fileInfo.absoluteFilePath() );
+    }
+    return true;
+}
 void MainWindow::closeEvent(QCloseEvent *event){
     MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"),this);
     int reply = msgbox->exec();
     if(reply == QDialog::Accepted){
+        QString downPath = "D:/CloundSafeWindows/ykey//";
+        QString contentPath = "D:/CloundSafeWindows/content//";
+        DeleteFileOrFolder(downPath);
+        DeleteFileOrFolder(contentPath);
         event->accept();
     }else{
         event->ignore();
@@ -2434,7 +2468,7 @@ void MainWindow::FileIsIgnored(){
         while(query.next()){
             DeleteID = query.record().value("id").toString();
             DecryptionItem *d1 = ui->MidStaWidget->findChild<DecryptionItem *>(DeleteID+"decryption");
-            if(d1 == NULL){
+            if(d1 == nullptr){
                 continue;
                 qDebug()<<"FileIsIgnored:查找Item失败";
             }
@@ -2456,8 +2490,36 @@ void MainWindow::FileIsIgnored(){
 
 }
 
-
+//批量分享按钮
 void MainWindow::on_pushButton_groupshare_clicked()
 {
+    int flag = 0;
+    QString file_id_d;
+    QSqlQuery query3(db);
 
+    bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query3.next())
+        {
+            file_id_d = query3.record().value("article_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
+
+            if(checkcheck->isChecked()){
+                flag = 1;
+                file_id_list = file_id_list + "||" +file_id_d;
+                }
+            }
+        }
+    if(flag == 1){
+        grpShareDlg = new groupshareDialog();
+        grpShareDlg->show();
+    }else if(flag == 0){
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"),this);
+        msgbox->exec();
+    }
+    flag = 0;
 }

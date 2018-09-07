@@ -76,6 +76,7 @@ void groupSendDialog::getCheckedItems(){
     ui->label_2->setText(tr("已选择")+"<font color=green>"+QString::number(reciever)+"</font>"+tr("个收件人"));
 }
 void groupSendDialog::closeEvent(QCloseEvent *){
+        file_id_list.clear();
     ConnectionPool::closeConnection(db1);
 }
 
@@ -152,16 +153,19 @@ void groupSendDialog::on_pushButton_trans_clicked()
     }
     MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
     msgbox->exec();
+    file_id_list.clear();
     this->close();
 }
 
 void groupSendDialog::on_pushButton_close2_clicked()
 {
+    file_id_list.clear();
     this->close();
 }
 
 void groupSendDialog::on_pushButton_close_clicked()
 {
+    file_id_list.clear();
     this->close();
 }
 void groupSendDialog::paintEvent(QPaintEvent *event)

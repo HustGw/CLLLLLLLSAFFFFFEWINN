@@ -21,11 +21,21 @@ void DecryptionThread::run(){
     DecryptionFile *fileD = new DecryptionFile();
     QString contentPath = "D://CloundSafeWindows//content//"+Dfile_id;
     QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
+    QString filePath_c = "D:/CloundSafeWindows/file/"+Dfile_name;
+    for(int i=0;i<10;i++){
+        QFileInfo d_file(filePath_c);
+        if(d_file.isFile()){
+            filePath_c = "D:/CloundSafeWindows/file/"+Dfile_name.section(".",0,0)+"("+QString::number(i,10)+")."+Dfile_name.section(".",1,1);
+            filePath = "D://CloundSafeWindows//file//"+Dfile_name.section(".",0,0)+"("+QString::number(i,10)+")."+Dfile_name.section(".",1,1);
+        }else{
+            break;
+        }
+    }
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
         //解密成功后删除本地密文和密钥文件
-        QFile::remove(contentPath);//删除密文
-        QFile::remove(downPath);//删除密钥
+        //QFile::remove(contentPath);//删除密文
+        //QFile::remove(downPath);//删除密钥
     }//解密函数
    else{
        emit decryptionFailed();
