@@ -1,5 +1,7 @@
 #ifndef DECRYPTIONFILE_H
 #define DECRYPTIONFILE_H
+#include <QTextStream>
+#include <QTextCodec>
 #include <iostream>
 #include <windows.h>
 #include <stdio.h>

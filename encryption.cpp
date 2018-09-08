@@ -107,6 +107,8 @@ int encryption::encrypt(){
     QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
     QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+originalFileName+".yfile";
+
+    QString uuPath = "C://CloundSafe//encrypt//yZip//"+enfile_id+".yfile";
     encryptfile *enfile = new encryptfile();
     //文件加密
     //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
@@ -114,7 +116,7 @@ int encryption::encrypt(){
     MsgBox *msgbox02;
     MsgBox *msgbox03;
     //QString path = fInfo.filePath();
-    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,originalFileName,userID)) {
+    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,uuPath,0,originalFileName,userID)) {
     case 41:
         //QMessageBox::critical(NULL,"错误","打开源文件失败！",QMessageBox::Yes,NULL);
         msgbox01 = new MsgBox(2,QStringLiteral("打开源文件失败！"));
@@ -140,7 +142,7 @@ int encryption::encrypt(){
     //drawItem();
 
     QByteArray yKey_oss_Path = ykeyAbPath.toLatin1();
-    QByteArray yFile_oss_Path = yzipAbPath.toLatin1();
+    QByteArray yFile_oss_Path = uuPath.toLatin1();
 
 
     //conn.close();
@@ -178,11 +180,11 @@ int encryption::encrypt(){
           qDebug()<<"error";
         }
 
-        QFile file(ykeyAbPath);
-        if (file.exists())
-        {
-            file.remove();
-        }
+//        QFile file(ykeyAbPath);
+//        if (file.exists())
+//        {
+//            file.remove();
+//        }
 
     }
 
@@ -194,7 +196,8 @@ int encryption::encrypt(){
     uploadoss *upFile = new uploadoss;
     upFile->OBJECT_NAME=enFileID.c_str();
     upFile->BUCKET_NAME="cloudsafe-pc-yfile";
-    upFile->filepath=yFile_oss_Path.data();
+    //upFile->filepath=yFile_oss_Path.data();
+    upFile->filepath = codec->fromUnicode(yFile_oss_Path.data()).data();
     oss_PutFile_Flag = upFile->put_object_from_file();
     if (oss_PutFile_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
@@ -219,6 +222,9 @@ int encryption::encrypt(){
           qDebug()<<"error";
         }
     }
+    QFile yZipFile(yFile_oss_Path);
+    bool yes = yZipFile.rename(yzipAbPath);
+    qDebug()<<yes;
     ConnectionPool::closeConnection(conn);
     return 1;
 
