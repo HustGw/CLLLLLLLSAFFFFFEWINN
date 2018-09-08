@@ -82,8 +82,8 @@ void FinishDecryptionItem::on_openBtn_clicked(){
            return;
        }else{
            while(query.next()){
-           openPath = QString("file:///D:/CloundSafeWindows/file/") + query.record().value("file_name").toString();
-           openfile = QString("D:/CloundSafeWindows/file/")+ query.record().value("file_name").toString();
+           openPath = QString("file:///C:/CloundSafe/"+User_qqNum+"/Decrypt/file/") + query.record().value("file_name").toString();
+           openfile = QString("C:/CloundSafe/"+User_qqNum+"/Decrypt/file/")+ query.record().value("file_name").toString();
            }
        }
        QFileInfo d_file(openfile);
@@ -110,7 +110,7 @@ void FinishDecryptionItem::on_pathOpenBtn_clicked(){
            return;
        }else{
            while(query.next()){
-           openPath = QString("file:///D:/CloundSafeWindows/file/");
+           openPath = QString("file:///C:/CloundSafe/"+User_qqNum+"/Decrypt/file/");
            }
        }
     QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));

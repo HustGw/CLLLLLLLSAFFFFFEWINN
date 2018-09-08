@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include"msgbox.h"
 
+extern QString User_qqNum;
 class FinishDecryptionItem : public QWidget
 {
     Q_OBJECT
