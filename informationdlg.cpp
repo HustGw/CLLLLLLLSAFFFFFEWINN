@@ -408,6 +408,7 @@ void informationDlg::NewFriend(){
                 m1->titleLabel->setText(title);
                 m1->ignoreBtn->setText("忽略");
                 m1->allowBtn->setText("允许");
+                m1->timeLabel->setText(query.record().value("create_time").toString());
                 m1->setObjectName(query.record().value("id").toString()+"friendInfor");
                 m1->allowBtn->setObjectName(query.record().value("id").toString()+"friendBtn");
                 m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"friendIgn");
