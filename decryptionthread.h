@@ -7,10 +7,12 @@
 #include "decryptionfile.h"
 #include <QMessageBox>
 #include <QFile>
+#include <QFileInfo>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;
 extern QString User_qqPath;
+extern QString User_qqNum;//用户qq_Num
 class DecryptionThread : public QThread
 {
     Q_OBJECT

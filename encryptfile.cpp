@@ -1,5 +1,10 @@
 #include "encryptfile.h"
-#include <QFile>
+#include <iostream>
+#include <windows.h>
+#include <stdio.h>
+#include <time.h>
+#include <string>
+#include <QDebug>
 
 #define BUFFER_SIZE 52428800
 #define MAX_FILE_ADDRESS_LENGTH 512
@@ -33,23 +38,30 @@ int file_count = 0;
 char file_buffer[BUFFER_SIZE];
 char key_buffer[BUFFER_SIZE];
 
-//QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
 encryptfile::encryptfile()
 {
-    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
 }
 
-QByteArray qstr2str(QString qstr)
+bool UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode)
 {
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-    QByteArray cdata = qstr.toUtf8();
-    //qstr.toLocal8Bit();
-    //.toUtf8()
-    //cdata.toStdString().c_str();
-     const char *s = cdata.toStdString().data();
-    return cdata;
+ DWORD dwUnicodeLen;    //转换后Unicode的长度
+ TCHAR *pwText;      //保存Unicode的指针
+// wchar_t* strUnicode;    //返回值
+ //获得转换后的长度，并分配内存
+ dwUnicodeLen = MultiByteToWideChar(CP_UTF8,0,UTF8,-1,NULL,0);
+ pwText = new TCHAR[dwUnicodeLen];
+ if(!pwText)
+ {
+ return false;
+ }
+ //转为Unicode
+ MultiByteToWideChar(CP_UTF8,0,UTF8,-1,pwText,dwUnicodeLen);
+ //转为CString
+ wcscpy(strUnicode, pwText);
+ //清除内存
+ delete[]pwText;
+ return true;
 }
 
 int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify){
@@ -63,46 +75,34 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     encryptPercent = percent / 100;
     int extractionRate = 100;
     qDebug()<<'2';
-
-
-    QString SaveFilePath = fileAbPath.toUtf8();
-    const char * finalFilePath = SaveFilePath.toStdString().c_str();
-    char* cSaveFilePath = new char[strlen(finalFilePath)+1];
-    memset(cSaveFilePath,0,sizeof(cSaveFilePath));
-
-    strcpy(cSaveFilePath,finalFilePath);
-
-    QByteArray ypath;
-    //ypath = fileAbPath.toStdString().c_str();
-
-    strcpy_s(originalFileLocalPath, fileAbPath.toUtf8());
+    ykeyAbPath = ykeyAbPath.toUtf8();
+    fileAbPath = fileAbPath.toUtf8();
+    yzipAbPath = yzipAbPath.toUtf8();
+    strcpy_s(originalFileLocalPath, fileAbPath.toStdString().c_str());
     strcpy_s(keyLocalPath, ykeyAbPath.toStdString().c_str());
     strcpy_s(ciphertextPath, yzipAbPath.toStdString().c_str());
-    QTextCodec *codec = QTextCodec::codecForName("utf8");
-    QString filePath;
-    filePath = codec->fromUnicode(QString(originalFileLocalPath)).data();
 
-    ypath = qstr2str(fileAbPath);
-    const char *s = ypath.data();
-    //char *temp = filePath.toLatin1().data();
-    int i ;
-//    for (i=0;i<filePath.length();i++)
-//       originalFileLocalPath[i] = path[i];
-//    originalFileLocalPath[i] = '\0';
-    //originalFileLocalPath = filePath.toLatin1().data();
-    err1 = fopen_s(&origin_file, originalFileLocalPath, "rb+");
-    if (err1 != 0)
-    {
-        qDebug()<<"cannot open original file";
-        return FAIL_OPEN_ORIGIN;
-    }
+    wchar_t strUnicode1[260];
+    UTF8ToUnicode(originalFileLocalPath, strUnicode1);
+    origin_file = _wfopen(strUnicode1, L"rb");
 
-    err2 = fopen_s(&key_file, keyLocalPath, "wb+");
-    if (err2 != 0)
-    {
-        qDebug()<<"cannot create key file";
-        return FAIL_OPEN_KEY_FILE;
-    }
+    //err1 = fopen_s(&origin_file, originalFileLocalPath, "rb+");
+//    if (err1 != 0)
+//    {
+//        qDebug()<<"cannot open original file";
+//        return FAIL_OPEN_ORIGIN;
+//    }
+
+    wchar_t strUnicode2[260];
+    UTF8ToUnicode(keyLocalPath, strUnicode2);
+    key_file = _wfopen(strUnicode2, L"wb");
+
+//    err2 = fopen_s(&key_file, keyLocalPath, "wb+");
+//    if (err2 != 0)
+//    {
+//        qDebug()<<"cannot create key file";
+//        return FAIL_OPEN_KEY_FILE;
+//    }
 
     qDebug()<<'3';
     while ((file_length = fread(file_buffer, 1, BUFFER_SIZE, origin_file)) > 0) {
@@ -125,12 +125,15 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     fseek(origin_file, 0, SEEK_SET);
 
     file_num = 0;
-    err4 = fopen_s(&ciphertext_file, ciphertextPath, "wb+");
-    if (err4 != 0)
-    {
-        qDebug()<<"cipher file open error";
-        return FAIL_NEW_CIPHERTEXT;
-    }
+    wchar_t strUnicode3[260];
+    UTF8ToUnicode(ciphertextPath, strUnicode3);
+    ciphertext_file = _wfopen(strUnicode3, L"wb");
+//    err4 = fopen_s(&ciphertext_file, ciphertextPath, "wb+");
+//    if (err4 != 0)
+//    {
+//        qDebug()<<"cipher file open error";
+//        return FAIL_NEW_CIPHERTEXT;
+//    }
     while ((file_length = fread(file_buffer, 1, BUFFER_SIZE, origin_file)) > 0) {
         for (int i = 1; i < (file_length / extractionRate); i++) {
             file_buffer[i * extractionRate] = random_num1;

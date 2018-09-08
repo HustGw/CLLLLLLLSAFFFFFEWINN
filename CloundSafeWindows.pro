@@ -7,7 +7,7 @@
 QT       += core gui
 QT       += sql
 
-RC_FILE += icotest.rc
+#RC_FILE += icotest.rc
 
 QT       += sql
 QT       += network
@@ -29,15 +29,15 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
 
-LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
-LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 
@@ -120,7 +120,8 @@ SOURCES += \
     QrSegment.cpp \
     groupsenddialog.cpp \
     msgbox.cpp \
-    resetDialog.cpp
+    resetDialog.cpp \
+    groupsharedialog.cpp
 
 
 
@@ -218,7 +219,8 @@ HEADERS += \
     QrSegment.hpp \
     groupsenddialog.h \
     msgbox.h \
-    resetDialog.h
+    resetDialog.h \
+    groupsharedialog.h
 
 
 
@@ -231,7 +233,8 @@ FORMS += \
     tcpclient.ui \
     sharedialog.ui \
     groupsenddialog.ui \
-    resetDialog.ui
+    resetDialog.ui \
+    groupsharedialog.ui
 
 DISTFILES += \
     Makefile

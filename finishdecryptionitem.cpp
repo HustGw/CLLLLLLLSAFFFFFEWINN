@@ -69,6 +69,7 @@ void FinishDecryptionItem::paintEvent(QPaintEvent *event){
 
 void FinishDecryptionItem::on_openBtn_clicked(){
     QString openPath;
+    QString openfile;
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
     db = ConnectionPool::openConnection();
@@ -82,9 +83,16 @@ void FinishDecryptionItem::on_openBtn_clicked(){
        }else{
            while(query.next()){
            openPath = QString("file:///D:/CloundSafeWindows/file/") + query.record().value("file_name").toString();
+           openfile = QString("D:/CloundSafeWindows/file/")+ query.record().value("file_name").toString();
            }
        }
-    QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+       QFileInfo d_file(openfile);
+       if(!d_file.isFile()){
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到文件，请检查文件是否已被删除或移动到新的位置。"),this);
+           msgbox->exec();
+       }else{
+           QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));
+       }
     ConnectionPool::closeConnection(db);
 
 }

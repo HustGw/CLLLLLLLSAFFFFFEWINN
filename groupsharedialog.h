@@ -1,5 +1,5 @@
-#ifndef SHAREDIALOG_H
-#define SHAREDIALOG_H
+#ifndef GROUPSHAREDIALOG_H
+#define GROUPSHAREDIALOG_H
 
 #include <QDialog>
 #include <QClipboard>
@@ -11,20 +11,19 @@
 #include <QMouseEvent>
 #include <QtMath>
 #include <QScrollBar>
-
+extern QString file_id_list;
 namespace Ui {
-class shareDialog;
+class groupshareDialog;
 }
-extern QString file_id;
-class shareDialog : public QDialog
+
+class groupshareDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit shareDialog(QWidget *parent = nullptr);
-    ~shareDialog();
+    explicit groupshareDialog(QWidget *parent = nullptr);
+    ~groupshareDialog();
     void paintQR(QPainter &painter,const QSize sz, const QString &data, QColor fg);
-
 private slots:
     void on_pushButton_clicked();
 
@@ -45,7 +44,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
     void paintEvent(QPaintEvent *event);
 private:
-    Ui::shareDialog *ui;
+    Ui::groupshareDialog *ui;
 };
 
-#endif // SHAREDIALOG_H
+#endif // GROUPSHAREDIALOG_H

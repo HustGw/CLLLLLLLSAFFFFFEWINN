@@ -16,7 +16,7 @@ class DelinkDialog : public QDialog
 {
     Q_OBJECT
 public:
-    DelinkDialog(QWidget* parent= 0);
+    DelinkDialog(QWidget* parent= nullptr);
     QSize sizeHint() const{
         return QSize(300,150);
     }

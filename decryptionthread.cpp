@@ -18,13 +18,27 @@ void DecryptionThread::run(){
     downKey->get_object_to_file();
     //下载完成后开始解密
     DecryptionFile *fileD = new DecryptionFile();
+
     QString contentPath = User_qqPath+"//Decrypt//content//"+Dfile_id;
     QString filePath = User_qqPath+"//Decrypt//file//"+Dfile_name;
+
+//    QString contentPath = "D://CloundSafeWindows//content//"+Dfile_id;
+//    QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
+    QString filePath_c = "C:/CloundSafe/"+User_qqNum+"/Decrypt/file/"+Dfile_name;
+    for(int i=0;i<10;i++){
+        QFileInfo d_file(filePath_c);
+        if(d_file.isFile()){
+            filePath_c = User_qqPath+"//Decrypt//file//"+Dfile_name.section(".",0,0)+"("+QString::number(i,10)+")."+Dfile_name.section(".",1,1);
+            filePath = User_qqPath+"//Decrypt//file//"+Dfile_name.section(".",0,0)+"("+QString::number(i,10)+")."+Dfile_name.section(".",1,1);
+        }else{
+            break;
+        }
+    }
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
         //解密成功后删除本地密文和密钥文件
-        QFile::remove(contentPath);//删除密文
-        QFile::remove(downPath);//删除密钥
+        //QFile::remove(contentPath);//删除密文
+        //QFile::remove(downPath);//删除密钥
     }//解密函数
    else{
        emit decryptionFailed();
