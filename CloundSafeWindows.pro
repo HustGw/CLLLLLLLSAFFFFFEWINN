@@ -121,7 +121,8 @@ SOURCES += \
     groupsenddialog.cpp \
     msgbox.cpp \
     resetDialog.cpp \
-    groupsharedialog.cpp
+    groupsharedialog.cpp \
+    newdownloaddialog.cpp
 
 
 
@@ -220,7 +221,8 @@ HEADERS += \
     groupsenddialog.h \
     msgbox.h \
     resetDialog.h \
-    groupsharedialog.h
+    groupsharedialog.h \
+    newdownloaddialog.h
 
 
 
@@ -234,7 +236,8 @@ FORMS += \
     sharedialog.ui \
     groupsenddialog.ui \
     resetDialog.ui \
-    groupsharedialog.ui
+    groupsharedialog.ui \
+    newdownloaddialog.ui
 
 DISTFILES += \
     Makefile

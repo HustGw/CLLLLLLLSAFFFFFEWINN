@@ -64,12 +64,13 @@
 #include <enitemthread.h>
 #include <encryptthread.h>
 #include "groupsharedialog.h"
-
+#include "newdownloaddialog.h"
 
 
 namespace Ui {
 class MainWindow;
 }
+extern QStringList newDownloadFileIdList;
 extern int AddFriendFlag;
 extern int LinkInsertFlag;
 extern int findecrypt_flag;//已解密全选判断变量
@@ -146,7 +147,7 @@ public:
     groupshareDialog *grpShareDlg;
     encryptthread *encptThreadArr[MAXSIZE];
     enItemThread *enitemArr[MAXSIZE];
-
+    newDownloadDialog *newdownloadDlg;
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -261,6 +262,7 @@ private slots:
 
     void on_pushButton_groupshare_clicked();
     bool DeleteFileOrFolder( const QString& strPath );
+    void downloadOneFile(QString id);
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -274,6 +276,7 @@ signals:
     void SendInforToInforDlg(QString nickname,QString fileName,QString time);
     void showDownDialog(QString id);
     void starEcptItem(QString itemName);
+    void newDownload();
 private:
     Ui::MainWindow *ui;
     QPoint dragPosition;

@@ -29,7 +29,7 @@ int RequsetIndex = 0;//数组的INDEX
 int FriendCount =0;
 QString FriendNickNameArray[50] = {};
 int FriendArrayIndex = 0;
-
+QStringList newDownloadFileIdList;
 QString User_ID = nullptr;//用户唯一标识ID
 QString User_qqNum = NULL;//用户qq_num
 QString User_qqPath = NULL;//用户本地文件存放路径
@@ -127,8 +127,8 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
-    friendListWidget->setGeometry(0,40,ui->RightWidget->width()+1,ui->RightWidget->height()-39);
-    friendListWidget->setIconSize(QSize(50,30));//设置Item图标大小
+    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-39);
+    friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
@@ -311,9 +311,10 @@ MainWindow::MainWindow(QWidget *parent) :
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
              add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
              add_item->setText(Friend_nickname);
-             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+             add_item->setFont(QFont("Microsoft YaHei",10,50));
+             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
              add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
              friendListWidget->insertItem(count,add_item);
              count++;
          }
@@ -331,12 +332,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
          }
      }
-
+     newdownloadDlg = new newDownloadDialog(this);
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
      connect(recThread,SIGNAL(thread_Disconnected()),this,SLOT(internet_Disconnected()));
      connect(recThread,SIGNAL(ReqIsIgnored()),this,SLOT(FileIsIgnored()));
+     connect(this,SIGNAL(newDownload()),newdownloadDlg,SLOT(change_list_view()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
      //connect(inforThread,SIGNAL(InformationChanged()),this,SLOT(HeadChanged()));
@@ -427,6 +429,12 @@ void MainWindow::on_FinishedBtn_clicked()
 
 void MainWindow::on_DecryptionBtn_clicked()
 {   //点击解密按钮后，MidStaWidget跳转到1号子页面
+    findecrypt_flag = 0;//已解密全选判断变量
+    ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    finencrypt_flag = 0;//已加密全选判断变量
+    ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon_selected.png"));
@@ -438,6 +446,12 @@ void MainWindow::on_DecryptionBtn_clicked()
 
 void MainWindow::on_EncryptionBtn_clicked()
 {    //点击加密按钮后，QMidStaWidget跳转到0号子页面
+    findecrypt_flag = 0;//已解密全选判断变量
+    ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    finencrypt_flag = 0;//已加密全选判断变量
+    ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
@@ -456,6 +470,12 @@ void MainWindow::on_EncryptionBtn_clicked()
 
 void MainWindow::on_FinEnpBtn_clicked()
 {
+    findecrypt_flag = 0;//已解密全选判断变量
+    ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    finencrypt_flag = 0;//已加密全选判断变量
+    ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController);
@@ -465,6 +485,12 @@ void MainWindow::on_FinEnpBtn_clicked()
 }
 void MainWindow::on_FinDepBtn_clicked()
 {
+    findecrypt_flag = 0;//已解密全选判断变量
+    ui->pushButton_11->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+    finencrypt_flag = 0;//已加密全选判断变量
+    ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+                                     " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
@@ -1079,7 +1105,7 @@ void MainWindow::ReceiveNewReq(){
                           qDebug()<<"新消息ID为:";
                           qDebug()<<Infor_ID;
                           newID = Infor_ID;
-
+                          emit showDownDialog(newID);
                       }
                       v1->fileDescription->setText("主体文件指定分享需确认下载.");
                       v1->downloadBtn->setText("确认下载");
@@ -1114,7 +1140,7 @@ void MainWindow::ReceiveNewReq(){
               qDebug()<<s;
               Infor_num_icon->show();
               Infor_num_icon->setText(s);
-              emit showDownDialog(newID);
+
     }
 }
 //进行数据库   操作
@@ -1197,7 +1223,7 @@ void MainWindow::addFriendToDatabase(QString name){
 //        add_item->setText(name);
 //        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
 //        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-//        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+//        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
 //        friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("发送请求成功！"),this);
         msgbox->exec();
@@ -1285,9 +1311,10 @@ void MainWindow::inforDlgaddFriend(QString name){
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
         add_item->setText(name);
-        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+        add_item->setFont(QFont("Microsoft YaHei",10,50));
+        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
         friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"),this);
         msgbox->exec();
@@ -1481,49 +1508,64 @@ void MainWindow::on_pushButton_8_clicked()
 //已加密文件批量删除按钮
 void MainWindow::on_pushButton_5_clicked()
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
-    int nRes = msgbox->exec();
-    if (nRes == QDialog::Accepted){
-    int flag = 0;
     QString file_id_d;
-        QSqlQuery query3(db);
-        bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
-        if(!success){
-            qDebug() << "查询密文失败";
-            return;
-        }else{
-            qDebug()<<"查询成功";
-            while(query3.next())
-            {
-                file_id_d = query3.record().value("article_id").toString();
-                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
-
-                if(checkcheck->isChecked()){
-                    flag = 1;
-                    QSqlQuery query9(db);
-                    bool qq = query9.exec("delete from varticle where article_id = '"+file_id_d+"'");
-                    if(qq){
-                        qDebug()<<"delete 1";
-                    }
-                }
-                FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id_d);
-                delete f2;
+    QSqlQuery query(db);
+    int flag = 0;
+    bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            file_id_d = query.record().value("article_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
+            if(checkcheck->isChecked()){
+                flag = 1;
             }
-         }
-        on_pushButton_8_clicked();
-        if(flag == 1){
+        }
+     }
+    if(flag == 1){
+        MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
+        int nRes = msgbox->exec();
+        if (nRes == QDialog::Accepted){
+            QSqlQuery query3(db);
+            bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
+            if(!success){
+                qDebug() << "查询密文失败";
+                return;
+            }else{
+                qDebug()<<"查询成功";
+                while(query3.next())
+                {
+                    file_id_d = query3.record().value("article_id").toString();
+                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id_d+"check");
+                    if(checkcheck->isChecked()){
+                        QSqlQuery query9(db);
+                        bool qq = query9.exec("delete from varticle where article_id = '"+file_id_d+"'");
+                        if(qq){
+                            qDebug()<<"delete 1";
+                        }
+                    }
+                    FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id_d);
+                    delete f2;
+                }
+             }
+            on_pushButton_8_clicked();
             MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"),this);
             msgbox->exec();
-        }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目"),this);
-            msgbox->exec();
+        }else{
         }
-        flag = 0;
-    }else{
-
+    }else if(flag == 0){
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目"),this);
+        msgbox->exec();
     }
+    flag = 0;
+
+
 }
-//批量分传输按钮响应
+//批量传输按钮响应
 void MainWindow::on_pushButton_6_clicked()
 {
         int flag = 0;
@@ -1551,7 +1593,7 @@ void MainWindow::on_pushButton_6_clicked()
             grpDlg = new groupSendDialog();
             grpDlg->show();
         }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"),this);
+            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量传输的条目！"),this);
             msgbox->exec();
         }
         flag = 0;
@@ -1933,83 +1975,90 @@ void MainWindow::NumDown(){
 //已解密文件批量删除按钮
 void MainWindow::on_pushButton_7_clicked()
 {
-    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这些已解密条目吗？"),this);
-    int nRes = msgbox->exec();
-    if (nRes == QDialog::Accepted){
-        int flag = 0;
-        QString file_id;
-        QSqlQuery query3(db);
-        bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
-        if(!success){
-            qDebug() << "查询密文失败";
-            return;
-        }else{
-            qDebug()<<"查询成功";
-            while(query3.next())
-            {
-                file_id = query3.record().value("file_id").toString();
-                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
-                if(checkcheck->isChecked()){
-                    flag = 1;
-                    QSqlQuery query9(db);
-                    query9.exec("delete from Decryption where file_id = '"+file_id+"'");
-                    RequestNum--;
-                }
-                FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
-                delete f2;
+    int flag = 0;
+    QString file_id;
+    QSqlQuery query3(db);
+    bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query3.next())
+        {
+            file_id = query3.record().value("file_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            if(checkcheck->isChecked()){
+                flag = 1;
             }
-         }
-        on_pushButton_9_clicked();
-        if(flag == 1){
+        }
+     }
+    if(flag == 1){
+        MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这些已解密条目吗？"),this);
+        int nRes = msgbox->exec();
+        if (nRes == QDialog::Accepted){
+            QSqlQuery query3(db);
+            bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+            if(!success){
+                qDebug() << "查询密文失败";
+                return;
+            }else{
+                qDebug()<<"查询成功";
+                while(query3.next())
+                {
+                    file_id = query3.record().value("file_id").toString();
+                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+                    if(checkcheck->isChecked()){
+                        QSqlQuery query9(db);
+                        query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                        RequestNum--;
+                    }
+                    FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+                    delete f2;
+                }
+             }
+            on_pushButton_9_clicked();
             MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"),this);
             msgbox->exec();
-        }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
-            msgbox->exec();
-        }
-        flag = 0;
-    }else if(nRes == 5){
-        int flag = 0;
-        QString file_id;
-        QSqlQuery query3(db);
-        bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
-        if(!success){
-            qDebug() << "查询密文失败";
-            return;
-        }else{
-            qDebug()<<"查询成功";
-            while(query3.next())
-            {
-                file_id = query3.record().value("file_id").toString();
-                QString d_address ="C:/CloundSafe/"+User_qqNum+"/Decrypt/file/" + query3.record().value("file_name").toString();
-                QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+        }else if(nRes == 5){
+            QString file_id;
+            QSqlQuery query3(db);
+            bool success = query3.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+            if(!success){
+                qDebug() << "查询密文失败";
+                return;
+            }else{
+                qDebug()<<"查询成功";
+                while(query3.next())
+                {
+                    file_id = query3.record().value("file_id").toString();
+                    QString d_address ="C:/CloundSafe/"+User_qqNum+"/Decrypt/file/" + query3.record().value("file_name").toString();
+                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
 
-                if(checkcheck->isChecked()){
-                    flag = 1;
-                    QSqlQuery query9(db);
-                    query9.exec("delete from Decryption where file_id = '"+file_id+"'");
-                    QFileInfo d_file(d_address);
-                    if(d_file.isFile()){
-                        QFile::remove(d_address);
+                    if(checkcheck->isChecked()){
+                        QSqlQuery query9(db);
+                        query9.exec("delete from Decryption where file_id = '"+file_id+"'");
+                        QFileInfo d_file(d_address);
+                        if(d_file.isFile()){
+                            QFile::remove(d_address);
+                        }
+                        RequestNum--;
                     }
-                    RequestNum--;
-                }
-                FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
-                delete f2;
+                    FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+                    delete f2;
+                 }
              }
-         }
-         on_pushButton_9_clicked();
-         if(flag == 1){
+             on_pushButton_9_clicked();
              MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目及文件！"),this);
              msgbox->exec();
-         }else if(flag == 0){
-             MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
-             msgbox->exec();
-         }
-         flag = 0;
-    }else{
+        }else{
 
+        }
+    }else if(flag == 0){
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
+        msgbox->exec();
     }
+    flag = 0;
 }
 
 //已解密页面全选按钮
@@ -2335,10 +2384,18 @@ void MainWindow::on_pushButton_13_clicked()
 }
 
 void MainWindow::ShowNewDownDialog(QString id){
-    qDebug()<<"shoudao";
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认下载这一待解密文件吗？"),this);
-    int reply = msgbox->exec();
-        if(reply == QDialog::Accepted){
+    newDownloadFileIdList.append(id);
+    if(newdownloadDlg->isOpened){
+        emit newDownload();
+    }else{
+        newdownloadDlg->show();
+        newdownloadDlg->isOpened = true;
+        emit newDownload();
+    }
+
+
+}
+void MainWindow::downloadOneFile(QString id){
             //跳转到解密页面，开始下载
             DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
             if(m1==nullptr){
@@ -2350,12 +2407,6 @@ void MainWindow::ShowNewDownDialog(QString id){
                 InforNum_Changed();
                 on_DecryptionBtn_clicked();
             }
-        }
-        else if(reply == QDialog::Rejected){
-            Infor_requestNum--;
-            InforNum_Changed();
-
-        }
 }
 bool MainWindow::DeleteFileOrFolder( const QString& strPath )
 {
@@ -2444,7 +2495,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.drawPath(path);
     }
 }
-
 void MainWindow::FriendListWidgetHide(){
     if(isFriendListHide == 0){
       friendListWidget->hide();
@@ -2487,9 +2537,10 @@ void MainWindow::NewFriendAgree(){
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
             add_item->setText(Friend_nickname);
-            add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignCenter);
+            add_item->setFont(QFont("Microsoft YaHei",10,50));
+            add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            add_item->setSizeHint(QSize(ui->RightWidget->width()-30,40));
+            add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
             friendListWidget->insertItem(count,add_item);
             count++;
         }

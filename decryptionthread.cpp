@@ -25,7 +25,7 @@ void DecryptionThread::run(){
 //    QString contentPath = "D://CloundSafeWindows//content//"+Dfile_id;
 //    QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
     QString filePath_c = "C:/CloundSafe/"+User_qqNum+"/Decrypt/file/"+Dfile_name;
-    for(int i=0;i<10;i++){
+    for(int i=1;i<50;i++){
         QFileInfo d_file(filePath_c);
         if(d_file.isFile()){
             filePath_c = User_qqPath+"//Decrypt//file//"+Dfile_name.section(".",0,0)+"("+QString::number(i,10)+")."+Dfile_name.section(".",1,1);

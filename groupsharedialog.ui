@@ -203,6 +203,23 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
     <string>链接：</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>18</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;Consolas&quot;;
+background-color: rgb(238, 240, 245);</string>
+   </property>
+   <property name="text">
+    <string>批量分享</string>
+   </property>
+  </widget>
   <zorder>label_6</zorder>
   <zorder>label_8</zorder>
   <zorder>label_4</zorder>
@@ -216,6 +233,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
   <zorder>label_5</zorder>
   <zorder>label</zorder>
   <zorder>textEdit</zorder>
+  <zorder>label_9</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -17,7 +17,7 @@ ConnectionPool::ConnectionPool() {
 
     maxWaitTime  = 1000;
     waitInterval = 200;
-    maxConnectionCount  = 20;
+    maxConnectionCount  = 50;
 }
 
 ConnectionPool::~ConnectionPool() {

@@ -8,7 +8,7 @@ groupshareDialog::groupshareDialog(QWidget *parent) :
 {
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->setupUi(this);
-    QString fake_address = "https://youxinzhongwang.com/theRea1Fi1eId&&"+file_id_list;
+    QString fake_address = "&&"+file_id_list;
     ui->pushButtonclos->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_copy->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_sav->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
@@ -32,7 +32,7 @@ void groupshareDialog::on_pushButton_clicked()
 }
 
 void groupshareDialog::paintEvent(QPaintEvent *event){
-    QString link = "https://youxinzhongwang.com/f113&&"+file_id_list;
+    QString link = "&&"+file_id_list;
     QPixmap pix(130,130);
     pix.fill(Qt::white);
     QPainter painter1(&pix);
@@ -110,22 +110,25 @@ void groupshareDialog::on_pushButton_copy_clicked()
 void groupshareDialog::on_pushButton_sav_clicked()
 {
     QString filename1 = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Images (*.png)")); //选择路径
-    QScreen *screen = QGuiApplication::primaryScreen();
-    screen->grabWindow(ui->label_2->winId()).save(filename1);
-    MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"),this);
-    ui->label_8->setText("二维码已保存！");
-    msgbox->exec();
+    if(filename1!=nullptr){
+        QScreen *screen = QGuiApplication::primaryScreen();
+        screen->grabWindow(ui->label_2->winId()).save(filename1);
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("保存成功！"),this);
+        ui->label_8->setText("二维码已保存！");
+        msgbox->exec();
+    }else{
+    }
 }
 
 void groupshareDialog::on_pushButtonclos_clicked()
 {
-        file_id_list.clear();
+    file_id_list.clear();
     this->close();
 }
 
 void groupshareDialog::on_pushButtonclos2_clicked()
 {
-        file_id_list.clear();
+    file_id_list.clear();
     this->close();
 }
 

@@ -63,8 +63,8 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     deleteBtn->setText(QStringLiteral("删除条目及文件"));
     deleteBtn->setGeometry(73,133,119,27);
     deleteBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
     deleteBtn->hide();
-
     okBtn=new QPushButton(this);
     if((style==2)||(style==3)||(style == 4)){
         okBtn->setGeometry(331,133,89,27);

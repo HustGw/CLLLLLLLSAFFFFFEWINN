@@ -168,7 +168,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
 font: 75 9pt &quot;Arial&quot;;</string>
    </property>
    <property name="text">
-    <string>批量分享</string>
+    <string>分享</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
