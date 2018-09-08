@@ -1,6 +1,6 @@
 #include "friendinputdlg.h"
 QNetworkAccessManager *f_accessManager;
-QString ddd =NULL;
+QString ddd =nullptr;
 friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 {
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
@@ -72,7 +72,8 @@ void friendInputDlg::sendName(){
     qDebug()<<"send";
     emit sendNameToMain(ddd);
     this->accept();
-
+    AddFriendFlag = 0;
+    ConnectionPool::closeConnection(db);
 }
 void friendInputDlg::cancel(){
     this->accept();

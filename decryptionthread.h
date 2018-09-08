@@ -7,6 +7,7 @@
 #include "decryptionfile.h"
 #include <QMessageBox>
 #include <QFile>
+#include <QFileInfo>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;

@@ -1,18 +1,14 @@
-#include "sharedialog.h"
-#include "ui_sharedialog.h"
-#include "finishencryptionitem.h"
+#include "groupsharedialog.h"
+#include "ui_groupsharedialog.h"
 #include "QrCode.hpp"
 #include "msgbox.h"
-
-extern QString file_id;
-
-shareDialog::shareDialog(QWidget *parent) :
+groupshareDialog::groupshareDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::shareDialog)
+    ui(new Ui::groupshareDialog)
 {
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     ui->setupUi(this);
-    QString fake_address = "https://youxinzhongwang.com/theRea1Fi1eId&&||"+file_id;
+    QString fake_address = "https://youxinzhongwang.com/theRea1Fi1eId&&"+file_id_list;
     ui->pushButtonclos->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_copy->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_sav->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
@@ -25,21 +21,18 @@ shareDialog::shareDialog(QWidget *parent) :
 
     ui->textEdit->setPlainText(fake_address);
     ui->textEdit->setReadOnly(true);
-
-
 }
 
-shareDialog::~shareDialog()
+groupshareDialog::~groupshareDialog()
 {
     delete ui;
 }
-
-void shareDialog::on_pushButton_clicked()
+void groupshareDialog::on_pushButton_clicked()
 {
 }
 
-void shareDialog::paintEvent(QPaintEvent *event){
-    QString link = "https://youxinzhongwang.com/f113&&"+file_id;
+void groupshareDialog::paintEvent(QPaintEvent *event){
+    QString link = "https://youxinzhongwang.com/f113&&"+file_id_list;
     QPixmap pix(130,130);
     pix.fill(Qt::white);
     QPainter painter1(&pix);
@@ -73,7 +66,7 @@ void shareDialog::paintEvent(QPaintEvent *event){
 }
 
 
-void shareDialog::paintQR(QPainter &painter,const QSize sz, const QString &data, QColor fg)
+void groupshareDialog::paintQR(QPainter &painter,const QSize sz, const QString &data, QColor fg)
 {
     // NOTE: At this point you will use the API to get the encoding and format you want, instead of my hardcoded stuff:
     qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(data.toUtf8().constData(), qrcodegen::QrCode::Ecc::LOW);
@@ -99,13 +92,13 @@ void shareDialog::paintQR(QPainter &painter,const QSize sz, const QString &data,
     }
 }
 
-void shareDialog::on_pushButton_2_clicked()
+void groupshareDialog::on_pushButton_2_clicked()
 {
 
 
 }
 
-void shareDialog::on_pushButton_copy_clicked()
+void groupshareDialog::on_pushButton_copy_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textEdit->toPlainText());
@@ -114,7 +107,7 @@ void shareDialog::on_pushButton_copy_clicked()
     msgbox->exec();
 }
 
-void shareDialog::on_pushButton_sav_clicked()
+void groupshareDialog::on_pushButton_sav_clicked()
 {
     QString filename1 = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Images (*.png)")); //选择路径
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -124,17 +117,19 @@ void shareDialog::on_pushButton_sav_clicked()
     msgbox->exec();
 }
 
-void shareDialog::on_pushButtonclos_clicked()
+void groupshareDialog::on_pushButtonclos_clicked()
 {
+        file_id_list.clear();
     this->close();
 }
 
-void shareDialog::on_pushButtonclos2_clicked()
+void groupshareDialog::on_pushButtonclos2_clicked()
 {
+        file_id_list.clear();
     this->close();
 }
 
-void shareDialog::mousePressEvent(QMouseEvent *qevent)
+void groupshareDialog::mousePressEvent(QMouseEvent *qevent)
 {
     if(qevent->button() == Qt::LeftButton)
     {
@@ -143,7 +138,7 @@ void shareDialog::mousePressEvent(QMouseEvent *qevent)
         move_point = qevent->pos();;
     }
 }
-void shareDialog::mouseMoveEvent(QMouseEvent *qevent)
+void groupshareDialog::mouseMoveEvent(QMouseEvent *qevent)
 {
     //若鼠标左键被按下
     if(mouse_press)
@@ -155,9 +150,8 @@ void shareDialog::mouseMoveEvent(QMouseEvent *qevent)
         this->move(move_pos - move_point);
     }
 }
-void shareDialog::mouseReleaseEvent(QMouseEvent *qevent)
+void groupshareDialog::mouseReleaseEvent(QMouseEvent *qevent)
 {
     //设置鼠标为未被按下
     mouse_press = false;
 }
-

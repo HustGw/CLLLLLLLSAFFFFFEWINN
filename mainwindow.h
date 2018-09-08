@@ -63,6 +63,7 @@
 #include<QtMath>
 #include <enitemthread.h>
 #include <encryptthread.h>
+#include "groupsharedialog.h"
 
 
 
@@ -76,8 +77,13 @@ extern int finencrypt_flag;//已加密全选判断变量
 extern int DeSelect_flag;//解密全选判断变量
 extern QString User_ID;
 extern QString URL;
+extern bool fileOpenFlag;
+extern bool initLableFlag;
+extern bool initPageFlag;
 extern int threadNum;
 extern int DepThreadNum;
+extern int encptThreadNum;
+extern int enitemNum;
 extern int isFinishedBtn;
 extern QFont f;
 extern int informationNum;
@@ -93,6 +99,10 @@ extern int FriendRequestCount;
 extern int FriendArrayIndex;//好友昵称数据目录
 extern int RequsetIndex;//消息ID数组的目录
 extern int isFriendListHide;//判断消息列表是否隐藏
+extern QFileInfo openFileInfo;
+extern QString orfileUuid;
+extern QString yzipfileUuid;
+extern QString file_item_name;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -100,7 +110,7 @@ signals:
     void fileData(QString);
     void sendUserId(QString);
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
@@ -131,7 +141,7 @@ public:
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
     groupSendDialog *grpDlg;
-
+    groupshareDialog *grpShareDlg;
     encryptthread *encptThreadArr[MAXSIZE];
     enItemThread *enitemArr[MAXSIZE];
 
@@ -247,7 +257,8 @@ private slots:
 
     void NewFriendAgree();//添加好友，对方同意函数
 
-
+    void on_pushButton_groupshare_clicked();
+    bool DeleteFileOrFolder( const QString& strPath );
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);

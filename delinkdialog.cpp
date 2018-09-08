@@ -56,8 +56,13 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 }
 
 void DelinkDialog::sendLink(){
+    QString split_file_id;
         QString link = inputLineEdit->text().section("&&",1,1);
-        emit sendLinkToMain(link);
+        QStringList list = link.split("||");
+        for(int j = 1;j<list.count();j++){
+            split_file_id = list[j];
+            emit sendLinkToMain(split_file_id);
+        }
         this->accept();
 }
 void DelinkDialog::closeEvent(QCloseEvent * event){

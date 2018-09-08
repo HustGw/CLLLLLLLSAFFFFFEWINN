@@ -138,10 +138,13 @@ background-color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>71</x>
-       <y>29</y>
+       <y>23</y>
        <width>150</width>
-       <height>18</height>
+       <height>30</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 14pt &quot;Microsoft JhengHei&quot;;</string>
      </property>
      <property name="text">
       <string>昵称获取失败</string>
@@ -307,7 +310,7 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
@@ -395,7 +398,7 @@ background-color: rgb(255, 255, 255);</string>
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>批量传输</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_8">
@@ -418,6 +421,19 @@ background-color: rgb(255, 255, 255);</string>
         <y>16</y>
         <width>53</width>
         <height>14</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_groupshare">
+      <property name="geometry">
+       <rect>
+        <x>365</x>
+        <y>6</y>
+        <width>110</width>
+        <height>32</height>
        </rect>
       </property>
       <property name="text">
