@@ -29,7 +29,9 @@ int RequsetIndex = 0;//数组的INDEX
 int FriendCount =0;
 QString FriendNickNameArray[50] = {};
 int FriendArrayIndex = 0;
-QString User_ID = NULL;
+QString User_ID = NULL;//用户唯一标识ID
+QString User_qqNum = NULL;//用户qq_num
+QString User_qqPath = NULL;//用户本地文件存放路径
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
@@ -50,8 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
-
+    //初始化用户User_ID
     User_ID = LoginUserID;
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
@@ -95,6 +96,16 @@ MainWindow::MainWindow(QWidget *parent) :
 //    emit sendUserID(User_ID);
     //使用连接池 管理数据库连接
     db = ConnectionPool::openConnection();
+    QSqlQuery qqQuery(db);
+    bool qq_success = qqQuery.exec("select * from employee where emp_id = '"+User_ID+"'");
+    if(!qq_success){
+        qDebug()<<"初始化QQ_NUM失败";
+    }
+    else{
+        while(qqQuery.next()){
+            User_qqNum = qqQuery.record().value("qq_num").toString();
+        }
+    }
     // 连接进度条信号槽
     //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
     //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
@@ -376,6 +387,7 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }");
      ui->pushButton_8->hide();
      ui->pushButton_9->hide();
+
 
 }
 
@@ -887,16 +899,29 @@ void MainWindow::getFileID(){
 void MainWindow::OssDownLoadFile(){
     //创建CloundSafe 主目录
     QDir dir;
-    dir.cd("D://CloundSafeWindows");  //进入某文件夹
-    if(!dir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
+    dir.cd("C://CloundSafe");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
     {
-        dir.mkdir("D://CloundSafeWindows"); //创建文件夹
+        dir.mkdir("C://CloundSafe"); //创建文件夹
     }
-    //创建子目录
-    dir.cd("D://CloundSafeWindows//content");  //进入某文件夹
-    if(!dir.exists("D://CloundSafeWindows//content"))//判断需要创建的文件夹是否存在
+    //创建用户子目录
+    QString qq_Path = "C://CloundSafe//"+User_qqNum;
+    dir.cd(qq_Path);  //进入某文件夹
+    if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
     {
-        dir.mkdir("D://CloundSafeWindows//content"); //创建文件夹
+        dir.mkdir(qq_Path); //创建文件夹
+    }
+    User_qqPath = qq_Path;//给User_qqPath赋值
+    //创建Decrypt子目录
+    QString file_path = qq_Path+"//Decrypt";
+    dir.cd(file_path);
+    if(!dir.exists(file_path)){
+        dir.mkdir(file_path);
+    }
+    QString path_content = file_path+"//content";
+    dir.cd(path_content);
+    if(!dir.exists(path_content)){
+        dir.mkdir(path_content);
     }
     QSqlQuery query(db);
     QPushButton *pt = qobject_cast<QPushButton *>(sender());
@@ -1741,32 +1766,47 @@ void MainWindow::HeadChanged(){
 }
 
 void MainWindow::FileIsAllowed(){
-    //创建密钥文件夹
+    //创建CloundSafe 主目录
     QDir dir;
-    dir.cd("D://CloundSafeWindows");  //进入某文件夹
-    if(!dir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
+    dir.cd("C://CloundSafe");  //进入某文件夹
+    if(!dir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
     {
-        dir.mkdir("D://CloundSafeWindows"); //创建文件夹
+        dir.mkdir("C://CloundSafe"); //创建文件夹
     }
-    //创建子目录
-    dir.cd("D://CloundSafeWindows//ykey");  //进入某文件夹
-    if(!dir.exists("D://CloundSafeWindows//ykey"))//判断需要创建的文件夹是否存在
+    //创建用户子目录
+    QString qq_Path = "C://CloundSafe//"+User_qqNum;
+    dir.cd(qq_Path);  //进入某文件夹
+    if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
     {
-        dir.mkdir("D://CloundSafeWindows//ykey"); //创建文件夹
+        dir.mkdir(qq_Path); //创建文件夹
+    }
+    //创建Decrypt子目录
+    QString file_path = qq_Path+"//Decrypt";
+    dir.cd(file_path);
+    if(!dir.exists(file_path)){
+        dir.mkdir(file_path);
     }
     //创建密文文件夹
-    QDir cdir;
-    cdir.cd("D://CloundSafeWindows");  //进入某文件夹
-    if(!cdir.exists("D://CloundSafeWindows"))//判断需要创建的文件夹是否存在
-    {
-        cdir.mkdir("D://CloundSafeWindows"); //创建文件夹
-    }
+//    QDir cdir;
+//    cdir.cd("C://CloundSafe");  //进入某文件夹
+//    if(!cdir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
+//    {
+//        cdir.mkdir("C://CloundSafe"); //创建文件夹
+//    }
+    QString path_finished = file_path+"//file";
     //创建子目录
-    cdir.cd("D://CloundSafeWindows//file");  //进入某文件夹
-    if(!cdir.exists("D://CloundSafeWindows//file"))//判断需要创建的文件夹是否存在
+    dir.cd(path_finished);  //进入某文件夹
+    if(!dir.exists(path_finished))//判断需要创建的文件夹是否存在
     {
-        cdir.mkdir("D://CloundSafeWindows//file"); //创建文件夹
+        dir.mkdir(path_finished); //创建文件夹
     }
+    QString path_ykey = file_path+"//ykey";
+    dir.cd(path_ykey);
+    if(!dir.exists(path_ykey))
+    {
+        dir.mkdir(path_ykey);
+    }
+
 
 
      QSqlQuery query(db);

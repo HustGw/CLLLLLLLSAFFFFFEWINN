@@ -10,7 +10,7 @@ DepDownThread::DepDownThread(QObject *parent):QThread(parent)
 
 void DepDownThread::run(){
     qDebug()<<"downloadThread Begin!";
-    QString downPath = "D://CloundSafeWindows//content//"+dekey_id;
+    QString downPath = User_qqPath+"//Decrypt//content//"+dekey_id;
     QByteArray down_oss_Path = downPath.toLatin1();
     std::string enKeyID = dekey_id.toStdString();
     downloadoss *downKey=new downloadoss;
@@ -23,7 +23,7 @@ void DepDownThread::run(){
 
 void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString file_name){
 
-    QString downPath = "D://CloundSafeWindows//ykey//"+enkey_id;
+    QString downPath = User_qqPath+"//Decrypt//ykey//"+enkey_id;
     QByteArray down_oss_Path = downPath.toLatin1();
     std::string enKeyID = enkey_id.toStdString();
     downloadoss *downKey=new downloadoss;
@@ -33,8 +33,8 @@ void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString fi
     downKey->get_object_to_file();
     //下载完成后开始解密
     DecryptionFile *fileD = new DecryptionFile();
-    QString contentPath = "D://CloundSafeWindows//content//"+file_id;
-    QString filePath = "D://CloundSafeWindows//file//"+file_name;
+    QString contentPath = User_qqPath+"//Decrypt//content//"+file_id;
+    QString filePath = User_qqPath+"//Decrypt//file//"+file_name;
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
     };//解密函数

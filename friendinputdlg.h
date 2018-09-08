@@ -37,7 +37,7 @@ public:
     QSqlDatabase db;
     QLabel *userHead;
     QLabel *userName;
-    QLabel *userPhone;
+   // QLabel *userPhone;
     QLabel *userTitle;
     QLabel *userId;
     QPushButton *addFriendBtn;

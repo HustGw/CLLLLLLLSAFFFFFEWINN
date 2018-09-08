@@ -93,6 +93,8 @@ extern int FriendRequestCount;
 extern int FriendArrayIndex;//好友昵称数据目录
 extern int RequsetIndex;//消息ID数组的目录
 extern int isFriendListHide;//判断消息列表是否隐藏
+extern QString User_qqNum;//用户qq_num
+extern QString User_qqPath;//用户本地存放文件路径
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

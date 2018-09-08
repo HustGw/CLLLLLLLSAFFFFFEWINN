@@ -8,9 +8,8 @@ DecryptionThread::DecryptionThread(QObject *parent):QThread(parent)
    // connect(downKey,SIGNAL(progressBarValue(double)),this,SLOT(RecProgressValue(double)));
 }
 
-
 void DecryptionThread::run(){
-    QString downPath = "D://CloundSafeWindows//ykey//"+Denkey_id;
+    QString downPath = User_qqPath+"//Decrypt//ykey//"+Denkey_id;
     QByteArray down_oss_Path = downPath.toLatin1();
     std::string enKeyID = Denkey_id.toStdString();
     downKey->OBJECT_NAME=enKeyID.c_str();
@@ -19,8 +18,8 @@ void DecryptionThread::run(){
     downKey->get_object_to_file();
     //下载完成后开始解密
     DecryptionFile *fileD = new DecryptionFile();
-    QString contentPath = "D://CloundSafeWindows//content//"+Dfile_id;
-    QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
+    QString contentPath = User_qqPath+"//Decrypt//content//"+Dfile_id;
+    QString filePath = User_qqPath+"//Decrypt//file//"+Dfile_name;
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         qDebug()<<"success";
         //解密成功后删除本地密文和密钥文件

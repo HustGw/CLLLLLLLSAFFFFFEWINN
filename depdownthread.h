@@ -8,6 +8,7 @@
 #include <QMessageBox>
 extern QString dekey_id;
 extern QString d_id;
+extern QString User_qqPath;
 class DepDownThread : public QThread
 {
     Q_OBJECT

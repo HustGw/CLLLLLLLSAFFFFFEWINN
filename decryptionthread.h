@@ -10,7 +10,7 @@
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;
-
+extern QString User_qqPath;
 class DecryptionThread : public QThread
 {
     Q_OBJECT

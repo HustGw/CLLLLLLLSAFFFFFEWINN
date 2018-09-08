@@ -48,12 +48,12 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
  //   this->setFixedSize(this->width(),this->height());
     userHead = new QLabel(this);
     userName = new QLabel(this);
-    userPhone = new QLabel(this);
+//    userPhone = new QLabel(this);
     userTitle = new QLabel(this);
     userId = new QLabel(this);
     userHead->hide();
     userName->hide();
-    userPhone->hide();
+//    userPhone->hide();
     userId->hide();
     userTitle->hide();
     addFriendBtn = new QPushButton(this);
@@ -232,8 +232,12 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                             qDebug()<<output;
                             QString ename = "emp_name";
                             QString lastindex = "emp_password";
+                            QString key = "qq_num";
                             int index = output.indexOf(ename);
                             int last = output.indexOf(lastindex);
+                            int qq = output.indexOf(key);
+                            qq +=9;
+                            QString qq_num = output.mid(qq,9);
                             //last-=5;
                             qDebug()<<last;
                             index+=11;
@@ -241,6 +245,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                             int lenth = last-index-3;
                             ddd = output.mid(index,lenth);
                             qDebug()<<ddd;
+                            qDebug()<<qq_num;
                             if(output==NULL){
                                 //好友不存在
                                 MsgBox *msgbox = new MsgBox(2,QStringLiteral("好友不存在"),this);
@@ -259,17 +264,17 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                                                         "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
                                                         );
                                 userHead->show();
-                                userName->setGeometry(150,110,80,30);
+                                userName->setGeometry(180,110,80,30);
                                 userName->setText(ddd);
                                 userName->show();
-                                userPhone->setGeometry(240,110,80,30);
-                                userPhone->setText("111111111111");
-                                userPhone->show();
+                               // userPhone->setGeometry(240,110,80,30);
+                                //userPhone->setText("111111111111");
+                                //userPhone->show();
                                 userTitle->setGeometry(150,160,50,30);
                                 userTitle->setText("用户名");
                                 userTitle->show();
                                 userId->setGeometry(220,160,80,30);
-                                userId->setText("8462023464");
+                                userId->setText(qq_num);
                                 userId->show();
                                 addFriendBtn->setGeometry(180,220,80,40);
                                 addFriendBtn->setText("添加好友");
