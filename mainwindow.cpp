@@ -2263,6 +2263,8 @@ void MainWindow::Init_InforIcon(){
     Infor_num_icon->setStyleSheet("background-color:red;"
                                   "border-radius:8px");
     Infor_num_icon->setAlignment(Qt::AlignCenter);
+    Infor_num_icon->setCursor(QCursor(Qt::PointingHandCursor));
+    connect(Infor_num_icon,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     QSqlQuery query(db);
     int num=0;
     bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and is_solved = '0'");
