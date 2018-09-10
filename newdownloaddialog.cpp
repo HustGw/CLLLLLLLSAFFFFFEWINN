@@ -63,10 +63,11 @@ void newDownloadDialog::change_list_view(){
 }
 void newDownloadDialog::on_pushButtonconfirm_clicked()
 {
+    emit Infor_numChange();
     for(int i = 0 ; i < newDownloadFileIdList.count() ; i++){
         QString record_id = newDownloadFileIdList[i];
         emit downloadOne(record_id);
-    }
+    }    
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);
     this->close();
@@ -74,6 +75,7 @@ void newDownloadDialog::on_pushButtonconfirm_clicked()
 
 void newDownloadDialog::on_pushButtoncancel_clicked()
 {
+    emit Infor_numChange();
     isOpened = false;
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);

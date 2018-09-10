@@ -55,6 +55,7 @@ private:
     void closeBtn_press();
 signals:
     void downloadOne(QString id);
+    void Infor_numChange();
 };
 
 #endif // NEWDOWNLOADDIALOG_H

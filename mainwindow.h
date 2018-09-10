@@ -65,7 +65,7 @@
 #include <encryptthread.h>
 #include "groupsharedialog.h"
 #include "newdownloaddialog.h"
-
+#include "decryptprobarthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -106,6 +106,7 @@ extern QFileInfo openFileInfo;
 extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString file_item_name;
+extern QString DecProFileID;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -148,6 +149,7 @@ public:
     encryptthread *encptThreadArr[MAXSIZE];
     enItemThread *enitemArr[MAXSIZE];
     newDownloadDialog *newdownloadDlg;
+    DecryptProBarThread *decryBarThread[MAXSIZE];
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -263,6 +265,10 @@ private slots:
     void on_pushButton_groupshare_clicked();
     bool DeleteFileOrFolder( const QString& strPath );
     void downloadOneFile(QString id);
+
+    void ChangeDecItemProBar(int value, QString itemID);
+
+    void newDownDialogInforInit();//newDownloadDiaglog点击按钮后消息数量置0并刷新
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -277,6 +283,7 @@ signals:
     void showDownDialog(QString id);
     void starEcptItem(QString itemName);
     void newDownload();
+    void DecryProBarID(QString id);
 private:
     Ui::MainWindow *ui;
     QPoint dragPosition;
