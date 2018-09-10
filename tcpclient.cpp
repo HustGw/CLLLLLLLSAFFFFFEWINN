@@ -544,7 +544,6 @@ void TcpClient::on_Rem_Passwd_clicked(){
         remeberPasswd = true;
     }else{
         remeberPasswd = false;
-        ui->passwardLineEdit->clear();
     }
 }
 
