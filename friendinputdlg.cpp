@@ -12,6 +12,7 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     bottomWidget->setGeometry(7,43,500,363);
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground, true);
     titleText = new QLabel(topWidget);
     titleText->setGeometry(54,14,200,15);
     titleText->setFont(QFont("Timers",9,QFont::Bold));
@@ -90,13 +91,13 @@ void friendInputDlg::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
+        color.setAlpha(120 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }

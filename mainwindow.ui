@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">border-color: rgb(189, 189, 189);
-background-color: rgb(255, 255, 255);</string>
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="EncryptionBtn">
@@ -398,7 +398,7 @@ background-color: rgb(255, 255, 255);</string>
        </rect>
       </property>
       <property name="text">
-       <string>批量传输</string>
+       <string/>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_8">
@@ -600,7 +600,7 @@ background-color: rgb(255, 255, 255);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image: url(:/new/mainwindow/pictures/mainwindow_border.png);</string>
+     <string notr="true">background-image: url(:/new/mainwindow/pictures/mainwindow_border.png);</string>
     </property>
     <property name="text">
      <string/>

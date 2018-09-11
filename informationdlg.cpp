@@ -9,6 +9,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     topWidget->setGeometry(6,6,540,37);
     topWidget->setStyleSheet("background-color:#EEF0F5");
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground, true);
     topWidget->show();
     bottomWidget = new QWidget(this);
     bottomWidget->setGeometry(7,43,540,463);
@@ -502,13 +503,13 @@ void informationDlg::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
+        color.setAlpha(120 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }

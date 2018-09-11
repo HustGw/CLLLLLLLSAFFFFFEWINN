@@ -18,7 +18,7 @@ registerDialog::registerDialog(QWidget *parent) :
 {
    ui->setupUi(this);
    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
-
+   setAttribute(Qt::WA_TranslucentBackground, true);
    flag = 0;
    ui->passwardLineEdit->setEchoMode(QLineEdit::Password);
    ui->passwardLineEdit_2->setEchoMode(QLineEdit::Password);
@@ -405,13 +405,13 @@ void registerDialog::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
+        color.setAlpha(120 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }

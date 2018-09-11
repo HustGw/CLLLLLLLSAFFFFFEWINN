@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     User_ID = LoginUserID;
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
@@ -128,7 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
-    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-39);
+    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-44);
     friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -378,6 +379,9 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_5 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
                          "QPushButton#pushButton_5:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
                          "QPushButton#pushButton_5:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
+                         "QPushButton#pushButton_6 { border-image: url(:/new/mainwindow/pictures/grouptrans.png); }"
+                         "QPushButton#pushButton_6:hover { border-image: url(:/new/mainwindow/pictures/grouptrans_hover.png); }"
+                         "QPushButton#pushButton_6:pressed { border-image: url(:/new/mainwindow/pictures/grouptrans_pressed.png); }"
                          "QPushButton#pushButton { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
                          "QPushButton#pushButton_groupshare { border-image: url(:/new/mainwindow/pictures/groupshare.png);}"
                          "QPushButton#pushButton_groupshare:hover { border-image: url(:/new/mainwindow/pictures/groupshare_hover.png);}"
@@ -2488,24 +2492,24 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 }
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(10, 10, this->width()-20, this->height()-20);
+//    QPainterPath path;
+//    path.setFillRule(Qt::WindingFill);
+//    path.addRect(10, 10, this->width()-20, this->height()-20);
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+//    painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
-    for(int i=0; i<10; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
+//    QColor color(0, 0, 0, 50);
+//    for(int i=0; i<10; i++)
+//    {
+//        QPainterPath path;
+//        path.setFillRule(Qt::WindingFill);
+//        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
+//        color.setAlpha(150 - qSqrt(i)*50);
+//        painter.setPen(color);
+//        painter.drawPath(path);
+//    }
 }
 void MainWindow::FriendListWidgetHide(){
     if(isFriendListHide == 0){
