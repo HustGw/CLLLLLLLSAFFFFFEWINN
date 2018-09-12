@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>462</width>
-    <height>620</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>6</x>
      <y>6</y>
      <width>450</width>
-     <height>608</height>
+     <height>538</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -193,38 +193,11 @@ border-radius:4px;</string>
 border-radius:4px;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="emailLabel">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>369</y>
-      <width>39</width>
-      <height>15</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>邮箱：</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="email">
-    <property name="geometry">
-     <rect>
-      <x>128</x>
-      <y>361</y>
-      <width>220</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border:1px solid rgb(214,216,221);
-border-radius:4px;</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="codeLabel">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>439</y>
+      <y>369</y>
       <width>60</width>
       <height>15</height>
      </rect>
@@ -237,7 +210,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>431</y>
+      <y>361</y>
       <width>99</width>
       <height>30</height>
      </rect>
@@ -251,7 +224,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>239</x>
-      <y>431</y>
+      <y>361</y>
       <width>109</width>
       <height>30</height>
      </rect>
@@ -273,7 +246,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>506</y>
+      <y>436</y>
       <width>271</width>
       <height>18</height>
      </rect>
@@ -289,7 +262,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>126</x>
-      <y>549</y>
+      <y>479</y>
       <width>222</width>
       <height>34</height>
      </rect>
@@ -309,7 +282,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>533</y>
+      <y>463</y>
       <width>428</width>
       <height>1</height>
      </rect>
@@ -377,7 +350,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>469</y>
+      <y>399</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -388,22 +361,6 @@ color:white;</string>
     </property>
     <property name="text">
      <string>验证码不正确</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="emailAlert">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>399</y>
-      <width>200</width>
-      <height>14</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:red;</string>
-    </property>
-    <property name="text">
-     <string>邮箱格式不正确</string>
     </property>
    </widget>
    <widget class="QLabel" name="icon">

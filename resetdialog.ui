@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>462</width>
-    <height>550</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>6</x>
      <y>6</y>
      <width>450</width>
-     <height>538</height>
+     <height>468</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -119,20 +119,20 @@ border:none;</string>
 border-radius:4px;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="emailLabel">
+   <widget class="QLabel" name="passwordLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>50</x>
       <y>160</y>
-      <width>39</width>
+      <width>66</width>
       <height>15</height>
      </rect>
     </property>
     <property name="text">
-     <string>邮箱：</string>
+     <string>登录密码：</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="email">
+   <widget class="QLineEdit" name="passwordLineEdit">
     <property name="geometry">
      <rect>
       <x>128</x>
@@ -146,7 +146,7 @@ border-radius:4px;</string>
 border-radius:4px;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="passwordLabel">
+   <widget class="QLabel" name="passwordLabel_2">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -156,10 +156,10 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="text">
-     <string>登录密码：</string>
+     <string>确认密码：</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="passwordLineEdit">
+   <widget class="QLineEdit" name="passwordLineEdit_2">
     <property name="geometry">
      <rect>
       <x>128</x>
@@ -173,38 +173,11 @@ border-radius:4px;</string>
 border-radius:4px;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="passwordLabel_2">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>300</y>
-      <width>66</width>
-      <height>15</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>确认密码：</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="passwordLineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>128</x>
-      <y>291</y>
-      <width>220</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border:1px solid rgb(214,216,221);
-border-radius:4px;</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="codeLabel">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>370</y>
+      <y>300</y>
       <width>60</width>
       <height>15</height>
      </rect>
@@ -217,7 +190,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>361</y>
+      <y>291</y>
       <width>99</width>
       <height>30</height>
      </rect>
@@ -231,7 +204,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>450</y>
+      <y>380</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -254,7 +227,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>239</x>
-      <y>361</y>
+      <y>291</y>
       <width>109</width>
       <height>30</height>
      </rect>
@@ -288,27 +261,11 @@ border-radius:4px;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="emailAlert">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>188</y>
-      <width>200</width>
-      <height>14</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:red;</string>
-    </property>
-    <property name="text">
-     <string>邮箱格式不对</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="passwordAlert">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>328</y>
+      <y>258</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -324,7 +281,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>398</y>
+      <y>328</y>
       <width>200</width>
       <height>14</height>
      </rect>

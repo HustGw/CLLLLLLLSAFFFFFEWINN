@@ -32,7 +32,6 @@ private slots:
     void on_closeBtn_clicked();
     void on_userLineEdit_textChanged();
     void on_userLineEdit_editingFinished();
-    void on_email_editingFinished();
     void finishedSlot(QNetworkReply *reply);   
 protected:
     QPoint move_point;                                    //移动的距离
