@@ -122,7 +122,8 @@ SOURCES += \
     msgbox.cpp \
     resetDialog.cpp \
     groupsharedialog.cpp \
-    newdownloaddialog.cpp
+    newdownloaddialog.cpp \
+    decryptprobarthread.cpp
 
 
 
@@ -222,7 +223,8 @@ HEADERS += \
     msgbox.h \
     resetDialog.h \
     groupsharedialog.h \
-    newdownloaddialog.h
+    newdownloaddialog.h \
+    decryptprobarthread.h
 
 
 

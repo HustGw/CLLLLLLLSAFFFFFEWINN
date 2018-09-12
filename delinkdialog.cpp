@@ -11,6 +11,7 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 
   //设置标题栏隐藏
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground, true);
     titleLabel = new QLabel(this);
     titleLabel->setGeometry(6,6,width-12,38);
     titleText = new QLabel(this);
@@ -106,13 +107,13 @@ void DelinkDialog::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
+        color.setAlpha(120 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }

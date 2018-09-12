@@ -61,7 +61,7 @@ void downloadoss::get_object_to_file()
     aos_pool_destroy(pool);
 
     // deinitialize http io system, call it olny once
-    aos_http_io_deinitialize();
+    //aos_http_io_deinitialize();
 }
 //void downloadoss::percentage(int64_t consumed_bytes, int64_t total_bytes)
 //{

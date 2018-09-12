@@ -23,6 +23,7 @@ int FriendRequestCount = 0;
 int informationNum = 0;
 int RequsetAllowNum = 0;
 int Infor_requestNum = 0;
+int DecryBarNum = 0;
 int isFinishedBtn=0;//用于判断是否已经点击
 QString RequestIDArray[50] = {};//存放Request的数组
 int RequsetIndex = 0;//数组的INDEX
@@ -47,7 +48,7 @@ QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
-
+QString DecProFileID = NULL;
 QString file_item_name;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -57,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     User_ID = LoginUserID;
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
@@ -127,7 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
-    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-39);
+    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-44);
     friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -333,6 +335,7 @@ MainWindow::MainWindow(QWidget *parent) :
          }
      }
      newdownloadDlg = new newDownloadDialog(this);
+     connect(newdownloadDlg,SIGNAL(Infor_numChange()),this,SLOT(newDownDialogInforInit()));
      RequestRecThread *recThread = new RequestRecThread();
      connect(recThread,SIGNAL(numChanged()),this,SLOT(ReceiveNewReq()));
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
@@ -376,6 +379,9 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_5 { border-image: url(:/new/mainwindow/pictures/groupdelete.png); }"
                          "QPushButton#pushButton_5:hover { border-image: url(:/new/mainwindow/pictures/groupdelete_hover.png); }"
                          "QPushButton#pushButton_5:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
+                         "QPushButton#pushButton_6 { border-image: url(:/new/mainwindow/pictures/grouptrans.png); }"
+                         "QPushButton#pushButton_6:hover { border-image: url(:/new/mainwindow/pictures/grouptrans_hover.png); }"
+                         "QPushButton#pushButton_6:pressed { border-image: url(:/new/mainwindow/pictures/grouptrans_pressed.png); }"
                          "QPushButton#pushButton { border-image: url(:/new/mainwindow/pictures/allselect.png); }"
                          "QPushButton#pushButton_groupshare { border-image: url(:/new/mainwindow/pictures/groupshare.png);}"
                          "QPushButton#pushButton_groupshare:hover { border-image: url(:/new/mainwindow/pictures/groupshare_hover.png);}"
@@ -976,12 +982,20 @@ void MainWindow::OssDownLoadFile(){
                     f_proccess->show();
                     f_proccess->setValue(20);
                     downThread[threadNum] = new DepDownThread();
+                    DecProFileID = onlyId;
+                    decryBarThread[DecryBarNum] = new DecryptProBarThread(this);
+//                    connect(this,SIGNAL(DecryProBarID(QString)),decryBarThread[DecryBarNum],SLOT(setItemID(QString)));
+                    connect(decryBarThread[DecryBarNum],SIGNAL(reslut(int,QString)),this,SLOT(ChangeDecItemProBar(int,QString)));
+                    connect(decryBarThread[DecryBarNum],SIGNAL(finished()),decryBarThread[DecryBarNum],SLOT(deleteLater()));
                     connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
                     connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
-                    connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),this,SLOT(ChangeItemBtnText(QString)));
+                    connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),decryBarThread[DecryBarNum],SLOT(run()));
                     downThread[threadNum]->start();
+//                     emit DecryProBarID(onlyId);
+//                    decryBarThread[DecryBarNum]->start();
                     emit OSSfileDownFileID(onlyId,enkey_id);
                     threadNum++;
+                    DecryBarNum++;
                     //更新按钮内容
                     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(onlyId+"decryption");
                     m1->downloadBtn->setText("正在下载");
@@ -2310,7 +2324,9 @@ void MainWindow::Init_InforIcon(){
     Infor_num_icon = new Mylabel(ui->TopWidget);
     Infor_num_icon->setGeometry(957,21,17,17);
     Infor_num_icon->setStyleSheet("background-color:red;"
-                                  "border-radius:8px");
+                                  "border-radius:8px;"
+                                  "color:white");
+
     Infor_num_icon->setAlignment(Qt::AlignCenter);
     Infor_num_icon->setCursor(QCursor(Qt::PointingHandCursor));
     connect(Infor_num_icon,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
@@ -2402,7 +2418,7 @@ void MainWindow::downloadOneFile(QString id){
                 qDebug()<<"error";
             }
             else{
-                m1->downloadBtn->click();
+                 m1->downloadBtn->click();
                 Infor_requestNum--;
                 InforNum_Changed();
                 on_DecryptionBtn_clicked();
@@ -2476,24 +2492,24 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 }
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(10, 10, this->width()-20, this->height()-20);
+//    QPainterPath path;
+//    path.setFillRule(Qt::WindingFill);
+//    path.addRect(10, 10, this->width()-20, this->height()-20);
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+//    painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
-    for(int i=0; i<10; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
+//    QColor color(0, 0, 0, 50);
+//    for(int i=0; i<10; i++)
+//    {
+//        QPainterPath path;
+//        path.setFillRule(Qt::WindingFill);
+//        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
+//        color.setAlpha(150 - qSqrt(i)*50);
+//        painter.setPen(color);
+//        painter.drawPath(path);
+//    }
 }
 void MainWindow::FriendListWidgetHide(){
     if(isFriendListHide == 0){
@@ -2614,4 +2630,24 @@ void MainWindow::on_pushButton_groupshare_clicked()
         msgbox->exec();
     }
     flag = 0;
+}
+
+void MainWindow::ChangeDecItemProBar(int value, QString itemID){
+    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(itemID+"decryption");
+    QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(itemID+"decryption");
+    m1->progressBar->setValue(value);
+    if(value ==100){
+        m1->fileDescription->setText("文件已加密需下载密钥文件");
+        m1->downloadBtn->setText("申请解密");
+        delete n1;
+        ReLayout();
+        //解除原有信号槽
+        disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(DeProgressBarStart()));
+        //连接新的信号槽
+        connect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
+    }
+}
+void MainWindow::newDownDialogInforInit(){
+    Infor_requestNum = 0;
+    InforNum_Changed();
 }

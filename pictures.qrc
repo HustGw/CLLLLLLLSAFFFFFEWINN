@@ -69,6 +69,9 @@
         <file>pictures/system_warning.png</file>
         <file>pictures/finde_label.png</file>
         <file>pictures/finen_label.png</file>
+        <file>pictures/grouptrans.png</file>
+        <file>pictures/grouptrans_hover.png</file>
+        <file>pictures/grouptrans_pressed.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

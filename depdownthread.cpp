@@ -9,11 +9,11 @@ DepDownThread::DepDownThread(QObject *parent):QThread(parent)
 }
 
 void DepDownThread::run(){
-    qDebug()<<"downloadThread Begin!";
+    qDebug()<<"downloadThread Begin111111111111!";
     QString downPath = User_qqPath+"//Decrypt//content//"+dekey_id;
     QByteArray down_oss_Path = downPath.toLatin1();
     std::string enKeyID = dekey_id.toStdString();
-    downloadoss *downKey=new downloadoss;
+    downloadoss *downKey=new downloadoss();
     downKey->OBJECT_NAME=enKeyID.c_str();
     downKey->BUCKET_NAME="cloudsafe-pc-yfile";
     downKey->download_filePath=down_oss_Path.data();

@@ -7,6 +7,7 @@ newDownloadDialog::newDownloadDialog(QWidget *parent) :
 {
     db1 = ConnectionPool::openConnection();
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground, true);
     ui->setupUi(this);
     ui->pushButtonconfirm->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButtonconfirm->setCursor(QCursor(Qt::PointingHandCursor));
@@ -63,10 +64,11 @@ void newDownloadDialog::change_list_view(){
 }
 void newDownloadDialog::on_pushButtonconfirm_clicked()
 {
+    emit Infor_numChange();
     for(int i = 0 ; i < newDownloadFileIdList.count() ; i++){
         QString record_id = newDownloadFileIdList[i];
         emit downloadOne(record_id);
-    }
+    }    
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);
     this->close();
@@ -74,6 +76,7 @@ void newDownloadDialog::on_pushButtonconfirm_clicked()
 
 void newDownloadDialog::on_pushButtoncancel_clicked()
 {
+    emit Infor_numChange();
     isOpened = false;
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);
@@ -129,13 +132,13 @@ void newDownloadDialog::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
+        color.setAlpha(120 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }
