@@ -26,12 +26,10 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->passwardLineEdit->setPlaceholderText(tr("设置你的登录密码"));
    ui->passwardLineEdit_2->setPlaceholderText(tr("请再次输入你的密码"));
    ui->userLineEdit->setPlaceholderText(tr("请输入手机号"));
-   ui->email->setPlaceholderText(tr("请输入邮箱"));
    ui->nichengAlert->setVisible(false);
    ui->passwardAlert->setVisible(false);
    ui->userAlert->setVisible(false);
    ui->codeAlert->setVisible(false);
-   ui->emailAlert->setVisible(false);
    ui->checkBox->setCursor(QCursor(Qt::PointingHandCursor));
    ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
    ui->codeBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -40,31 +38,28 @@ registerDialog::registerDialog(QWidget *parent) :
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
-               "QPushButton:hover{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
+               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
    ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QPushButton:hover{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->closeBtn->setStyleSheet(               //调整关闭按钮样式
                "QPushButton{border-image: url(:/new/mainwindow/pictures/delete_button.png);border:none;background-color:#EEF0F5;}"
-               "QPushButton:hover{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
+               "QPushButton:hover,QPushButton:focus{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
    ui->nichengLineEdit->setStyleSheet(                 //调整昵称输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->passwardLineEdit->setStyleSheet(                 //调整密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->passwardLineEdit_2->setStyleSheet(                 //调整确认密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->userLineEdit->setStyleSheet(                 //调整手机号输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
-   ui->email->setStyleSheet(                 //调整邮箱输入框样式
-               "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->code->setStyleSheet(                 //调整验证码样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
 
 
    qDebug()<<"hehe flag:"<<flag;
@@ -85,19 +80,15 @@ void registerDialog::on_signBtn_clicked()
     ui->passwardAlert->setVisible(false);
     ui->userAlert->setVisible(false);
     ui->codeAlert->setVisible(false);
-    ui->emailAlert->setVisible(false);
    //点击注册按钮的响应
    QString s;
    QRegExp rx("[1]\\d{10}");
-   QRegExp rx2("[a-zA-Z0-9_]+@[a-zA-Z0-9_]+(\\.[a-zA-Z]+)+");
    QRegExpValidator v(rx,0);
-   QRegExpValidator v2(rx2,0);
    int pos = 0;
    QString userName=ui->userLineEdit->text();  //获取对话框中用户名
    QString passward=ui->passwardLineEdit->text();//获取对话框中密码
    QString passward_2=ui->passwardLineEdit_2->text();
    QString nicheng=ui->nichengLineEdit->text();//获取昵称
-   QString email=ui->email->text();
    if(userName=="" || passward==""|| nicheng==""){//判断用户名、密码是否为空，为空弹出警告
        if(passward != passward_2){
            ui->passwardAlert->setVisible(true);
@@ -109,12 +100,10 @@ void registerDialog::on_signBtn_clicked()
            ui->passwardAlert->setVisible(true);
        }else if(QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setVisible(true);
-       }else if(email != "" && (QValidator::Acceptable!=v2.validate(email,pos))){
-           ui->emailAlert->setVisible(true);
        }else if(ui->checkBox->isChecked()==true){
            //http 判断手机号是否注册
            QNetworkRequest request;
-           //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+//           request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
            flag = 1; //步骤：判断手机是否注册
            qDebug()<<"hehe flag:"<<flag;
            request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Employee/Judge_Phone.do"));  //判断手机是否注册
@@ -135,8 +124,6 @@ void registerDialog::on_signBtn_clicked()
            postData.append(ui->userLineEdit->text());
            postData.append("&emp_password=");//参数密码
            postData.append(ui->passwardLineEdit->text());//
-           postData.append("&emp_email=");//参数邮箱
-           postData.append(ui->email->text());//
            postData.append("&code=");//参数验证码
            postData.append(ui->code->text());//
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
@@ -197,10 +184,10 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    postData.append(ui->userLineEdit->text());
                    postData.append("&emp_password=");//参数密码
                    postData.append(ui->passwardLineEdit->text());//
-                   postData.append("&emp_email=");//参数邮箱
-                   postData.append(ui->email->text());//
                    postData.append("&code=");//参数验证码
                    postData.append(ui->code->text());//
+                   postData.append("&emp_email=");//参数验证码
+                   postData.append("");//
                    postData.append("&emp_name=");//昵称
                    postData.append(ui->nichengLineEdit->text());//
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
