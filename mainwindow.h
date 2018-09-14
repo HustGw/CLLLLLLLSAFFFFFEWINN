@@ -66,7 +66,10 @@
 #include "groupsharedialog.h"
 #include "newdownloaddialog.h"
 #include "decryptprobarthread.h"
-
+#include <QNetworkAccessManager>
+#include "heartthread.h"
+#include <QNetworkInterface>
+#include <QList>
 namespace Ui {
 class MainWindow;
 }
@@ -107,6 +110,7 @@ extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString file_item_name;
 extern QString DecProFileID;
+extern QNetworkAccessManager *m_accessManagerHeart;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -140,6 +144,7 @@ public:
     informationDlg *inforDlg;
     DepDownThread *downThread[MAXSIZE];
     DecryptionThread *depThread[MAXSIZE];
+    heartThread *heartTread_;
     QProgressBar *f_progressBar;
     QProgressBar *d_progressBar;
     encryption *contest = new encryption();
@@ -150,6 +155,8 @@ public:
     enItemThread *enitemArr[MAXSIZE];
     newDownloadDialog *newdownloadDlg;
     DecryptProBarThread *decryBarThread[MAXSIZE];
+
+
 private slots:
 
     void on_FinishedBtn_clicked();
@@ -269,6 +276,8 @@ private slots:
     void ChangeDecItemProBar(int value, QString itemID);
 
     void newDownDialogInforInit();//newDownloadDiaglog点击按钮后消息数量置0并刷新
+
+    void forceShut();
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);

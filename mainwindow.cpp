@@ -341,6 +341,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(recThread,SIGNAL(ReqIsAlliowed()),this,SLOT(FileIsAllowed()));
      connect(recThread,SIGNAL(thread_Disconnected()),this,SLOT(internet_Disconnected()));
      connect(recThread,SIGNAL(ReqIsIgnored()),this,SLOT(FileIsIgnored()));
+     connect(recThread,SIGNAL(forceShutDown()),this,SLOT(forceShut()));
      connect(this,SIGNAL(newDownload()),newdownloadDlg,SLOT(change_list_view()));
      recThread->start();
      InformationThread *inforThread = new InformationThread();
@@ -397,6 +398,14 @@ MainWindow::MainWindow(QWidget *parent) :
      ui->pushButton_8->hide();
      ui->pushButton_9->hide();
 
+        QThread *thread = new QThread(this);
+        heartThread *workThread = new heartThread(); //工作线程，具体的业务实现在此中完成，继承自Object
+        workThread->moveToThread( thread );       //加入到子线程
+        thread->start();                        //启动线程
+
+        QTimer *threadTimer = new QTimer();
+        QObject::connect( threadTimer, SIGNAL(timeout()), workThread, SLOT( work() ),Qt::AutoConnection );
+        threadTimer->start(10000);   // 计时器，每隔几秒钟唤起工作线程；
 
 }
 
@@ -404,7 +413,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 void MainWindow::on_FinishedBtn_clicked()
 {
@@ -2562,9 +2570,12 @@ void MainWindow::NewFriendAgree(){
             count++;
         }
     }
-
 }
-
+void MainWindow::forceShut(){
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("其他地点登录！本地强制下线！"),this);
+    msgbox->exec();
+    this->close();
+}
 void MainWindow::FileIsIgnored(){
     //查询数据库找到当前状态为4的数据
     QSqlQuery query(db);

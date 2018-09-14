@@ -37,6 +37,7 @@ void RequestRecThread::listenReqNum(){
     int allownum = 0;
     int ignoreNum = 0;
     while(1){
+        int disFlag = forceDisconnect();
         num = getReqNum();
         allownum = ReqAllowNum();
         ignoreNum = ReqIgnoreNum();
@@ -51,6 +52,8 @@ void RequestRecThread::listenReqNum(){
         if(ignoreNum>RequestIgnNum){
             emit ReqIsIgnored();
             RequestIgnNum = ReqIgnoreNum();
+        }if(disFlag == 7){
+            emit forceShutDown();
         }
         Sleep(2000);
     }
@@ -96,3 +99,23 @@ int RequestRecThread::ReqIgnoreNum(){
     return num;
 }
 
+int RequestRecThread::forceDisconnect(){
+    QSqlQuery query(dd);
+    bool success = query.exec("select * from UserStatus where emp_phone = '"+UserPhoneNum + "'");
+    if(!success){
+        if(!erroFlag){
+            emit thread_Disconnected();
+            erroFlag = 1;
+        }
+        qDebug()<<"ReqThread:ignore查询失败";
+    }
+    else{
+        while(query.next()){
+            if(Mac_address != query.record().value("mac_address").toString()){
+                return 7;
+            }else {
+                return 0;
+            }
+        }
+    }
+}

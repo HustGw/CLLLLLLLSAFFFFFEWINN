@@ -33,11 +33,11 @@ LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master
 
 
 
-#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
-LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 
@@ -123,7 +123,8 @@ SOURCES += \
     resetDialog.cpp \
     groupsharedialog.cpp \
     newdownloaddialog.cpp \
-    decryptprobarthread.cpp
+    decryptprobarthread.cpp \
+    heartthread.cpp
 
 
 
@@ -224,7 +225,8 @@ HEADERS += \
     resetDialog.h \
     groupsharedialog.h \
     newdownloaddialog.h \
-    decryptprobarthread.h
+    decryptprobarthread.h \
+    heartthread.h
 
 
 

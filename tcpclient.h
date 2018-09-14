@@ -12,7 +12,7 @@
 #include <QtMath>
 #include <QPainter>
 #include <QSettings>
-
+extern QString Mac_address;
 extern QString LoginUserID;
 extern QString UserPhoneNum;
 namespace Ui {
@@ -32,8 +32,9 @@ public:
     QString usersname;
     QString passwd;
     void savecfg();
-
-
+    QString getHostMacAddress();
+    QString getHostIpAddress();
+    QNetworkAccessManager *m_accessManagerHeartFirst;
 protected:
     void init();
     void connectServer();
@@ -71,9 +72,9 @@ private slots:
     void readMessages();
     void finishedSlot(QNetworkReply *reply);
 
-    void on_codeBtn_clicked();
 
     void on_Rem_Passwd_clicked();
+
 
 private:
     Ui::TcpClient *ui;

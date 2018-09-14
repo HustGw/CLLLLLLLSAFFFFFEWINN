@@ -11,6 +11,7 @@
 #include "mainwindow.h"
 extern int RequestNum;
 extern int RequsetAllowNum;
+extern QString Mac_address;
 class RequestRecThread : public QThread
 {
     Q_OBJECT
@@ -24,11 +25,13 @@ public:
     void listenReqNum();//监听数据库文件数量
     int ReqAllowNum();
     int ReqIgnoreNum();
+    int forceDisconnect();
 signals:
     void numChanged();
     void ReqIsAlliowed();
     void thread_Disconnected();
     void ReqIsIgnored();
+    void forceShutDown();
 };
 
 #endif // REQUESTRECTHREAD_H
