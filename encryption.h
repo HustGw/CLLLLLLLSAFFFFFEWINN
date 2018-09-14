@@ -42,6 +42,7 @@ public:
     int oss_PutKey_Flag;
     int oss_PutFile_Flag;
 
+
 public:
     encryption();
     void connect();
