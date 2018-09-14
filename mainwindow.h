@@ -155,7 +155,7 @@ public:
     enItemThread *enitemArr[MAXSIZE];
     newDownloadDialog *newdownloadDlg;
     DecryptProBarThread *decryBarThread[MAXSIZE];
-
+    bool forceFlag = false;
 
 private slots:
 

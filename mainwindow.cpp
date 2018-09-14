@@ -2459,14 +2459,18 @@ bool MainWindow::DeleteFileOrFolder( const QString& strPath )
     return true;
 }
 void MainWindow::closeEvent(QCloseEvent *event){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"),this);
-    int reply = msgbox->exec();
-    if(reply == QDialog::Accepted){
-        QString downPath = "C:/CloundSafe/"+User_qqNum+"/Decrypt/ykey/";
-        DeleteFileOrFolder(downPath);
-        event->accept();
+    if(forceFlag == false){
+        MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"),this);
+        int reply = msgbox->exec();
+        if(reply == QDialog::Accepted){
+            QString downPath = "C:/CloundSafe/"+User_qqNum+"/Decrypt/ykey/";
+            DeleteFileOrFolder(downPath);
+            event->accept();
+        }else{
+            event->ignore();
+        }
     }else{
-        event->ignore();
+        event->accept();
     }
 }
 
@@ -2573,6 +2577,7 @@ void MainWindow::NewFriendAgree(){
 void MainWindow::forceShut(){
     MsgBox *msgbox = new MsgBox(2,QStringLiteral("其他地点登录！本地强制下线！"),this);
     msgbox->exec();
+    forceFlag = true;
     this->close();
 }
 void MainWindow::FileIsIgnored(){
