@@ -33,11 +33,11 @@ void RequestRecThread::listenReqNum(){
     RequestNum = getReqNum();//获取请求数量
     RequsetAllowNum = ReqAllowNum();//获取请求允许数量
     RequestIgnNum = ReqIgnoreNum();//获取请求忽略数量
-    int disFlag = forceDisconnect();
     int num= 0;
     int allownum = 0;
     int ignoreNum = 0;
     while(1){
+        int disFlag = forceDisconnect();
         num = getReqNum();
         allownum = ReqAllowNum();
         ignoreNum = ReqIgnoreNum();
