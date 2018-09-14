@@ -12,7 +12,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QSettings>
-
+QString Mac_address;
 QString LoginUserID = NULL;
 QString UserPhoneNum = NULL;
 QNetworkAccessManager *m_accessManager;
@@ -23,7 +23,7 @@ TcpClient::TcpClient(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
-    this->setAttribute(Qt::WA_TranslucentBackground, true);
+
     //登录初始化时设置已记住的账号密码
     QString RemeberPasswd;
     QSettings cfg("user.ini",QSettings::IniFormat);
@@ -102,6 +102,7 @@ void TcpClient::on_forgetBtn_clicked()
 
 void TcpClient::on_sendBtn_clicked()
 {
+
     //点击登录按钮的响应
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
@@ -109,23 +110,60 @@ void TcpClient::on_sendBtn_clicked()
         QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
     }else{
 
-        //先判断，手机号是否已经注册， 调用judge_phone.do
-        //然后再调用登录接口，登录，调用接口employee.do
+        Mac_address = getHostMacAddress();
+        QString Ip_address = getHostIpAddress();
         QNetworkRequest request;
+        flag = 7;
         //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-        flag = 3; //步骤：登录
-        request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
-        QByteArray postData;
-        //emp_password  emp_email   code
-        postData.append("emp_phone=");//参数手机
-        postData.append(ui->userLineEdit->text());
-        postData.append("&emp_password=");//参数密码
-        postData.append(ui->passwardLineEdit->text());//
-
-        QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
+        request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Login/firstlogin.do"));
+        QByteArray postData1;
+        postData1.append("mac_address=");//参数
+        postData1.append(Mac_address);//参数
+        postData1.append("&ip_address=");//参数
+        postData1.append(Ip_address);//参数
+        postData1.append("&emp_phone=");//参数
+        postData1.append(ui->userLineEdit->text());//参数
+        qDebug()<<postData1;
+        QNetworkReply* reply = m_accessManager->post(request,postData1);//发送http的post请求
     }
 }
 
+QString TcpClient::getHostIpAddress()
+{
+    QString strIpAddress;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // 获取第一个本主机的IPv4地址
+    int nListSize = ipAddressesList.size();
+    for (int i = 0; i < nListSize; ++i)
+    {
+           if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+               ipAddressesList.at(i).toIPv4Address()) {
+               strIpAddress = ipAddressesList.at(i).toString();
+               break;
+           }
+     }
+     // 如果没有找到，则以本地IP地址为IP
+     if (strIpAddress.isEmpty())
+        strIpAddress = QHostAddress(QHostAddress::LocalHost).toString();
+     return strIpAddress;
+}
+
+QString TcpClient::getHostMacAddress()
+{
+    QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
+    int nCnt = nets.count();
+    QString strMacAddr = "";
+    for(int i = 0; i < nCnt; i ++)
+    {
+        // 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
+        if(nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
+        {
+            strMacAddr = nets[i].hardwareAddress();
+            break;
+        }
+    }
+    return strMacAddr;
+}
 void TcpClient::on_clearBtn_clicked()
 {   //点击清除密码按钮的响应
 
@@ -136,7 +174,6 @@ void TcpClient::on_clearBtn_clicked()
 void TcpClient::on_signBtn_clicked()
 {
     //点击注册账号按钮的响应
-
     registerDialog *regDlg = new registerDialog(this);
     regDlg->exec();
     return;
@@ -207,7 +244,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
          QByteArray bytes = reply->readAll();
          qDebug()<<bytes;
          //QString string = QString::fromUtf8(bytes);
-
          if(flag==1){   //判断手机是否注册
              QJsonParseError jsonError;//Qt5新类
              QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
@@ -369,7 +405,53 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                      }
                  }
              }
-         }else{//登录
+         }else if(flag == 7){
+             if (reply->error() == QNetworkReply::NoError)
+             {
+                 QJsonParseError jsonError;//Qt5新类
+                 QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
+                 if (jsonError.error == QJsonParseError::NoError)
+                 {
+                     if (json.isObject())
+                     {
+                         QJsonObject rootObj = json.object();
+                         qDebug()<<rootObj;
+                         QString rootpath;
+                         //是否含有key  rootpath
+                         if (rootObj.contains("status"))
+                         {
+                             //取出key为rootpath的值
+                             QJsonValue value = rootObj.value("status");
+                             //判断是否是string类型
+                             if (value.isString())
+                             {
+                                 rootpath = value.toString();
+                                 qDebug()<<rootpath;
+                                 if(rootpath == "success")
+                                 {
+                                     //先判断，手机号是否已经注册， 调用judge_phone.do
+                                     //然后再调用登录接口，登录，调用接口employee.do
+                                     QNetworkRequest request;
+                                     //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
+                                     flag = 3; //步骤：登录
+                                     request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
+                                     QByteArray postData;
+                                     //emp_password  emp_email   code
+                                     postData.append("emp_phone=");//参数手机
+                                     postData.append(ui->userLineEdit->text());
+                                     postData.append("&emp_password=");//参数密码
+                                     postData.append(ui->passwardLineEdit->text());//
+                                     QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
+                                 }else{
+                                     QMessageBox::warning(this,"警告","禁止重复登陆！",QMessageBox::Ok);
+                                 }
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+         else{//登录
              QJsonParseError jsonError;//Qt5新类
              QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
              if (jsonError.error == QJsonParseError::NoError)
@@ -448,14 +530,10 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                  }
              }
          }
-
-         flag = 0;
-
-
+        flag = 0;
      }
      else
      {
-
          qDebug()<<"handle errors here";
          QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
          qDebug( "found error ....code: %d %d\n", statusCodeV.toInt(), (int)reply->error());
@@ -475,18 +553,7 @@ void TcpClient::on_closeBtn_clicked()
 }
 
 //点击获取验证码
-void TcpClient::on_codeBtn_clicked()
-{
-    //http 获取验证码
-    QNetworkRequest request;
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-    flag = 4; //步骤：获取验证码
-    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/AcquireCode.do"));
-    QByteArray postData;
-    postData.append("emp_phone=");//参数
-    postData.append(ui->userLineEdit->text());//参数
-    QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
-}
+
 
 void TcpClient::mousePressEvent(QMouseEvent *qevent)
 {
@@ -525,13 +592,13 @@ void TcpClient::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(128, 128, 128, 50);
+    QColor color(0, 0, 0, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(120 - qSqrt(i)*50);
+        color.setAlpha(150 - qSqrt(i)*50);
         painter.setPen(color);
         painter.drawPath(path);
     }

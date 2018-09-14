@@ -123,7 +123,8 @@ SOURCES += \
     resetDialog.cpp \
     groupsharedialog.cpp \
     newdownloaddialog.cpp \
-    decryptprobarthread.cpp
+    decryptprobarthread.cpp \
+    heartthread.cpp
 
 
 
@@ -224,7 +225,8 @@ HEADERS += \
     resetDialog.h \
     groupsharedialog.h \
     newdownloaddialog.h \
-    decryptprobarthread.h
+    decryptprobarthread.h \
+    heartthread.h
 
 
 
