@@ -109,22 +109,23 @@ void TcpClient::on_sendBtn_clicked()
     if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告
         QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
     }else{
-
         Mac_address = getHostMacAddress();
         QString Ip_address = getHostIpAddress();
         QNetworkRequest request;
-        flag = 7;
         //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-        request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Login/firstlogin.do"));
-        QByteArray postData1;
-        postData1.append("mac_address=");//参数
-        postData1.append(Mac_address);//参数
-        postData1.append("&ip_address=");//参数
-        postData1.append(Ip_address);//参数
-        postData1.append("&emp_phone=");//参数
-        postData1.append(ui->userLineEdit->text());//参数
-        qDebug()<<postData1;
-        QNetworkReply* reply = m_accessManager->post(request,postData1);//发送http的post请求
+        flag = 3; //步骤：登录
+        request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
+        QByteArray postData;
+        //emp_password  emp_email   code
+        postData.append("emp_phone=");//参数手机
+        postData.append(ui->userLineEdit->text());
+        postData.append("&emp_password=");//参数密码
+        postData.append(ui->passwardLineEdit->text());//
+        postData.append("&mac_address=");//参数
+        postData.append(Mac_address);//参数
+        postData.append("&ip_address=");//参数
+        postData.append(Ip_address);//参数
+        QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
     }
 }
 
@@ -291,165 +292,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                      }
                  }
              }
-         }else if(flag==2){ //注册
-             QJsonParseError jsonError;//Qt5新类
-             QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
-             if (jsonError.error == QJsonParseError::NoError)
-             {
-                 if (json.isObject())
-                 {
-                     QJsonObject rootObj = json.object();
-                     QString rootpath;
-                     int rootusernum;
-                     //是否含有key  rootpath
-                     if (rootObj.contains("status"))
-                     {
-                         //取出key为rootpath的值
-                         QJsonValue value = rootObj.value("status");
-                         //判断是否是string类型
-                         if (value.isString())
-                         {
-                             qDebug()<<rootpath;
-                             rootpath = value.toString();
-                             if(rootpath!="Success")
-                             {
-
-                             }
-                         }
-
-                     }
-
-                     if (rootObj.contains("content"))
-                     {
-                         //取出key为rootpath的值
-                         QJsonValue value = rootObj.value("content");
-                         QString content;
-                         //判断是否是string类型
-                         if (value.isString())
-                         {
-                             qDebug()<<rootpath;
-                             content = value.toString();
-                             if(content.contains("error",Qt::CaseSensitive))
-                             {
-                                 //验证码错误。
-                                  QMessageBox::information(this,"警告","验证码错误",QMessageBox::Ok);
-
-
-                             }
-                             else if(content.contains("invalid",Qt::CaseSensitive))
-                             {
-                                 //验证码错误。
-                                  QMessageBox::information(this,"警告","验证码失败",QMessageBox::Ok);
-
-
-                             }
-                             else{
-                                 QMessageBox::information(this,"警告","注册成功",QMessageBox::Ok);
-                             }
-                         }
-
-                     }
-                 }
-             }
-
-         }else if(flag==4){   //获取验证码返回
-             QJsonParseError jsonError;
-             QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);
-             if (jsonError.error == QJsonParseError::NoError)
-             {
-                 if (json.isObject())
-                 {
-                     QJsonObject rootObj = json.object();
-                     QString rootpath;
-                     int rootusernum;
-                     //是否含有key  rootpath
-                     if (rootObj.contains("status"))
-                     {
-                         //取出key为rootpath的值
-                         QJsonValue value = rootObj.value("status");
-                         //判断是否是string类型
-                         if (value.isString())
-                         {
-                             qDebug()<<rootpath;
-                             rootpath = value.toString();
-                             if(rootpath!="Success")
-                             {
-
-                             }
-                         }
-
-                     }
-
-                     if (rootObj.contains("content"))
-                     {
-                         //取出key为rootpath的值
-                         QJsonValue value = rootObj.value("content");
-                         QString content;
-                         //判断是否是string类型
-                         if (value.isString())
-                         {
-                             qDebug()<<rootpath;
-                             content = value.toString();
-                             if(content.contains("success",Qt::CaseSensitive))
-                             {
-                                 //成功，发送注册信息。
-                                 //http 判断手机号是否注册
-                                qDebug()<<"code ok";
-
-                             }else{
-                                 qDebug()<<"code error";
-
-                             }
-                         }
-
-                     }
-                 }
-             }
-         }else if(flag == 7){
-             if (reply->error() == QNetworkReply::NoError)
-             {
-                 QJsonParseError jsonError;//Qt5新类
-                 QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
-                 if (jsonError.error == QJsonParseError::NoError)
-                 {
-                     if (json.isObject())
-                     {
-                         QJsonObject rootObj = json.object();
-                         qDebug()<<rootObj;
-                         QString rootpath;
-                         //是否含有key  rootpath
-                         if (rootObj.contains("status"))
-                         {
-                             //取出key为rootpath的值
-                             QJsonValue value = rootObj.value("status");
-                             //判断是否是string类型
-                             if (value.isString())
-                             {
-                                 rootpath = value.toString();
-                                 qDebug()<<rootpath;
-                                 if(rootpath == "success")
-                                 {
-                                     //先判断，手机号是否已经注册， 调用judge_phone.do
-                                     //然后再调用登录接口，登录，调用接口employee.do
-                                     QNetworkRequest request;
-                                     //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
-                                     flag = 3; //步骤：登录
-                                     request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Login/EmployeePC.do"));  //登录
-                                     QByteArray postData;
-                                     //emp_password  emp_email   code
-                                     postData.append("emp_phone=");//参数手机
-                                     postData.append(ui->userLineEdit->text());
-                                     postData.append("&emp_password=");//参数密码
-                                     postData.append(ui->passwardLineEdit->text());//
-                                     QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
-                                 }else{
-                                     QMessageBox::warning(this,"警告","禁止重复登陆！",QMessageBox::Ok);
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
          }
          else{//登录
              QJsonParseError jsonError;//Qt5新类
@@ -478,7 +320,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                          }
 
                      }
-
                      if (rootObj.contains("content"))
                      {
                          //取出key为rootpath的值
@@ -493,23 +334,26 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              if(content.contains("phonenull",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::information(this,"警告","电话号不存在",QMessageBox::Ok);
+                                  QMessageBox::warning(this,"警告","电话号不存在！",QMessageBox::Ok);
 
 
                              }
                              else if(content.contains("passworderror",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::information(this,"警告","密码错误",QMessageBox::Ok);
+                                  QMessageBox::warning(this,"警告","密码错误！",QMessageBox::Ok);
 
 
                              }
                              else if(content.contains("freezing",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::information(this,"警告","账号已冻结",QMessageBox::Ok);
+                                  QMessageBox::warning(this,"警告","账号已冻结！",QMessageBox::Ok);
 
 
+                             }else if(content.contains("repeatlogin",Qt::CaseSensitive))
+                             {
+                                 QMessageBox::warning(this,"警告","禁止重复登录！",QMessageBox::Ok);
                              }
                              else{
                                  accept();
@@ -521,7 +365,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                                  qDebug()<<LoginUserID;
 
                                  savecfg();
-
 //                                 QMessageBox::information(this,"警告","登录成功",QMessageBox::Ok);
                              }
                          }
