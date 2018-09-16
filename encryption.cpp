@@ -4,36 +4,46 @@ extern QString User_ID;
 extern QFileInfo openFileInfo;
 extern QString orfileUuid;
 extern QString yzipfileUuid;
+extern QString User_qqNum;
+int dir_Flag = 0;
 encryption::encryption()
 {
     conn = ConnectionPool::openConnection();
     //创建加密目录
     //创建CloundSafe 主目录
-    QDir dir;
-    dir.cd("C://CloundSafe");  //进入某文件夹
-    if(!dir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
-    {
-        dir.mkdir("C://CloundSafe"); //创建文件夹
+    if (dir_Flag != 0 ){
+        QString qq_Path = "C://CloundSafe//"+User_qqNum;
+        QDir dir;
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = qq_Path+"//encrypt";
+        //创建encrypt子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = qq_Path+"//yKey";
+        //创建yKey子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip";
+        //创建yZip子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        //encrypt();
     }
-    //创建encrypt子目录
-    dir.cd("C://CloundSafe//encrypt");  //进入某文件夹
-    if(!dir.exists("C://CloundSafe//encrypt"))//判断需要创建的文件夹是否存在
-    {
-        dir.mkdir("C://CloundSafe//encrypt"); //创建文件夹
-    }
-    //创建yKey子目录
-    dir.cd("C://CloundSafe//encrypt//yKey");  //进入某文件夹
-    if(!dir.exists("C://CloundSafe//encrypt//yKey"))//判断需要创建的文件夹是否存在
-    {
-        dir.mkdir("C://CloundSafe//encrypt//yKey"); //创建文件夹
-    }
-    //创建yZip子目录
-    dir.cd("C://CloundSafe//encrypt//yZip");  //进入某文件夹
-    if(!dir.exists("C://CloundSafe//encrypt//yZip"))//判断需要创建的文件夹是否存在
-    {
-        dir.mkdir("C://CloundSafe//encrypt//yZip"); //创建文件夹
-    }
-    //encrypt();
+    dir_Flag ++;
+
 }
 void encryption::connect(){
     //连接数据库
@@ -104,11 +114,11 @@ int encryption::encrypt(){
     ///
     ///
     //设置密钥地址
-    QString ykeyAbPath = "C://CloundSafe//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
+    QString ykeyAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
-    QString yzipAbPath = "C://CloundSafe//encrypt//yZip//"+originalFileName+".yfile";
+    QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+originalFileName+".yfile";
 
-    QString uuPath = "C://CloundSafe//encrypt//yZip//"+enfile_id+".yfile";
+    QString uuPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+enfile_id+".yfile";
     encryptfile *enfile = new encryptfile();
     //文件加密
     //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
@@ -180,12 +190,15 @@ int encryption::encrypt(){
           qDebug()<<"error";
         }
 
-//        QFile file(ykeyAbPath);
-//        if (file.exists())
-//        {
-//            file.remove();
-//        }
+        QFile file(ykeyAbPath);
+        if (file.exists())
+        {
+            file.remove();
+        }
 
+    }else if (oss_PutKey_Flag == 3) {
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
+        msgbox->exec();
     }
 
 
@@ -221,7 +234,11 @@ int encryption::encrypt(){
         else{
           qDebug()<<"error";
         }
+    }else if (oss_PutFile_Flag == 3) {
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
+        msgbox->exec();
     }
+
     QFile yZipFile(yFile_oss_Path);
     bool yes = yZipFile.rename(yzipAbPath);
     qDebug()<<yes;

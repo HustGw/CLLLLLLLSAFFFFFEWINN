@@ -102,7 +102,7 @@ void FinishEncryptionItem::on_pathOpenBtn_clicked(){
            return;
        }else{
            while(query.next()){
-           openPath = QString("file:///C:/CloundSafe/encrypt/yZip");
+           openPath = QString("file:///C:/CloundSafe/"+User_qqNum+"/encrypt/yZip/");
            }
        }
         QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));

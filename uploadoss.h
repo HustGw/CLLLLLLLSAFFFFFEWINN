@@ -8,6 +8,7 @@
 #include "oss_util.h"
 #include "oss_api.h"
 #include "QDebug"
+#include "QFile"
 
 class uploadoss
 {

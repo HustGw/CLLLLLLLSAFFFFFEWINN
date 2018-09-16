@@ -56,6 +56,10 @@ int uploadoss::put_object_from_file()
         aos_str_set(&object, OBJECT_NAME);
         aos_str_set(&file, filename);
 
+        QFile ofile(filepath);
+        if(!ofile.open(QIODevice::ReadWrite )) {
+           return 3;
+        }
         s = oss_put_object_from_file(options, &bucket, &object, &file,headers, &resp_headers);
 
         if (aos_status_is_ok(s)) {

@@ -18,6 +18,7 @@
 #include "sharedialog.h"
 #include"msgbox.h"
 extern QString file_id;
+extern QString User_qqNum;
 class FinishEncryptionItem : public QWidget
 {
     Q_OBJECT

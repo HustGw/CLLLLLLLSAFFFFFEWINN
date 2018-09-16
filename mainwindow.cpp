@@ -717,11 +717,12 @@ void MainWindow::handleResults(int value,QString itemName)
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
+        ui->FinishedBtn->clicked(true);
 
 ///////////////////////////////////////////////////////////////////////
         //initPageFlag=true;
         if (encryptionViewController->vbox->count()==0)
-            on_FinEnpBtn_clicked();
+            ui->FinEnpBtn->clicked(true);
     }
     if (value==0){
         //QMessageBox::information(NULL,tr("失败！"),tr("网络连接错误！"),QMessageBox::Yes,NULL);
