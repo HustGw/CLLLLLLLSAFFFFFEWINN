@@ -2466,6 +2466,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
         if(reply == QDialog::Accepted){
             QString downPath = "C:/CloundSafe/"+User_qqNum+"/Decrypt/ykey/";
             DeleteFileOrFolder(downPath);
+            QSqlQuery query(db);
+            query.exec("update UserStatus set status = 0 where emp_phone = '" + UserPhoneNum + "'");
             event->accept();
         }else{
             event->ignore();

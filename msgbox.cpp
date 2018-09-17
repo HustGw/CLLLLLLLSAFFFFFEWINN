@@ -25,8 +25,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         titleText->setText(QStringLiteral("成功"));
     }else if(style==5){
         titleText->setText(QStringLiteral("删除"));
-    }
-    else if(style == 6){
+    }else if(style == 6){
         titleText->setText(QStringLiteral("文件传输"));
     }else{
         titleText->setText(QStringLiteral("系统提示"));
