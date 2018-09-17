@@ -109,6 +109,8 @@ MainWindow::MainWindow(QWidget *parent) :
             User_qqNum = qqQuery.record().value("qq_num").toString();
         }
     }
+    QString qq_Path = "C://CloundSafe//"+User_qqNum;
+    User_qqPath = qq_Path;//给User_qqPath赋值
     // 连接进度条信号槽
     //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
     //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
@@ -288,6 +290,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                        decryptionViewController->vbox->addWidget(v1);
                    }
+                   else if(query.record().value("status").toString()=="3"){//申请请求已同意
+                       v1->fileDescription->setText("正在申请解密，请等待！");
+                       v1->downloadBtn->setText("申请中");
+                       v1->label->show();
+                       decryptionViewController->vbox->addWidget(v1);
+
+                   }
                }
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
@@ -357,6 +366,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(inforDlg,SIGNAL(CleanInforNum()),this,SLOT(InforNum_Changed()));
      inforThread->start();
      Init_InforIcon();//初始化消息按钮
+//     FileIsAllowed();
 
 //     QString qss;
 //     QFile qssFile(":/mainWindow.qss");
@@ -952,7 +962,7 @@ void MainWindow::OssDownLoadFile(){
     {
         dir.mkdir(qq_Path); //创建文件夹
     }
-    User_qqPath = qq_Path;//给User_qqPath赋值
+//    User_qqPath = qq_Path;//给User_qqPath赋值
     //创建Decrypt子目录
     QString file_path = qq_Path+"//Decrypt";
     dir.cd(file_path);

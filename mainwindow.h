@@ -156,6 +156,9 @@ public:
     newDownloadDialog *newdownloadDlg;
     DecryptProBarThread *decryBarThread[MAXSIZE];
     bool forceFlag = false;
+public slots:
+
+    void FileIsAllowed();//请求同意槽函数
 
 private slots:
 
@@ -205,7 +208,7 @@ private slots:
 
     void HeadChanged();
 
-    void FileIsAllowed();//请求同意槽函数
+//    void FileIsAllowed();//请求同意槽函数
 
     void FileIsIgnored();//请求忽略槽函数
 

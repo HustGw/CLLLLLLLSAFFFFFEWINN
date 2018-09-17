@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         MainWindow w;
         w.setWindowTitle("云加密");
         w.show();
+        w.FileIsAllowed();
         return a.exec();
     }
 
