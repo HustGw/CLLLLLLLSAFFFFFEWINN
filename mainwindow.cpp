@@ -32,8 +32,8 @@ QString FriendNickNameArray[50] = {};
 int FriendArrayIndex = 0;
 QStringList newDownloadFileIdList;
 QString User_ID = nullptr;//用户唯一标识ID
-QString User_qqNum = NULL;//用户qq_num
-QString User_qqPath = NULL;//用户本地文件存放路径
+QString User_qqNum = nullptr;//用户qq_num
+QString User_qqPath = nullptr;//用户本地文件存放路径
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
 bool initLableFlag;
@@ -48,7 +48,7 @@ QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
-QString DecProFileID = NULL;
+QString DecProFileID = nullptr;
 QString file_item_name;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -1591,7 +1591,7 @@ void MainWindow::on_pushButton_5_clicked()
         }else{
         }
     }else if(flag == 0){
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目"),this);
+        MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要删除的条目"),this);
         msgbox->exec();
     }
     flag = 0;
@@ -1626,7 +1626,7 @@ void MainWindow::on_pushButton_6_clicked()
             grpDlg = new groupSendDialog();
             grpDlg->show();
         }else if(flag == 0){
-            MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量传输的条目！"),this);
+            MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要批量传输的条目！"),this);
             msgbox->exec();
         }
         flag = 0;
@@ -2196,7 +2196,7 @@ void MainWindow::LinkInsert(QString link){
         }
     }
     if(Link_empid == nullptr){
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("无效链接！"),this);
+        MsgBox *msgbox = new MsgBox(6,QStringLiteral("无效链接！"),this);
         msgbox->exec();
         return;
     }
@@ -2476,6 +2476,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
         if(reply == QDialog::Accepted){
             QString downPath = "C:/CloundSafe/"+User_qqNum+"/Decrypt/ykey/";
             DeleteFileOrFolder(downPath);
+            QSqlQuery query(db);
+            query.exec("update UserStatus set status = 0 where emp_phone = '" + UserPhoneNum + "'");
             event->accept();
         }else{
             event->ignore();
@@ -2515,24 +2517,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 }
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-//    QPainterPath path;
-//    path.setFillRule(Qt::WindingFill);
-//    path.addRect(10, 10, this->width()-20, this->height()-20);
 
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-//    painter.fillPath(path, QBrush(Qt::white));
-
-//    QColor color(0, 0, 0, 50);
-//    for(int i=0; i<10; i++)
-//    {
-//        QPainterPath path;
-//        path.setFillRule(Qt::WindingFill);
-//        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
-//        color.setAlpha(150 - qSqrt(i)*50);
-//        painter.setPen(color);
-//        painter.drawPath(path);
-//    }
 }
 void MainWindow::FriendListWidgetHide(){
     if(isFriendListHide == 0){
@@ -2653,7 +2638,7 @@ void MainWindow::on_pushButton_groupshare_clicked()
         grpShareDlg = new groupshareDialog();
         grpShareDlg->show();
     }else if(flag == 0){
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要批量分享的条目！"),this);
+        MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要批量分享的条目！"),this);
         msgbox->exec();
     }
     flag = 0;

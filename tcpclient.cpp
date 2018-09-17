@@ -13,8 +13,8 @@
 #include <QMouseEvent>
 #include <QSettings>
 QString Mac_address;
-QString LoginUserID = NULL;
-QString UserPhoneNum = NULL;
+QString LoginUserID = nullptr;
+QString UserPhoneNum = nullptr;
 QNetworkAccessManager *m_accessManager;
 
 TcpClient::TcpClient(QWidget *parent) :
@@ -23,7 +23,7 @@ TcpClient::TcpClient(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
-
+    setAttribute(Qt::WA_TranslucentBackground, true);
     //登录初始化时设置已记住的账号密码
     QString RemeberPasswd;
     QSettings cfg("user.ini",QSettings::IniFormat);
@@ -125,7 +125,7 @@ void TcpClient::on_sendBtn_clicked()
         postData.append(Mac_address);//参数
         postData.append("&ip_address=");//参数
         postData.append(Ip_address);//参数
-        QNetworkReply* reply = m_accessManager->post(request,postData);//发送http的post请求
+        m_accessManager->post(request,postData);//发送http的post请求
     }
 }
 
@@ -254,7 +254,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                  {
                      QJsonObject rootObj = json.object();
                      QString rootpath;
-                     int rootusernum;
                      //是否含有key  rootpath
                      if (rootObj.contains("status"))
                      {
@@ -302,7 +301,6 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                  {
                      QJsonObject rootObj = json.object();
                      QString rootpath;
-                     int rootusernum;
                      //是否含有key  rootpath
                      if (rootObj.contains("status"))
                      {
@@ -379,7 +377,7 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
      {
          qDebug()<<"handle errors here";
          QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-         qDebug( "found error ....code: %d %d\n", statusCodeV.toInt(), (int)reply->error());
+         qDebug("found error ....code: %d %d\n", statusCodeV.toInt(), reply->error());
          qDebug(qPrintable(reply->errorString()));
      }
      reply->deleteLater();
@@ -435,7 +433,7 @@ void TcpClient::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.fillPath(path, QBrush(Qt::white));
 
-    QColor color(0, 0, 0, 50);
+    QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
     {
         QPainterPath path;

@@ -25,8 +25,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         titleText->setText(QStringLiteral("成功"));
     }else if(style==5){
         titleText->setText(QStringLiteral("删除"));
-    }
-    else if(style == 2){
+    }else if(style == 6){
         titleText->setText(QStringLiteral("文件传输"));
     }else{
         titleText->setText(QStringLiteral("系统提示"));
@@ -48,7 +47,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     if((style == 1)||(style == 5)){
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_question.png);background: transparent;border:none;}");
     }
-    else if(style == 2){
+    else if((style == 2)||(style == 6)){
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_fail.png);background: transparent;border:none;}");
     }
     else if(style == 3){
@@ -67,7 +66,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
     deleteBtn->hide();
     okBtn=new QPushButton(this);
-    if((style==2)||(style==3)||(style == 4)){
+    if((style==2)||(style==3)||(style == 4)||(style == 6)){
         okBtn->setGeometry(331,133,89,27);
     }
     else{
@@ -86,7 +85,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     cancleBtn->setGeometry(331,133,89,27);
     cancleBtn->setText(QStringLiteral("取消"));
     cancleBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
-    if((style==2)||(style==3)||(style == 4)){
+    if((style==2)||(style==3)||(style == 4)||(style == 6)){
         cancleBtn->hide();
     }
     else{

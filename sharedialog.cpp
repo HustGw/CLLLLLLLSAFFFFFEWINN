@@ -110,7 +110,7 @@ void shareDialog::on_pushButton_copy_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(ui->textEdit->toPlainText());
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("拷贝成功！"),this);
+    MsgBox *msgbox = new MsgBox(4,QStringLiteral("拷贝成功！"),this);
     ui->label_8->setText("分享链接已复制！");
     msgbox->exec();
 }

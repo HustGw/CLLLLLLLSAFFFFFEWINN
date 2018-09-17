@@ -112,6 +112,7 @@ int RequestRecThread::forceDisconnect(){
     else{
         while(query.next()){
             if(Mac_address != query.record().value("mac_address").toString()){
+                Mac_address = query.record().value("mac_address").toString();
                 return 7;
             }else {
                 return 0;

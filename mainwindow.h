@@ -90,6 +90,7 @@ extern int encptThreadNum;
 extern int enitemNum;
 extern int isFinishedBtn;
 extern QFont f;
+extern int DecryBarNum;
 extern int informationNum;
 extern int RequsetAllowNum;
 extern int RequestNum;
@@ -110,7 +111,6 @@ extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString file_item_name;
 extern QString DecProFileID;
-extern QNetworkAccessManager *m_accessManagerHeart;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
