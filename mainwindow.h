@@ -156,6 +156,9 @@ public:
     newDownloadDialog *newdownloadDlg;
     DecryptProBarThread *decryBarThread[MAXSIZE];
     bool forceFlag = false;
+    QTimer *threadTimer;
+    QThread *thread_11;
+    heartThread *workThread;
 public slots:
 
     void FileIsAllowed();//请求同意槽函数

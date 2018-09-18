@@ -415,7 +415,9 @@ void informationDlg::NewFriend(){
                 m1->ignoreBtn->setObjectName(query.record().value("id").toString()+"friendIgn");
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
                 connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
-                vbox->addWidget(m1);
+//                vbox->addWidget(m1);
+                this->vbox = new QVBoxLayout();
+                setItem();
                 delete bottomWidget->layout();
                 QWidget *newItemWidget = new QWidget();
                 newItemWidget->setLayout(this->vbox);
