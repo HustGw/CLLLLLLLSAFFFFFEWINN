@@ -1,6 +1,7 @@
 #include "heartthread.h"
 heartThread::heartThread(QObject *parent):QThread(parent)
 {
+    m_accessManagerHeart = new QNetworkAccessManager(this);
 }
 void heartThread::run()
 {
@@ -19,6 +20,5 @@ void heartThread::sendHeart()
     QByteArray postData;
     postData.append("emp_phone=");//参数
     postData.append(UserPhoneNum);//参数
-    QNetworkAccessManager *m_accessManagerHeart = new QNetworkAccessManager;
     m_accessManagerHeart->post(*request,postData);//发送http的post请求
 }
