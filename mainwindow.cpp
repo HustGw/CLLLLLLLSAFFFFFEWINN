@@ -413,7 +413,7 @@ MainWindow::MainWindow(QWidget *parent) :
         workThread->moveToThread( thread_11 );       //加入到子线程
         thread_11->start();                        //启动线程
 
-        QTimer *threadTimer = new QTimer();
+        threadTimer = new QTimer();
         QObject::connect( threadTimer, SIGNAL(timeout()), workThread, SLOT( work() ),Qt::AutoConnection );
         threadTimer->start(10000);   // 计时器，每隔几秒钟唤起工作线程；
 

@@ -158,8 +158,8 @@ public:
     DecryptProBarThread *decryBarThread[MAXSIZE];
     bool forceFlag = false;
     QTimer *threadTimer;
-    heartThread *workThread;
     QThread *thread_11;
+    heartThread *workThread;
 public slots:
 
     void FileIsAllowed();//请求同意槽函数
