@@ -408,10 +408,10 @@ MainWindow::MainWindow(QWidget *parent) :
      ui->pushButton_8->hide();
      ui->pushButton_9->hide();
 
-        QThread *thread = new QThread(this);
-        heartThread *workThread = new heartThread(); //工作线程，具体的业务实现在此中完成，继承自Object
-        workThread->moveToThread( thread );       //加入到子线程
-        thread->start();                        //启动线程
+        thread_11 = new QThread(this);
+        workThread = new heartThread(); //工作线程，具体的业务实现在此中完成，继承自Object
+        workThread->moveToThread( thread_11 );       //加入到子线程
+        thread_11->start();                        //启动线程
 
         QTimer *threadTimer = new QTimer();
         QObject::connect( threadTimer, SIGNAL(timeout()), workThread, SLOT( work() ),Qt::AutoConnection );
@@ -2478,6 +2478,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
             DeleteFileOrFolder(downPath);
             QSqlQuery query(db);
             query.exec("update UserStatus set status = 0 where emp_phone = '" + UserPhoneNum + "'");
+            thread_11->exit(0);
+            workThread->exit(0);
             event->accept();
         }else{
             event->ignore();

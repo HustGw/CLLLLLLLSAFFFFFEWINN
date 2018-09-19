@@ -6,12 +6,12 @@
 #include <QtNetwork>
 #include <QNetworkRequest>
 extern QString UserPhoneNum;
-extern QNetworkAccessManager *m_accessManagerHeart;
 class heartThread:public QThread
 {
     Q_OBJECT
 public:
     explicit heartThread(QObject *parent = nullptr);
+    QNetworkAccessManager *m_accessManagerHeart;
 private:
     void run();
 private slots:

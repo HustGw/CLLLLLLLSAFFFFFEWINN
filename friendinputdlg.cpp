@@ -116,7 +116,7 @@ void friendInputDlg::SearchFriend(){
     QString name = inputLineEdit->text();
     if(!name.isEmpty()){
     QNetworkRequest request;
-    request.setUrl(QUrl("https://www.yunjiami1.com/cloud/Employee/FindUser.do"));
+    request.setUrl(QUrl("http://www.yunjiami1.com/cloud/Employee/FindUser.do"));
     QByteArray postData;
     postData.append("data=");//请求参数名
     postData.append(name);

@@ -70,6 +70,7 @@
 #include "heartthread.h"
 #include <QNetworkInterface>
 #include <QList>
+#include <QTimer>
 namespace Ui {
 class MainWindow;
 }
@@ -156,6 +157,9 @@ public:
     newDownloadDialog *newdownloadDlg;
     DecryptProBarThread *decryBarThread[MAXSIZE];
     bool forceFlag = false;
+    QTimer *threadTimer;
+    heartThread *workThread;
+    QThread *thread_11;
 public slots:
 
     void FileIsAllowed();//请求同意槽函数
