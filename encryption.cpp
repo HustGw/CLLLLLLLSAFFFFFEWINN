@@ -116,9 +116,9 @@ int encryption::encrypt(){
     //设置密钥地址
     QString ykeyAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
-    QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+originalFileName+".yfile";
+    QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+originalFileName;
 
-    QString uuPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+enfile_id+".yfile";
+    QString uuPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+enfile_id;
     encryptfile *enfile = new encryptfile();
     //文件加密
     //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
