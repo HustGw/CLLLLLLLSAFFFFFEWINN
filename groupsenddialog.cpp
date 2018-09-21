@@ -21,7 +21,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
 
-    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"'");
+    bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");
     if(!friendSelSuc){
         qDebug()<<"查询好友失败";
         return;
