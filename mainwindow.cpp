@@ -822,55 +822,79 @@ void MainWindow::startEncryptThread(QString itemName){
 void MainWindow::on_pushButton_3_clicked()
 
 {
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
-    int nRes = msgbox->exec();
-    if (nRes == QDialog::Accepted){
-    QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
-    if(!success){
-        qDebug() << "查询user失败";
+    int flag = 0;
+    QSqlQuery checkQuery(db);
+    bool checkSuccess = checkQuery.exec("select * from Decryption where oemp_id='"+User_ID+"'");
+    if(!checkSuccess){
+        qDebug()<<"查询user失败";
         return;
-     }else{
-              qDebug()<<"查询成功";
-              //将数据库查到的数据添加到视图中
-              while(query.next()){
-                  QString fileID = query.record().value("id").toString();
-                  QCheckBox *check = ui->MidStaWidget->findChild<QCheckBox*>(fileID+"Decheck");
-                  if(check!=nullptr){//判断是否找到相应控件
-                      if(check->isChecked()){
-                          QString deleteQuest = "delete from Decryption where id ='"+fileID+"'";
-                          QSqlQuery queryDelete(db);
-                          bool deleteSuccess = queryDelete.exec(deleteQuest);
-                          if(!deleteSuccess){
-                              qDebug()<<"delete failed";
-                          }
-                          else{
-                              DecryptionItem *v1 = ui->MidStaWidget->findChild<DecryptionItem *>(fileID+"decryption");
-                              delete v1;
-                              qDebug()<<"delete success";
-                              RequestNum--;
-                          }
+    }
+    else{
+        while(checkQuery.next()){
+            QString checkID = checkQuery.record().value("id").toString();
+            QCheckBox *IsCheck = ui->MidStaWidget->findChild<QCheckBox*>(checkID+"Decheck");
+            if(IsCheck!=nullptr){
+                if(IsCheck->isChecked())
+                    flag = 1;
+            }
+            else{
+                continue;
+            }
 
+        }
+    }
+    if(flag==1){
+        MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
+        int nRes = msgbox->exec();
+        if (nRes == QDialog::Accepted){
+        QSqlQuery query(db);
+        bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"'");
+        if(!success){
+            qDebug() << "查询user失败";
+            return;
+         }else{
+                  qDebug()<<"查询成功";
+                  //将数据库查到的数据添加到视图中
+                  while(query.next()){
+                      QString fileID = query.record().value("id").toString();
+                      QCheckBox *check = ui->MidStaWidget->findChild<QCheckBox*>(fileID+"Decheck");
+                      if(check!=nullptr){//判断是否找到相应控件
+                          if(check->isChecked()){
+                              QString deleteQuest = "delete from Decryption where id ='"+fileID+"'";
+                              QSqlQuery queryDelete(db);
+                              bool deleteSuccess = queryDelete.exec(deleteQuest);
+                              if(!deleteSuccess){
+                                  qDebug()<<"delete failed";
+                              }
+                              else{
+                                  DecryptionItem *v1 = ui->MidStaWidget->findChild<DecryptionItem *>(fileID+"decryption");
+                                  delete v1;
+                                  qDebug()<<"delete success";
+                                  RequestNum--;
+                              }
+
+                          }
                       }
+                      else{  //若没找到则继续查找
+                          continue;
+                      }
+
                   }
-                  else{  //若没找到则继续查找
-                      continue;
-                  }
-
-              }
-              delete decryptionViewController->layout();
-              QWidget *newItemWidget = new QWidget();
-              newItemWidget->setLayout(decryptionViewController->vbox);
-              newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-              newScrollArea->setWidget(newItemWidget);
-              QVBoxLayout *newVbox = new QVBoxLayout();
-              newVbox->addWidget(newScrollArea);
-              decryptionViewController->setLayout(newVbox);
+                  delete decryptionViewController->layout();
+                  QWidget *newItemWidget = new QWidget();
+                  newItemWidget->setLayout(decryptionViewController->vbox);
+                  newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+                  newScrollArea->setWidget(newItemWidget);
+                  QVBoxLayout *newVbox = new QVBoxLayout();
+                  newVbox->addWidget(newScrollArea);
+                  decryptionViewController->setLayout(newVbox);
+        }
     }
-    }else{
-
+    }else if(flag == 0 ){
+        MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要删除的条目"),this);
+        msgbox->exec();
     }
-
+    flag = 0;
 }
 //点击全选按钮 QCheckbox处于被选择状态
 void MainWindow::on_pushButton_clicked()
@@ -1192,9 +1216,28 @@ void MainWindow::addFriendToDatabase(QString name){
     else{
         while (query.next()) {
             if(query.record().value("friend_nickname").toString()==name){
-                MsgBox *msgbox = new MsgBox(3,QStringLiteral("已经是你的好友了！"),this);
-                msgbox->exec();
-                return;
+                if(query.record().value("status").toString()=='1'){
+                    MsgBox *msgbox = new MsgBox(3,QStringLiteral("已经是你的好友了！"),this);
+                    msgbox->exec();
+                    return;
+                }else if(query.record().value("status").toString()=='2'){
+                    //之前添加好友 但被好友拒绝 此时将status置为0 重新添加好友
+                    QSqlQuery statusQuery(db);
+                    bool statusSuccess = statusQuery.exec("update friend set status = '0' and is_solved = '0' where user_id ='"+User_ID+"' and friend_nickname ='"+name+"'");
+                    if(!statusSuccess){
+                        qDebug()<<"addFriendToDatabase:update status = 0 failed";
+                    }
+                    else{
+                        qDebug()<<"addFriendToDatabase: update success";
+                        return;
+                    }
+                }else if(query.record().value("status").toString()=='0'){
+                    MsgBox *msgbox = new MsgBox(3,QStringLiteral("请等待好友处理申请"),this);
+                    msgbox->exec();
+                    return;
+                }
+
+
             }
             else{
                 continue;
@@ -1440,8 +1483,7 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_status;
     finishViewController->vbox = new QVBoxLayout();
    QSqlQuery query(db);
-       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
-
+       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"' order by article_uploadtime DESC");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -1502,7 +1544,7 @@ void MainWindow::on_pushButton_8_clicked()
                    f1->elseLabel->setText(filetype.left(3));
                    f1->elseLabel->raise();
                }
-
+               f1->timeLabel->setText(query.record().value("article_uploadtime").toString());
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->transprotBtn->setObjectName(file_id);
@@ -1745,7 +1787,7 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_discryption;
     finishViewController2->vbox = new QVBoxLayout();
     QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"' order by apply_time DESC");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -1802,7 +1844,7 @@ void MainWindow::on_pushButton_9_clicked()
                    f1->elseLabel->setText(filetype.left(3));
                    f1->elseLabel->raise();
                }
-
+               f1->timeLabel->setText(query.record().value("apply_time").toString());
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->openBtn->setObjectName(file_id);
@@ -2490,6 +2532,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
             event->ignore();
         }
     }else{
+        thread_11->exit(0);
+        workThread->exit(0);
         event->accept();
     }
 }
@@ -2578,7 +2622,7 @@ void MainWindow::NewFriendAgree(){
     }
 }
 void MainWindow::forceShut(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("其他地点登录！本地强制下线！"),this);
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("您的账号在其他地方登陆，您已被迫下线，如非本人操作，请修改密码"),this);
     msgbox->exec();
     forceFlag = true;
     this->close();

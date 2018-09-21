@@ -244,7 +244,9 @@ FORMS += \
     newdownloaddialog.ui
 
 DISTFILES += \
-    Makefile
+    Makefile \
+    qt_zh_CN.qm \
+    widgets.qm
 
 RESOURCES += \
     pictures.qrc

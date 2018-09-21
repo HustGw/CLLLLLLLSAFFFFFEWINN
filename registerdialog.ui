@@ -251,6 +251,9 @@ border-radius:4px;</string>
       <height>18</height>
      </rect>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">font: 8pt &quot;04b_21&quot;;</string>
     </property>

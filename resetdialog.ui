@@ -80,6 +80,9 @@ color:rgb(61,57,57);</string>
        <height>14</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/new/mainwindow/pictures/delete_button.png);
 border:none;</string>
@@ -96,7 +99,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>90</y>
+      <y>230</y>
       <width>54</width>
       <height>15</height>
      </rect>
@@ -109,7 +112,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>81</y>
+      <y>221</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -123,7 +126,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>160</y>
+      <y>90</y>
       <width>66</width>
       <height>15</height>
      </rect>
@@ -136,7 +139,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>151</y>
+      <y>81</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -150,7 +153,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>230</y>
+      <y>160</y>
       <width>66</width>
       <height>15</height>
      </rect>
@@ -163,7 +166,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>221</y>
+      <y>151</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -203,10 +206,10 @@ border-radius:4px;</string>
    <widget class="QPushButton" name="confirmBtn">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>380</y>
-      <width>101</width>
-      <height>31</height>
+      <x>126</x>
+      <y>409</y>
+      <width>222</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -249,7 +252,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>118</y>
+      <y>258</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -265,7 +268,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>258</y>
+      <y>188</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -291,6 +294,22 @@ border-radius:4px;</string>
     </property>
     <property name="text">
      <string>验证码不正确</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="line">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>393</y>
+      <width>428</width>
+      <height>1</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::HLine</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>

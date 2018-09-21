@@ -15,6 +15,12 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
+    timeLabel = new QLabel(this);
+    timeLabel->setStyleSheet("background:transparent");
+    timeLabel->setGeometry(294,31,230,10);
+    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setStyleSheet("color:#9999AB");
+
     fileName->setFont(QFont("Timers",11,QFont::Bold));
     fileSize->setFont(QFont("Timers",8));
     fileDescription->setFont(QFont("Timers",8));

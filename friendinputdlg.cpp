@@ -1,6 +1,7 @@
 #include "friendinputdlg.h"
 QNetworkAccessManager *f_accessManager;
 QString ddd =nullptr;
+QString qq_num = nullptr;
 friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 {
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
@@ -50,13 +51,13 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     userHead = new QLabel(this);
     userName = new QLabel(this);
 //    userPhone = new QLabel(this);
-    userTitle = new QLabel(this);
-    userId = new QLabel(this);
+//    userTitle = new QLabel(this);
+//    userId = new QLabel(this);
     userHead->hide();
     userName->hide();
 //    userPhone->hide();
-    userId->hide();
-    userTitle->hide();
+//    userId->hide();
+//    userTitle->hide();
     addFriendBtn = new QPushButton(this);
     addFriendBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     cancelBtn = new QPushButton(this);
@@ -71,16 +72,26 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 }
 void friendInputDlg::sendName(){
     qDebug()<<"send";
-    emit sendNameToMain(ddd);
+    if(qq_num==User_qqNum){
+        qDebug()<<"添加自己为好友";
+    }
+    else{
+        emit sendNameToMain(ddd);
+    }
     this->accept();
     AddFriendFlag = 0;
     ConnectionPool::closeConnection(db);
 }
 void friendInputDlg::cancel(){
-    this->accept();
-    //取消关闭时断开数据库连接
+//    this->accept();
+//    //取消关闭时断开数据库连接
     AddFriendFlag = 0;
-    ConnectionPool::closeConnection(db);
+//    ConnectionPool::closeConnection(db);
+    userHead->hide();
+    userName->hide();
+    addFriendBtn->hide();
+    cancelBtn->hide();
+
 
 }
 
@@ -210,6 +221,14 @@ void friendInputDlg::mouseReleaseEvent(QMouseEvent *event){
     }
 }
 
+void friendInputDlg::keyPressEvent(QKeyEvent *event){
+    switch (event->key()) {
+    case Qt::Key_Return:SearchFriend();break;
+    case Qt::Key_Enter:SearchFriend();break;
+    default:
+        break;
+    }
+}
 void friendInputDlg::finishedSlot(QNetworkReply *reply){
     if(reply->error()==QNetworkReply::NoError){
         QByteArray bytes = reply->readAll();
@@ -239,7 +258,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                             int last = output.indexOf(lastindex);
                             int qq = output.indexOf(key);
                             qq +=9;
-                            QString qq_num = output.mid(qq,9);
+                            qq_num = output.mid(qq,9);
                             //last-=5;
                             qDebug()<<last;
                             index+=11;
@@ -266,18 +285,18 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                                                         "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
                                                         );
                                 userHead->show();
-                                userName->setGeometry(180,110,80,30);
+                                userName->setGeometry(180,140,80,30);
                                 userName->setText(ddd);
                                 userName->show();
                                // userPhone->setGeometry(240,110,80,30);
                                 //userPhone->setText("111111111111");
                                 //userPhone->show();
-                                userTitle->setGeometry(150,160,50,30);
-                                userTitle->setText("用户名");
-                                userTitle->show();
-                                userId->setGeometry(220,160,80,30);
-                                userId->setText(qq_num);
-                                userId->show();
+//                                userTitle->setGeometry(150,160,50,30);
+//                                userTitle->setText("用户名");
+//                                userTitle->show();
+//                                userId->setGeometry(220,160,80,30);
+//                                userId->setText(qq_num);
+//                                userId->show();
                                 addFriendBtn->setGeometry(180,220,80,40);
                                 addFriendBtn->setText("添加好友");
                                 addFriendBtn->show();
@@ -309,3 +328,5 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
     }
     reply->deleteLater();
 }
+
+

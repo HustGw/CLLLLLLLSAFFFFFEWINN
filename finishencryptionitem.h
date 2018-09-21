@@ -42,6 +42,7 @@ public:
     QHBoxLayout *hbox1;
     sendDialog *dlg;
     shareDialog *share;
+    QLabel *timeLabel;
 signals:
     void fileData(QString);
 public slots:
