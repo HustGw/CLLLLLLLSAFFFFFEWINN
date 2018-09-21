@@ -42,7 +42,11 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     shareBtn->setToolTip("分享");
     pathOpenBtn->setToolTip("打开路径");
     deleteBtn->setToolTip("删除条目");
-
+    timeLabel = new QLabel(this);
+    timeLabel->setStyleSheet("background:transparent");
+    timeLabel->setGeometry(294,31,230,10);
+    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setStyleSheet("color:#9999AB");
     transprotBtn->setCursor(QCursor(Qt::PointingHandCursor));
     shareBtn->setCursor(QCursor(Qt::PointingHandCursor));
     pathOpenBtn->setCursor(QCursor(Qt::PointingHandCursor));

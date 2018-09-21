@@ -1478,8 +1478,7 @@ void MainWindow::on_pushButton_8_clicked()
     QString file_status;
     finishViewController->vbox = new QVBoxLayout();
    QSqlQuery query(db);
-       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
-
+       bool success = query.exec("select * from varticle where emp_id='"+User_ID+"' order by article_uploadtime DESC");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -1540,7 +1539,7 @@ void MainWindow::on_pushButton_8_clicked()
                    f1->elseLabel->setText(filetype.left(3));
                    f1->elseLabel->raise();
                }
-
+               f1->timeLabel->setText(query.record().value("article_uploadtime").toString());
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->transprotBtn->setObjectName(file_id);
@@ -1783,7 +1782,7 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_discryption;
     finishViewController2->vbox = new QVBoxLayout();
     QSqlQuery query(db);
-       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+       bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"' order by apply_time DESC");
        if(!success){
            qDebug() << "查询密文失败";
            return;
@@ -1840,7 +1839,7 @@ void MainWindow::on_pushButton_9_clicked()
                    f1->elseLabel->setText(filetype.left(3));
                    f1->elseLabel->raise();
                }
-
+               f1->timeLabel->setText(query.record().value("apply_time").toString());
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->openBtn->setObjectName(file_id);
@@ -2528,6 +2527,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
             event->ignore();
         }
     }else{
+        thread_11->exit(0);
+        workThread->exit(0);
         event->accept();
     }
 }
@@ -2616,7 +2617,7 @@ void MainWindow::NewFriendAgree(){
     }
 }
 void MainWindow::forceShut(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("其他地点登录！本地强制下线！"),this);
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("您的账号在其他地方登陆，您已被迫下线，如非本人操作，请修改密码"),this);
     msgbox->exec();
     forceFlag = true;
     this->close();

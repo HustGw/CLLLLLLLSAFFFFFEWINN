@@ -70,6 +70,7 @@
 #include "heartthread.h"
 #include <QNetworkInterface>
 #include <QList>
+#include <QTimer>
 namespace Ui {
 class MainWindow;
 }

@@ -36,7 +36,7 @@ public:
     QPushButton *openBtn;
     QPushButton *pathOpenBtn;
     QPushButton *deleteBtn;
-
+    QLabel *timeLabel;
     QHBoxLayout *hbox1;
 signals:
 

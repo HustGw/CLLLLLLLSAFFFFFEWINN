@@ -12,6 +12,9 @@ int main(int argc, char *argv[])
    // a.setFont(f);
 //    MainWindow w;
 
+    QTranslator *trans = new QTranslator;
+    trans->load(":/new/src/widgets.qm");
+    QCoreApplication::installTranslator(trans);
  //   LoginView dlg;
     TcpClient L;
     //判断是否点击登录按钮

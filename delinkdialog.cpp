@@ -64,6 +64,9 @@ void DelinkDialog::sendLink(){
             split_file_id = list[j];
             emit sendLinkToMain(split_file_id);
         }
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText("");
+        LinkInsertFlag = 0;
         this->accept();
 }
 void DelinkDialog::closeEvent(QCloseEvent * event){
