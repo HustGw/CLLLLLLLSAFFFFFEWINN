@@ -288,7 +288,7 @@ void informationDlg::setItem(){
                 f1->ignoreBtn->setText("已忽略");
                 f1->ignoreBtn->setEnabled(false);
                 f1->ignoreBtn->setGeometry(340,75,80,30);
-                f1->ignoreBtn->hide();
+                f1->allowBtn->hide();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
                 vbox->addWidget(f1);
