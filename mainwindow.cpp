@@ -2485,6 +2485,8 @@ void MainWindow::closeEvent(QCloseEvent *event){
             event->ignore();
         }
     }else{
+        thread_11->exit(0);
+        workThread->exit(0);
         event->accept();
     }
 }
@@ -2573,7 +2575,7 @@ void MainWindow::NewFriendAgree(){
     }
 }
 void MainWindow::forceShut(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("其他地点登录！本地强制下线！"),this);
+    MsgBox *msgbox = new MsgBox(2,QStringLiteral("您的账号在其他地方登陆，您已被迫下线，如非本人操作，请修改密码"),this);
     msgbox->exec();
     forceFlag = true;
     this->close();
