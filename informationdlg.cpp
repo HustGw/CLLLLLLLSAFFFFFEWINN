@@ -99,6 +99,7 @@ void informationDlg::recvReq(){
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
                      q1->allowBtn->setEnabled(false);
                      q1->allowBtn->setText("已允许");
+                     q1->allowBtn->setGeometry(340,75,80,30);
                      q1->ignoreBtn->hide();
                   //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
                 }
@@ -145,6 +146,7 @@ void informationDlg::ignoreReq(){
                     q1->allowBtn->hide();
                     q1->ignoreBtn->setEnabled(false);
                     q1->ignoreBtn->setText("已忽略");
+                    q1->ignoreBtn->setGeometry(340,75,80,30);
                 }
                 else{
                     MsgBox *msgbox = new MsgBox(2,QStringLiteral("操作失败！"),this);
@@ -216,6 +218,7 @@ void informationDlg::setItem(){
                 m1->allowBtn->setText(QStringLiteral("已允许"));
                 m1->ignoreBtn->hide();
                 m1->allowBtn->setEnabled(false);
+                m1->allowBtn->setGeometry(340,75,80,30);
                 vbox->addWidget(m1);
             }
             if(nowStatus =="4"){
@@ -225,6 +228,7 @@ void informationDlg::setItem(){
                 m1->allowBtn->hide();
                 m1->ignoreBtn->setText(QStringLiteral("已忽略"));
                 m1->ignoreBtn->setEnabled(false);
+                m1->ignoreBtn->setGeometry(340,75,80,30);
                 vbox->addWidget(m1);
             }
         }
@@ -266,6 +270,7 @@ void informationDlg::setItem(){
                 f1->titleLabel->setText(t);
                 f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
                 f1->allowBtn->setText("已允许");
+                f1->allowBtn->setGeometry(340,75,80,30);
                 f1->allowBtn->setEnabled(false);
                 f1->ignoreBtn->hide();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
@@ -282,6 +287,7 @@ void informationDlg::setItem(){
                 f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
                 f1->ignoreBtn->setText("已忽略");
                 f1->ignoreBtn->setEnabled(false);
+                f1->ignoreBtn->setGeometry(340,75,80,30);
                 f1->ignoreBtn->hide();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
@@ -461,6 +467,7 @@ void informationDlg::AddFriendRequest(){
                 emit InforNumDecrease();
                 b1->setText("已允许");
                 m1->ignoreBtn->hide();
+                m1->allowBtn->setGeometry(340,75,80,30);
                 b1->setEnabled(false);
             }
         }
@@ -537,12 +544,13 @@ void informationDlg::AddFriendIgnore(){
                 bool updateSuccess = updateQuery.exec("update friend set status = '2' where id = '"+ID+"'");
                 if(!updateSuccess){
                     qDebug()<<"update friend failed";
-                }
-                emit InforNumDecrease();
+                }                
                 FriendRequestCount--;//消息数量减一
                 FriendStatusNum--;
+                emit InforNumDecrease();
                 b1->setText("已忽略");
                 m1->allowBtn->hide();
+                m1->ignoreBtn->setGeometry(340,75,80,30);
                 b1->setEnabled(false);
                     }
                 }
