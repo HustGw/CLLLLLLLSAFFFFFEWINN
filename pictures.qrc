@@ -9,6 +9,7 @@
         <file>pictures/system_fail.png</file>
         <file>pictures/system_question.png</file>
         <file>pictures/system_warning.png</file>
+        <file>widgets.qm</file>
     </qresource>
     <qresource prefix="/">
         <file>mainWindow.qss</file>

@@ -68,7 +68,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileDescription->setStyleSheet("background:transparent");
     fileSize->setStyleSheet("background:transparent");
     downloadBtn->setStyleSheet("background:transparent");
-    timeLabel->setStyleSheet("background:transparent");
+
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
