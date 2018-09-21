@@ -55,7 +55,12 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->code->setStyleSheet(                 //调整验证码输入框样式
                 "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
-    ui->userLineEdit->setFocus();
+    ui->passwordLineEdit->setFocus();
+    setTabOrder(ui->passwordLineEdit,ui->passwordLineEdit_2);
+    setTabOrder(ui->passwordLineEdit_2,ui->userLineEdit);
+    setTabOrder(ui->userLineEdit,ui->code);
+    setTabOrder(ui->code,ui->codeBtn);
+    setTabOrder(ui->codeBtn,ui->confirmBtn);
 
     flag = 0;
     a = 61;
