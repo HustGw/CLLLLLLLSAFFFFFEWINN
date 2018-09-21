@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QtMath>
 #include <QPainter>
+#include <QTimer>
 
 #include "msgbox.h"
 
@@ -25,6 +26,7 @@ public:
     explicit registerDialog(QWidget *parent = 0);
     ~registerDialog();
     int flag;  //步骤
+    int a;
 
 private slots:
     void on_closeBtn_clicked();
@@ -35,6 +37,7 @@ private slots:
     void on_signBtn_clicked();
     void on_codeBtn_clicked();
     void finishedSlot(QNetworkReply *reply);
+    void showTimelimit();
 protected:
     QPoint move_point;                                    //移动的距离
     bool mouse_press;                                    //鼠标按下

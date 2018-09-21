@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QRegExpValidator>
 #include <Qvalidator>
+#include <QTimer>
 QNetworkAccessManager *m_accessManagerReset;
 
 resetDialog::resetDialog(QWidget *parent) :
@@ -33,7 +34,7 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->codeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
-    ui->confirmBtn->setStyleSheet(                 //调整登录按钮样式
+    ui->confirmBtn->setStyleSheet(                 //调整确定按钮样式
                 "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
                 "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
     ui->codeBtn->setStyleSheet(                 //调整验证码按钮样式
@@ -54,8 +55,15 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->code->setStyleSheet(                 //调整验证码输入框样式
                 "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+    ui->passwordLineEdit->setFocus();
+    setTabOrder(ui->passwordLineEdit,ui->passwordLineEdit_2);
+    setTabOrder(ui->passwordLineEdit_2,ui->userLineEdit);
+    setTabOrder(ui->userLineEdit,ui->code);
+    setTabOrder(ui->code,ui->codeBtn);
+    setTabOrder(ui->codeBtn,ui->confirmBtn);
 
     flag = 0;
+    a = 61;
 
     qDebug()<<"hehe flag:"<<flag;
     m_accessManagerReset = new QNetworkAccessManager(this);
@@ -187,6 +195,11 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
              qDebug()<<"获取验证码";
 
              if(content.contains("success",Qt::CaseSensitive)){
+                 a = 61;
+                 QTimer *timer = new QTimer(this);
+                 connect(timer,SIGNAL(timeout()),this,SLOT(showTimelimit()));
+                 timer->start(1000);
+
                  QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
              }else{
                   QMessageBox::information(this,"警告","验证码发送失败！",QMessageBox::Ok);
@@ -327,4 +340,16 @@ void resetDialog::mouseReleaseEvent(QMouseEvent *qevent)
 {
     //设置鼠标为未被按下
     mouse_press = false;
+}
+
+void resetDialog::showTimelimit(){
+    if(a != 1){
+        ui->codeBtn->setEnabled(false);
+        a = a-1;
+        QString num = QString::number(a);
+        ui->codeBtn->setText(num + "秒后再次发送");
+    }else{
+        ui->codeBtn->setEnabled(true);
+        ui->codeBtn->setText("重新发送验证码");
+    }
 }
