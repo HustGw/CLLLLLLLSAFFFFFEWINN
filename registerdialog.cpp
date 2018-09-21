@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QRegExpValidator>
 #include <Qvalidator>
+#include <QTimer>
 
 QNetworkAccessManager *m_accessManagerRegister;
 
@@ -20,6 +21,7 @@ registerDialog::registerDialog(QWidget *parent) :
    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
    setAttribute(Qt::WA_TranslucentBackground, true);
    flag = 0;
+   a = 61;
    ui->passwardLineEdit->setEchoMode(QLineEdit::Password);
    ui->passwardLineEdit_2->setEchoMode(QLineEdit::Password);
    ui->nichengLineEdit->setPlaceholderText(tr("昵称一旦设置成功，无法修改"));
@@ -161,7 +163,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
 
         QString jsonString = QString(bytes);
         QByteArray njba = jsonString.toUtf8();
-         QJsonObject nobj = QJsonObject(QJsonDocument::fromJson(njba).object());
+        QJsonObject nobj = QJsonObject(QJsonDocument::fromJson(njba).object());
 
 
          QString status = nobj.take("status").toString();
@@ -266,6 +268,10 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                qDebug()<<"获取验证码";
                if(content.contains("success",Qt::CaseSensitive))
                {
+                   a = 61;
+                   QTimer *timer = new QTimer(this);
+                   connect(timer,SIGNAL(timeout()),this,SLOT(showTimelimit()));
+                   timer->start(1000);
                    QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
                }else{
                     QMessageBox::warning(this,"警告","验证码发送失败！",QMessageBox::Ok);
@@ -479,3 +485,14 @@ void registerDialog::on_passwardLineEdit_2_editingFinished(){
     }
 }
 
+void registerDialog::showTimelimit(){
+    if(a != 1){
+        ui->codeBtn->setEnabled(false);
+        a = a-1;
+        QString num = QString::number(a);
+        ui->codeBtn->setText(num + "秒后再次发送");
+    }else{
+        ui->codeBtn->setEnabled(true);
+        ui->codeBtn->setText("重新发送验证码");
+    }
+}

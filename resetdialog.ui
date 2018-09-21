@@ -80,6 +80,9 @@ color:rgb(61,57,57);</string>
        <height>14</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/new/mainwindow/pictures/delete_button.png);
 border:none;</string>
@@ -203,10 +206,10 @@ border-radius:4px;</string>
    <widget class="QPushButton" name="confirmBtn">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>380</y>
-      <width>101</width>
-      <height>31</height>
+      <x>126</x>
+      <y>409</y>
+      <width>222</width>
+      <height>34</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -291,6 +294,22 @@ border-radius:4px;</string>
     </property>
     <property name="text">
      <string>验证码不正确</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="line">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>393</y>
+      <width>428</width>
+      <height>1</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::HLine</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>
