@@ -117,6 +117,7 @@ int encryption::encrypt(){
     QString ykeyAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
     QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+originalFileName;
+    QString yPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//";
 
     QString uuPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+enfile_id;
     encryptfile *enfile = new encryptfile();
@@ -209,8 +210,8 @@ int encryption::encrypt(){
     uploadoss *upFile = new uploadoss;
     upFile->OBJECT_NAME=enFileID.c_str();
     upFile->BUCKET_NAME="cloudsafe-pc-yfile";
-    //upFile->filepath=yFile_oss_Path.data();
-    upFile->filepath = codec->fromUnicode(yFile_oss_Path.data()).data();
+    upFile->filepath=yFile_oss_Path.data();
+    //upFile->filepath = codec->fromUnicode(yFile_oss_Path.data()).data();
     oss_PutFile_Flag = upFile->put_object_from_file();
     if (oss_PutFile_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
@@ -239,9 +240,31 @@ int encryption::encrypt(){
         msgbox->exec();
     }
 
+    //QFile file(yzipAbPath);
+    QString newName = yzipAbPath;
     QFile yZipFile(yFile_oss_Path);
-    bool yes = yZipFile.rename(yzipAbPath);
-    qDebug()<<yes;
+    QFile file(yzipAbPath);
+    if (file.exists())
+    {
+        //若有重复文件
+        newName =yPath+ "副本 1 "+originalFileName ;
+        int count = 2;
+        bool yes = yZipFile.rename(newName);
+        qDebug()<<yes;
+        while (!yes) {
+
+            QString num = QString::number(count);
+            newName = yPath+"副本 "+num+" "+originalFileName ;
+            yes = yZipFile.rename(newName);
+            count++;
+        }
+
+    }else {
+        bool yes = yZipFile.rename(yzipAbPath);
+        qDebug()<<yes;
+    }
+
+
     ConnectionPool::closeConnection(conn);
     return 1;
 
