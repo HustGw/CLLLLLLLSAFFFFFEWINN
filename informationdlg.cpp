@@ -50,6 +50,8 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     CleanStatusLabel->setGeometry(256,186,100,40);
     if(count==0){
         CleanStatusLabel->show();
+        cleanInforBtn->setEnabled(false);
+        cleanInforBtn->setStyleSheet("color:#708090");
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
         //scrollArea->setFrameRect(0,50,width-20,this->height()-50);
@@ -64,6 +66,8 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     }
     else{
         CleanStatusLabel->hide();
+        cleanInforBtn->setEnabled(true);
+        cleanInforBtn->setStyleSheet("color:#3D6CFE");
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
         scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -159,6 +163,8 @@ void informationDlg::ignoreReq(){
 }
 void informationDlg::newInformation(){
     CleanStatusLabel->hide();
+    cleanInforBtn->setEnabled(true);
+    cleanInforBtn->setStyleSheet("color:#3D6CFE");
     this->vbox = new QVBoxLayout();
     setItem();
     delete bottomWidget->layout();
@@ -338,6 +344,8 @@ void informationDlg::setItem(){
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
+    cleanInforBtn->setEnabled(false);
+    cleanInforBtn->setStyleSheet("color:#708090");
     CleanStatusLabel->show();
     QSqlQuery query(db);
     bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"'");
@@ -345,7 +353,7 @@ void informationDlg::CleanAllInfor(){
         qDebug()<<"update failed!";
     }
     bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_id ='"+User_ID+"'");
-    if(upFriSuc){
+    if(!upFriSuc){
         qDebug()<<"update friend error";
     }
     informationNum=0;
@@ -366,6 +374,8 @@ void informationDlg::CleanAllInfor(){
 void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
      InformationItem *m1 = new InformationItem();
      CleanStatusLabel->hide();
+     cleanInforBtn->setEnabled(true);
+     cleanInforBtn->setStyleSheet("color:#3D6CFE");
      QString s = name+"传输文件"+fileName;
      m1->InforKindsLabel->setText("文件传输");
      m1->titleLabel->setText(s);
@@ -389,6 +399,8 @@ void informationDlg::NewFriend(){
     qDebug()<<"new friend";
     FriendCount++;//
     CleanStatusLabel->hide();
+    cleanInforBtn->setEnabled(true);
+    cleanInforBtn->setStyleSheet("color:#3D6CFE");
     QSqlQuery query(db);
     bool success = query.exec("select * from friend where friend_id = '"+User_ID+"' and status = '0'");
     if(!success){
