@@ -1200,8 +1200,14 @@ void MainWindow::ReceiveNewReq(){
               QString s = QString::number(newRequestNum,10);
               qDebug()<<"Infor_num_icon:";
               qDebug()<<s;
-              Infor_num_icon->show();
-              Infor_num_icon->setText(s);
+              if(newRequestNum==0){
+                  Infor_num_icon->hide();
+              }
+              else{
+                  Infor_num_icon->show();
+                  Infor_num_icon->setText(s);
+              }
+
 
     }
 }
