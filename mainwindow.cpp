@@ -15,6 +15,7 @@
 #include <QFile>
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
+int IsLinkInfor = 0;//用于判断是否链接插入的消息
 int findecrypt_flag = 0;//已解密全选判断变量
 int finencrypt_flag = 0;//已加密全选判断变量
 int DeSelect_flag = 0;//解密全选判断变量
@@ -1142,6 +1143,7 @@ void MainWindow::ReceiveNewReq(){
                           }
                       }
                       if(isNEW ==1){
+
                           //如果是新消息则发送信号为InforDlg
                           RequestIDArray[RequsetIndex]=Infor_ID;//将该ID加入到数组中
                           RequsetIndex++;
@@ -1157,10 +1159,14 @@ void MainWindow::ReceiveNewReq(){
                           else{
                               while (nameQuery.next()) {
                                   QString SendID = nameQuery.record().value("emp_name").toString();
-                                  qDebug()<<"发送者姓名为：";
-                                  qDebug()<<SendID;
-                                  Infor_requestNum++;
-                                  emit SendInforToInforDlg(SendID,SendFileName,time);//发送信号
+                                  if(IsLinkInfor ==1){
+                                      IsLinkInfor = 0;
+                                  }
+                                  else{
+                                      Infor_requestNum++;
+                                      emit SendInforToInforDlg(SendID,SendFileName,time);//发送信号
+                                  }
+
 
                               }
                           }
@@ -2294,6 +2300,7 @@ void MainWindow::CleanButtonClicked(){
 }
 
 void MainWindow::LinkInsert(QString link){
+
     QString GetLink = link;
     QSqlQuery query(db);
     QString Link_empid;
@@ -2388,6 +2395,7 @@ void MainWindow::LinkInsert(QString link){
         f_progressBar->hide();
         f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
         //decryptionViewController->vbox->addWidget(f_progressBar);
+        IsLinkInfor = 1;
         ReLayout();
     }
 
