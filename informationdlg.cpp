@@ -182,7 +182,7 @@ void informationDlg::setItem(){
     QSqlQuery query(db);
     QString sql = "select * from Decryption where emp_id = '"+User_ID+"' and status = '2'";
     qDebug()<<sql;
-    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and is_solved = '0' and (status = '2' or status ='4' or status = '3' or status = '5') order by apply_time DESC");
+    bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and (is_solved = '0' or is_solved = '2') and (status = '2' or status ='4' or status = '3' or status = '5') order by apply_time DESC");
     if(success){
         qDebug()<<"查询数据库成功";
         while (query.next()) {
@@ -306,7 +306,7 @@ void informationDlg::setItem(){
     }
     //设置消息种类为文件传输
     QSqlQuery transforQuery(db);
-    bool transforSuccess = transforQuery.exec("select * from Decryption where oemp_id = '"+User_ID+"' and apply_time<> '0' and is_solved = '0' order by apply_time DESC");
+    bool transforSuccess = transforQuery.exec("select * from Decryption where oemp_id = '"+User_ID+"' and createtime <> '0' and (is_solved = '0' or is_solved = '1')order by createtime DESC");
     if(!transforSuccess){
         qDebug()<<"查询消息种类失败";
     }
@@ -318,7 +318,7 @@ void informationDlg::setItem(){
             QString m_id = transforQuery.record().value("emp_id").toString();
             QString name;
             QString fileName = transforQuery.record().value("file_name").toString();
-            QString time = transforQuery.record().value("apply_time").toString();
+            QString time = transforQuery.record().value("createtime").toString();
             QSqlQuery nameQuery(db);
             bool nameSuccess = nameQuery.exec("select * from employee where emp_id = '"+m_id+"'");
             if(!nameSuccess){
@@ -348,9 +348,22 @@ void informationDlg::CleanAllInfor(){
     cleanInforBtn->setStyleSheet("color:#708090");
     CleanStatusLabel->show();
     QSqlQuery query(db);
-    bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"'");
+    bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"' and is_solved = '0'");//0表示为处理，1表示只有emp处理，2表示只有oemp处理，3表示emp和oemp均处理
     if(!success){
         qDebug()<<"update failed!";
+    }
+    bool success2 = query.exec("update Decryption set is_solved = 3 where emp_id = '"+User_ID+"' and is_solved = '2'");
+    if(!success2){
+        qDebug()<<"update2 failed";
+    }
+    bool success3 = query.exec("update Decryption set is_solved = 2 where oemp_id = '"+User_ID+"' and is_solved = '0'");
+    if(!success3){
+        qDebug()<<"update3 failed";
+    }
+
+    bool success4 = query.exec("update Decryption set is_solved = 3 where oemp_id = '"+User_ID+"' and is_solved = '1'");
+    if(!success4){
+        qDebug()<<"update4 failed";
     }
     bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_id ='"+User_ID+"'");
     if(!upFriSuc){

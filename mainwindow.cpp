@@ -2412,7 +2412,7 @@ void MainWindow::Init_InforIcon(){
     connect(Infor_num_icon,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
     QSqlQuery query(db);
     int num=0;
-    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and is_solved = '0'");
+    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and (is_solved = '0' or is_solved = '2')");
     if(!success){
         qDebug() << "Thread:查询user失败";
     }else{

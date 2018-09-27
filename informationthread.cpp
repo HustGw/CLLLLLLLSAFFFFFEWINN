@@ -16,9 +16,9 @@ void InformationThread::run(){
 int InformationThread::getInfNum(){
     QSqlQuery query(inforDB);
     int num=0;
-    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and is_solved = '0'");
+    bool success = query.exec("select * from Decryption where emp_id='"+User_ID+"' and status =2 and (is_solved = '0' or is_solved = '2')");
     if(!success){
-        qDebug() << "Thread:查询user失败";
+        qDebug() << "Thread:查询status =2 and (is_solved = '0' or is_solved = '2'失败";
     }else{
          while(query.next()){
              num++;
