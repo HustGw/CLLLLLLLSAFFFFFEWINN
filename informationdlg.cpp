@@ -385,17 +385,19 @@ void informationDlg::CleanAllInfor(){
 }
 
 void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
-     InformationItem *m1 = new InformationItem();
+//     InformationItem *m1 = new InformationItem();
+//     QString s = name+"传输文件"+fileName;
+//     m1->InforKindsLabel->setText("文件传输");
+//     m1->titleLabel->setText(s);
+//     m1->timeLabel->setText(time);
+//     m1->allowBtn->hide();
+//     m1->ignoreBtn->hide();
+//     vbox->addWidget(m1);
      CleanStatusLabel->hide();
      cleanInforBtn->setEnabled(true);
      cleanInforBtn->setStyleSheet("color:#3D6CFE");
-     QString s = name+"传输文件"+fileName;
-     m1->InforKindsLabel->setText("文件传输");
-     m1->titleLabel->setText(s);
-     m1->timeLabel->setText(time);
-     m1->allowBtn->hide();
-     m1->ignoreBtn->hide();
-     vbox->addWidget(m1);
+     this->vbox = new QVBoxLayout();
+     setItem();
      delete bottomWidget->layout();
      QWidget *newItemWidget = new QWidget();
      newItemWidget->setLayout(this->vbox);
