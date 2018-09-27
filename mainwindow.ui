@@ -310,7 +310,7 @@
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
@@ -368,6 +368,33 @@
       </property>
       <property name="text">
        <string>二维码</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="de_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>14</y>
+        <width>53</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>全选</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>13</width>
+        <height>13</height>
+       </size>
       </property>
      </widget>
     </widget>
@@ -440,6 +467,33 @@
        <string/>
       </property>
      </widget>
+     <widget class="QCheckBox" name="finen_checkBox">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>14</y>
+        <width>53</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>全选</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>13</width>
+        <height>13</height>
+       </size>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_4">
      <widget class="QPushButton" name="pushButton_7">
@@ -482,6 +536,33 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="finen_checkBox_2">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>14</y>
+        <width>53</width>
+        <height>14</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>全选</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>13</width>
+        <height>13</height>
+       </size>
       </property>
      </widget>
     </widget>

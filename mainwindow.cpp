@@ -69,7 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->hide();
     ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_11->hide();
+    ui->pushButton->hide();
     ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
@@ -83,7 +86,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
-
+    ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -431,6 +439,7 @@ void MainWindow::on_FinishedBtn_clicked()
 //    pal.setColor(QColorGroup::ButtonText,QColor(255,0,0));
 //    ui->FinishedBtn->setPalette(pal);
     CleanButtonClicked();
+    clearCheckBox();
     ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon_selected.png"));
 
@@ -461,6 +470,7 @@ void MainWindow::on_DecryptionBtn_clicked()
     ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
+    clearCheckBox();
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
@@ -478,6 +488,7 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
+    clearCheckBox();
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
@@ -502,6 +513,7 @@ void MainWindow::on_FinEnpBtn_clicked()
     ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
+    clearCheckBox();
     ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
@@ -517,6 +529,7 @@ void MainWindow::on_FinDepBtn_clicked()
     ui->pushButton_10->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
+    clearCheckBox();
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
@@ -1619,7 +1632,7 @@ void MainWindow::on_pushButton_5_clicked()
         }
      }
     if(flag == 1){
-        MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这些已加密条目吗？"),this);
+        MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这些已加密条目吗？"),this);
         int nRes = msgbox->exec();
         if (nRes == QDialog::Accepted){
             QSqlQuery query3(db);
@@ -1647,6 +1660,37 @@ void MainWindow::on_pushButton_5_clicked()
             on_pushButton_8_clicked();
             MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目！"),this);
             msgbox->exec();
+        }else if(nRes == 5){
+            QString file_id;
+            QSqlQuery query3(db);
+            bool success = query3.exec("select * from varticle where emp_id='"+User_ID+"'");
+            if(!success){
+                qDebug() << "查询密文失败";
+                return;
+            }else{
+                qDebug()<<"查询成功";
+                while(query3.next())
+                {
+                    file_id = query3.record().value("article_id").toString();
+                    QString d_address ="C:/CloundSafe/"+User_qqNum+"/encrypt/yZip/" + query3.record().value("article_name").toString();
+                    QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+
+                    if(checkcheck->isChecked()){
+                        QSqlQuery query9(db);
+                        query9.exec("delete from varticle where article_id = '"+file_id+"'");
+                        QFileInfo d_file(d_address);
+                        if(d_file.isFile()){
+                            QFile::remove(d_address);
+                        }
+                        RequestNum--;
+                    }
+                    FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(file_id);
+                    delete f2;
+                 }
+             }
+             on_pushButton_8_clicked();
+             MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功批量删除条目及文件！"),this);
+             msgbox->exec();
         }else{
         }
     }else if(flag == 0){
@@ -1693,12 +1737,11 @@ void MainWindow::on_pushButton_6_clicked()
 
 //已加密文件单独删除按钮
 void MainWindow::on_deleteBtn_clicked(){
-    MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认删除这一已加密条目吗？"),this);
+    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这一已加密文件吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
         QPushButton* button = qobject_cast<QPushButton*>(sender());
         QString name = button->objectName();
-
 
         FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(name);
         delete f2;
@@ -1721,11 +1764,45 @@ void MainWindow::on_deleteBtn_clicked(){
         finishViewController->setLayout(newVbox);
         }
     else if (nRes == QDialog::Rejected){
+    }else if(nRes == 5){
+        QPushButton* button = qobject_cast<QPushButton*>(sender());
+        QString name = button->objectName();
+
+        FinishEncryptionItem *f2 = ui->MidStaWidget->findChild<FinishEncryptionItem*>(name);
+        delete f2;
+        qDebug()<<name;
+
+        QSqlQuery query(db);
+        bool success1 = query.exec("select * from varticle where article_id = '"+name+"'");
+        if(success1){
+            while(query.next()){
+                QString address = "C:/CloundSafe/"+User_qqNum+"/encrypt/yZip/" +query.record().value("article_name").toString();
+                qDebug()<<address;
+                QFileInfo d_file(address);
+                if(d_file.isFile()){
+                QFile::remove(address);
+                }
+            }
+        }
+        bool success = query.exec("delete from varticle where article_id = '"+name+"'");
+        if(success){
+            MsgBox *msgbox = new MsgBox(4,QStringLiteral("成功删除已解密条目及文件！"),this);
+            msgbox->exec();
+        }
+
+        delete finishViewController->layout();
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setLayout(finishViewController->vbox);
+        finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        finScrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(finScrollArea);
+        finishViewController->setLayout(newVbox);
     }
 }
 //已解密文件单独删除按钮
 void MainWindow::on_deleteBtn2_clicked(){
-    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这一已解密条目吗？"),this);
+    MsgBox *msgbox = new MsgBox(5,QStringLiteral("确认删除这一已解密文件吗？"),this);
     int nRes = msgbox->exec();
     if (nRes == QDialog::Accepted){
             QPushButton* button = qobject_cast<QPushButton*>(sender());
@@ -2567,6 +2644,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             dragPosition = event->globalPos() - frameGeometry().topLeft();
             event->accept();
         }
+    event->ignore();
 }
 void MainWindow::mouseMoveEvent(QMouseEvent *event){
     if (event->buttons() & Qt::LeftButton) {
@@ -2575,10 +2653,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event){
             event->accept();
         }
         }
-
+    event->ignore();
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     mouse_press = false;
+    event->ignore();
 }
 void MainWindow::paintEvent(QPaintEvent *event)
 {
@@ -2727,4 +2806,110 @@ void MainWindow::ChangeDecItemProBar(int value, QString itemID){
 void MainWindow::newDownDialogInforInit(){
     Infor_requestNum = 0;
     InforNum_Changed();
+}
+
+void MainWindow::on_finen_checkBox_stateChanged(int arg1)
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from varticle where emp_id='"+User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("article_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            if(findecrypt_flag == 0){
+                checkcheck->setChecked(true);
+            }else if(findecrypt_flag == 1){
+                checkcheck->setChecked(false);
+            }
+        }
+        if(findecrypt_flag == 0){
+            findecrypt_flag = 1;
+//            ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}"
+//                                              "QCheckBox {color:#3A8CFF}");
+        }else if(findecrypt_flag == 1){
+            findecrypt_flag =0;
+//            ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}"
+//                                              "QCheckBox {color:black}");
+        }
+
+    }
+}
+
+void MainWindow::on_finen_checkBox_2_stateChanged(int arg1)
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
+    if(!success){
+        qDebug() << "查询密文失败";
+        return;
+    }else{
+        qDebug()<<"查询成功";
+        while(query.next())
+        {
+            QString file_id = query.record().value("file_id").toString();
+            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+            if(finencrypt_flag == 0){
+                checkcheck->setChecked(true);
+            }else if(finencrypt_flag == 1){
+                checkcheck->setChecked(false);
+            }
+        }
+    }
+    if(finencrypt_flag == 0){
+        finencrypt_flag = 1;
+//        ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}"
+//                                            "QCheckBox {color:#3A8CFF}");
+    }else if(finencrypt_flag == 1){
+        finencrypt_flag =0;
+//        ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}"
+//                                            "QCheckBox {color:black}");
+    }
+}
+
+void MainWindow::on_de_checkBox_stateChanged(int arg1)
+{
+    QSqlQuery query(db);
+    bool success = query.exec("select * from Decryption where oemp_id = '"+User_ID+"'");
+    if(!success){
+        qDebug()<<"checkBox:查询数据库失败";
+        return;
+    }
+    else{
+        while(query.next()){
+            QString m_ID = query.record().value("id").toString();
+            QCheckBox *checkbox = ui->MidStaWidget->findChild<QCheckBox *>(m_ID+"Decheck");
+            if(checkbox==nullptr){
+                continue;
+            }
+            else{
+                if(DeSelect_flag==0){
+                    checkbox->setChecked(true);
+                }
+                else if(DeSelect_flag == 1){
+                    checkbox->setChecked(false);
+                }
+            }
+        }
+        if(DeSelect_flag ==0){
+            DeSelect_flag =1;
+//            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect_pressed.png);} "
+//                                          " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }
+        else{
+            DeSelect_flag =0;
+//            ui->pushButton->setStyleSheet(" QPushButton {border-image: url(:/new/mainwindow/pictures/allselect.png);} "
+//                                             " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
+        }
+    }
+}
+void MainWindow::clearCheckBox(){
+    findecrypt_flag = 0;//已解密全选判断变量
+    finencrypt_flag = 0;//已加密全选判断变量
+    ui->finen_checkBox->setChecked(false);
+    ui->finen_checkBox_2->setChecked(false);
 }

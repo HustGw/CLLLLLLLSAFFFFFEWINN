@@ -111,8 +111,8 @@ void groupSendDialog::on_pushButton_trans_clicked()
         }else{
             while(query.next()){
                 fileName = query.record().value("article_name").toString();
+                QString file_size = query.record().value("article_size").toString();
                 for(int i = 0;i<count;i++){
-                    QString file_size = query.record().value("article_size").toString();
                     QDateTime time = QDateTime::currentDateTime();
                     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
                     QListWidgetItem *item = ui->listWidget_2->item(i);

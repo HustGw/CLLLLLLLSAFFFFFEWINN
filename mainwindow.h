@@ -285,6 +285,13 @@ private slots:
     void newDownDialogInforInit();//newDownloadDiaglog点击按钮后消息数量置0并刷新
 
     void forceShut();
+    void on_finen_checkBox_stateChanged(int arg1);
+
+    void on_finen_checkBox_2_stateChanged(int arg1);
+
+    void on_de_checkBox_stateChanged(int arg1);
+
+    void clearCheckBox();
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
