@@ -112,7 +112,7 @@ background-color: rgb(238, 240, 245);
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-image: url(:/new/mainwindow/pictures/min_button.png);
+      <string notr="true">border-image: url(:/new/mainwindow/pictures/min_button.png);
 background-color: rgb(238, 240, 245);
 border:0px</string>
      </property>
