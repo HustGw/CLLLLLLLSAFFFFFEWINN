@@ -9,7 +9,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
   //初始化为未按下鼠标左键
 
   //设置标题栏隐藏
-    this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     titleLabel = new QLabel(this);
     titleLabel->setGeometry(6,6,width-12,38);
@@ -56,7 +56,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_success.png);background: transparent;border:none;}");
     }
     askLabel = new QLabel(this);
-    askLabel->setGeometry(89,74,300,20);
+    askLabel->setGeometry(89,64,300,40);
     askLabel->setText(text);
 
     deleteBtn = new QPushButton(this);

@@ -11,6 +11,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtMath>
+#include <msgbox.h>
 extern int LinkInsertFlag;
 class DelinkDialog : public QDialog
 {
