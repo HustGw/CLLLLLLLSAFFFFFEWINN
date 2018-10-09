@@ -2249,7 +2249,7 @@ void MainWindow::on_pushButton_7_clicked()
 
         }
     }else if(flag == 0){
-        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要删除的条目！"),this);
+        MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要删除的条目！"),this);
         msgbox->exec();
     }
     flag = 0;
@@ -2634,7 +2634,7 @@ bool MainWindow::DeleteFileOrFolder( const QString& strPath )
 }
 void MainWindow::closeEvent(QCloseEvent *event){
     if(forceFlag == false){
-        MsgBox *msgbox = new MsgBox(1,QStringLiteral("确认关闭系统吗？"),this);
+        MsgBox *msgbox = new MsgBox(1,"确认关闭系统吗？",this);
         int reply = msgbox->exec();
         if(reply == QDialog::Accepted){
             QString downPath = "C:/CloundSafe/"+User_qqNum+"/Decrypt/ykey/";
@@ -2740,7 +2740,7 @@ void MainWindow::NewFriendAgree(){
     }
 }
 void MainWindow::forceShut(){
-    MsgBox *msgbox = new MsgBox(2,QStringLiteral("您的账号在其他地方登陆，您已被迫下线，如非本人操作，请修改密码"),this);
+    MsgBox *msgbox = new MsgBox(2,"您的账号在其他地方登陆，您已被迫下线，\n如非本人操作，请修改密码",this);
     msgbox->exec();
     forceFlag = true;
     this->close();

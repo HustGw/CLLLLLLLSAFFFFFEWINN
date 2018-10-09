@@ -119,6 +119,7 @@ void sendDialog::on_pushButton_trans_clicked()
 {
     QString fileName;
     int count = ui->listWidget_2->count();
+    if(count!=0){
     qDebug()<<file_id;
     QSqlQuery query(db1);
     bool select_file_name = query.exec("select * from varticle where article_id ='"+file_id+"'");
@@ -170,7 +171,10 @@ void sendDialog::on_pushButton_trans_clicked()
         msgbox->exec();
         this->close();
     }
-
+    }else{
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择传输好友！"),this);
+        msgbox->exec();
+    }
 
 }
 

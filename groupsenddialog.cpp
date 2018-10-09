@@ -97,12 +97,19 @@ void groupSendDialog::on_pushButton_clicked()
 
 void groupSendDialog::on_pushButton_trans_clicked()
 {
+    bool select_flag = true;
     QString split_file_id;
     QStringList list = file_id_list.split("||");
     for(int j = 0;j<list.count();j++){
         split_file_id = list[j];
         QString fileName;
         int count = ui->listWidget_2->count();
+        if(count == 0){
+            select_flag =false;
+            break;
+        }else{
+            select_flag = true;
+        }
         qDebug()<<split_file_id;
         QSqlQuery query(db1);
         bool select_file_name = query.exec("select * from varticle where article_id ='"+split_file_id+"'");
@@ -152,10 +159,15 @@ void groupSendDialog::on_pushButton_trans_clicked()
             }
         }
     }
-    MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
-    msgbox->exec();
-    file_id_list.clear();
-    this->close();
+    if(select_flag == true){
+        MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
+        msgbox->exec();
+        file_id_list.clear();
+        this->close();
+    }else {
+        MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要传输的好友！"),this);
+        msgbox->exec();
+    }
 }
 
 void groupSendDialog::on_pushButton_close2_clicked()

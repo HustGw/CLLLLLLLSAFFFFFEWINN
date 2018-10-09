@@ -40,12 +40,12 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     okBtn->setGeometry(228,144,89,27);
     okBtn->setText(QStringLiteral("确认下载"));
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
-
+    okBtn->setCursor(QCursor(Qt::PointingHandCursor));
     cancleBtn=new QPushButton(this);
     cancleBtn->setGeometry(342,144,89,27);
     cancleBtn->setText(QStringLiteral("取消下载"));
     cancleBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
-
+    cancleBtn->setCursor(QCursor(Qt::PointingHandCursor));
     inputLineEdit = new QLineEdit(this);
     inputLineEdit->setGeometry(40,80,391,31);
     inputLineEdit->setPlaceholderText(tr("输入链接"));
@@ -59,6 +59,7 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 void DelinkDialog::sendLink(){
     QString split_file_id;
         QString link = inputLineEdit->text().section("&&",1,1);
+        if(link!=nullptr){
         QStringList list = link.split("||");
         for(int j = 1;j<list.count();j++){
             split_file_id = list[j];
@@ -68,6 +69,10 @@ void DelinkDialog::sendLink(){
         clipboard->setText("");
         LinkInsertFlag = 0;
         this->accept();
+        }else{
+            MsgBox *msgbox = new MsgBox(2,"请输入下载链接",this);
+            msgbox->exec();
+        }
 }
 void DelinkDialog::closeEvent(QCloseEvent * event){
     LinkInsertFlag = 0;
