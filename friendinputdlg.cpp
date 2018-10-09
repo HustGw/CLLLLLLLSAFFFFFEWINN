@@ -74,6 +74,8 @@ void friendInputDlg::sendName(){
     qDebug()<<"send";
     if(qq_num==User_qqNum){
         qDebug()<<"添加自己为好友";
+       MsgBox *msgbox = new MsgBox(2,QStringLiteral("不能添加自己为好友！"),this);
+       msgbox->exec();
     }
     else{
         emit sendNameToMain(ddd);

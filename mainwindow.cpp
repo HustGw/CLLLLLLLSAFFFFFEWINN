@@ -1350,9 +1350,34 @@ void MainWindow::inforDlgaddFriend(QString name){
     else{
         while (query.next()) {
             if(query.record().value("friend_nickname").toString()==name){
-                MsgBox *msgbox = new MsgBox(2,QStringLiteral("已经是你的好友了"),this);
-                msgbox->exec();
-                return;
+                if(query.record().value("status").toString()=='1'){//status为1说明已经成功添加好友
+                    MsgBox *msgbox = new MsgBox(2,QStringLiteral("已经是你的好友了"),this);
+                    msgbox->exec();
+                    return;
+                }
+                else if(query.record().value("status").toString()=='2'){//status为2说明之前添加但被忽略，此时将status置为1，并添加好友
+                    QSqlQuery updateQuery(db);
+                    bool updateSuccess = updateQuery.exec("update friend set status = '1' where user_id = '"+User_ID+"' and friend_nickname = '"+name+"'");
+                    if(!updateSuccess){
+                        qDebug()<<"inforDlgaddFriend:update friend failed";
+                    }
+                    else{
+                        int i = friendListWidget->count();
+                        i++;
+                        QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
+                        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+                        add_item->setText(name);
+                        add_item->setFont(QFont("Microsoft YaHei",10,50));
+                        add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
+                        add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+                        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
+                        friendListWidget->insertItem(i,add_item);
+                        MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"),this);
+                        msgbox->exec();
+                        return;
+
+                    }
+                }
             }
             else{
                 continue;
@@ -2570,14 +2595,14 @@ void MainWindow::ShowNewDownDialog(QString id){
 }
 void MainWindow::downloadOneFile(QString id){
             //跳转到解密页面，开始下载
+            InforNum_Changed();
             DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
             if(m1==nullptr){
                 qDebug()<<"error";
             }
             else{
                  m1->downloadBtn->click();
-                Infor_requestNum--;
-                InforNum_Changed();
+//                Infor_requestNum--;
                 on_DecryptionBtn_clicked();
             }
 }

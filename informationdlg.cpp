@@ -344,43 +344,50 @@ void informationDlg::setItem(){
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
-    cleanInforBtn->setEnabled(false);
-    cleanInforBtn->setStyleSheet("color:#708090");
-    CleanStatusLabel->show();
-    QSqlQuery query(db);
-    bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"' and is_solved = '0'");//0表示为处理，1表示只有emp处理，2表示只有oemp处理，3表示emp和oemp均处理
-    if(!success){
-        qDebug()<<"update failed!";
-    }
-    bool success2 = query.exec("update Decryption set is_solved = 3 where emp_id = '"+User_ID+"' and is_solved = '2'");
-    if(!success2){
-        qDebug()<<"update2 failed";
-    }
-    bool success3 = query.exec("update Decryption set is_solved = 2 where oemp_id = '"+User_ID+"' and is_solved = '0'");
-    if(!success3){
-        qDebug()<<"update3 failed";
+    MsgBox *msgbox = new MsgBox(1,QStringLiteral("是否清空消息？"),this);
+    int nRes = msgbox->exec();
+    if(nRes == QDialog::Accepted){
+        cleanInforBtn->setEnabled(false);
+        cleanInforBtn->setStyleSheet("color:#708090");
+        CleanStatusLabel->show();
+        QSqlQuery query(db);
+        bool success = query.exec("update Decryption set is_solved = 1 where emp_id = '"+User_ID+"' and is_solved = '0'");//0表示为处理，1表示只有emp处理，2表示只有oemp处理，3表示emp和oemp均处理
+        if(!success){
+            qDebug()<<"update failed!";
+        }
+        bool success2 = query.exec("update Decryption set is_solved = 3 where emp_id = '"+User_ID+"' and is_solved = '2'");
+        if(!success2){
+            qDebug()<<"update2 failed";
+        }
+        bool success3 = query.exec("update Decryption set is_solved = 2 where oemp_id = '"+User_ID+"' and is_solved = '0'");
+        if(!success3){
+            qDebug()<<"update3 failed";
+        }
+
+        bool success4 = query.exec("update Decryption set is_solved = 3 where oemp_id = '"+User_ID+"' and is_solved = '1'");
+        if(!success4){
+            qDebug()<<"update4 failed";
+        }
+        bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_id ='"+User_ID+"'");
+        if(!upFriSuc){
+            qDebug()<<"update friend error";
+        }
+        informationNum=0;
+        FriendRequestCount = 0;
+        emit CleanInforNum();
+        this->vbox = new QVBoxLayout();
+        delete bottomWidget->layout();
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setLayout(this->vbox);
+        scrollArea->setWidget(newItemWidget);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->addWidget(scrollArea);
+        newVbox->addWidget(cleanInforBtn);
+        bottomWidget->setLayout(newVbox);
+    }else{
+
     }
 
-    bool success4 = query.exec("update Decryption set is_solved = 3 where oemp_id = '"+User_ID+"' and is_solved = '1'");
-    if(!success4){
-        qDebug()<<"update4 failed";
-    }
-    bool upFriSuc = query.exec("update friend set is_solved = 1 where friend_id ='"+User_ID+"'");
-    if(!upFriSuc){
-        qDebug()<<"update friend error";
-    }
-    informationNum=0;
-    FriendRequestCount = 0;
-    emit CleanInforNum();
-    this->vbox = new QVBoxLayout();
-    delete bottomWidget->layout();
-    QWidget *newItemWidget = new QWidget();
-    newItemWidget->setLayout(this->vbox);
-    scrollArea->setWidget(newItemWidget);
-    QVBoxLayout *newVbox = new QVBoxLayout();
-    newVbox->addWidget(scrollArea);
-    newVbox->addWidget(cleanInforBtn);
-    bottomWidget->setLayout(newVbox);
 
 }
 
