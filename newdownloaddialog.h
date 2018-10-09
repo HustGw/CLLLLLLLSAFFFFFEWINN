@@ -29,6 +29,7 @@ public:
     ~newDownloadDialog();
     QSqlDatabase db1;
     bool isOpened = false;
+    bool clearFlag = false;
     QPushButton *okBtn;
     QPushButton *cancleBtn;
     QPushButton *closeBtn;
@@ -48,6 +49,7 @@ private slots:
     void on_pushButton_close_clicked();
 
     void change_list_view();
+    void clearlist();
 private:
     Ui::newDownloadDialog *ui;
     void okBtn_press();

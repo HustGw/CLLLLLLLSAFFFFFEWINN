@@ -22,6 +22,13 @@ newDownloadDialog::~newDownloadDialog()
 {
     delete ui;
 }
+void newDownloadDialog::clearlist(){
+    int count = ui->listWidget->count();
+    for (int j = 0;j<count;j++){
+        QListWidgetItem * item = ui->listWidget->takeItem(0);
+        delete item;
+    }
+}
 void newDownloadDialog::change_list_view(){
     int count = ui->listWidget->count();
     for (int j = 0;j<count;j++){
@@ -85,6 +92,7 @@ void newDownloadDialog::on_pushButtoncancel_clicked()
 
 void newDownloadDialog::on_pushButton_close_clicked()
 {
+    emit Infor_numChange();
     isOpened = false;
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);
@@ -92,6 +100,7 @@ void newDownloadDialog::on_pushButton_close_clicked()
 }
 void newDownloadDialog::closeEvent(QCloseEvent *qevent)
 {
+    emit Infor_numChange();
     isOpened = false;
     newDownloadFileIdList.clear();
     ConnectionPool::closeConnection(db1);

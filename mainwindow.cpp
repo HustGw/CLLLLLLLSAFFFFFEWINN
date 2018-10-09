@@ -2561,9 +2561,13 @@ void MainWindow::ShowNewDownDialog(QString id){
     if(newdownloadDlg->isOpened){
         emit newDownload();
     }else{
+        newdownloadDlg = new newDownloadDialog(this);
+        connect(newdownloadDlg,SIGNAL(Infor_numChange()),this,SLOT(newDownDialogInforInit()));
+        connect(this,SIGNAL(newDownload()),newdownloadDlg,SLOT(change_list_view()));
+
+        emit newDownload();
         newdownloadDlg->show();
         newdownloadDlg->isOpened = true;
-        emit newDownload();
     }
 
 
