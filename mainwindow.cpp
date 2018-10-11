@@ -704,7 +704,7 @@ void MainWindow::on_OpenFileBtn_clicked()
         newItemWidget->setContentsMargins(0,0,0,0);
 
         QScrollArea *newScrollArea = new QScrollArea();
-        //newScrollArea->setWidgetResizable(true);
+        //newScrollArea->setWidgetResizable(true);//铺满显示
         newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
