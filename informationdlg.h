@@ -21,6 +21,7 @@
 #include <mylabel.h>
 #include"msgbox.h"
 #include <QMouseEvent>
+#include <QMap>
 extern QString User_ID;
 extern int informationNum;
 extern int count;
@@ -70,6 +71,8 @@ private slots:
     void AddFriendRequest();
     void AddFriendIgnore();
     void closeBtn_press();
+    int time_insertWidget(QString time);
+    int time_compare(QString time1,QString time2);
 signals:
     void statusChanged();
     void InforNumDecrease();

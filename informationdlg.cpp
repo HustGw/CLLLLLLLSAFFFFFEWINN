@@ -1,6 +1,7 @@
 #include "informationdlg.h"
 int count = 0;
 
+QList<QString>timelist;
 informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 {
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
@@ -180,8 +181,6 @@ void informationDlg::newInformation(){
 
 void informationDlg::setItem(){
     QSqlQuery query(db);
-    QString sql = "select * from Decryption where emp_id = '"+User_ID+"' and status = '2'";
-    qDebug()<<sql;
     bool success = query.exec("select * from Decryption where emp_id = '"+User_ID+"' and (is_solved = '0' or is_solved = '2') and (status = '2' or status ='4' or status = '3' or status = '5') order by apply_time DESC");
     if(success){
         qDebug()<<"查询数据库成功";
@@ -207,6 +206,7 @@ void informationDlg::setItem(){
             m1->titleLabel->setText(title);
             //判断当前状态 给予不同的按钮状态
             QString time = query.record().value("apply_time").toString();
+            timelist.append(time);//将time时间插入timelist中
             m1->timeLabel->setText(time);
             QString nowStatus = query.record().value("status").toString();
             if(nowStatus=="2"){
@@ -216,6 +216,8 @@ void informationDlg::setItem(){
                 connect(m1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(recvReq()));
                 connect(m1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(ignoreReq()));
                 vbox->addWidget(m1);
+
+
             }
             if(nowStatus=="3"||nowStatus=="5"){
                 m1->setObjectName(query.record().value("id").toString()+"information");
@@ -255,9 +257,10 @@ void informationDlg::setItem(){
                 InformationItem *f1 = new InformationItem();
                 f1->InforKindsLabel->setText("好友申请");
                 QString userNickName = friendQuery.record().value("user_nickname").toString();
-                QString t = userNickName+"添加您为好友";
+                QString t = userNickName+"添加您为好友";\
+                QString friend_time = friendQuery.record().value("create_time").toString();
                 f1->titleLabel->setText(t);
-                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->timeLabel->setText(friend_time);
                 f1->allowBtn->setText("允许");
                 f1->ignoreBtn->setText("忽略");
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
@@ -265,7 +268,8 @@ void informationDlg::setItem(){
                 f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
                 connect(f1->ignoreBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendIgnore()));
                 connect(f1->allowBtn,SIGNAL(clicked(bool)),this,SLOT(AddFriendRequest()));
-                vbox->addWidget(f1);
+                int index1 = time_insertWidget(friend_time);
+                vbox->insertWidget(index1,f1);
             }
             else if(friendQuery.record().value("status").toString()=="1"){
                 count++;
@@ -273,15 +277,17 @@ void informationDlg::setItem(){
                 f1->InforKindsLabel->setText("好友申请");
                 QString userNickName = friendQuery.record().value("user_nickname").toString();
                 QString t = userNickName+"添加您为好友";
+                QString friend_time = friendQuery.record().value("create_time").toString();
                 f1->titleLabel->setText(t);
-                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->timeLabel->setText(friend_time);
                 f1->allowBtn->setText("已允许");
                 f1->allowBtn->setGeometry(340,75,80,30);
                 f1->allowBtn->setEnabled(false);
                 f1->ignoreBtn->hide();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
-                vbox->addWidget(f1);
+                int index1 = time_insertWidget(friend_time);
+                vbox->insertWidget(index1,f1);
             }
             else if(friendQuery.record().value("status").toString()=="2"){
                 count++;
@@ -289,15 +295,17 @@ void informationDlg::setItem(){
                 f1->InforKindsLabel->setText("好友申请");
                 QString userNickName = friendQuery.record().value("user_nickname").toString();
                 QString t = userNickName+"添加您为好友";
+                QString friend_time = friendQuery.record().value("create_time").toString();
                 f1->titleLabel->setText(t);
-                f1->timeLabel->setText(friendQuery.record().value("create_time").toString());
+                f1->timeLabel->setText(friend_time);
                 f1->ignoreBtn->setText("已忽略");
                 f1->ignoreBtn->setEnabled(false);
                 f1->ignoreBtn->setGeometry(340,75,80,30);
                 f1->allowBtn->hide();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
-                vbox->addWidget(f1);
+                int index1 = time_insertWidget(friend_time);
+                vbox->insertWidget(index1,f1);
             }
         }
 
@@ -332,18 +340,21 @@ void informationDlg::setItem(){
             QString s = name+"传输文件"+fileName;
             m1->InforKindsLabel->setText("文件传输");
             m1->titleLabel->setText(s);
+            int index2 = time_insertWidget(time);
             m1->timeLabel->setText(time);
             m1->allowBtn->hide();
             m1->ignoreBtn->hide();
-            vbox->addWidget(m1);
+            vbox->insertWidget(index2,m1);
         }
     }
-
+    //插入排序玩后将timelist清空
+    timelist.clear();
 }
 
 void informationDlg::CleanAllInfor(){
     qDebug()<<"cleanClicked";
     //清除所有
+    timelist.clear();//清空timelist
     MsgBox *msgbox = new MsgBox(1,QStringLiteral("是否清空消息？"),this);
     int nRes = msgbox->exec();
     if(nRes == QDialog::Accepted){
@@ -589,4 +600,60 @@ void informationDlg::AddFriendIgnore(){
                     }
                 }
         }
+}
+//比较函数 通过传入的时间，返回插入list的index
+int informationDlg::time_insertWidget(QString time){
+    qDebug()<<time;
+    for(int i = 0;i!=timelist.size();i++){
+        if(time_compare(time,timelist.at(i))){
+            //time靠后则将time插入timelist中
+            timelist.insert(i,time);
+            qDebug()<<i;
+            return i;
+        }else if(i== timelist.size()-1){
+            timelist.append(time);
+            return i+1;
+        }
+    }
+}
+//时间比较函数 time1如果时间靠后返回1，时间靠前返回0
+int informationDlg::time_compare(QString time1, QString time2){
+    int year1 = time1.mid(0,4).toInt();
+    int year2 = time2.mid(0,4).toInt();
+    if(year1>year2) return 1;
+    else if(year1<year2) return 0;
+    else if(year1==year2){//如年份相同比较月份
+        int month1 = time1.mid(5,2).toInt();
+        int month2 = time2.mid(5,2).toInt();
+        if(month1>month2) return 1;
+        else if(month1<month2) return 0;
+        else if(month1==month2){//如月份相同比较日期
+            int date1 = time1.mid(8,2).toInt();
+            int date2 = time2.mid(8,2).toInt();
+            if(date1>date2) return 1;
+            else if(date1<date2) return 2;
+            else if(date1==date2){//如日期相同比较小时
+                int hour1 = time1.mid(11,2).toInt();
+                int hour2 = time2.mid(11,2).toInt();
+                if(hour1>hour2) return 1;
+                else if(hour1<hour2) return 0;
+                else if(hour1==hour2){//如小时相同比较分钟
+                    int minute1 = time1.mid(14,2).toInt();
+                    int minute2 = time2.mid(14,2).toInt();
+                    if(minute1>minute2) return 1;
+                    else if(minute1<minute2) return 0;
+                    else if(minute1==minute2){//如分钟相同比较秒
+                        int second1 = time1.mid(17,2).toInt();
+                        int second2 = time2.mid(17,2).toInt();
+                        if(second1>=second2) return 1;
+                        else if(second1<second2) return 0;
+
+                    }
+                }
+
+            }
+
+        }
+
+    }
 }
