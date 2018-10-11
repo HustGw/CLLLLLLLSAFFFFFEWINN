@@ -643,9 +643,10 @@ void MainWindow::on_OpenFileBtn_clicked()
         v1->encryptStaBtn->setObjectName(fName);
         v1->encryptStaBtn->show();
         v1->encryptStaBtn->setEnabled(false);
-        v1->encryptStaBtn->setText("正在加密...");
+        v1->encryptStaBtn->setText("加密中...");
         v1->encryptStaBtn->setFlat(true);
-        v1->encryptStaBtn->setStyleSheet("background:transparent");
+        v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
+        //v1->encryptStaBtn->t
         v1->starEncptBtn->setFlat(true);
         //v1->checkBox->setObjectName(fName);
 
@@ -660,6 +661,8 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         f_progressBar = new QProgressBar();
         f_progressBar = v1->progressBar;
+        f_progressBar->setGeometry(0,0,700,75);
+        f_progressBar->setTextVisible(false);
         QString strQSS = "QProgressBar { \
                 text-align: center; \
                 border: 1px ; \
@@ -698,11 +701,18 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
+
         QScrollArea *newScrollArea = new QScrollArea();
+        //newScrollArea->setWidgetResizable(true);
+        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        //newItemWidget->setSizePolicy(QSizePolicy::Fixed);
         newScrollArea->setWidget(newItemWidget);
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
 
@@ -739,6 +749,8 @@ void MainWindow::handleResults(int value,QString itemName)
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
 

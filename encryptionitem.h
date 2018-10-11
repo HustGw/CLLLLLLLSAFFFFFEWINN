@@ -29,6 +29,7 @@ public:
     QLabel *fileDescription;
     QLabel *fileIcon;
     QLabel *timeInfo;
+    QLabel *line;
     //QCheckBox *checkBox;
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
