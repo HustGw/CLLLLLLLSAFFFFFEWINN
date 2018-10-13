@@ -132,9 +132,9 @@ MainWindow::MainWindow(QWidget *parent) :
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
-    friendListLab->setGeometry(ui->RightWidget->width()/2-55,5,80,30);
+    friendListLab->setGeometry(ui->RightWidget->width()/2-60,1,80,30);
     friendIcon = new QLabel(ui->RightWidget);
-    friendIcon->setGeometry(ui->RightWidget->width()/2-85,14,10,10);
+    friendIcon->setGeometry(ui->RightWidget->width()/2-85,10,10,10);
     friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
@@ -172,7 +172,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_bt->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_13->hide();
     connect(m_bt,SIGNAL(clicked(bool)),this,SLOT(on_pushButton_13_clicked()));
-    //ui->SearchEdit->setStyleSheet("border-radius:10px;");
+    ui->SearchEdit->setStyleSheet("border-radius:10px;"
+                                  "border:1px groove gray;"
+                                  );
     //查询数据库 获取用户名称
     setEmp_name();
     //使用Mylabel添加头像
