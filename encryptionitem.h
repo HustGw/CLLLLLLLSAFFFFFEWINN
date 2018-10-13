@@ -21,7 +21,7 @@ class EncryptionItem : public QWidget
 public:
     explicit EncryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(648,71);
+        return QSize(695,71);
     }
 
     QLabel *fileName;

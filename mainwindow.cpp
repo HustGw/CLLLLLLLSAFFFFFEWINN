@@ -44,7 +44,7 @@ int threadNum = 0;
 int DepThreadNum = 0;
 int encptThreadNum = 0;
 int enitemNum = 0;
-QFont f("HiraginoSansGB",10,75);
+QFont f("冬青黑体简体",10,75);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
@@ -177,7 +177,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setEmp_name();
     //使用Mylabel添加头像
     userHead = new Mylabel(ui->TopWidget);
-    userHead->setGeometry(15,14,45,45);
+    userHead->setGeometry(30,14,45,45);
     userHead->setStyleSheet("min-width:  45px;"
                             "max-width:  45px;"
                             "min-height: 45px;"
@@ -199,7 +199,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->line_11->hide();
     ui->pushButton_12->hide();
     this->setFixedSize(this->width(),this->height());
-    QFont font("Microsoft YaHei",10,75);
+    QFont font("冬青黑体简体",10,75);
     this->setFont(font);
         //查询数据库  查询解密请求
      QSqlQuery query(db);
@@ -307,12 +307,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
                    }
                }
+               decryptionViewController->vbox->setMargin(0);
+               decryptionViewController->vbox->setSpacing(0);
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
+               newVbox->setMargin(0);
+               newVbox->setSpacing(0);
                newVbox->addWidget(newScrollArea);
                decryptionViewController->setLayout(newVbox);
            }
@@ -331,7 +335,7 @@ MainWindow::MainWindow(QWidget *parent) :
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
              add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
              add_item->setText(Friend_nickname);
-             add_item->setFont(QFont("Microsoft YaHei",10,50));
+             add_item->setFont(QFont("冬青黑体简体",10,50));
              add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
              add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
              add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -442,7 +446,7 @@ void MainWindow::on_FinishedBtn_clicked()
     clearCheckBox();
     ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon_selected.png"));
-
+    ui->blue_encrypt_3->setStyleSheet("background-color: #3A8CFF");
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
         ui->FinDepBtn->show();
@@ -471,6 +475,7 @@ void MainWindow::on_DecryptionBtn_clicked()
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     clearCheckBox();
+    ui->blue_encrypt_2->setStyleSheet("background-color: #3A8CFF");
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
@@ -489,6 +494,7 @@ void MainWindow::on_EncryptionBtn_clicked()
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     clearCheckBox();
+    ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(encryptionViewController);
@@ -514,6 +520,7 @@ void MainWindow::on_FinEnpBtn_clicked()
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     clearCheckBox();
+    ui->blue_encrypt_4->setStyleSheet("background-color: #3A8CFF");
     ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
@@ -530,6 +537,7 @@ void MainWindow::on_FinDepBtn_clicked()
                                      " QPushButton:hover {border-image: url(:/new/mainwindow/pictures/allselect_hover.png);}");
     CleanButtonClicked();
     clearCheckBox();
+    ui->blue_encrypt_5->setStyleSheet("background-color: #3A8CFF");
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
@@ -744,7 +752,9 @@ void MainWindow::handleResults(int value,QString itemName)
         //ReLayout();
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
         QScrollArea *newScrollArea = new QScrollArea();
+
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -774,10 +784,14 @@ void MainWindow::handleResults(int value,QString itemName)
         //delete f_progressBar;
         delete encryptionViewController->layout();
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
         QScrollArea *newScrollArea = new QScrollArea();
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
     }
@@ -907,11 +921,16 @@ void MainWindow::on_pushButton_3_clicked()
 
                   }
                   delete decryptionViewController->layout();
+                  decryptionViewController->vbox->setMargin(0);
+                  decryptionViewController->vbox->setSpacing(0);
                   QWidget *newItemWidget = new QWidget();
+                  newItemWidget->setContentsMargins(0,0,0,0);
                   newItemWidget->setLayout(decryptionViewController->vbox);
                   newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                   newScrollArea->setWidget(newItemWidget);
                   QVBoxLayout *newVbox = new QVBoxLayout();
+                  newVbox->setMargin(0);
+                  newVbox->setSpacing(0);
                   newVbox->addWidget(newScrollArea);
                   decryptionViewController->setLayout(newVbox);
         }
@@ -1379,7 +1398,7 @@ void MainWindow::inforDlgaddFriend(QString name){
                         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
                         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
                         add_item->setText(name);
-                        add_item->setFont(QFont("Microsoft YaHei",10,50));
+                        add_item->setFont(QFont("冬青黑体简体",10,50));
                         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
                         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
                         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -1454,7 +1473,7 @@ void MainWindow::inforDlgaddFriend(QString name){
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
         add_item->setText(name);
-        add_item->setFont(QFont("Microsoft YaHei",10,50));
+        add_item->setFont(QFont("冬青黑体简体",10,50));
         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -1625,15 +1644,24 @@ void MainWindow::on_pushButton_8_clicked()
                //f1->fileName->setText(file_name);
                f1->fileSize->setText(file_size);
                f1->fileDescription->setText(file_discryption);
-
+               finishViewController->vbox->setMargin(0);
+               finishViewController->vbox->setSpacing(0);
                finishViewController->vbox->addWidget(f1);
+
                delete finishViewController->layout();
                QWidget *newItemWidget = new QWidget();
+               newItemWidget->setContentsMargins(0,0,0,0);
+
                //QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController->vbox);
-               finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+               finScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+               finScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+               finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;margins:0;");
                finScrollArea->setWidget(newItemWidget);
+
                QVBoxLayout *newVbox = new QVBoxLayout();
+               newVbox->setMargin(0);
+               newVbox->setSpacing(0);
                newVbox->addWidget(finScrollArea);
                finishViewController->setLayout(newVbox);
 
@@ -1792,11 +1820,16 @@ void MainWindow::on_deleteBtn_clicked(){
         }
 
         delete finishViewController->layout();
+        finishViewController->vbox->setMargin(0);
+        finishViewController->vbox->setSpacing(0);
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
         newItemWidget->setLayout(finishViewController->vbox);
         finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         finScrollArea->setWidget(newItemWidget);
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(finScrollArea);
         finishViewController->setLayout(newVbox);
         }
@@ -1828,11 +1861,16 @@ void MainWindow::on_deleteBtn_clicked(){
         }
 
         delete finishViewController->layout();
+        finishViewController->vbox->setMargin(0);
+        finishViewController->vbox->setSpacing(0);
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
         newItemWidget->setLayout(finishViewController->vbox);
         finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         finScrollArea->setWidget(newItemWidget);
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(finScrollArea);
         finishViewController->setLayout(newVbox);
     }
@@ -1856,12 +1894,17 @@ void MainWindow::on_deleteBtn2_clicked(){
                 msgbox->exec();
             }
             delete finishViewController2->layout();
+            finishViewController2->vbox->setMargin(0);
+            finishViewController2->vbox->setSpacing(0);
             QWidget *newItemWidget = new QWidget();
+            newItemWidget->setContentsMargins(0,0,0,0);
            // QScrollArea *newScrollArea = new QScrollArea();
             newItemWidget->setLayout(finishViewController2->vbox);
             finScrollArea->setWidget(newItemWidget);
             finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
             QVBoxLayout *newVbox = new QVBoxLayout();
+            newVbox->setMargin(0);
+            newVbox->setSpacing(0);
             newVbox->addWidget(finScrollArea);
             finishViewController2->setLayout(newVbox);
         }
@@ -1893,12 +1936,17 @@ void MainWindow::on_deleteBtn2_clicked(){
         }
 
         delete finishViewController2->layout();
+        finishViewController2->vbox->setMargin(0);
+        finishViewController2->vbox->setSpacing(0);
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
        // QScrollArea *newScrollArea = new QScrollArea();
         newItemWidget->setLayout(finishViewController2->vbox);
         finScrollArea->setWidget(newItemWidget);
         finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(finScrollArea);
         finishViewController2->setLayout(newVbox);
     }
@@ -1990,14 +2038,18 @@ void MainWindow::on_pushButton_9_clicked()
                f1->fileDescription->setText(file_discryption);
 
                finishViewController2->vbox->addWidget(f1);
-
+               finishViewController2->vbox->setMargin(0);
+               finishViewController2->vbox->setSpacing(0);
                delete finishViewController2->layout();
                QWidget *newItemWidget = new QWidget();
+               newItemWidget->setContentsMargins(0,0,0,0);
               // QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController2->vbox);
                finScrollArea->setWidget(newItemWidget);
                finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
+               newVbox->setMargin(0);
+               newVbox->setSpacing(0);
                newVbox->addWidget(finScrollArea);
                finishViewController2->setLayout(newVbox);
                connect(f1->pathOpenBtn,SIGNAL(clicked(bool)),f1,SLOT(on_pathOpenBtn_clicked()));
@@ -2112,11 +2164,16 @@ void MainWindow::FileIsAllowed(){
                      delete f1;
                      //重新布局
                      delete decryptionViewController->layout();
+                     decryptionViewController->vbox->setMargin(0);
+                     decryptionViewController->vbox->setSpacing(0);
                      QWidget *newItemWidget = new QWidget();
+                     newItemWidget->setContentsMargins(0,0,0,0);
                      newItemWidget->setLayout(decryptionViewController->vbox);
                      newScrollArea->setWidget(newItemWidget);
                      newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                      QVBoxLayout *newVbox = new QVBoxLayout();
+                     newVbox->setMargin(0);
+                     newVbox->setSpacing(0);
                      newVbox->addWidget(newScrollArea);
                      decryptionViewController->setLayout(newVbox);
                      MsgBox *msgbox = new MsgBox(4,QStringLiteral("文件解密同意并成功解密"),this);
@@ -2347,6 +2404,12 @@ void MainWindow::CleanButtonClicked(){
     ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon.png"));
+    //ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
+    ui->blue_encrypt->setStyleSheet("background-color: white");
+    ui->blue_encrypt_2->setStyleSheet("background-color: white");
+    ui->blue_encrypt_3->setStyleSheet("background-color: white");
+    ui->blue_encrypt_4->setStyleSheet("background-color: white");
+    ui->blue_encrypt_5->setStyleSheet("background-color: white");
 }
 
 void MainWindow::LinkInsert(QString link){
@@ -2459,11 +2522,16 @@ void MainWindow::RecDecryptionFailed(){
 
 void MainWindow::ReLayout(){
     delete decryptionViewController->layout();
+    decryptionViewController->vbox->setMargin(0);
+    decryptionViewController->vbox->setSpacing(0);
     QWidget *newItemWidget = new QWidget();
+    newItemWidget->setContentsMargins(0,0,0,0);
     newItemWidget->setLayout(decryptionViewController->vbox);
     newScrollArea->setWidget(newItemWidget);
     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
     QVBoxLayout *newVbox = new QVBoxLayout();
+    newVbox->setMargin(0);
+    newVbox->setSpacing(0);
     newVbox->addWidget(newScrollArea);
     decryptionViewController->setLayout(newVbox);
 }
@@ -2546,7 +2614,7 @@ void MainWindow::Init_InforIcon(){
         }
     }
     QString s = QString::number(num,10);
-    QFont font("Microsoft YaHei",8,75);
+    QFont font("冬青黑体简体",8,75);
     Infor_num_icon->setFont(font);
     if(num==0){
         Infor_num_icon->hide();
@@ -2746,7 +2814,7 @@ void MainWindow::NewFriendAgree(){
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
             add_item->setText(Friend_nickname);
-            add_item->setFont(QFont("Microsoft YaHei",10,50));
+            add_item->setFont(QFont("冬青黑体简体",10,50));
             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -2784,11 +2852,16 @@ void MainWindow::FileIsIgnored(){
         }
         //在删除完成后重新布局
         delete decryptionViewController->layout();
+        decryptionViewController->vbox->setMargin(0);
+        decryptionViewController->vbox->setSpacing(0);
         QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
         newItemWidget->setLayout(decryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
         newVbox->addWidget(newScrollArea);
         decryptionViewController->setLayout(newVbox);
     }

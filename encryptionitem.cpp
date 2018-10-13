@@ -66,7 +66,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 
     }
 
-    progressBar->setGeometry(0,0,650,65);
+    progressBar->setGeometry(0,0,695,65);
     QString strQSS = "QProgressBar { \
             text-align: center; \
             border: 1px ; \

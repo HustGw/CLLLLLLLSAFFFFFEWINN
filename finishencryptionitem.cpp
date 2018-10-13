@@ -56,10 +56,10 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     fileSize->setGeometry(97,28,300,11);
     fileDescription->setGeometry(97,41,400,12);
 
-    transprotBtn->setGeometry(503,10,13,15);
-    shareBtn->setGeometry(540,10,11,14);
-    pathOpenBtn->setGeometry(575,10,15,14);
-    deleteBtn->setGeometry(614,10,13,13);
+    transprotBtn->setGeometry(553,10,13,15);
+    shareBtn->setGeometry(590,10,11,14);
+    pathOpenBtn->setGeometry(625,10,15,14);
+    deleteBtn->setGeometry(664,10,13,13);
 
     checkBox->setGeometry(15,25,13,13);
     checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");

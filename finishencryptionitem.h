@@ -25,7 +25,7 @@ class FinishEncryptionItem : public QWidget
 public:
     explicit FinishEncryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(630,71);
+        return QSize(695,71);
     }
     QLabel *label;
     QLabel *elseLabel;
