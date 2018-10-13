@@ -23,7 +23,7 @@ class FinishDecryptionItem : public QWidget
 public:
     explicit FinishDecryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(648,71);
+        return QSize(695,71);
     }
     QLabel *label;
     QLabel *elseLabel;

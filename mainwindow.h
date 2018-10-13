@@ -71,6 +71,8 @@
 #include <QNetworkInterface>
 #include <QList>
 #include <QTimer>
+#include <QDesktopWidget>
+#include <QApplication>
 namespace Ui {
 class MainWindow;
 }
@@ -160,6 +162,41 @@ public:
     QTimer *threadTimer;
     QThread *thread_11;
     heartThread *workThread;
+
+    //鼠标所在区域
+    enum WindowStretchRectState
+    {
+        NO_SELECT = 0,
+        TOP_BORDER,
+        BOTTOM_BORDER,
+        LEFT_BORDER,
+        RIGHT_BORDER,
+        LEFT_TOP_RECT,
+        LEFT_BOTTOM_RECT,
+        RIGHT_TOP_RECT,
+        RIGHT_BOTTOM_RECT,
+    };
+
+    //四条边
+    QRect m_topBorderRect;
+    QRect m_bottomBorderRect;
+    QRect m_leftBorderRect;
+    QRect m_rightBorderRect;
+    //四个角
+    QRect m_leftTopRect;
+    QRect m_leftBottomRect;
+    QRect m_rightTopRect;
+    QRect m_rightBottomRect;
+
+    bool   m_bMousePressed;    // 鼠标是否按下
+    int    m_nMouseStyle;     // 鼠标样式
+
+    QPoint m_moveStartPoint;
+    QPoint m_endPoint;
+    QRect windowRect;
+    WindowStretchRectState stretchState;
+
+
 public slots:
 
     void FileIsAllowed();//请求同意槽函数
@@ -285,6 +322,7 @@ private slots:
     void newDownDialogInforInit();//newDownloadDiaglog点击按钮后消息数量置0并刷新
 
     void forceShut();
+
     void on_finen_checkBox_stateChanged(int arg1);
 
     void on_finen_checkBox_2_stateChanged(int arg1);
@@ -292,11 +330,14 @@ private slots:
     void on_de_checkBox_stateChanged(int arg1);
 
     void clearCheckBox();
+
+   // void on_pushButton_max_clicked();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);//松开鼠标触发
     void paintEvent(QPaintEvent *event);
 signals:
 //    void sendUserID(QString user_id);

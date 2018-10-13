@@ -5,6 +5,7 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
 
     label = new QLabel(this);
     label->setGeometry(0,0,34,16);
+    label->setCursor(QCursor(Qt::PointingHandCursor));
     label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png); }");
     elseLabel = new QLabel(this);
     elseLabel->setGeometry(49,25,30,16);
@@ -55,9 +56,9 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     fileSize->setGeometry(97,28,300,11);
     fileDescription->setGeometry(97,41,400,12);
 
-    openBtn->setGeometry(540,10,14,16);
-    pathOpenBtn->setGeometry(575,11,15,14);
-    deleteBtn->setGeometry(614,12,13,13);
+    openBtn->setGeometry(590,10,14,16);
+    pathOpenBtn->setGeometry(625,11,15,14);
+    deleteBtn->setGeometry(664,12,13,13);
 
     checkBox->setGeometry(15,25,13,13);
     checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");

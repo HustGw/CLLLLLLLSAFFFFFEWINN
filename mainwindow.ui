@@ -21,10 +21,10 @@
    <widget class="QPushButton" name="EncryptionBtn">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>87</y>
-      <width>164</width>
-      <height>47</height>
+      <x>14</x>
+      <y>91</y>
+      <width>163</width>
+      <height>45</height>
      </rect>
     </property>
     <property name="text">
@@ -34,10 +34,10 @@
    <widget class="QPushButton" name="DecryptionBtn">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>135</y>
-      <width>164</width>
-      <height>47</height>
+      <x>14</x>
+      <y>141</y>
+      <width>163</width>
+      <height>45</height>
      </rect>
     </property>
     <property name="text">
@@ -47,10 +47,10 @@
    <widget class="QPushButton" name="FinishedBtn">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>185</y>
-      <width>164</width>
-      <height>47</height>
+      <x>14</x>
+      <y>191</y>
+      <width>163</width>
+      <height>45</height>
      </rect>
     </property>
     <property name="text">
@@ -76,7 +76,7 @@
       <x>872</x>
       <y>87</y>
       <width>6</width>
-      <height>576</height>
+      <height>575</height>
      </rect>
     </property>
     <property name="orientation">
@@ -89,7 +89,7 @@
       <x>175</x>
       <y>87</y>
       <width>6</width>
-      <height>576</height>
+      <height>575</height>
      </rect>
     </property>
     <property name="orientation">
@@ -99,7 +99,7 @@
    <widget class="Line" name="line_4">
     <property name="geometry">
      <rect>
-      <x>176</x>
+      <x>178</x>
       <y>125</y>
       <width>697</width>
       <height>6</height>
@@ -128,7 +128,7 @@
       <x>11</x>
       <y>11</y>
       <width>1062</width>
-      <height>74</height>
+      <height>77</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -137,14 +137,14 @@
     <widget class="QLabel" name="nameLabel">
      <property name="geometry">
       <rect>
-       <x>71</x>
+       <x>86</x>
        <y>23</y>
        <width>150</width>
        <height>30</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 75 14pt &quot;Microsoft JhengHei&quot;;</string>
+      <string notr="true">font: 75 14pt &quot;Microsoft JhengHei&quot; bold;</string>
      </property>
      <property name="text">
       <string>昵称获取失败</string>
@@ -248,9 +248,9 @@
    <widget class="QWidget" name="LeftWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>235</y>
-      <width>165</width>
+      <x>14</x>
+      <y>241</y>
+      <width>163</width>
       <height>102</height>
      </rect>
     </property>
@@ -259,8 +259,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>164</width>
-       <height>47</height>
+       <width>163</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="text">
@@ -272,8 +272,8 @@
       <rect>
        <x>0</x>
        <y>50</y>
-       <width>164</width>
-       <height>47</height>
+       <width>163</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="text">
@@ -284,10 +284,10 @@
    <widget class="QStackedWidget" name="MidStaWidget">
     <property name="geometry">
      <rect>
-      <x>176</x>
-      <y>126</y>
-      <width>698</width>
-      <height>497</height>
+      <x>179</x>
+      <y>129</y>
+      <width>695</width>
+      <height>494</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -301,23 +301,23 @@
     <property name="geometry">
      <rect>
       <x>175</x>
-      <y>85</y>
+      <y>87</y>
       <width>698</width>
-      <height>41</height>
+      <height>39</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
       <property name="geometry">
        <rect>
         <x>8</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -332,7 +332,7 @@
       <property name="geometry">
        <rect>
         <x>127</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -361,7 +361,7 @@
       <property name="geometry">
        <rect>
         <x>550</x>
-        <y>6</y>
+        <y>4</y>
         <width>111</width>
         <height>33</height>
        </rect>
@@ -374,7 +374,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>12</y>
         <width>53</width>
         <height>14</height>
        </rect>
@@ -403,7 +403,7 @@
       <property name="geometry">
        <rect>
         <x>127</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -419,7 +419,7 @@
       <property name="geometry">
        <rect>
         <x>246</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -432,7 +432,7 @@
       <property name="geometry">
        <rect>
         <x>550</x>
-        <y>6</y>
+        <y>4</y>
         <width>111</width>
         <height>33</height>
        </rect>
@@ -458,7 +458,7 @@
       <property name="geometry">
        <rect>
         <x>365</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -471,7 +471,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>12</y>
         <width>53</width>
         <height>14</height>
        </rect>
@@ -500,7 +500,7 @@
       <property name="geometry">
        <rect>
         <x>127</x>
-        <y>6</y>
+        <y>4</y>
         <width>110</width>
         <height>32</height>
        </rect>
@@ -516,7 +516,7 @@
       <property name="geometry">
        <rect>
         <x>550</x>
-        <y>6</y>
+        <y>4</y>
         <width>111</width>
         <height>33</height>
        </rect>
@@ -542,7 +542,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>12</y>
         <width>53</width>
         <height>14</height>
        </rect>
@@ -596,9 +596,9 @@
    <widget class="Line" name="line_5">
     <property name="geometry">
      <rect>
-      <x>177</x>
-      <y>620</y>
-      <width>895</width>
+      <x>178</x>
+      <y>621</y>
+      <width>697</width>
       <height>6</height>
      </rect>
     </property>
@@ -610,8 +610,8 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>131</y>
-      <width>164</width>
+      <y>136</y>
+      <width>167</width>
       <height>6</height>
      </rect>
     </property>
@@ -623,8 +623,8 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>181</y>
-      <width>164</width>
+      <y>186</y>
+      <width>167</width>
       <height>6</height>
      </rect>
     </property>
@@ -636,8 +636,8 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>231</y>
-      <width>164</width>
+      <y>236</y>
+      <width>167</width>
       <height>6</height>
      </rect>
     </property>
@@ -649,8 +649,8 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>281</y>
-      <width>164</width>
+      <y>286</y>
+      <width>167</width>
       <height>6</height>
      </rect>
     </property>
@@ -662,8 +662,8 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>332</y>
-      <width>164</width>
+      <y>336</y>
+      <width>167</width>
       <height>6</height>
      </rect>
     </property>
@@ -687,20 +687,79 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="blue_encrypt">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>91</y>
+      <width>3</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blue_encrypt_2">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>141</y>
+      <width>3</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blue_encrypt_3">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>191</y>
+      <width>3</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blue_encrypt_4">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>241</y>
+      <width>3</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blue_encrypt_5">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>291</y>
+      <width>3</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>label</zorder>
-   <zorder>EncryptionBtn</zorder>
-   <zorder>DecryptionBtn</zorder>
-   <zorder>FinishedBtn</zorder>
    <zorder>SearchEdit</zorder>
    <zorder>RightWidget</zorder>
    <zorder>TopWidget</zorder>
-   <zorder>LeftWidget</zorder>
-   <zorder>MidStaWidget</zorder>
    <zorder>BtnStaWidget</zorder>
    <zorder>line_2</zorder>
    <zorder>pushButton_13</zorder>
    <zorder>line</zorder>
-   <zorder>line_3</zorder>
    <zorder>line_4</zorder>
    <zorder>line_5</zorder>
    <zorder>line_7</zorder>
@@ -708,6 +767,17 @@
    <zorder>line_9</zorder>
    <zorder>line_10</zorder>
    <zorder>line_11</zorder>
+   <zorder>EncryptionBtn</zorder>
+   <zorder>DecryptionBtn</zorder>
+   <zorder>FinishedBtn</zorder>
+   <zorder>LeftWidget</zorder>
+   <zorder>line_3</zorder>
+   <zorder>blue_encrypt</zorder>
+   <zorder>blue_encrypt_2</zorder>
+   <zorder>blue_encrypt_3</zorder>
+   <zorder>blue_encrypt_4</zorder>
+   <zorder>blue_encrypt_5</zorder>
+   <zorder>MidStaWidget</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
