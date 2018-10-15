@@ -26,7 +26,8 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(255, 255, 255);
+</string>
    </property>
    <widget class="QWidget" name="widget_2" native="true">
     <property name="geometry">
@@ -245,20 +246,20 @@ border-radius:4px;</string>
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>436</y>
-      <width>271</width>
-      <height>18</height>
+      <x>114</x>
+      <y>428</y>
+      <width>15</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 8pt &quot;04b_21&quot;;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>  阅读并接受  《云加密用户协议》</string>
+     <string>  </string>
     </property>
    </widget>
    <widget class="QPushButton" name="signBtn">
@@ -291,13 +292,16 @@ color:white;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:rgb(238,240,245);</string>
+     <string notr="true">background-color:#eef0f5;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::HLine</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
     </property>
    </widget>
    <widget class="QLabel" name="nichengAlert">
@@ -378,6 +382,35 @@ color:white;</string>
     <property name="styleSheet">
      <string notr="true">background-image: url(:/new/mainwindow/pictures/system_icon.png);
 background-color: rgb(238, 240, 245);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="user_id_label">
+    <property name="geometry">
+     <rect>
+      <x>364</x>
+      <y>90</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/pictures/login_user_id_check.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="checklabel">
+    <property name="geometry">
+     <rect>
+      <x>142</x>
+      <y>430</y>
+      <width>193</width>
+      <height>14</height>
+     </rect>
     </property>
     <property name="text">
      <string/>

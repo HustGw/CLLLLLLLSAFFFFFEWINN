@@ -22,6 +22,9 @@ registerDialog::registerDialog(QWidget *parent) :
    setAttribute(Qt::WA_TranslucentBackground, true);
    flag = 0;
    a = 61;
+   ui->checklabel->setText(
+               QObject::tr("<font style='color:#9999AB;font-size:13px;'>%1</font>").arg("阅读并接受")+
+               QObject::tr("<font style='color:#2E82FF;font-size:13px;'>%1</font>").arg(" 《云加密用户协议》"));
    ui->passwardLineEdit->setEchoMode(QLineEdit::Password);
    ui->passwardLineEdit_2->setEchoMode(QLineEdit::Password);
    ui->nichengLineEdit->setPlaceholderText(tr("昵称一旦设置成功，无法修改"));
@@ -32,6 +35,7 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->passwardAlert->setVisible(false);
    ui->userAlert->setVisible(false);
    ui->codeAlert->setVisible(false);
+   ui->user_id_label->setVisible(false);
    ui->checkBox->setCursor(QCursor(Qt::PointingHandCursor));
    ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
    ui->codeBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -39,8 +43,8 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
-               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
-               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
+               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;color:white;}"
+               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;color:white;}");
    ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -175,6 +179,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                if(content == "available"){
                    //成功，发送注册信息。
                    //http 判断昵称是否注册
+                   ui->user_id_label->setVisible(true);
                    QNetworkRequest request;
                    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
                    flag = 2; //步骤：注册
@@ -195,6 +200,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
                }else{
                     ui->nichengAlert->setVisible(true);
+                    ui->user_id_label->setVisible(false);
                }
                return;
 
