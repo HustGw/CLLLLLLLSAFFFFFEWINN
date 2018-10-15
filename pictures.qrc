@@ -17,6 +17,7 @@
         <file>pictures/AddFriend_icon.png</file>
         <file>pictures/userIcon_1.png</file>
         <file>pictures/login_accounts_management_hide.png</file>
+        <file>pictures/login_user_id_check.png</file>
     </qresource>
     <qresource prefix="/new/mainwindow">
         <file>pictures/link_download.png</file>
