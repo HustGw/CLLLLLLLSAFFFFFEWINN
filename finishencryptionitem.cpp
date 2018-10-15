@@ -14,9 +14,9 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
-    fileName->setFont(QFont("Timers",11,QFont::Bold));
-    fileSize->setFont(QFont("Timers",8));
-    fileDescription->setFont(QFont("Timers",8));
+    fileName->setFont(QFont("冬青黑体简体",12,QFont::Bold));
+    fileSize->setFont(QFont("冬青黑体简体",9));
+    fileDescription->setFont(QFont("冬青黑体简体",10));
     fileSize->setStyleSheet("color:#9999AB");
     fileDescription->setStyleSheet("color:#9999AB");
 
@@ -53,8 +53,8 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     fileName->setGeometry(97,10,300,16);
-    fileSize->setGeometry(97,28,300,11);
-    fileDescription->setGeometry(97,41,400,12);
+    fileSize->setGeometry(97,28,300,12);
+    fileDescription->setGeometry(97,42,400,14);
 
     transprotBtn->setGeometry(553,10,13,15);
     shareBtn->setGeometry(590,10,11,14);

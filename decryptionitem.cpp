@@ -21,11 +21,11 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     elseLabel->setAlignment(Qt::AlignCenter);
 
 
-    fileName->setFont(QFont("Timers",11,QFont::Bold));
-    fileSize->setFont(QFont("Timers",8));
-    fileDescription->setFont(QFont("Timers",8));
-    fileSize->setStyleSheet("color:#9999AB");
-    fileDescription->setStyleSheet("color:#9999AB");
+    fileName->setFont(QFont("冬青黑体简体",12,QFont::Bold));
+    fileSize->setFont(QFont("冬青黑体简体",9));
+    fileDescription->setFont(QFont("冬青黑体简体",10));
+    fileSize->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
+    fileDescription->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
 
     downloadBtn = new QPushButton(this);
     fileIcon = new QLabel(this);
@@ -38,8 +38,8 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     timeLabel->setStyleSheet("background:transparent");
 
     fileName->setGeometry(97,10,300,16);
-    fileSize->setGeometry(97,28,300,11);
-    fileDescription->setGeometry(97,41,400,12);
+    fileSize->setGeometry(97,28,300,12);
+    fileDescription->setGeometry(97,42,400,14);
 
     downloadBtn->setGeometry(545,22,90,24);
     downloadBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -65,8 +65,6 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     progressBar->setMaximum(100);
     progressBar->setStyleSheet(strQSS);
     fileName->setStyleSheet("background:transparent");
-    fileDescription->setStyleSheet("background:transparent");
-    fileSize->setStyleSheet("background:transparent");
     downloadBtn->setStyleSheet("background:transparent");
 
 }
