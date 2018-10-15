@@ -93,6 +93,7 @@ extern int encptThreadNum;
 extern int enitemNum;
 extern int isFinishedBtn;
 extern QFont f;
+extern QFont m;
 extern int DecryBarNum;
 extern int informationNum;
 extern int RequsetAllowNum;

@@ -44,7 +44,8 @@ int threadNum = 0;
 int DepThreadNum = 0;
 int encptThreadNum = 0;
 int enitemNum = 0;
-QFont f("冬青黑体简体",10,75);
+QFont f("冬青黑体简体",9,75);
+QFont m("冬青黑体简体",10,60);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
@@ -1263,6 +1264,7 @@ void MainWindow::ReceiveNewReq(){
                   else if(query.record().value("status").toString()=="1"){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
                       v1->downloadBtn->setText("申请解密");
+                      v1->label->show();
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
  //                     connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
@@ -1270,6 +1272,7 @@ void MainWindow::ReceiveNewReq(){
                   else if(query.record().value("status").toString()=="2"){//申请等待状态
                       v1->fileDescription->setText("正在申请解密，请等待！");
                       v1->downloadBtn->setText("申请中");
+                      v1->label->show();
 //                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);
                       }
@@ -2222,6 +2225,7 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
     m1->fileDescription->setText("文件已加密需下载密钥文件");
     m1->downloadBtn->setText("申请解密");
+    m1->label->show();
     QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(fileID+"decryption");
     int value = 21;
     while(value<100){
@@ -2420,11 +2424,11 @@ void MainWindow::on_pushButton_11_clicked()
 }
 
 void MainWindow::CleanButtonClicked(){
-    ui->FinDepBtn->setFont(f);
-    ui->DecryptionBtn->setFont(f);
-    ui->EncryptionBtn->setFont(f);
-    ui->FinishedBtn->setFont(f);
-    ui->FinEnpBtn->setFont(f);
+    ui->FinDepBtn->setFont(m);
+    ui->DecryptionBtn->setFont(m);
+    ui->EncryptionBtn->setFont(m);
+    ui->FinishedBtn->setFont(m);
+    ui->FinEnpBtn->setFont(m);
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon.png"));
@@ -2938,6 +2942,7 @@ void MainWindow::ChangeDecItemProBar(int value, QString itemID){
     if(value ==100){
         m1->fileDescription->setText("文件已加密需下载密钥文件");
         m1->downloadBtn->setText("申请解密");
+        m1->label->show();
         delete n1;
         ReLayout();
         //解除原有信号槽

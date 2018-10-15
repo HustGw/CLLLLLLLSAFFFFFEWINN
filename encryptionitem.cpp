@@ -7,7 +7,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
     if (initPageFlag){
         initPage = new QLabel(this);
         QFont font ("冬青黑体简体", 12, 75);
-        initPage->setGeometry(241,162,215,30);
+        initPage->setGeometry(241,162,285,30);
         initPage->setStyleSheet("color:#afafaf;");
         initPage->setFont(font);
         initPage->setText("请调取本地文件进行加密");
@@ -22,9 +22,9 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //timeInfo = new QLabel(this);
         line = new QLabel(this);
 
-        fileName->setFont(QFont("Timers",11,QFont::Bold));
-        fileSize->setFont(QFont("Timers",8));
-        fileDescription->setFont(QFont("Timers",8));
+        fileName->setFont(QFont("冬青黑体简体",12,QFont::Bold));
+        fileSize->setFont(QFont("冬青黑体简体",9));
+        fileDescription->setFont(QFont("冬青黑体简体",10));
         fileSize->setStyleSheet("color:#9999AB");
         fileDescription->setStyleSheet("color:#9999AB");
         //timeInfo->setFont(QFont("Timers",8));;
@@ -49,8 +49,8 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
         fileName->setGeometry(95,12,150,16);
         //timeInfo->setGeometry(300,31,200,30 );
-        fileSize->setGeometry(95,31,100,11);
-        fileDescription->setGeometry(95,47,100,12);
+        fileSize->setGeometry(95,31,100,12);
+        fileDescription->setGeometry(95,48,200,14);
         //downloadBtn->setGeometry(500,50,100,30);
 
         //checkBox->setGeometry(10,70,20,20);

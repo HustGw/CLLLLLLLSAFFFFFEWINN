@@ -432,7 +432,6 @@ void TcpClient::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
 
     QColor color(128, 128, 128, 50);
     for(int i=0; i<5; i++)
@@ -444,6 +443,10 @@ void TcpClient::paintEvent(QPaintEvent *event)
         painter.setPen(color);
         painter.drawPath(path);
     }
+    QPainter p(this);
+    p.setCompositionMode( QPainter::CompositionMode_Clear );
+    p.fillRect(6,6,571,440, Qt::SolidPattern);
+
 }
 
 
