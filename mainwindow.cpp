@@ -128,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     //ui->MidStaWidget->addWidget(encryptionPage);
-    ui->EncryptionBtn->clicked();
+    ui->EncryptionBtn->clicked(true);
     //initLableFlag = true;
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
@@ -500,11 +500,11 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
-    ;
+
     if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
         ui->MidStaWidget->addWidget(encryptionViewController);
-        ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+        //ui->MidStaWidget->setCurrentWidget(encryptionViewController);
         encryptionPage = new EncryptionItem();
         ui->MidStaWidget->addWidget(encryptionPage);
         ui->BtnStaWidget->setCurrentIndex(0);//顶部
