@@ -37,7 +37,7 @@ QString User_qqNum = nullptr;//用户qq_num
 QString User_qqPath = nullptr;//用户本地文件存放路径
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
-bool initLableFlag;
+bool initLableFlag = false;
 bool initPageFlag=true;
 int decryptionFlag =0;
 int threadNum = 0;
@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    encryptionPage = new EncryptionItem();
+    //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
     decryptionBtnItem = new DecryptionBtnView();
@@ -127,8 +127,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
-    ui->MidStaWidget->addWidget(encryptionPage);
+    //ui->MidStaWidget->addWidget(encryptionPage);
     ui->EncryptionBtn->clicked();
+    //initLableFlag = true;
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
@@ -146,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
-    ui->MidStaWidget->addWidget(encryptionViewController);
+    //ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
@@ -499,15 +500,23 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
-    ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+    ;
     if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
-        ui->BtnStaWidget->setCurrentIndex(0);
+        ui->MidStaWidget->addWidget(encryptionViewController);
+        ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+        encryptionPage = new EncryptionItem();
+        ui->MidStaWidget->addWidget(encryptionPage);
+        ui->BtnStaWidget->setCurrentIndex(0);//顶部
+        initLableFlag = true;
         //initPageFlag=true;
+
         ui->MidStaWidget->setCurrentWidget(encryptionPage);
-        //ui->MidStaWidget->addWidget(encryptionPage);
+
+
 
     }else {
+        ui->MidStaWidget->setCurrentWidget(encryptionViewController);
         ui->BtnStaWidget->setCurrentIndex(0);
     }
 }
@@ -572,11 +581,28 @@ void MainWindow::on_OpenFileBtn_clicked()
 
     }else{
         fileOpenFlag = true;
-        initLableFlag = false;
 
-        if (initPageFlag){
+
+        if (initLableFlag){
 
             delete encryptionPage;
+            delete encryptionViewController->layout();
+            QWidget *newItemWidget = new QWidget();
+            newItemWidget->setContentsMargins(0,0,0,0);
+
+            QScrollArea *newScrollArea = new QScrollArea();
+            //newScrollArea->setWidgetResizable(true);//铺满显示
+            newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            newItemWidget->setLayout(encryptionViewController->vbox);
+            newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+            //newItemWidget->setSizePolicy(QSizePolicy::Fixed);
+            newScrollArea->setWidget(newItemWidget);
+            QVBoxLayout *newVbox = new QVBoxLayout();
+            newVbox->setMargin(0);
+            newVbox->setSpacing(0);
+            newVbox->addWidget(newScrollArea);
+            encryptionViewController->setLayout(newVbox);
+            initLableFlag = false;
             initPageFlag=false;
         }
 
@@ -774,6 +800,7 @@ void MainWindow::handleResults(int value,QString itemName)
             if (isFinishedBtn == 0)
                 ui->FinishedBtn->clicked(true);
            ui->FinEnpBtn->clicked(true);
+           initPageFlag = true;
          }
 
     }

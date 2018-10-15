@@ -1,5 +1,6 @@
 #include "encryptionitem.h"
 extern bool initPageFlag;
+extern bool initLableFlag;
 extern QFileInfo openFileInfo;
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
@@ -10,6 +11,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         initPage->setStyleSheet("color:#afafaf;");
         initPage->setFont(font);
         initPage->setText("请调取本地文件进行加密");
+         initLableFlag = true;
         //checkBox->hide();
     }
     else{
@@ -27,7 +29,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         fileDescription->setStyleSheet("color:#9999AB");
         //timeInfo->setFont(QFont("Timers",8));;
         //timeInfo->setStyleSheet("color:#9999AB");
-        line->setStyleSheet("background-color:#afafaf");
+        line->setStyleSheet("color:rgb(139,139,139)");
 
         line->setGeometry(0,76,750,1);
 
@@ -94,8 +96,11 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
 
-    painter.setPen(QColor(139,139,139));
-    painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
+    if (!initPageFlag){
+        painter.setPen(QColor(139,139,139));
+        painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
+    }
+
 //    painter.drawLine(31,0,31,this->height()-1);
 //    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
 //    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);

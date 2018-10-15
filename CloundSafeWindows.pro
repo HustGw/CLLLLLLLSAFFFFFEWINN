@@ -29,11 +29,11 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 #LIBS += -LC:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release/ -lmxml1
 
 
-#LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master/oss-c-sdk/lib/Release)
 
 
 
-LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
