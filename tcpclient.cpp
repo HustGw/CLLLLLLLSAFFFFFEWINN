@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QSettings>
+#include <QGraphicsDropShadowEffect>
 QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
@@ -24,6 +25,13 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
+    effect->setOffset(0,0);
+    effect->setColor(Qt::black);
+    effect->setBlurRadius(15);
+    this->setGraphicsEffect(effect);
+
     //登录初始化时设置已记住的账号密码
     QString RemeberPasswd;
     QSettings cfg("user.ini",QSettings::IniFormat);
@@ -187,7 +195,7 @@ void TcpClient::on_userLineEdit_textChanged()
     //用户名输入框文本变化的响应
 
     ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account_hover.png);"));
-    ui->frame_2->setStyleSheet(tr("color: rgb(57, 140, 255);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(57, 140, 255);border:1px solid rgb(57, 140, 255);"));
 }
 
 void TcpClient::on_userLineEdit_editingFinished()
@@ -195,7 +203,7 @@ void TcpClient::on_userLineEdit_editingFinished()
     //用户名输入框停止输入的响应
 
     ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account.png);"));
-    ui->frame_2->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(199, 197, 198);border:1px solid rgb(199, 197, 198);"));
 }
 
 void TcpClient::on_passwardLineEdit_editingFinished()
@@ -203,7 +211,7 @@ void TcpClient::on_passwardLineEdit_editingFinished()
     //密码输入框停止输入的响应
 
     ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password.png);"));
-    ui->frame->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+    ui->frame->setStyleSheet(tr("color: rgb(199, 197, 198);border:1px solid rgb(199, 197, 198);"));
 }
 
 void TcpClient::on_passwardLineEdit_textChanged()
@@ -211,7 +219,7 @@ void TcpClient::on_passwardLineEdit_textChanged()
     //密码输入框文本变化的响应
 
     ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password_hover.png);"));
-    ui->frame->setStyleSheet(tr("color: rgb(57, 140, 255);"));
+    ui->frame->setStyleSheet(tr("color: rgb(57, 140, 255);border:1px solid rgb(57, 140, 255);"));
 }
 
 
@@ -424,30 +432,30 @@ void TcpClient::mouseReleaseEvent(QMouseEvent *qevent)
     mouse_press = false;
 }
 
-void TcpClient::paintEvent(QPaintEvent *event)
-{
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(5, 5, this->width()-10, this->height()-10);
+//void TcpClient::paintEvent(QPaintEvent *event)
+//{
+//    QPainterPath path;
+//    path.setFillRule(Qt::WindingFill);
+//    path.addRect(5, 5, this->width()-10, this->height()-10);
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
 
-    QColor color(128, 128, 128, 50);
-    for(int i=0; i<5; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
-    QPainter p(this);
-    p.setCompositionMode( QPainter::CompositionMode_Clear );
-    p.fillRect(6,6,571,440, Qt::SolidPattern);
+//    QColor color(128, 128, 128, 50);
+//    for(int i=0; i<5; i++)
+//    {
+//        QPainterPath path;
+//        path.setFillRule(Qt::WindingFill);
+//        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
+//        color.setAlpha(150 - qSqrt(i)*50);
+//        painter.setPen(color);
+//        painter.drawPath(path);
+//    }
+//    QPainter p(this);
+//    p.setCompositionMode( QPainter::CompositionMode_Clear );
+//    p.fillRect(6,6,571,440, Qt::SolidPattern);
 
-}
+//}
 
 
 //勾选记住密码,定义一个标志位
