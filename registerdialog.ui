@@ -228,11 +228,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius:4px;
-background-color: rgb(46, 130, 255);
-font-size:14pt;
-font-weight:bold;
-color:white;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>注册</string>

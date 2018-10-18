@@ -38,7 +38,7 @@ border-bottom-right-radius:6px;
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(57, 140, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>登 录</string>

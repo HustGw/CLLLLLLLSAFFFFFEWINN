@@ -56,12 +56,11 @@ TcpClient::TcpClient(QWidget *parent) :
                 "QPushButton{border:0px;color:rgb(57,140,255);}"
                 "QPushButton:hover{border:0px;color:rgb(85,170,255);}");
     ui->sendBtn->setStyleSheet(                 //调整登录按钮样式
-                "QPushButton{background-color: rgb(57, 140, 255);font: 22px 黑体;border-radius:4px;color:white;}"
-                "QPushButton:hover{background-color: rgb(85, 170, 255);font: 22px 黑体;border-radius:4px;color:white;}");
+                "QPushButton{background-color: rgb(57, 140, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}"
+                "QPushButton:hover{background-color: rgb(85, 170, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}");
     ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
                 "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
                 "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
-//    ui->centralWidget->setStyleSheet("border:1px solid #999999;border-radius:6px;");
 
     ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
@@ -431,31 +430,6 @@ void TcpClient::mouseReleaseEvent(QMouseEvent *qevent)
     //设置鼠标为未被按下
     mouse_press = false;
 }
-
-//void TcpClient::paintEvent(QPaintEvent *event)
-//{
-//    QPainterPath path;
-//    path.setFillRule(Qt::WindingFill);
-//    path.addRect(5, 5, this->width()-10, this->height()-10);
-
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-
-//    QColor color(128, 128, 128, 50);
-//    for(int i=0; i<5; i++)
-//    {
-//        QPainterPath path;
-//        path.setFillRule(Qt::WindingFill);
-//        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-//        color.setAlpha(150 - qSqrt(i)*50);
-//        painter.setPen(color);
-//        painter.drawPath(path);
-//    }
-//    QPainter p(this);
-//    p.setCompositionMode( QPainter::CompositionMode_Clear );
-//    p.fillRect(6,6,571,440, Qt::SolidPattern);
-
-//}
 
 
 //勾选记住密码,定义一个标志位

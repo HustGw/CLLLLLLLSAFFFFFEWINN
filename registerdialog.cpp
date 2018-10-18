@@ -61,8 +61,8 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
-               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;color:white;}"
-               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;color:white;}");
+               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
+               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
    ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -413,27 +413,6 @@ void registerDialog::on_closeBtn_clicked()
     this->close();        //窗口关闭
 }
 
-//void registerDialog::paintEvent(QPaintEvent *event)
-//{
-//    QPainterPath path;
-//    path.setFillRule(Qt::WindingFill);
-//    path.addRect(5, 5, this->width()-10, this->height()-10);
-
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-//    painter.fillPath(path, QBrush(Qt::white));
-
-//    QColor color(128, 128, 128, 50);
-//    for(int i=0; i<5; i++)
-//    {
-//        QPainterPath path;
-//        path.setFillRule(Qt::WindingFill);
-//        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-//        color.setAlpha(120 - qSqrt(i)*50);
-//        painter.setPen(color);
-//        painter.drawPath(path);
-//    }
-//}
 void registerDialog::mousePressEvent(QMouseEvent *qevent)
 {
     if(qevent->button() == Qt::LeftButton)
