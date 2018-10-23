@@ -1,11 +1,20 @@
 #include "groupsenddialog.h"
 #include "ui_groupsenddialog.h"
 #include "mainwindow.h"
-
+extern QStringList m_fontList;
 groupSendDialog::groupSendDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::groupSendDialog)
 {
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
+
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     db1 = ConnectionPool::openConnection();
@@ -13,10 +22,15 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     QSqlQuery query(db1);
     ui->label_3->setStyleSheet("QLabel{border:1px solid gray;}");
     ui->label_7->setStyleSheet("QLabel{border:1px solid gray;}");
+    ui->label_2->setFont(f_1);
+    ui->label_8->setFont(f_1);
+    ui->label_3->setFont(f_1);
+    ui->label_7->setFont(f_1);
+    ui->label->setFont(f_1);
+    ui->label_6->setFont(f_2);
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
-
     ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
@@ -35,7 +49,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
             QCheckBox * b1 = new QCheckBox(nickName);
             QListWidgetItem* a1 = new QListWidgetItem();
             a1->setSizeHint(QSize(200,40));
-            b1->setFont(QFont("Timers",12,QFont::Bold));
+            b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
@@ -47,6 +61,10 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
 }
 
 void groupSendDialog::getCheckedItems(){
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
     int count = ui->listWidget->count();
     int reciever = 0;
     qDebug()<<count;
@@ -69,7 +87,7 @@ void groupSendDialog::getCheckedItems(){
             QListWidgetItem *nick_name_item = new QListWidgetItem();
             nick_name_item->setText(nick_name);
             nick_name_item->setSizeHint(QSize(200,40));
-            nick_name_item->setFont(QFont("Timers",12,QFont::Bold));
+            nick_name_item->setFont(f_2);
             ui->listWidget_2->insertItem(i,nick_name_item);
             reciever++;
         }

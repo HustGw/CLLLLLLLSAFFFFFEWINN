@@ -1,7 +1,21 @@
 #include "decryptionitem.h"
+extern QStringList m_fontList;
 int flag = 0;
 DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 {
+    QFont f_14;
+     QFont f_12;
+     QFont f_10;
+     f_14.setFamily(m_fontList.at(0));
+     f_12.setFamily(m_fontList.at(0));
+     f_10.setFamily(m_fontList.at(0));
+     f_14.setPixelSize(14);
+     f_12.setPixelSize(12);
+     f_10.setPixelSize(10);
+     f_14.setWeight(QFont::Bold);
+     f_12.setWeight(QFont::Normal);
+     f_10.setWeight(QFont::Normal);
+
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
@@ -21,9 +35,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     elseLabel->setAlignment(Qt::AlignCenter);
 
 
-    fileName->setFont(QFont("冬青黑体简体",12,QFont::Bold));
-    fileSize->setFont(QFont("冬青黑体简体",9));
-    fileDescription->setFont(QFont("冬青黑体简体",10));
+    fileName->setFont(f_14);
+    fileSize->setFont(f_10);
+    fileDescription->setFont(f_12);
     fileSize->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
     fileDescription->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
 
@@ -50,7 +64,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileIcon->setGeometry(45,10,38,46);
 
     timeLabel->setGeometry(294,31,230,10);
-    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setFont(f_10);
     timeLabel->setStyleSheet("color:#9999AB");
     progressBar->setGeometry(0,0,695,this->height()-1);
     QString strQSS = "QProgressBar { \
@@ -66,7 +80,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     progressBar->setStyleSheet(strQSS);
     fileName->setStyleSheet("background:transparent");
     downloadBtn->setStyleSheet("background:transparent");
-
+    f_14.setWeight(QFont::Normal);
+    downloadBtn->setFont(f_14);
+    f_14.setWeight(QFont::Bold);
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
