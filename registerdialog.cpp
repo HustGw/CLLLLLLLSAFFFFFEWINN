@@ -9,7 +9,10 @@
 #include <QMouseEvent>
 #include <QRegExpValidator>
 #include <Qvalidator>
+#include <QPainter>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
+#include <QBitmap>
 
 QNetworkAccessManager *m_accessManagerRegister;
 
@@ -20,6 +23,21 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->setupUi(this);
    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
    setAttribute(Qt::WA_TranslucentBackground, true);
+
+   QBitmap bmp(this->size());
+   bmp.fill();
+   QPainter p(&bmp);
+   p.setPen(Qt::NoPen);
+   p.setBrush(Qt::black);
+   p.drawRoundedRect(bmp.rect(),6,6);
+   setMask(bmp);
+
+   QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
+   effect->setOffset(0,0);
+   effect->setColor(Qt::black);
+   effect->setBlurRadius(15);
+   this->setGraphicsEffect(effect);
+
    flag = 0;
    a = 61;
    ui->checklabel->setText(
@@ -43,8 +61,8 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
-               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;color:white;}"
-               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;color:white;}");
+               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
+               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
    ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -86,6 +104,7 @@ void registerDialog::on_signBtn_clicked()
     ui->passwardAlert->setVisible(false);
     ui->userAlert->setVisible(false);
     ui->codeAlert->setVisible(false);
+
    //点击注册按钮的响应
    QString s;
    QRegExp rx("[1]\\d{10}");
@@ -394,27 +413,6 @@ void registerDialog::on_closeBtn_clicked()
     this->close();        //窗口关闭
 }
 
-void registerDialog::paintEvent(QPaintEvent *event)
-{
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(5, 5, this->width()-10, this->height()-10);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
-
-    QColor color(128, 128, 128, 50);
-    for(int i=0; i<5; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(120 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
-}
 void registerDialog::mousePressEvent(QMouseEvent *qevent)
 {
     if(qevent->button() == Qt::LeftButton)

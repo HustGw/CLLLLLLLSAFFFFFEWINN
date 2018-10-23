@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>登录</string>
   </property>
-  <widget class="QWidget" name="centralWidget" native="true">
+  <widget class="QFrame" name="centralFrame">
    <property name="geometry">
     <rect>
      <x>6</x>
@@ -24,6 +24,8 @@
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(255, 255, 255);
+border-bottom-left-radius:6px;
+border-bottom-right-radius:6px;
 </string>
    </property>
    <widget class="QPushButton" name="sendBtn">
@@ -36,7 +38,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(57, 140, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>登 录</string>
@@ -138,7 +140,8 @@ background:white;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(199, 197, 198);</string>
+     <string notr="true">color: rgb(199, 197, 198);
+border:1px solid rgb(199, 197, 198);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::HLine</enum>
@@ -178,7 +181,8 @@ background:white;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(199, 197, 198);</string>
+     <string notr="true">color: rgb(199, 197, 198);
+border:1px solid rgb(199, 197, 198);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::HLine</enum>
@@ -257,14 +261,15 @@ border:0px;</string>
       <x>428</x>
       <y>192</y>
       <width>12</width>
-      <height>12</height>
+      <height>15</height>
      </rect>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;</string>
+     <string notr="true">image: url(:/new/login/pictures/login_clear_password.png);
+</string>
     </property>
     <property name="text">
      <string/>

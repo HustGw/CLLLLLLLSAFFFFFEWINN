@@ -611,6 +611,7 @@ void MainWindow::on_OpenFileBtn_clicked()
         if (initLableFlag){
 
             delete encryptionPage;
+
             delete encryptionViewController->layout();
             QWidget *newItemWidget = new QWidget();
             newItemWidget->setContentsMargins(0,0,0,0);
