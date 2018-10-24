@@ -1,14 +1,29 @@
 #include "newdownloaddialog.h"
 #include "ui_newdownloaddialog.h"
 extern QStringList newDownloadFileIdList;
+extern QStringList m_fontList;
 newDownloadDialog::newDownloadDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::newDownloadDialog)
 {
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
+
+
     db1 = ConnectionPool::openConnection();
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     ui->setupUi(this);
+    ui->label_3->setFont(f_2);
+    ui->label_6->setFont(f_1);
+    ui->pushButtoncancel->setFont(f_1);
+    ui->pushButtonconfirm->setFont(f_1);
     ui->pushButtonconfirm->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButtonconfirm->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButtonconfirm->setText(QStringLiteral("确认下载"));
@@ -30,6 +45,10 @@ void newDownloadDialog::clearlist(){
     }
 }
 void newDownloadDialog::change_list_view(){
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
     int count = ui->listWidget->count();
     for (int j = 0;j<count;j++){
         QListWidgetItem * item = ui->listWidget->takeItem(0);
@@ -63,7 +82,7 @@ void newDownloadDialog::change_list_view(){
                 QListWidgetItem *file_item = new QListWidgetItem();
                 file_item->setText(the_words);
                 file_item->setSizeHint(QSize(200,40));
-                file_item->setFont(QFont("Timers",8));
+                file_item->setFont(f_1);
                 ui->listWidget->insertItem(i,file_item);
             }
         }

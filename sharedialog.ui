@@ -164,8 +164,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(238, 240, 245);
-font: 75 9pt &quot;Arial&quot;;</string>
+    <string notr="true">background-color: rgb(238, 240, 245);</string>
    </property>
    <property name="text">
     <string>分享</string>

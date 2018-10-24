@@ -13,6 +13,8 @@
 #include "QProgressBar"
 #include <qt_windows.h>
 #include <QFile>
+
+QStringList m_fontList;
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
 int IsLinkInfor = 0;//用于判断是否链接插入的消息
@@ -46,6 +48,7 @@ int encptThreadNum = 0;
 int enitemNum = 0;
 QFont f("冬青黑体简体",9,75);
 QFont m("冬青黑体简体",10,60);
+QFont f_h("冬青黑体简体",10,60);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
@@ -61,6 +64,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList.clear();
+
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m.setFamily(m_fontList.at(0));
+    f.setFamily(m_fontList.at(0));
+    f_h.setFamily(m_fontList.at(0));
+    m.setPixelSize(14);
+    f.setPixelSize(14);
+    f_h.setPixelSize(20);
+    m.setWeight(QFont::Normal);
+    f.setWeight(QFont::DemiBold);
+    f_h.setWeight(QFont::Bold);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
@@ -89,10 +110,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
     ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setFont(m);
     ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox_2->setFont(m);
     ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->de_checkBox->setFont(m);
     //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -134,6 +158,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
+    friendListLab->setFont(m);
     friendListLab->setGeometry(ui->RightWidget->width()/2-60,1,80,30);
     friendIcon = new QLabel(ui->RightWidget);
     friendIcon->setGeometry(ui->RightWidget->width()/2-85,10,10,10);
@@ -203,8 +228,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->line_11->hide();
     ui->pushButton_12->hide();
     this->setFixedSize(this->width(),this->height());
-    QFont font("冬青黑体简体",10,75);
-    this->setFont(font);
+
         //查询数据库  查询解密请求
      QSqlQuery query(db);
      bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
@@ -339,7 +363,7 @@ MainWindow::MainWindow(QWidget *parent) :
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
              add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
              add_item->setText(Friend_nickname);
-             add_item->setFont(QFont("冬青黑体简体",10,50));
+             add_item->setFont(m);
              add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
              add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
              add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -1431,7 +1455,7 @@ void MainWindow::inforDlgaddFriend(QString name){
                         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
                         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
                         add_item->setText(name);
-                        add_item->setFont(QFont("冬青黑体简体",10,50));
+                        add_item->setFont(m);
                         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
                         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
                         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -1506,7 +1530,7 @@ void MainWindow::inforDlgaddFriend(QString name){
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
         add_item->setText(name);
-        add_item->setFont(QFont("冬青黑体简体",10,50));
+        add_item->setFont(m);
         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -2252,7 +2276,9 @@ void MainWindow::setEmp_name(){
         while (query.next()) {
             QString nickName = query.record().value("emp_name").toString();
             qDebug()<<nickName;
+            ui->nameLabel->setFont(f_h);
             ui->nameLabel->setText(nickName);
+
         }
         ui->UserPhonelabe->setText("手机号："+UserPhoneNum);
         ui->UserPhonelabe->hide();
@@ -2848,7 +2874,7 @@ void MainWindow::NewFriendAgree(){
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
             add_item->setText(Friend_nickname);
-            add_item->setFont(QFont("冬青黑体简体",10,50));
+            add_item->setFont(m);
             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));

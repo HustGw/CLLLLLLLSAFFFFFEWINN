@@ -4,17 +4,32 @@
 #include "finishencryptionitem.h"
 extern QString file_id;
 extern QString User_ID;
-
+extern QStringList m_fontList;
 sendDialog::sendDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::sendDialog)
 {
+
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
+
     db1 = ConnectionPool::openConnection();
 
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     ui->setupUi(this);
-
+    ui->label_2->setFont(f_1);
+    ui->label_8->setFont(f_1);
+    ui->label_3->setFont(f_1);
+    ui->label_7->setFont(f_1);
+    ui->label->setFont(f_1);
+    ui->label_6->setFont(f_2);
     ui->label_3->setStyleSheet("QLabel{border:1px solid gray;}");
     ui->label_7->setStyleSheet("QLabel{border:1px solid gray;}");
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
@@ -42,7 +57,7 @@ sendDialog::sendDialog(QWidget *parent) :
             QCheckBox * b1 = new QCheckBox(nickName);
             QListWidgetItem* a1 = new QListWidgetItem();
             a1->setSizeHint(QSize(200,40));
-            b1->setFont(QFont("Timers",12,QFont::Bold));
+            b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
@@ -54,6 +69,10 @@ sendDialog::sendDialog(QWidget *parent) :
 }
 
 void sendDialog::getCheckedItems(){
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
     int count = ui->listWidget->count();
     int reciever = 0;
     qDebug()<<count;
@@ -77,7 +96,7 @@ void sendDialog::getCheckedItems(){
             QListWidgetItem *nick_name_item = new QListWidgetItem();
             nick_name_item->setText(nick_name);
             nick_name_item->setSizeHint(QSize(200,40));
-            nick_name_item->setFont(QFont("Timers",12,QFont::Bold));
+            nick_name_item->setFont(f_2);
             ui->listWidget_2->insertItem(i,nick_name_item);
             reciever++;
         }

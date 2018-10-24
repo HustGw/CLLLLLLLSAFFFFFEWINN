@@ -10,6 +10,7 @@
 #include <QRegExpValidator>
 #include <Qvalidator>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
 QNetworkAccessManager *m_accessManagerReset;
 
 resetDialog::resetDialog(QWidget *parent) :
@@ -19,9 +20,15 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
+    effect->setOffset(0,0);
+    effect->setColor(Qt::black);
+    effect->setBlurRadius(15);
+    this->setGraphicsEffect(effect);
+
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
     ui->passwordLineEdit_2->setEchoMode(QLineEdit::Password);
-
     ui->userLineEdit->setPlaceholderText("请输入手机号");
     ui->passwordLineEdit->setPlaceholderText("设置你的登录密码");
     ui->passwordLineEdit_2->setPlaceholderText("请再次输入你的密码");
@@ -35,8 +42,8 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->confirmBtn->setStyleSheet(                 //调整确定按钮样式
-                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font-size:14pt;font-weight:bold;color:white;}"
-                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font-size:14pt;font-weight:bold;color:white;}");
+                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
+                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
     ui->codeBtn->setStyleSheet(                 //调整验证码按钮样式
                 "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -55,6 +62,9 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->code->setStyleSheet(                 //调整验证码输入框样式
                 "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+    ui->widget->setObjectName("myWidget");
+    ui->widget->setStyleSheet(
+                              "QWidget#myWidget{border-bottom-left-radius:6px;border-bottom-right-radius:6px;background-color:white;}");
     ui->passwordLineEdit->setFocus();
     setTabOrder(ui->passwordLineEdit,ui->passwordLineEdit_2);
     setTabOrder(ui->passwordLineEdit_2,ui->userLineEdit);
@@ -294,27 +304,6 @@ void resetDialog::on_userLineEdit_editingFinished(){
     }
 }
 
-void resetDialog::paintEvent(QPaintEvent *event)
-{
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(5, 5, this->width()-10, this->height()-10);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
-
-    QColor color(128, 128, 128, 50);
-    for(int i=0; i<5; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(120 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
-}
 void resetDialog::mousePressEvent(QMouseEvent *qevent)
 {
     if(qevent->button() == Qt::LeftButton)
