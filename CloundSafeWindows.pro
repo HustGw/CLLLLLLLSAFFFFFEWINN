@@ -46,7 +46,7 @@ LIBS += -L$$quote(E:/CloundSafe/cloundsafetwentyfour/CLLLLLLLSAFFFFFEWINN-master
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = CloundSafeWindows
+TARGET = CloudSafeWindows
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
