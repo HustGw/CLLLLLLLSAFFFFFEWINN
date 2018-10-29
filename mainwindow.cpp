@@ -2807,7 +2807,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
         event->accept();
         qApp->exit(773);
-        QProcess::startDetached(qApp->applicationFilePath());
+        QProcess::startDetached(qApp->applicationFilePath(),QStringList());
     }
 }
 

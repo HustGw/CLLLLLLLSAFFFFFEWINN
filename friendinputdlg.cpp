@@ -131,7 +131,7 @@ void friendInputDlg::paintEvent(QPaintEvent *event){
     }
     QPainter painterline(this);
     painterline.setPen(QColor(139,139,139));
-    painterline.drawLine(0,70,this->width()-1,70);
+    //painterline.drawLine(0,70,this->width()-1,70);
 }
 
 void friendInputDlg::ShowDetail(){
