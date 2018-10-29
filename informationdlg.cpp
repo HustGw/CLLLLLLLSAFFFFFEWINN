@@ -631,7 +631,7 @@ int informationDlg::time_compare(QString time1, QString time2){
             int date1 = time1.mid(8,2).toInt();
             int date2 = time2.mid(8,2).toInt();
             if(date1>date2) return 1;
-            else if(date1<date2) return 2;
+            else if(date1<date2) return 0;
             else if(date1==date2){//如日期相同比较小时
                 int hour1 = time1.mid(11,2).toInt();
                 int hour2 = time2.mid(11,2).toInt();
