@@ -1,7 +1,19 @@
 #include "finishencryptionItem.h"
-
+extern QStringList m_fontList;
 QString file_id;
 FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
+    QFont f_14;
+    QFont f_12;
+    QFont f_10;
+    f_14.setFamily(m_fontList.at(0));
+    f_12.setFamily(m_fontList.at(0));
+    f_10.setFamily(m_fontList.at(0));
+    f_14.setPixelSize(14);
+    f_12.setPixelSize(12);
+    f_10.setPixelSize(10);
+    f_14.setWeight(QFont::Bold);
+    f_12.setWeight(QFont::Normal);
+    f_10.setWeight(QFont::Normal);
 
     label = new QLabel(this);
     label->setGeometry(0,0,34,16);
@@ -14,9 +26,9 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
-    fileName->setFont(QFont("Timers",11,QFont::Bold));
-    fileSize->setFont(QFont("Timers",8));
-    fileDescription->setFont(QFont("Timers",8));
+    fileName->setFont(f_14);
+    fileSize->setFont(f_10);
+    fileDescription->setFont(f_12);
     fileSize->setStyleSheet("color:#9999AB");
     fileDescription->setStyleSheet("color:#9999AB");
 
@@ -45,7 +57,7 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     timeLabel = new QLabel(this);
     timeLabel->setStyleSheet("background:transparent");
     timeLabel->setGeometry(294,31,230,10);
-    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setFont(f_10);
     timeLabel->setStyleSheet("color:#9999AB");
     transprotBtn->setCursor(QCursor(Qt::PointingHandCursor));
     shareBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -53,8 +65,8 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     fileName->setGeometry(97,10,300,16);
-    fileSize->setGeometry(97,28,300,11);
-    fileDescription->setGeometry(97,41,400,12);
+    fileSize->setGeometry(97,28,300,12);
+    fileDescription->setGeometry(97,42,400,14);
 
     transprotBtn->setGeometry(553,10,13,15);
     shareBtn->setGeometry(590,10,11,14);

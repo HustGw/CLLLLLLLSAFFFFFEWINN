@@ -1,15 +1,31 @@
 #include "encryptionitem.h"
 extern bool initPageFlag;
+extern bool initLableFlag;
 extern QFileInfo openFileInfo;
+extern QStringList m_fontList;
 EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 {
+    QFont f_14;
+    QFont f_12;
+    QFont f_10;
+    f_14.setFamily(m_fontList.at(0));
+    f_12.setFamily(m_fontList.at(0));
+    f_10.setFamily(m_fontList.at(0));
+    f_14.setPixelSize(14);
+    f_12.setPixelSize(12);
+    f_10.setPixelSize(10);
+    f_14.setWeight(QFont::Bold);
+    f_12.setWeight(QFont::Normal);
+    f_10.setWeight(QFont::Normal);
+
     if (initPageFlag){
         initPage = new QLabel(this);
         QFont font ("冬青黑体简体", 12, 75);
-        initPage->setGeometry(241,162,215,30);
+        initPage->setGeometry(241,162,285,30);
         initPage->setStyleSheet("color:#afafaf;");
         initPage->setFont(font);
         initPage->setText("请调取本地文件进行加密");
+         initLableFlag = true;
         //checkBox->hide();
     }
     else{
@@ -20,14 +36,14 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //timeInfo = new QLabel(this);
         line = new QLabel(this);
 
-        fileName->setFont(QFont("Timers",11,QFont::Bold));
-        fileSize->setFont(QFont("Timers",8));
-        fileDescription->setFont(QFont("Timers",8));
+        fileName->setFont(f_14);
+        fileSize->setFont(f_10);
+        fileDescription->setFont(f_12);
         fileSize->setStyleSheet("color:#9999AB");
         fileDescription->setStyleSheet("color:#9999AB");
         //timeInfo->setFont(QFont("Timers",8));;
         //timeInfo->setStyleSheet("color:#9999AB");
-        line->setStyleSheet("background-color:#afafaf");
+        line->setStyleSheet("color:rgb(139,139,139)");
 
         line->setGeometry(0,76,750,1);
 
@@ -47,8 +63,8 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
         fileName->setGeometry(95,12,150,16);
         //timeInfo->setGeometry(300,31,200,30 );
-        fileSize->setGeometry(95,31,100,11);
-        fileDescription->setGeometry(95,47,100,12);
+        fileSize->setGeometry(95,31,100,12);
+        fileDescription->setGeometry(95,48,200,14);
         //downloadBtn->setGeometry(500,50,100,30);
 
         //checkBox->setGeometry(10,70,20,20);
@@ -94,8 +110,11 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
 
-    painter.setPen(QColor(139,139,139));
-    painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
+    if (!initPageFlag){
+        painter.setPen(QColor(139,139,139));
+        painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
+    }
+
 //    painter.drawLine(31,0,31,this->height()-1);
 //    painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
 //    painter.drawLine(31,this->height()-1,this->width()-1,this->height()-1);

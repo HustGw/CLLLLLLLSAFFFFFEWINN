@@ -1,7 +1,15 @@
 #include "delinkdialog.h"
-
+extern QStringList m_fontList;
 DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
 {
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
     this->resize(462,202);
 
   //获取主界面的宽度
@@ -16,7 +24,7 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     titleLabel->setGeometry(6,6,width-12,38);
     titleText = new QLabel(this);
     titleText->setGeometry(54,19,200,15);
-    titleText->setFont(QFont("Timers",9,QFont::Bold));
+    titleText->setFont(f_2);
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleIcon = new QLabel(this);
     titleIcon->setGeometry(22,18,23,17);
@@ -35,21 +43,23 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     askLabel = new QLabel(this);
     askLabel->setGeometry(28,56,150,15);
     askLabel->setText(QStringLiteral("链接地址："));
-
+    askLabel->setFont(f_1);
     okBtn=new QPushButton(this);
     okBtn->setGeometry(228,144,89,27);
     okBtn->setText(QStringLiteral("确认下载"));
+    okBtn->setFont(f_1);
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     okBtn->setCursor(QCursor(Qt::PointingHandCursor));
     cancleBtn=new QPushButton(this);
     cancleBtn->setGeometry(342,144,89,27);
+    cancleBtn->setFont(f_1);
     cancleBtn->setText(QStringLiteral("取消下载"));
     cancleBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     cancleBtn->setCursor(QCursor(Qt::PointingHandCursor));
     inputLineEdit = new QLineEdit(this);
     inputLineEdit->setGeometry(40,80,391,31);
     inputLineEdit->setPlaceholderText(tr("输入链接"));
-
+    inputLineEdit->setFont(f_1);
     connect(okBtn,SIGNAL(clicked(bool)),this,SLOT(sendLink()));
     connect(cancleBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));

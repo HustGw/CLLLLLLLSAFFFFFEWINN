@@ -1,7 +1,16 @@
 #include "msgbox.h"
+extern QStringList m_fontList;
 MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
 {
     this->resize(450,190);
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
 
   //获取主界面的宽度
     int width = this->width();
@@ -15,7 +24,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     titleLabel->setGeometry(6,6,width-12,38);
     titleText = new QLabel(this);
     titleText->setGeometry(53,18,200,15);
-    titleText->setFont(QFont("Timers",9,QFont::Bold));
+    titleText->setFont(f_2);
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleIcon = new QLabel(this);
     titleIcon->setGeometry(21,17,23,17);
@@ -31,7 +40,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         titleText->setText(QStringLiteral("系统提示"));
     }
     titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
-
+    titleLabel->setFont(f_2);
     closeBtn = new QPushButton(this);
     closeBtn->setGeometry(414, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
@@ -58,12 +67,13 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     askLabel = new QLabel(this);
     askLabel->setGeometry(89,64,300,40);
     askLabel->setText(text);
-
+    askLabel->setFont(f_1);
     deleteBtn = new QPushButton(this);
     deleteBtn->setText(QStringLiteral("删除条目及文件"));
     deleteBtn->setGeometry(73,133,119,27);
     deleteBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    deleteBtn->setFont(f_1);
     deleteBtn->hide();
     okBtn=new QPushButton(this);
     if((style==2)||(style==3)||(style == 4)||(style == 6)){
@@ -80,7 +90,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     }
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     okBtn->setCursor(QCursor(Qt::PointingHandCursor));
-
+    okBtn->setFont(f_1);
     cancleBtn=new QPushButton(this);
     cancleBtn->setGeometry(331,133,89,27);
     cancleBtn->setText(QStringLiteral("取消"));
@@ -92,7 +102,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         cancleBtn->show();
     }
     cancleBtn->setCursor(QCursor(Qt::PointingHandCursor));
-
+    cancleBtn->setFont(f_1);
     connect(okBtn,SIGNAL(clicked()),this,SLOT(okBtn_press()));
     connect(deleteBtn,SIGNAL(clicked()),this,SLOT(deletBtn_press()));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));

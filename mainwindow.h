@@ -73,9 +73,13 @@
 #include <QTimer>
 #include <QDesktopWidget>
 #include <QApplication>
+#include <QFontDatabase>
+#include <QCoreApplication>
+#include <QStringList>
 namespace Ui {
 class MainWindow;
 }
+extern QStringList m_fontList;
 extern QStringList newDownloadFileIdList;
 extern int AddFriendFlag;
 extern int LinkInsertFlag;
@@ -93,6 +97,7 @@ extern int encptThreadNum;
 extern int enitemNum;
 extern int isFinishedBtn;
 extern QFont f;
+extern QFont m;
 extern int DecryBarNum;
 extern int informationNum;
 extern int RequsetAllowNum;
@@ -114,6 +119,7 @@ extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString file_item_name;
 extern QString DecProFileID;
+extern QStringList m_fontList;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

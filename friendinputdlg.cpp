@@ -2,8 +2,18 @@
 QNetworkAccessManager *f_accessManager;
 QString ddd =nullptr;
 QString qq_num = nullptr;
+extern QStringList m_fontList;
 friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 {
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
+    this->setFont(f_1);
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
     topWidget = new QWidget(this);
     topWidget->setGeometry(6,6,500,37);
@@ -16,7 +26,7 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     titleText = new QLabel(topWidget);
     titleText->setGeometry(54,14,200,15);
-    titleText->setFont(QFont("Timers",9,QFont::Bold));
+    titleText->setFont(f_2);
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("好友添加"));
     titleText->show();
@@ -29,6 +39,7 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     closeBtn->setGeometry(466, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    closeBtn->setFont(f_1);
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));
     db = ConnectionPool::openConnection();//打开数据库连接
     setWindowTitle(tr("好友添加"));
@@ -38,12 +49,14 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 //    titleLabel->setGeometry(10,10,150,40);
     inputLineEdit->setGeometry(30,60,300,30);
     inputLineEdit->setPlaceholderText(tr("请输入好友手机号/昵称/用户名"));
+    inputLineEdit->setFont(f_1);
     okBtn = new QPushButton(this);
     okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
 //    cancelBtn = new QPushButton(this);
     okBtn->setText(QStringLiteral("查找"));
 //    cancelBtn->setText(tr("取消"));
     okBtn->setGeometry(350,60,40,30);
+    okBtn->setFont(f_1);
 //    cancelBtn->setGeometry(200,100,40,30);
     connect(okBtn,SIGNAL(clicked(bool)),this,SLOT(SearchFriend()));
 //    connect(cancelBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));
@@ -59,8 +72,10 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 //    userId->hide();
 //    userTitle->hide();
     addFriendBtn = new QPushButton(this);
+    addFriendBtn->setFont(f_1);
     addFriendBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     cancelBtn = new QPushButton(this);
+    cancelBtn->setFont(f_1);
     cancelBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
     addFriendBtn->hide();
     cancelBtn->hide();

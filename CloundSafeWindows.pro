@@ -7,7 +7,7 @@
 QT       += core gui
 QT       += sql
 
-#RC_FILE += icotest.rc
+RC_FILE += icotest.rc
 
 QT       += sql
 QT       += network
@@ -46,7 +46,7 @@ LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLL
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = CloundSafeWindows
+TARGET = CloudSafeWindows
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use

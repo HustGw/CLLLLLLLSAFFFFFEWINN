@@ -213,8 +213,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 10pt &quot;Consolas&quot;;
-background-color: rgb(238, 240, 245);</string>
+    <string notr="true">background-color: rgb(238, 240, 245);</string>
    </property>
    <property name="text">
     <string>批量分享</string>

@@ -13,6 +13,8 @@
 #include "QProgressBar"
 #include <qt_windows.h>
 #include <QFile>
+
+QStringList m_fontList;
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
 int IsLinkInfor = 0;//用于判断是否链接插入的消息
@@ -37,14 +39,16 @@ QString User_qqNum = nullptr;//用户qq_num
 QString User_qqPath = nullptr;//用户本地文件存放路径
 QString URL = "119.23.162.138/cloud";
 bool fileOpenFlag;
-bool initLableFlag;
+bool initLableFlag = false;
 bool initPageFlag=true;
 int decryptionFlag =0;
 int threadNum = 0;
 int DepThreadNum = 0;
 int encptThreadNum = 0;
 int enitemNum = 0;
-QFont f("冬青黑体简体",10,75);
+QFont f("冬青黑体简体",9,75);
+QFont m("冬青黑体简体",10,60);
+QFont f_h("冬青黑体简体",10,60);
 QFileInfo openFileInfo;
 QString orfileUuid;
 QString yzipfileUuid;
@@ -60,6 +64,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList.clear();
+
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m.setFamily(m_fontList.at(0));
+    f.setFamily(m_fontList.at(0));
+    f_h.setFamily(m_fontList.at(0));
+    m.setPixelSize(14);
+    f.setPixelSize(14);
+    f_h.setPixelSize(20);
+    m.setWeight(QFont::Normal);
+    f.setWeight(QFont::DemiBold);
+    f_h.setWeight(QFont::Bold);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
@@ -88,11 +110,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
     ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setFont(m);
     ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox_2->setFont(m);
     ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
     ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    encryptionPage = new EncryptionItem();
+    ui->de_checkBox->setFont(m);
+    //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
     decryptionBtnItem = new DecryptionBtnView();
@@ -127,11 +152,13 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
-    ui->MidStaWidget->addWidget(encryptionPage);
-    ui->EncryptionBtn->clicked();
+    //ui->MidStaWidget->addWidget(encryptionPage);
+    ui->EncryptionBtn->clicked(true);
+    //initLableFlag = true;
     initPageFlag=true;
     friendListLab = new Mylabel(ui->RightWidget);
     friendListLab->setText(tr("好友列表"));
+    friendListLab->setFont(m);
     friendListLab->setGeometry(ui->RightWidget->width()/2-60,1,80,30);
     friendIcon = new QLabel(ui->RightWidget);
     friendIcon->setGeometry(ui->RightWidget->width()/2-85,10,10,10);
@@ -146,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
-    ui->MidStaWidget->addWidget(encryptionViewController);
+    //ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
@@ -201,8 +228,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->line_11->hide();
     ui->pushButton_12->hide();
     this->setFixedSize(this->width(),this->height());
-    QFont font("冬青黑体简体",10,75);
-    this->setFont(font);
+
         //查询数据库  查询解密请求
      QSqlQuery query(db);
      bool success = query.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
@@ -337,7 +363,7 @@ MainWindow::MainWindow(QWidget *parent) :
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
              add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
              add_item->setText(Friend_nickname);
-             add_item->setFont(QFont("冬青黑体简体",10,50));
+             add_item->setFont(m);
              add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
              add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
              add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -499,15 +525,23 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
-    ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+
     if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
-        ui->BtnStaWidget->setCurrentIndex(0);
+        ui->MidStaWidget->addWidget(encryptionViewController);
+        //ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+        encryptionPage = new EncryptionItem();
+        ui->MidStaWidget->addWidget(encryptionPage);
+        ui->BtnStaWidget->setCurrentIndex(0);//顶部
+        initLableFlag = true;
         //initPageFlag=true;
+
         ui->MidStaWidget->setCurrentWidget(encryptionPage);
-        //ui->MidStaWidget->addWidget(encryptionPage);
+
+
 
     }else {
+        ui->MidStaWidget->setCurrentWidget(encryptionViewController);
         ui->BtnStaWidget->setCurrentIndex(0);
     }
 }
@@ -572,11 +606,29 @@ void MainWindow::on_OpenFileBtn_clicked()
 
     }else{
         fileOpenFlag = true;
-        initLableFlag = false;
 
-        if (initPageFlag){
+
+        if (initLableFlag){
 
             delete encryptionPage;
+
+            delete encryptionViewController->layout();
+            QWidget *newItemWidget = new QWidget();
+            newItemWidget->setContentsMargins(0,0,0,0);
+            ui->MidStaWidget->setCurrentWidget(encryptionViewController);
+            QScrollArea *newScrollArea = new QScrollArea();
+            //newScrollArea->setWidgetResizable(true);//铺满显示
+            newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            newItemWidget->setLayout(encryptionViewController->vbox);
+            newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+            //newItemWidget->setSizePolicy(QSizePolicy::Fixed);
+            newScrollArea->setWidget(newItemWidget);
+            QVBoxLayout *newVbox = new QVBoxLayout();
+            newVbox->setMargin(0);
+            newVbox->setSpacing(0);
+            newVbox->addWidget(newScrollArea);
+            encryptionViewController->setLayout(newVbox);
+            initLableFlag = false;
             initPageFlag=false;
         }
 
@@ -774,6 +826,7 @@ void MainWindow::handleResults(int value,QString itemName)
             if (isFinishedBtn == 0)
                 ui->FinishedBtn->clicked(true);
            ui->FinEnpBtn->clicked(true);
+           initPageFlag = true;
          }
 
     }
@@ -1236,6 +1289,7 @@ void MainWindow::ReceiveNewReq(){
                   else if(query.record().value("status").toString()=="1"){
                       v1->fileDescription->setText("文件已加密需下载密钥文件.");
                       v1->downloadBtn->setText("申请解密");
+                      v1->label->show();
                       connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
  //                     connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
@@ -1243,6 +1297,7 @@ void MainWindow::ReceiveNewReq(){
                   else if(query.record().value("status").toString()=="2"){//申请等待状态
                       v1->fileDescription->setText("正在申请解密，请等待！");
                       v1->downloadBtn->setText("申请中");
+                      v1->label->show();
 //                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
                       decryptionViewController->vbox->addWidget(v1);
                       }
@@ -1400,7 +1455,7 @@ void MainWindow::inforDlgaddFriend(QString name){
                         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
                         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
                         add_item->setText(name);
-                        add_item->setFont(QFont("冬青黑体简体",10,50));
+                        add_item->setFont(m);
                         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
                         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
                         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -1475,7 +1530,7 @@ void MainWindow::inforDlgaddFriend(QString name){
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
         add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
         add_item->setText(name);
-        add_item->setFont(QFont("冬青黑体简体",10,50));
+        add_item->setFont(m);
         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
         add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -2195,6 +2250,7 @@ void MainWindow::ChangeItemBtnText(QString fileID){
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem*>(fileID+"decryption");
     m1->fileDescription->setText("文件已加密需下载密钥文件");
     m1->downloadBtn->setText("申请解密");
+    m1->label->show();
     QProgressBar *n1 = ui->MidStaWidget->findChild<QProgressBar *>(fileID+"decryption");
     int value = 21;
     while(value<100){
@@ -2220,7 +2276,9 @@ void MainWindow::setEmp_name(){
         while (query.next()) {
             QString nickName = query.record().value("emp_name").toString();
             qDebug()<<nickName;
+            ui->nameLabel->setFont(f_h);
             ui->nameLabel->setText(nickName);
+
         }
         ui->UserPhonelabe->setText("手机号："+UserPhoneNum);
         ui->UserPhonelabe->hide();
@@ -2393,11 +2451,11 @@ void MainWindow::on_pushButton_11_clicked()
 }
 
 void MainWindow::CleanButtonClicked(){
-    ui->FinDepBtn->setFont(f);
-    ui->DecryptionBtn->setFont(f);
-    ui->EncryptionBtn->setFont(f);
-    ui->FinishedBtn->setFont(f);
-    ui->FinEnpBtn->setFont(f);
+    ui->FinDepBtn->setFont(m);
+    ui->DecryptionBtn->setFont(m);
+    ui->EncryptionBtn->setFont(m);
+    ui->FinishedBtn->setFont(m);
+    ui->FinEnpBtn->setFont(m);
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon.png"));
@@ -2816,7 +2874,7 @@ void MainWindow::NewFriendAgree(){
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
             add_item->setText(Friend_nickname);
-            add_item->setFont(QFont("冬青黑体简体",10,50));
+            add_item->setFont(m);
             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
@@ -2911,6 +2969,7 @@ void MainWindow::ChangeDecItemProBar(int value, QString itemID){
     if(value ==100){
         m1->fileDescription->setText("文件已加密需下载密钥文件");
         m1->downloadBtn->setText("申请解密");
+        m1->label->show();
         delete n1;
         ReLayout();
         //解除原有信号槽

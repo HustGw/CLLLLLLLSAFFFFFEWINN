@@ -2,14 +2,31 @@
 #include "ui_groupsharedialog.h"
 #include "QrCode.hpp"
 #include "msgbox.h"
+extern QStringList m_fontList;
 groupshareDialog::groupshareDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::groupshareDialog)
 {
+    QFont f_1;
+    f_1.setFamily(m_fontList.at(0));
+    f_1.setPixelSize(14);
+    f_1.setWeight(QFont::Normal);
+    QFont f_2;
+    f_2.setFamily(m_fontList.at(0));
+    f_2.setPixelSize(14);
+    f_2.setWeight(QFont::Bold);
+
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     ui->setupUi(this);
     QString fake_address = "&&"+file_id_list;
+    ui->label->setFont(f_1);
+    ui->label_3->setFont(f_1);
+    ui->label_8->setFont(f_1);
+    ui->label_9->setFont(f_2);
+    ui->pushButtonclos->setFont(f_1);
+    ui->pushButton_copy->setFont(f_1);
+    ui->pushButton_sav->setFont(f_1);
     ui->pushButtonclos->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_copy->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_sav->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");

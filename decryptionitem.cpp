@@ -1,7 +1,21 @@
 #include "decryptionitem.h"
+extern QStringList m_fontList;
 int flag = 0;
 DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 {
+    QFont f_14;
+     QFont f_12;
+     QFont f_10;
+     f_14.setFamily(m_fontList.at(0));
+     f_12.setFamily(m_fontList.at(0));
+     f_10.setFamily(m_fontList.at(0));
+     f_14.setPixelSize(14);
+     f_12.setPixelSize(12);
+     f_10.setPixelSize(10);
+     f_14.setWeight(QFont::Bold);
+     f_12.setWeight(QFont::Normal);
+     f_10.setWeight(QFont::Normal);
+
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
@@ -21,11 +35,11 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     elseLabel->setAlignment(Qt::AlignCenter);
 
 
-    fileName->setFont(QFont("Timers",11,QFont::Bold));
-    fileSize->setFont(QFont("Timers",8));
-    fileDescription->setFont(QFont("Timers",8));
-    fileSize->setStyleSheet("color:#9999AB");
-    fileDescription->setStyleSheet("color:#9999AB");
+    fileName->setFont(f_14);
+    fileSize->setFont(f_10);
+    fileDescription->setFont(f_12);
+    fileSize->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
+    fileDescription->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
 
     downloadBtn = new QPushButton(this);
     fileIcon = new QLabel(this);
@@ -38,8 +52,8 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     timeLabel->setStyleSheet("background:transparent");
 
     fileName->setGeometry(97,10,300,16);
-    fileSize->setGeometry(97,28,300,11);
-    fileDescription->setGeometry(97,41,400,12);
+    fileSize->setGeometry(97,28,300,12);
+    fileDescription->setGeometry(97,42,400,14);
 
     downloadBtn->setGeometry(545,22,90,24);
     downloadBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -50,7 +64,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileIcon->setGeometry(45,10,38,46);
 
     timeLabel->setGeometry(294,31,230,10);
-    timeLabel->setFont(QFont("Timers",8));
+    timeLabel->setFont(f_10);
     timeLabel->setStyleSheet("color:#9999AB");
     progressBar->setGeometry(0,0,695,this->height()-1);
     QString strQSS = "QProgressBar { \
@@ -65,10 +79,10 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     progressBar->setMaximum(100);
     progressBar->setStyleSheet(strQSS);
     fileName->setStyleSheet("background:transparent");
-    fileDescription->setStyleSheet("background:transparent");
-    fileSize->setStyleSheet("background:transparent");
     downloadBtn->setStyleSheet("background:transparent");
-
+    f_14.setWeight(QFont::Normal);
+    downloadBtn->setFont(f_14);
+    f_14.setWeight(QFont::Bold);
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>463</width>
+    <width>563</width>
     <height>512</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>6</x>
      <y>6</y>
-     <width>451</width>
+     <width>551</width>
      <height>38</height>
     </rect>
    </property>
@@ -56,8 +56,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(238, 240, 245);
-font: 75 10pt &quot;Microsoft YaHei UI&quot;;</string>
+    <string notr="true">background-color: rgb(238, 240, 245);</string>
    </property>
    <property name="text">
     <string>确认下载</string>
@@ -66,7 +65,7 @@ font: 75 10pt &quot;Microsoft YaHei UI&quot;;</string>
   <widget class="QPushButton" name="pushButton_close">
    <property name="geometry">
     <rect>
-     <x>436</x>
+     <x>536</x>
      <y>12</y>
      <width>13</width>
      <height>13</height>
@@ -85,7 +84,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
     <rect>
      <x>6</x>
      <y>44</y>
-     <width>451</width>
+     <width>551</width>
      <height>462</height>
     </rect>
    </property>
@@ -130,7 +129,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
     <rect>
      <x>70</x>
      <y>130</y>
-     <width>321</width>
+     <width>421</width>
      <height>291</height>
     </rect>
    </property>
@@ -138,7 +137,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
   <widget class="QPushButton" name="pushButtonconfirm">
    <property name="geometry">
     <rect>
-     <x>228</x>
+     <x>328</x>
      <y>460</y>
      <width>89</width>
      <height>27</height>
@@ -151,7 +150,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
   <widget class="QPushButton" name="pushButtoncancel">
    <property name="geometry">
     <rect>
-     <x>342</x>
+     <x>442</x>
      <y>460</y>
      <width>89</width>
      <height>27</height>

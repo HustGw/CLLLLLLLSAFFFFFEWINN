@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QSettings>
+#include <QGraphicsDropShadowEffect>
 QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
@@ -24,6 +25,13 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
+    effect->setOffset(0,0);
+    effect->setColor(Qt::black);
+    effect->setBlurRadius(15);
+    this->setGraphicsEffect(effect);
+
     //登录初始化时设置已记住的账号密码
     QString RemeberPasswd;
     QSettings cfg("user.ini",QSettings::IniFormat);
@@ -42,14 +50,14 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
 
     ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
-                "QPushButton{border:0px;color:rgb(102,102,102);}"
+                "QPushButton{border:0px;color:rgb(102,102,102);font:16px;}"
                 "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
     ui->forgetBtn->setStyleSheet(               //调整忘记密码按钮样式
                 "QPushButton{border:0px;color:rgb(57,140,255);}"
                 "QPushButton:hover{border:0px;color:rgb(85,170,255);}");
     ui->sendBtn->setStyleSheet(                 //调整登录按钮样式
-                "QPushButton{background-color: rgb(57, 140, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;}"
-                "QPushButton:hover{background-color: rgb(85, 170, 255);font-size:18pt;font-weight:bold;border-radius:4px;color:white;}");
+                "QPushButton{background-color: rgb(57, 140, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}"
+                "QPushButton:hover{background-color: rgb(85, 170, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}");
     ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
                 "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
                 "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
@@ -186,7 +194,7 @@ void TcpClient::on_userLineEdit_textChanged()
     //用户名输入框文本变化的响应
 
     ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account_hover.png);"));
-    ui->frame_2->setStyleSheet(tr("color: rgb(57, 140, 255);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(57, 140, 255);border:1px solid rgb(57, 140, 255);"));
 }
 
 void TcpClient::on_userLineEdit_editingFinished()
@@ -194,7 +202,7 @@ void TcpClient::on_userLineEdit_editingFinished()
     //用户名输入框停止输入的响应
 
     ui->label->setStyleSheet(tr("image: url(:/new/login/pictures/login_account.png);"));
-    ui->frame_2->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+    ui->frame_2->setStyleSheet(tr("color: rgb(199, 197, 198);border:1px solid rgb(199, 197, 198);"));
 }
 
 void TcpClient::on_passwardLineEdit_editingFinished()
@@ -202,7 +210,7 @@ void TcpClient::on_passwardLineEdit_editingFinished()
     //密码输入框停止输入的响应
 
     ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password.png);"));
-    ui->frame->setStyleSheet(tr("color: rgb(199, 197, 198);"));
+    ui->frame->setStyleSheet(tr("color: rgb(199, 197, 198);border:1px solid rgb(199, 197, 198);"));
 }
 
 void TcpClient::on_passwardLineEdit_textChanged()
@@ -210,7 +218,7 @@ void TcpClient::on_passwardLineEdit_textChanged()
     //密码输入框文本变化的响应
 
     ui->label_3->setStyleSheet(tr("image: url(:/new/login/pictures/login_password_hover.png);"));
-    ui->frame->setStyleSheet(tr("color: rgb(57, 140, 255);"));
+    ui->frame->setStyleSheet(tr("color: rgb(57, 140, 255);border:1px solid rgb(57, 140, 255);"));
 }
 
 
@@ -421,28 +429,6 @@ void TcpClient::mouseReleaseEvent(QMouseEvent *qevent)
 {
     //设置鼠标为未被按下
     mouse_press = false;
-}
-
-void TcpClient::paintEvent(QPaintEvent *event)
-{
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    path.addRect(5, 5, this->width()-10, this->height()-10);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
-
-    QColor color(128, 128, 128, 50);
-    for(int i=0; i<5; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRect(5-i, 5-i, this->width()-(5-i)*2, this->height()-(5-i)*2);
-        color.setAlpha(150 - qSqrt(i)*50);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
 }
 
 

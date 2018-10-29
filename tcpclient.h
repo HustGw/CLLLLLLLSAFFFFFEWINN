@@ -43,7 +43,6 @@ protected:
     void mousePressEvent(QMouseEvent *qevent);            //鼠标按下事件
     void mouseReleaseEvent(QMouseEvent *qevent);         //鼠标释放事件
     void mouseMoveEvent(QMouseEvent *qevent);             //鼠标移动事件
-    void paintEvent(QPaintEvent *event);
 
 private slots:
 

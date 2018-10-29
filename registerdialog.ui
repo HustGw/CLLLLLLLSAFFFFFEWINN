@@ -16,77 +16,34 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QWidget" name="widget" native="true">
+  <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
      <x>6</x>
-     <y>6</y>
+     <y>43</y>
      <width>450</width>
-     <height>538</height>
+     <height>501</height>
     </rect>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
    </property>
-   <widget class="QWidget" name="widget_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>450</width>
-      <height>37</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(238, 240, 245);</string>
-    </property>
-    <widget class="QPushButton" name="closeBtn">
-     <property name="geometry">
-      <rect>
-       <x>425</x>
-       <y>6</y>
-       <width>14</width>
-       <height>14</height>
-      </rect>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/new/mainwindow/pictures/delete_button.png);
-border:none;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="icon_words">
-     <property name="geometry">
-      <rect>
-       <x>47</x>
-       <y>12</y>
-       <width>105</width>
-       <height>14</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-size:13px;
-font-weight:bold;
-color:rgb(61,57,57);</string>
-     </property>
-     <property name="text">
-      <string>注册云加密账号</string>
-     </property>
-    </widget>
-   </widget>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);
+border-bottom-left-radius:6px;
+border-bottom-right-radius:6px;</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
    <widget class="QLabel" name="nichengLabel">
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>90</y>
+      <y>53</y>
       <width>39</width>
       <height>15</height>
      </rect>
@@ -99,7 +56,7 @@ color:rgb(61,57,57);</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>81</y>
+      <y>44</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -113,7 +70,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>159</y>
+      <y>122</y>
       <width>66</width>
       <height>15</height>
      </rect>
@@ -126,7 +83,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>151</y>
+      <y>114</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -140,7 +97,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>229</y>
+      <y>192</y>
       <width>66</width>
       <height>15</height>
      </rect>
@@ -153,7 +110,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>221</y>
+      <y>184</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -170,7 +127,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>299</y>
+      <y>262</y>
       <width>54</width>
       <height>15</height>
      </rect>
@@ -183,7 +140,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>291</y>
+      <y>254</y>
       <width>220</width>
       <height>30</height>
      </rect>
@@ -197,7 +154,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>369</y>
+      <y>332</y>
       <width>60</width>
       <height>15</height>
      </rect>
@@ -210,7 +167,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>361</y>
+      <y>324</y>
       <width>99</width>
       <height>30</height>
      </rect>
@@ -224,7 +181,7 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>239</x>
-      <y>361</y>
+      <y>324</y>
       <width>109</width>
       <height>30</height>
      </rect>
@@ -245,37 +202,33 @@ border-radius:4px;</string>
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>436</y>
-      <width>271</width>
-      <height>18</height>
+      <x>114</x>
+      <y>391</y>
+      <width>15</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 8pt &quot;04b_21&quot;;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>  阅读并接受  《云加密用户协议》</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="signBtn">
     <property name="geometry">
      <rect>
       <x>126</x>
-      <y>479</y>
+      <y>442</y>
       <width>222</width>
       <height>34</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius:4px;
-background-color: rgb(46, 130, 255);
-font-size:14pt;
-font-weight:bold;
-color:white;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>注册</string>
@@ -285,13 +238,13 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>463</y>
+      <y>426</y>
       <width>428</width>
       <height>1</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:rgb(238,240,245);</string>
+     <string notr="true">background-color:#eef0f5;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::HLine</enum>
@@ -299,12 +252,15 @@ color:white;</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
    </widget>
    <widget class="QLabel" name="nichengAlert">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>118</y>
+      <y>81</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -321,7 +277,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>259</y>
+      <y>222</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -337,7 +293,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>329</y>
+      <y>292</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -353,7 +309,7 @@ color:white;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>399</y>
+      <y>362</y>
       <width>200</width>
       <height>14</height>
      </rect>
@@ -364,6 +320,91 @@ color:white;</string>
     </property>
     <property name="text">
      <string>验证码不正确</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="user_id_label">
+    <property name="geometry">
+     <rect>
+      <x>364</x>
+      <y>53</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/pictures/login_user_id_check.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="checklabel">
+    <property name="geometry">
+     <rect>
+      <x>142</x>
+      <y>393</y>
+      <width>193</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_2" native="true">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>6</y>
+     <width>450</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 240, 245);
+border-top-left-radius:6px;
+border-top-right-radius:6px;</string>
+   </property>
+   <widget class="QPushButton" name="closeBtn">
+    <property name="geometry">
+     <rect>
+      <x>425</x>
+      <y>6</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/new/mainwindow/pictures/delete_button.png);
+border:none;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="icon_words">
+    <property name="geometry">
+     <rect>
+      <x>47</x>
+      <y>12</y>
+      <width>105</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:13px;
+font-weight:bold;
+color:rgb(61,57,57);</string>
+    </property>
+    <property name="text">
+     <string>注册云加密账号</string>
     </property>
    </widget>
    <widget class="QLabel" name="icon">
