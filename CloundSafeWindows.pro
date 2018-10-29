@@ -7,7 +7,7 @@
 QT       += core gui
 QT       += sql
 
-RC_FILE += icotest.rc
+#RC_FILE += icotest.rc
 
 QT       += sql
 QT       += network

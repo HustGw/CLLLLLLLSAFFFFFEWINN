@@ -206,6 +206,7 @@ public:
 public slots:
 
     void FileIsAllowed();//请求同意槽函数
+    void InitUi();
 
 private slots:
 

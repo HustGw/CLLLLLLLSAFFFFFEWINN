@@ -23,6 +23,16 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->setupUi(this);
    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
    setAttribute(Qt::WA_TranslucentBackground, true);
+   ui->nichengLineEdit->setStyleSheet("QMenu {border: 1px solid black}"
+                                       "QMenu::item:selected {background-color: grey;}");
+   ui->passwardLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
+                                   "QMenu::item:selected {background-color: grey;}");
+   ui->passwardLineEdit_2->setStyleSheet("QMenu {border: 1px solid black}"
+                                       "QMenu::item:selected {background-color: grey;}");
+   ui->userLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
+                                   "QMenu::item:selected {background-color: grey;}");
+   ui->code->setStyleSheet("QMenu {border: 1px solid black}"
+                                       "QMenu::item:selected {background-color: grey;}");
 
    QBitmap bmp(this->size());
    bmp.fill();
@@ -71,19 +81,29 @@ registerDialog::registerDialog(QWidget *parent) :
                "QPushButton:hover,QPushButton:focus{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
    ui->nichengLineEdit->setStyleSheet(                 //调整昵称输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
+               "QMenu {border: 1px solid black}"
+               "QMenu::item:selected {background-color: grey;}");
    ui->passwardLineEdit->setStyleSheet(                 //调整密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
+               "QMenu {border: 1px solid black}"
+               "QMenu::item:selected {background-color: grey;}");
    ui->passwardLineEdit_2->setStyleSheet(                 //调整确认密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
+               "QMenu {border: 1px solid black}"
+               "QMenu::item:selected {background-color: grey;}");
    ui->userLineEdit->setStyleSheet(                 //调整手机号输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
+               "QMenu {border: 1px solid black}"
+               "QMenu::item:selected {background-color: grey;}");
    ui->code->setStyleSheet(                 //调整验证码样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
+               "QMenu {border: 1px solid black}"
+               "QMenu::item:selected {background-color: grey;}");
 
 
    qDebug()<<"hehe flag:"<<flag;

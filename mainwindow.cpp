@@ -14,6 +14,7 @@
 #include <qt_windows.h>
 #include <QFile>
 
+extern int const EXIT_CODE_REBOOT;
 QStringList m_fontList;
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
@@ -62,61 +63,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //初始化用户User_ID
     User_ID = LoginUserID;
     ui->setupUi(this);
-    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground, true);
-    QString dir = QCoreApplication::applicationDirPath();
-    m_fontList.clear();
 
-    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
-    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
-    if (lcdFontId != -1) // -1为加载失败
-    {
-        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
-    }
-    m.setFamily(m_fontList.at(0));
-    f.setFamily(m_fontList.at(0));
-    f_h.setFamily(m_fontList.at(0));
-    m.setPixelSize(14);
-    f.setPixelSize(14);
-    f_h.setPixelSize(20);
-    m.setWeight(QFont::Normal);
-    f.setWeight(QFont::DemiBold);
-    f_h.setWeight(QFont::Bold);
-    ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
-    ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_5->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_6->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_7->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_10->hide();
-    ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_11->hide();
-    ui->pushButton->hide();
-    ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_15->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_max->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->OpenFileBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->EncryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->DecryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox->setFont(m);
-    ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox_2->setFont(m);
-    ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->de_checkBox->setFont(m);
+    InitUi();
+
     //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -222,11 +171,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    userHead->setPixmap(pixmap);
     //连接头像信号槽
     //connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
-    ui->FinDepBtn->hide();
-    ui->FinEnpBtn->hide();
-    ui->line_10->hide();
-    ui->line_11->hide();
-    ui->pushButton_12->hide();
+
     this->setFixedSize(this->width(),this->height());
 
         //查询数据库  查询解密请求
@@ -446,8 +391,7 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                          "QPushButton#pushButton_10:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                          "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }");
-     ui->pushButton_8->hide();
-     ui->pushButton_9->hide();
+
 
         thread_11 = new QThread(this);
         workThread = new heartThread(); //工作线程，具体的业务实现在此中完成，继承自Object
@@ -464,7 +408,71 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::InitUi(){
+    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList.clear();
 
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m.setFamily(m_fontList.at(0));
+    f.setFamily(m_fontList.at(0));
+    f_h.setFamily(m_fontList.at(0));
+    m.setPixelSize(14);
+    f.setPixelSize(14);
+    f_h.setPixelSize(20);
+    m.setWeight(QFont::Normal);
+    f.setWeight(QFont::DemiBold);
+    f_h.setWeight(QFont::Bold);
+    ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
+    ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_5->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_6->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_7->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->hide();
+    ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_11->hide();
+    ui->pushButton->hide();
+    ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_15->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_max->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->OpenFileBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->EncryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->DecryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setFont(m);
+    ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox_2->setFont(m);
+    ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->de_checkBox->setFont(m);
+
+    ui->FinDepBtn->hide();
+    ui->FinEnpBtn->hide();
+    ui->line_10->hide();
+    ui->line_11->hide();
+    ui->pushButton_12->hide();
+    ui->pushButton_8->hide();
+    ui->pushButton_9->hide();
+}
 void MainWindow::on_FinishedBtn_clicked()
 {
 //    QPalette pal = ui->FinishedBtn->palette();
@@ -2794,7 +2802,12 @@ void MainWindow::closeEvent(QCloseEvent *event){
     }else{
         thread_11->exit(0);
         workThread->exit(0);
+        //ConnectionPool::release();
+        QApplication::setQuitOnLastWindowClosed(true);
+
         event->accept();
+        qApp->exit(773);
+        QProcess::startDetached(qApp->applicationFilePath());
     }
 }
 
