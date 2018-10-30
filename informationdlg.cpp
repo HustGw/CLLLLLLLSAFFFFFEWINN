@@ -40,9 +40,14 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     ItemWidget = new QWidget();
     setItem();//布局函数
     CleanStatusLabel = new QLabel(this);
-    lineLabel = new QLabel(this);
-    lineLabel->setGeometry(0,0,this->width(),1);
-    lineLabel->setStyleSheet("color:#000000");
+//    lineLabel = new QLabel(this);
+//    lineLabel->setGeometry(1,1,this->width(),1);
+//    lineLabel->setStyleSheet("background-color:#000000");
+    QFrame *framline = new QFrame;
+    framline->setGeometry(0,this->height()-49,this->width(),3);
+    framline->setFrameShape(QFrame::HLine);
+    framline->setStyleSheet("color:#C7C5C6");
+//    framline->raise();
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
     cleanInforBtn->setStyleSheet("color:#3D6CFE");
@@ -117,7 +122,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
                                                        );
         scrollLayout = new QVBoxLayout();
         scrollLayout->addWidget(scrollArea);
-        scrollLayout->addWidget(lineLabel);
+        scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
     }
@@ -183,7 +188,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         scrollLayout = new QVBoxLayout();
         scrollArea->setWidget(ItemWidget);
         scrollLayout->addWidget(scrollArea);
-        scrollLayout->addWidget(lineLabel);
+        scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
     }
