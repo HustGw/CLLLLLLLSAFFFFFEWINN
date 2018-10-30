@@ -18,7 +18,7 @@
     <rect>
      <x>38</x>
      <y>59</y>
-     <width>61</width>
+     <width>500</width>
      <height>16</height>
     </rect>
    </property>
@@ -56,8 +56,7 @@ background-color: rgb(238, 240, 245);</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 10pt &quot;Consolas&quot;;
-background-color: rgb(238, 240, 245);</string>
+    <string notr="true">background-color: rgb(238, 240, 245);</string>
    </property>
    <property name="text">
     <string>批量传输</string>
@@ -66,7 +65,7 @@ background-color: rgb(238, 240, 245);</string>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>48</x>
+     <x>65</x>
      <y>111</y>
      <width>200</width>
      <height>15</height>
@@ -84,6 +83,12 @@ background-color: rgb(238, 240, 245);</string>
      <width>282</width>
      <height>283</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-top:none;
+border-bottom:1px solid rgb(207,207,208);
+border-left:1px solid rgb(207,207,208);
+border-right:1px solid rgb(207,207,208);</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_trans">
@@ -203,6 +208,25 @@ border:1px;</string>
      <height>283</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>45</x>
+     <y>114</y>
+     <width>15</width>
+     <height>8</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/new/login/pictures/login_accounts_management.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
   <zorder>label</zorder>
   <zorder>listWidget_2</zorder>
@@ -217,6 +241,7 @@ border:1px;</string>
   <zorder>pushButton_close2</zorder>
   <zorder>label_8</zorder>
   <zorder>label_2</zorder>
+  <zorder>label_9</zorder>
  </widget>
  <resources/>
  <connections/>

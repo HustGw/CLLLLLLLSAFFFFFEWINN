@@ -283,7 +283,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;</string>
     </property>
     <property name="text">
      <string>密码不一致，请重新输入</string>

@@ -73,11 +73,14 @@
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>872</x>
+      <x>874</x>
       <y>87</y>
-      <width>6</width>
+      <width>1</width>
       <height>575</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -86,11 +89,14 @@
    <widget class="Line" name="line_3">
     <property name="geometry">
      <rect>
-      <x>175</x>
+      <x>177</x>
       <y>87</y>
-      <width>6</width>
+      <width>1</width>
       <height>575</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -100,10 +106,13 @@
     <property name="geometry">
      <rect>
       <x>178</x>
-      <y>125</y>
+      <y>127</y>
       <width>697</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(237,237,237); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -331,7 +340,7 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>119</x>
+        <x>109</x>
         <y>4</y>
         <width>110</width>
         <height>32</height>
@@ -402,7 +411,7 @@
      <widget class="QPushButton" name="pushButton_5">
       <property name="geometry">
        <rect>
-        <x>119</x>
+        <x>109</x>
         <y>4</y>
         <width>110</width>
         <height>32</height>
@@ -418,7 +427,7 @@
      <widget class="QPushButton" name="pushButton_6">
       <property name="geometry">
        <rect>
-        <x>238</x>
+        <x>237</x>
         <y>4</y>
         <width>110</width>
         <height>32</height>
@@ -457,7 +466,7 @@
      <widget class="QPushButton" name="pushButton_groupshare">
       <property name="geometry">
        <rect>
-        <x>357</x>
+        <x>365</x>
         <y>4</y>
         <width>110</width>
         <height>32</height>
@@ -499,7 +508,7 @@
      <widget class="QPushButton" name="pushButton_7">
       <property name="geometry">
        <rect>
-        <x>119</x>
+        <x>109</x>
         <y>4</y>
         <width>110</width>
         <height>32</height>
@@ -571,10 +580,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>85</y>
+      <y>87</y>
       <width>1062</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -597,10 +609,13 @@
     <property name="geometry">
      <rect>
       <x>178</x>
-      <y>621</y>
+      <y>623</y>
       <width>697</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(243,243,243); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -610,10 +625,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>136</y>
+      <y>138</y>
       <width>167</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -623,10 +641,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>186</y>
+      <y>188</y>
       <width>167</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -636,10 +657,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>236</y>
+      <y>238</y>
       <width>167</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -649,10 +673,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>286</y>
+      <y>288</y>
       <width>167</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -662,10 +689,13 @@
     <property name="geometry">
      <rect>
       <x>11</x>
-      <y>336</y>
+      <y>338</y>
       <width>167</width>
-      <height>6</height>
+      <height>2</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-top: 1px solid rgb(214,216,221); </string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>

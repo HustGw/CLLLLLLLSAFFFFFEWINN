@@ -80,7 +80,7 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
 
 void FinishDecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    painter.setPen(QColor(237,237,237));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
 
@@ -106,7 +106,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
        }
        QFileInfo d_file(openfile);
        if(!d_file.isFile()){
-           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到文件，请检查文件是否已被删除或移动到新的位置。"),this);
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到文件，请检查文件是否已被删除或移动到\n新的位置。"),this);
            msgbox->exec();
        }else{
            QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));

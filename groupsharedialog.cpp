@@ -3,6 +3,7 @@
 #include "QrCode.hpp"
 #include "msgbox.h"
 extern QStringList m_fontList;
+extern bool groupShareDialogFlag;
 groupshareDialog::groupshareDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::groupshareDialog)
@@ -141,12 +142,14 @@ void groupshareDialog::on_pushButton_sav_clicked()
 void groupshareDialog::on_pushButtonclos_clicked()
 {
     file_id_list.clear();
+    groupShareDialogFlag = false;
     this->close();
 }
 
 void groupshareDialog::on_pushButtonclos2_clicked()
 {
     file_id_list.clear();
+    groupShareDialogFlag = false;
     this->close();
 }
 

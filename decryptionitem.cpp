@@ -1,8 +1,14 @@
 #include "decryptionitem.h"
 extern QStringList m_fontList;
 int flag = 0;
+QPalette pa;
+
+
 DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 {
+    pa.setColor(QPalette::Background, QColor(0x00,0xff,0x00,0x00));
+
+
     QFont f_14;
      QFont f_12;
      QFont f_10;
@@ -47,9 +53,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     timeLabel = new QLabel(this);
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-
+    timeLabel->setPalette (pa);
     downloadBtn->setStyleSheet("background:transparent");
-    timeLabel->setStyleSheet("background:transparent");
+    //timeLabel->setStyleSheet("background:transparent");
 
     fileName->setGeometry(97,10,300,16);
     fileSize->setGeometry(97,28,300,12);
@@ -87,7 +93,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    painter.setPen(QColor(237,237,237));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
 

@@ -1,6 +1,8 @@
 #include "finishencryptionItem.h"
 extern QStringList m_fontList;
 QString file_id;
+bool sendDialogFlag;
+bool shareDialogFlag;
 FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     QFont f_14;
     QFont f_12;
@@ -82,27 +84,37 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
 
 void FinishEncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    painter.setPen(QColor(237,237,237));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
 
 
 void FinishEncryptionItem::on_transprotBtn_clicked(){
+    if(sendDialogFlag){
 
+    }else{
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
     file_id = name;
+
     dlg = new sendDialog();
     dlg->show();
+    sendDialogFlag = true;
+    }
 
 }
 
 void FinishEncryptionItem::on_shareBtn_clicked(){
+    if(shareDialogFlag){
+
+    }else{
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     QString name = button->objectName();
     file_id = name;
     share = new shareDialog();
     share->show();
+    shareDialogFlag = true;
+    }
 }
 void FinishEncryptionItem::on_pathOpenBtn_clicked(){
     QString openPath;
