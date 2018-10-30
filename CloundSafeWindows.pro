@@ -7,8 +7,8 @@
 QT       += core gui
 QT       += sql
 
-RC_FILE += icotest.rc
-
+#RC_FILE += icotest.rc
+CONFIG += resources_big
 QT       += sql
 QT       += network
 LIBS += -lWs2_32

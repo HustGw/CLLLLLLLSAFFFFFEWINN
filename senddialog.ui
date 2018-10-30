@@ -54,7 +54,7 @@
     <rect>
      <x>38</x>
      <y>59</y>
-     <width>61</width>
+     <width>400</width>
      <height>16</height>
     </rect>
    </property>
@@ -196,7 +196,7 @@ border:1px;</string>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>48</x>
+     <x>65</x>
      <y>111</y>
      <width>200</width>
      <height>15</height>
@@ -204,6 +204,22 @@ border:1px;</string>
    </property>
    <property name="text">
     <string>好友列表</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>45</x>
+     <y>114</y>
+     <width>15</width>
+     <height>8</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/new/login/pictures/login_accounts_management.png);</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <zorder>label_3</zorder>
@@ -219,6 +235,7 @@ border:1px;</string>
   <zorder>pushButton_close2</zorder>
   <zorder>label_7</zorder>
   <zorder>label_8</zorder>
+  <zorder>label_9</zorder>
  </widget>
  <resources/>
  <connections/>

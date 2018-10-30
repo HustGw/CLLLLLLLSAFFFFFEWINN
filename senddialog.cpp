@@ -5,6 +5,7 @@
 extern QString file_id;
 extern QString User_ID;
 extern QStringList m_fontList;
+extern bool sendDialogFlag;
 sendDialog::sendDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::sendDialog)
@@ -30,16 +31,39 @@ sendDialog::sendDialog(QWidget *parent) :
     ui->label_7->setFont(f_1);
     ui->label->setFont(f_1);
     ui->label_6->setFont(f_2);
-    ui->label_3->setStyleSheet("QLabel{border:1px solid gray;}");
-    ui->label_7->setStyleSheet("QLabel{border:1px solid gray;}");
+    ui->label_3->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);}");
+    ui->label_7->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);border-bottom:none;}");
+    ui->listWidget->setStyleSheet("QListWidget {border-top:none;"
+                                  "border-bottom:1px solid rgb(207,207,208);"
+                                  "border-left:1px solid rgb(207,207,208);"
+                                  "border-right:1px solid rgb(207,207,208);}"
+                                  "QListWidget::Item {border:none;padding-left:20px}");
+    ui->listWidget_2->setStyleSheet("QListWidget {border-top:none;"
+                                    "border-bottom:1px solid rgb(207,207,208);"
+                                    "border-left:1px solid rgb(207,207,208);"
+                                    "border-right:1px solid rgb(207,207,208);}"
+                                    "QListWidget::Item {border:none;padding-left:20px}");
+    QString fileName_;
+    QSqlQuery query(db1);
+    bool select_file_name = query.exec("select * from varticle where article_id ='"+file_id+"'");
+    if(!select_file_name){
+        qDebug()<<"bug!~!!!!!!";
+    }else{
+        while(query.next()){
+            fileName_ = query.record().value("article_name").toString();
+        }
+    }
+    fileName_="分享文件："+fileName_;
+    qDebug()<<fileName_;
+    ui->label->setText(fileName_);
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
-    ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
-    QSqlQuery query(db1);
+    //QSqlQuery query(db1);
     //QListWidget *friendList = new QListWidget(ui->listWidget);
     //friendList->setGeometry(0,0,251,351);
     //ui->listWidget->setGeometry(0,0,251,351);
@@ -188,6 +212,7 @@ void sendDialog::on_pushButton_trans_clicked()
         }
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
         msgbox->exec();
+        sendDialogFlag = false;
         this->close();
     }
     }else{
@@ -199,11 +224,13 @@ void sendDialog::on_pushButton_trans_clicked()
 
 void sendDialog::on_pushButton_close2_clicked()
 {
+    sendDialogFlag = false;
       this->close();
 }
 
 void sendDialog::on_pushButton_close_clicked()
 {
+    sendDialogFlag = false;
       this->close();
 }
 

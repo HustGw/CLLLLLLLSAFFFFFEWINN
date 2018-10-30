@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+  #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -14,7 +14,13 @@
 #include <qt_windows.h>
 #include <QFile>
 
+extern int const EXIT_CODE_REBOOT;
 QStringList m_fontList;
+QStringList m_fontList_W4;
+bool groupSendDialogFlag;
+bool groupShareDialogFlag;
+
+
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
 int IsLinkInfor = 0;//用于判断是否链接插入的消息
@@ -48,6 +54,7 @@ int encptThreadNum = 0;
 int enitemNum = 0;
 QFont f("冬青黑体简体",9,75);
 QFont m("冬青黑体简体",10,60);
+QFont m_w4;
 QFont f_h("冬青黑体简体",10,60);
 QFileInfo openFileInfo;
 QString orfileUuid;
@@ -62,61 +69,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //初始化用户User_ID
     User_ID = LoginUserID;
     ui->setupUi(this);
-    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground, true);
-    QString dir = QCoreApplication::applicationDirPath();
-    m_fontList.clear();
 
-    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
-    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
-    if (lcdFontId != -1) // -1为加载失败
-    {
-        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
-    }
-    m.setFamily(m_fontList.at(0));
-    f.setFamily(m_fontList.at(0));
-    f_h.setFamily(m_fontList.at(0));
-    m.setPixelSize(14);
-    f.setPixelSize(14);
-    f_h.setPixelSize(20);
-    m.setWeight(QFont::Normal);
-    f.setWeight(QFont::DemiBold);
-    f_h.setWeight(QFont::Bold);
-    ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
-    ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_5->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_6->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_7->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_10->hide();
-    ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_11->hide();
-    ui->pushButton->hide();
-    ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_15->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_max->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->OpenFileBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->EncryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->DecryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox->setFont(m);
-    ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->finen_checkBox_2->setFont(m);
-    ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-    ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->de_checkBox->setFont(m);
+    InitUi();
+
     //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -167,12 +122,14 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
-    friendListWidget->setGeometry(20,40,ui->RightWidget->width()-19,ui->RightWidget->height()-44);
+    friendListWidget->setGeometry(20,30,ui->RightWidget->width()-39,ui->RightWidget->height()-44);
     friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
     friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
+
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接
+
     //ui->MidStaWidget->addWidget(encryptionViewController);
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
@@ -222,11 +179,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    userHead->setPixmap(pixmap);
     //连接头像信号槽
     //connect(userHead,SIGNAL(LabelClicked()),this,SLOT(HeadClickedSlot()));
-    ui->FinDepBtn->hide();
-    ui->FinEnpBtn->hide();
-    ui->line_10->hide();
-    ui->line_11->hide();
-    ui->pushButton_12->hide();
+
     this->setFixedSize(this->width(),this->height());
 
         //查询数据库  查询解密请求
@@ -339,6 +292,7 @@ MainWindow::MainWindow(QWidget *parent) :
                decryptionViewController->vbox->setSpacing(0);
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
+               newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -361,12 +315,13 @@ MainWindow::MainWindow(QWidget *parent) :
          while(query.next()){
              QString Friend_nickname = query.record().value("friend_nickname").toString();
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-             add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+             add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
              add_item->setText(Friend_nickname);
              add_item->setFont(m);
              add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
              add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-             add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
+             add_item->setSizeHint(QSize(ui->RightWidget->width()-45,34));
+             add_item->setTextAlignment(Qt::AlignVCenter);
              friendListWidget->insertItem(count,add_item);
              count++;
          }
@@ -445,9 +400,10 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_7:pressed { border-image: url(:/new/mainwindow/pictures/groupdelete_pressed.png); }"
                          "QPushButton#pushButton:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                          "QPushButton#pushButton_10:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
-                         "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }");
-     ui->pushButton_8->hide();
-     ui->pushButton_9->hide();
+                         "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
+                       //  "#line,#line_1,#line_2,#line_3,#line_4,#line_5,#line_6,#line_7,#line_8,#line_9,#line_10,#line_11 {background-color: rgb(243,243,243);}"
+                         );
+
 
         thread_11 = new QThread(this);
         workThread = new heartThread(); //工作线程，具体的业务实现在此中完成，继承自Object
@@ -464,7 +420,80 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::InitUi(){
+    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList.clear();
+    m_fontList_W4.clear();
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    int lcdFontId_2 = QFontDatabase::addApplicationFont(":/pictures/W4.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId_2 != -1) // -1为加载失败
+    {
+        m_fontList_W4 << QFontDatabase::applicationFontFamilies(lcdFontId_2);
+    }
+    m_w4.setFamily(m_fontList_W4.at(0));
+    m.setFamily(m_fontList.at(0));
+    f.setFamily(m_fontList.at(0));
+    f_h.setFamily(m_fontList.at(0));
+    m.setPixelSize(14);
+    m_w4.setPixelSize(14);
+    f.setPixelSize(14);
+    f_h.setPixelSize(20);
+    m.setWeight(QFont::Normal);
+    m_w4.setWeight(QFont::Normal);
+    f.setWeight(QFont::DemiBold);
+    f_h.setWeight(QFont::Bold);
+    ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
+    ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_5->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_6->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_7->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_8->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_9->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_10->hide();
+    ui->pushButton_11->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_11->hide();
+    ui->pushButton->hide();
+    ui->pushButton_12->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_13->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_14->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_15->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_max->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->OpenFileBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->EncryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->DecryptionBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinDepBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinEnpBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox->setFont(m);
+    ui->finen_checkBox_2->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->finen_checkBox_2->setFont(m);
+    ui->de_checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->de_checkBox->setFont(m);
 
+    ui->FinDepBtn->hide();
+    ui->FinEnpBtn->hide();
+    ui->line_10->hide();
+    ui->line_11->hide();
+    ui->pushButton_12->hide();
+    ui->pushButton_8->hide();
+    ui->pushButton_9->hide();
+}
 void MainWindow::on_FinishedBtn_clicked()
 {
 //    QPalette pal = ui->FinishedBtn->palette();
@@ -983,6 +1012,7 @@ void MainWindow::on_pushButton_3_clicked()
                   newItemWidget->setLayout(decryptionViewController->vbox);
                   newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                   newScrollArea->setWidget(newItemWidget);
+                  newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                   QVBoxLayout *newVbox = new QVBoxLayout();
                   newVbox->setMargin(0);
                   newVbox->setSpacing(0);
@@ -1453,12 +1483,13 @@ void MainWindow::inforDlgaddFriend(QString name){
                         int i = friendListWidget->count();
                         i++;
                         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-                        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+                        add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
                         add_item->setText(name);
                         add_item->setFont(m);
                         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
                         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
+                        add_item->setSizeHint(QSize(ui->RightWidget->width()-45,34));
+                        add_item->setTextAlignment(Qt::AlignVCenter);
                         friendListWidget->insertItem(i,add_item);
                         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"),this);
                         msgbox->exec();
@@ -1528,12 +1559,13 @@ void MainWindow::inforDlgaddFriend(QString name){
         int i = friendListWidget->count();
         i++;
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-        add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+        add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
         add_item->setText(name);
         add_item->setFont(m);
         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
         add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-        add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
+        add_item->setSizeHint(QSize(ui->RightWidget->width()-45,34));
+        add_item->setTextAlignment(Qt::AlignVCenter);
         friendListWidget->insertItem(i,add_item);
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("添加好友成功！"),this);
         msgbox->exec();
@@ -1826,6 +1858,9 @@ void MainWindow::on_pushButton_5_clicked()
 //批量传输按钮响应
 void MainWindow::on_pushButton_6_clicked()
 {
+    if(groupSendDialogFlag){
+
+    }else{
         int flag = 0;
         QString file_id_d;
         QSqlQuery query3(db);
@@ -1848,13 +1883,17 @@ void MainWindow::on_pushButton_6_clicked()
                 }
             }
         if(flag == 1){
+
             grpDlg = new groupSendDialog();
             grpDlg->show();
+            groupSendDialogFlag = true;
+
         }else if(flag == 0){
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要批量传输的条目！"),this);
             msgbox->exec();
         }
         flag = 0;
+    }
 }
 
 //已加密文件单独删除按钮
@@ -2228,6 +2267,7 @@ void MainWindow::FileIsAllowed(){
                      newItemWidget->setLayout(decryptionViewController->vbox);
                      newScrollArea->setWidget(newItemWidget);
                      newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                      QVBoxLayout *newVbox = new QVBoxLayout();
                      newVbox->setMargin(0);
                      newVbox->setSpacing(0);
@@ -2451,11 +2491,11 @@ void MainWindow::on_pushButton_11_clicked()
 }
 
 void MainWindow::CleanButtonClicked(){
-    ui->FinDepBtn->setFont(m);
-    ui->DecryptionBtn->setFont(m);
-    ui->EncryptionBtn->setFont(m);
-    ui->FinishedBtn->setFont(m);
-    ui->FinEnpBtn->setFont(m);
+    ui->FinDepBtn->setFont(m_w4);
+    ui->DecryptionBtn->setFont(m_w4);
+    ui->EncryptionBtn->setFont(m_w4);
+    ui->FinishedBtn->setFont(m_w4);
+    ui->FinEnpBtn->setFont(m_w4);
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg.png);");
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon.png"));
@@ -2589,6 +2629,7 @@ void MainWindow::ReLayout(){
     newItemWidget->setLayout(decryptionViewController->vbox);
     newScrollArea->setWidget(newItemWidget);
     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+    newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->setMargin(0);
     newVbox->setSpacing(0);
@@ -2794,7 +2835,12 @@ void MainWindow::closeEvent(QCloseEvent *event){
     }else{
         thread_11->exit(0);
         workThread->exit(0);
+        //ConnectionPool::release();
+        QApplication::setQuitOnLastWindowClosed(true);
+
         event->accept();
+        qApp->exit(773);
+        QProcess::startDetached(qApp->applicationFilePath(),QStringList());
     }
 }
 
@@ -2872,12 +2918,13 @@ void MainWindow::NewFriendAgree(){
         while(query.next()){
             QString Friend_nickname = query.record().value("friend_nickname").toString();
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-            add_item->setIcon(QIcon("://pictures/userIcon_1.png"));
+            add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
             add_item->setText(Friend_nickname);
             add_item->setFont(m);
             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
             add_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            add_item->setSizeHint(QSize(ui->RightWidget->width()-30,34));
+            add_item->setSizeHint(QSize(ui->RightWidget->width()-45,34));
+            add_item->setTextAlignment(Qt::AlignVCenter);
             friendListWidget->insertItem(count,add_item);
             count++;
         }
@@ -2919,6 +2966,7 @@ void MainWindow::FileIsIgnored(){
         newItemWidget->setLayout(decryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->setMargin(0);
         newVbox->setSpacing(0);
@@ -2931,6 +2979,9 @@ void MainWindow::FileIsIgnored(){
 //批量分享按钮
 void MainWindow::on_pushButton_groupshare_clicked()
 {
+    if(groupShareDialogFlag){
+
+    }else{
     int flag = 0;
     QString file_id_d;
     QSqlQuery query3(db);
@@ -2953,13 +3004,17 @@ void MainWindow::on_pushButton_groupshare_clicked()
             }
         }
     if(flag == 1){
+
         grpShareDlg = new groupshareDialog();
         grpShareDlg->show();
+        groupShareDialogFlag = true;
+
     }else if(flag == 0){
         MsgBox *msgbox = new MsgBox(3,QStringLiteral("请选择需要批量分享的条目！"),this);
         msgbox->exec();
     }
     flag = 0;
+    }
 }
 
 void MainWindow::ChangeDecItemProBar(int value, QString itemID){

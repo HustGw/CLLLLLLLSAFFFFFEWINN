@@ -3,7 +3,7 @@
 #include "finishencryptionitem.h"
 #include "QrCode.hpp"
 #include "msgbox.h"
-
+extern bool shareDialogFlag;
 extern QString file_id;
 extern QStringList m_fontList;
 shareDialog::shareDialog(QWidget *parent) :
@@ -146,11 +146,13 @@ void shareDialog::on_pushButton_sav_clicked()
 
 void shareDialog::on_pushButtonclos_clicked()
 {
+    shareDialogFlag = false;
     this->close();
 }
 
 void shareDialog::on_pushButtonclos2_clicked()
 {
+    shareDialogFlag = false;
     this->close();
 }
 

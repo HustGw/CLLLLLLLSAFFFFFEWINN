@@ -25,7 +25,10 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
-
+    ui->passwardLineEdit->setStyleSheet("QMenu {border: 1px solid black}"
+                                        "QMenu::item:selected {background-color: grey;}");
+    ui->userLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
+                                    "QMenu::item:selected {background-color: grey;}");
     QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
     effect->setOffset(0,0);
     effect->setColor(Qt::black);

@@ -19,6 +19,7 @@
         <file>pictures/login_accounts_management_hide.png</file>
         <file>pictures/login_user_id_check.png</file>
         <file>pictures/W3.ttf</file>
+        <file>pictures/W4.ttf</file>
     </qresource>
     <qresource prefix="/new/mainwindow">
         <file>pictures/link_download.png</file>
@@ -75,6 +76,7 @@
         <file>pictures/grouptrans.png</file>
         <file>pictures/grouptrans_hover.png</file>
         <file>pictures/grouptrans_pressed.png</file>
+        <file>pictures/head_likui.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>
