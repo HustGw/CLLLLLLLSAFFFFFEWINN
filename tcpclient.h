@@ -12,6 +12,10 @@
 #include <QtMath>
 #include <QPainter>
 #include <QSettings>
+#include <QCoreApplication>
+#include <QStringList>
+#include <QList>
+#include <QFont>
 extern QString Mac_address;
 extern QString LoginUserID;
 extern QString UserPhoneNum;

@@ -14,6 +14,11 @@
 #include <QGraphicsDropShadowEffect>
 #include <QBitmap>
 
+QStringList m_fontList_;
+QFont f_("冬青黑体简体",9,75);
+QFont m_;
+QFont f_h_("冬青黑体简体",10,60);
+QFont q;
 QNetworkAccessManager *m_accessManagerRegister;
 
 registerDialog::registerDialog(QWidget *parent) :
@@ -23,16 +28,28 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->setupUi(this);
    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
    setAttribute(Qt::WA_TranslucentBackground, true);
-   ui->nichengLineEdit->setStyleSheet("QMenu {border: 1px solid black}"
-                                       "QMenu::item:selected {background-color: grey;}");
-   ui->passwardLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
-                                   "QMenu::item:selected {background-color: grey;}");
-   ui->passwardLineEdit_2->setStyleSheet("QMenu {border: 1px solid black}"
-                                       "QMenu::item:selected {background-color: grey;}");
-   ui->userLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
-                                   "QMenu::item:selected {background-color: grey;}");
-   ui->code->setStyleSheet("QMenu {border: 1px solid black}"
-                                       "QMenu::item:selected {background-color: grey;}");
+
+   QString dir = QCoreApplication::applicationDirPath();
+   m_fontList_.clear();
+
+   int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+   // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+   if (lcdFontId != -1) // -1为加载失败
+   {
+       m_fontList_ << QFontDatabase::applicationFontFamilies(lcdFontId);
+   }
+   m_.setFamily(m_fontList_.at(0));
+   f_.setFamily(m_fontList_.at(0));
+   f_h_.setFamily(m_fontList_.at(0));
+   q.setFamily(m_fontList_.at(0));
+   m_.setPixelSize(14);
+   f_.setPixelSize(14);
+   f_h_.setPixelSize(30);
+   q.setPixelSize(12);
+   m_.setWeight(QFont::Normal);
+   f_.setWeight(QFont::DemiBold);
+   f_h_.setWeight(QFont::Bold);
+   q.setWeight(QFont::Normal);
 
    QBitmap bmp(this->size());
    bmp.fill();
@@ -50,6 +67,7 @@ registerDialog::registerDialog(QWidget *parent) :
 
    flag = 0;
    a = 61;
+   timer1 = new QTimer(this);
    ui->checklabel->setText(
                QObject::tr("<font style='color:#9999AB;font-size:13px;'>%1</font>").arg("阅读并接受")+
                QObject::tr("<font style='color:#2E82FF;font-size:13px;'>%1</font>").arg(" 《云加密用户协议》"));
@@ -59,6 +77,26 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->passwardLineEdit->setPlaceholderText(tr("设置你的登录密码"));
    ui->passwardLineEdit_2->setPlaceholderText(tr("请再次输入你的密码"));
    ui->userLineEdit->setPlaceholderText(tr("请输入手机号"));
+
+   ui->icon_words->setFont(f_);
+   ui->nichengLabel->setFont(m_);
+   ui->passwardLabel->setFont(m_);
+   ui->passwardLabel_2->setFont(m_);
+   ui->userLabel->setFont(m_);
+   ui->codeLabel->setFont(m_);
+   ui->nichengAlert->setFont(m_);
+   ui->passwardAlert->setFont(m_);
+   ui->codeAlert->setFont(m_);
+   ui->userAlert->setFont(m_);
+   ui->signBtn->setFont(f_);
+   ui->codeBtn->setFont(m_);
+   ui->nichengLineEdit->setFont(q);
+   ui->passwardLineEdit->setFont(q);
+   ui->passwardLineEdit_2->setFont(q);
+   ui->userLineEdit->setFont(q);
+   ui->code->setFont(q);
+   ui->checklabel->setFont(m_);
+
    ui->nichengAlert->setVisible(false);
    ui->passwardAlert->setVisible(false);
    ui->userAlert->setVisible(false);
@@ -71,8 +109,8 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
 
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
-               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
-               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
+               "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);color:white;}"
+               "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);color:white;}");
    ui->codeBtn->setStyleSheet(                 //调整验证按钮样式
                "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -81,29 +119,19 @@ registerDialog::registerDialog(QWidget *parent) :
                "QPushButton:hover,QPushButton:focus{border-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:none;background-color:#EEF0F5;}");
    ui->nichengLineEdit->setStyleSheet(                 //调整昵称输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
-               "QMenu {border: 1px solid black}"
-               "QMenu::item:selected {background-color: grey;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->passwardLineEdit->setStyleSheet(                 //调整密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
-               "QMenu {border: 1px solid black}"
-               "QMenu::item:selected {background-color: grey;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->passwardLineEdit_2->setStyleSheet(                 //调整确认密码输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
-               "QMenu {border: 1px solid black}"
-               "QMenu::item:selected {background-color: grey;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->userLineEdit->setStyleSheet(                 //调整手机号输入框样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
-               "QMenu {border: 1px solid black}"
-               "QMenu::item:selected {background-color: grey;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
    ui->code->setStyleSheet(                 //调整验证码样式
                "QLineEdit{border:1px solid rgb(214,216,221);border-radius:4px;}"
-               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}"
-               "QMenu {border: 1px solid black}"
-               "QMenu::item:selected {background-color: grey;}");
+               "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255);border-radius:4px;}");
 
 
    qDebug()<<"hehe flag:"<<flag;
@@ -120,10 +148,11 @@ registerDialog::~registerDialog()
 
 void registerDialog::on_signBtn_clicked()
 {
-    ui->nichengAlert->setVisible(false);
-    ui->passwardAlert->setVisible(false);
-    ui->userAlert->setVisible(false);
-    ui->codeAlert->setVisible(false);
+    ui->signBtn->setEnabled(false);
+//    ui->nichengAlert->setVisible(false);
+//    ui->passwardAlert->setVisible(false);
+//    ui->userAlert->setVisible(false);
+//    ui->codeAlert->setVisible(false);
 
    //点击注册按钮的响应
    QString s;
@@ -134,18 +163,27 @@ void registerDialog::on_signBtn_clicked()
    QString passward=ui->passwardLineEdit->text();//获取对话框中密码
    QString passward_2=ui->passwardLineEdit_2->text();
    QString nicheng=ui->nichengLineEdit->text();//获取昵称
+
    if(userName=="" || passward==""|| nicheng==""){//判断用户名、密码是否为空，为空弹出警告
        if(passward != passward_2){
            ui->passwardAlert->setVisible(true);
+           ui->signBtn->setEnabled(true);
+           return;
        }
        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
+       ui->signBtn->setEnabled(true);
+       return;
    }
    else{
        if(passward != passward_2){
            ui->passwardAlert->setVisible(true);
+           ui->signBtn->setEnabled(true);
        }else if(QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setVisible(true);
-       }else if(ui->checkBox->isChecked()==true){
+           ui->signBtn->setEnabled(true);
+       }else{
+           ui->userAlert->setVisible(false);
+           if(ui->checkBox->isChecked()==true){
            //http 判断手机号是否注册
            QNetworkRequest request;
 //           request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
@@ -157,6 +195,7 @@ void registerDialog::on_signBtn_clicked()
            postData.append("emp_phone=");//参数
            postData.append(ui->userLineEdit->text());//参数
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
+           return;
 
            /*
            //登录测试
@@ -173,8 +212,11 @@ void registerDialog::on_signBtn_clicked()
            postData.append(ui->code->text());//
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
            */
-       }else{
-           QMessageBox::information(this,"警告","您未阅读并接受《云加密用户协议》！",QMessageBox::Ok);
+           }else{
+            QMessageBox::information(this,"警告","您未阅读并接受《云加密用户协议》！",QMessageBox::Ok);
+            ui->signBtn->setEnabled(true);
+            return;
+           }
        }
    }
 }
@@ -213,12 +255,27 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
          QString content = nobj.take("content").toString();
 
            qDebug()<<"content:"<<content;
-        if(flag==3){
+        if(flag==5){
+                qDebug()<<"输入昵称时判断昵称是否已被注册";
+                if(ui->nichengLineEdit->text() != "" && content == "available"){
+                    ui->user_id_label->setVisible(true);
+                    ui->nichengAlert->setVisible(false);
+                }else if(ui->nichengLineEdit->text() == ""){
+                    ui->user_id_label->setVisible(false);
+                    ui->nichengAlert->setVisible(false);
+                }else if(content == "unavailable"){
+                    ui->user_id_label->setVisible(false);
+                    ui->nichengAlert->setVisible(true);
+                }
+                return;
+        }
+        else if(flag==3){
                qDebug()<<"判断昵称是否注册";
                if(content == "available"){
                    //成功，发送注册信息。
                    //http 判断昵称是否注册
                    ui->user_id_label->setVisible(true);
+                   ui->nichengAlert->setVisible(false);
                    QNetworkRequest request;
                    //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
                    flag = 2; //步骤：注册
@@ -237,9 +294,11 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    postData.append("&emp_name=");//昵称
                    postData.append(ui->nichengLineEdit->text());//
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
+                   return;
                }else{
                     ui->nichengAlert->setVisible(true);
                     ui->user_id_label->setVisible(false);
+                    ui->signBtn->setEnabled(true);
                }
                return;
 
@@ -287,36 +346,38 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                {
                                    //验证码错误。
                                     ui->codeAlert->setVisible(true);
-
+                                    ui->signBtn->setEnabled(true);
+                                    return;
 
                                }
                                else if(content.contains("invalid",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::warning(this,"警告","验证码失败",QMessageBox::Ok);
                                     ui->codeAlert->setVisible(true);
-
+                                    ui->signBtn->setEnabled(true);
+                                    return;
 
                                }
-                               else{
+                               else if(content != ""){
                                    QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
+                                   ui->signBtn->setEnabled(true);
                                    this->close();
-
+                                   return;
                                }
                            }
 
                        }
                    }
                }
-
+               return;
            }else if(flag==4){   //获取验证码返回
                qDebug()<<"获取验证码";
                if(content.contains("success",Qt::CaseSensitive))
                {
                    a = 61;
-                   QTimer *timer = new QTimer(this);
-                   connect(timer,SIGNAL(timeout()),this,SLOT(showTimelimit()));
-                   timer->start(1000);
+
+                   connect(timer1,SIGNAL(timeout()),this,SLOT(showTimelimit()));
+                   timer1->start(1000);
                    QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
                }else{
                     QMessageBox::warning(this,"警告","验证码发送失败！",QMessageBox::Ok);
@@ -366,33 +427,34 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                {
                                    //验证码错误。
                                     QMessageBox::warning(this,"警告","电话号不存在",QMessageBox::Ok);
-
+                               return;
 
                                }
                                else if(content.contains("passworderror",Qt::CaseSensitive))
                                {
                                    //验证码错误。
                                     QMessageBox::warning(this,"警告","密码错误",QMessageBox::Ok);
-
+                               return;
 
                                }
                                else if(content.contains("freezing",Qt::CaseSensitive))
                                {
                                    //验证码错误。
                                     QMessageBox::warning(this,"警告","账号已冻结",QMessageBox::Ok);
-
+                               return;
 
                                }
                                else{
                                    QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
                                    this->close();
-
+                                return;
                                }
                            }
 
                        }
                    }
                }
+               return;
            }
         else if(flag==1){
             qDebug()<<"判断手机号是否注册";
@@ -407,8 +469,10 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                 postData_2.append("emp_name=");
                 postData_2.append(ui->nichengLineEdit->text());
                 QNetworkReply* reply_2 = m_accessManagerRegister->post(request_2,postData_2);
+                return;
             }else{
                 QMessageBox::warning(this,"警告","手机号已注册！",QMessageBox::Ok);
+                ui->signBtn->setEnabled(true);
             }
             return;
            }
@@ -426,6 +490,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
            qDebug(qPrintable(reply->errorString()));
        }
        reply->deleteLater();
+       return;
 }
 
 void registerDialog::on_closeBtn_clicked()
@@ -518,5 +583,20 @@ void registerDialog::showTimelimit(){
     }else{
         ui->codeBtn->setEnabled(true);
         ui->codeBtn->setText("重新发送验证码");
+        timer1->stop();
     }
+}
+
+void registerDialog::on_nichengLineEdit_textChanged(){
+    QNetworkRequest request;
+
+    flag = 5;
+
+    qDebug()<<"hehe flag:"<<flag;
+    request.setUrl(QUrl("http://119.23.138.209:8080/cloud/Employee/Judge_Name.do"));
+    QByteArray postData;
+    postData.append("emp_name=");//参数
+    postData.append(ui->nichengLineEdit->text());//参数
+    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
+    return;
 }
