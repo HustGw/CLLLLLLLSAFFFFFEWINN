@@ -62,7 +62,7 @@ sendDialog::sendDialog(QWidget *parent) :
 
     ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
-    ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
+    ui->pushButton_trans->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/trans_huge_btn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/trans_huge_btn_hover.png)}");
     //QSqlQuery query(db1);
     //QListWidget *friendList = new QListWidget(ui->listWidget);
     //friendList->setGeometry(0,0,251,351);
@@ -83,6 +83,14 @@ sendDialog::sendDialog(QWidget *parent) :
             a1->setSizeHint(QSize(200,40));
             b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
+            b1->setStyleSheet("QCheckBox {color: black;}"
+                                               "QCheckBox::indicator {width: 13px;height: 13px;}"
+                                               "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                                               "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
             count++;
@@ -114,7 +122,14 @@ void sendDialog::getCheckedItems(){
         QWidget * widget = ui->listWidget->itemWidget(item);
         QCheckBox * box =(QCheckBox*) widget;
         QString nick_name = box->text();
-
+        box->setStyleSheet("QCheckBox {color: black;}"
+                                           "QCheckBox::indicator {width: 13px;height: 13px;}"
+                                           "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                                           "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                           "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                           "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                                           "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                                           "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
         isChecked = box ->isChecked();
         if(isChecked){
             QListWidgetItem *nick_name_item = new QListWidgetItem();

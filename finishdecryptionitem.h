@@ -25,6 +25,7 @@ public:
     QSize sizeHint() const{
         return QSize(695,71);
     }
+    QLabel *background;
     QLabel *label;
     QLabel *elseLabel;
     QLabel *fileName;
@@ -43,6 +44,8 @@ signals:
 public slots:
     void on_openBtn_clicked();
     void on_pathOpenBtn_clicked();
+    void onStateChanged(int);
+    void changeBackground();
 
 private:
 protected:

@@ -21,7 +21,7 @@ public:
     }
     QLabel *label;
     QLabel *elseLabel;
-
+    QLabel *background;
     QLabel *fileName;
     QLabel *fileSize;
     QLabel *fileDescription;
@@ -38,6 +38,7 @@ signals:
 
 public slots:
     void changeCheckBox();
+    void onStateChanged(int);
 private:
 protected:
     void paintEvent(QPaintEvent *event);

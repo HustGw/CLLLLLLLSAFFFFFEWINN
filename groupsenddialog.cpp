@@ -29,6 +29,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     ui->label_7->setFont(f_1);
     ui->label->setFont(f_1);
     ui->label_6->setFont(f_2);
+    ui->label_10->setFont(f_1);
     ui->listWidget->setStyleSheet("QListWidget {border-top:none;"
                                   "border-bottom:1px solid rgb(207,207,208);"
                                   "border-left:1px solid rgb(207,207,208);"
@@ -44,10 +45,11 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
-    ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
+    ui->pushButton_trans->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/trans_huge_btn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/trans_huge_btn_hover.png)}");
     QString split_file_id;
     QString fileName_ = "分享文件：";
     QStringList list = file_id_list.split("||");
+    QString numberLabel = "等<font color=green>"+QString::number(list.count()-1)+"</font>个文件";
     for(int j = 0;j<list.count();j++){
         split_file_id = list[j];
         QSqlQuery query(db1);
@@ -62,8 +64,20 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
         }
     }
     fileName_.chop(1);
+    int fontSize = fontMetrics().width( fileName_ );//获取之前设置的字符串的像素大小
+    if( fontSize >= ui->label->width() ) //与label自身相比较
+    {
+        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, ui->label->width()-50);//返回一个带有省略号的字符串
+        ui->label->setText(str);       //重新设置label上的字符串
+       // ui->label_10->hide();
+        //ui->label->setGeometry(38,59,700,16);
+    }else{
+        ui->label->setText(fileName_);
+        ui->label->setGeometry(38,59,fontSize,16);
+        ui->label_10->setGeometry(38+fontSize,59,85,16);
+    }
     ui->label->setText(fileName_);
-
+    ui->label_10->setText(numberLabel);
     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");
     if(!friendSelSuc){
         qDebug()<<"查询好友失败";
@@ -80,7 +94,14 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
             a1->setSizeHint(QSize(200,40));
             b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
-
+            b1->setStyleSheet("QCheckBox {color: black;}"
+                                               "QCheckBox::indicator {width: 13px;height: 13px;}"
+                                               "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                                               "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
             count++;
@@ -112,7 +133,14 @@ void groupSendDialog::getCheckedItems(){
         QCheckBox * box =(QCheckBox*) widget;
         QString nick_name = box->text();
         isChecked = box ->isChecked();
-
+        box->setStyleSheet("QCheckBox {color: black;}"
+                     "QCheckBox::indicator {width: 13px;height: 13px;}"
+                     "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                     "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                     "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                     "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
         if(isChecked){
             QListWidgetItem *nick_name_item = new QListWidgetItem();
             nick_name_item->setText(nick_name);

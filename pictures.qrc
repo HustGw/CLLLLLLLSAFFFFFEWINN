@@ -77,6 +77,12 @@
         <file>pictures/grouptrans_hover.png</file>
         <file>pictures/grouptrans_pressed.png</file>
         <file>pictures/head_likui.png</file>
+        <file>pictures/checkBox.png</file>
+        <file>pictures/checkBoxChecked.png</file>
+        <file>pictures/checkBoxCheckedHover.png</file>
+        <file>pictures/checkBoxHover.png</file>
+        <file>pictures/trans_huge_btn.png</file>
+        <file>pictures/trans_huge_btn_hover.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

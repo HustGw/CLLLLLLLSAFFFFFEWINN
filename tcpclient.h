@@ -12,6 +12,7 @@
 #include <QtMath>
 #include <QPainter>
 #include <QSettings>
+#include "msgbox.h"
 extern QString Mac_address;
 extern QString LoginUserID;
 extern QString UserPhoneNum;
@@ -24,9 +25,8 @@ class TcpClient : public QDialog
     Q_OBJECT
 
 public:
-    explicit TcpClient(QWidget *parent = 0);
+    explicit TcpClient(QWidget *parent = nullptr);
     ~TcpClient();
-
     int flag;  //步骤
     bool remeberPasswd;
     QString usersname;

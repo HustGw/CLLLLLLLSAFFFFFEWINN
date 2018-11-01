@@ -96,12 +96,12 @@ border-right:1px solid rgb(207,207,208);</string>
     <rect>
      <x>441</x>
      <y>434</y>
-     <width>87</width>
-     <height>41</height>
+     <width>86</width>
+     <height>40</height>
     </rect>
    </property>
    <property name="text">
-    <string>传输</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -191,8 +191,8 @@ border:1px;</string>
     <rect>
      <x>542</x>
      <y>434</y>
-     <width>87</width>
-     <height>41</height>
+     <width>86</width>
+     <height>40</height>
     </rect>
    </property>
    <property name="text">
@@ -228,6 +228,22 @@ border:1px;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>538</x>
+     <y>59</y>
+     <width>87</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label</zorder>
   <zorder>listWidget_2</zorder>
   <zorder>pushButton_trans</zorder>
@@ -242,6 +258,7 @@ border:1px;</string>
   <zorder>label_8</zorder>
   <zorder>label_2</zorder>
   <zorder>label_9</zorder>
+  <zorder>label_10</zorder>
  </widget>
  <resources/>
  <connections/>
