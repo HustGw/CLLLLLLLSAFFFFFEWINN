@@ -53,8 +53,7 @@ background-color: rgb(255, 255, 255);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(102,102,102);
-font: 10pt </string>
+     <string notr="true">color: rgb(40,40,40);</string>
     </property>
     <property name="text">
      <string>记住密码</string>
@@ -223,7 +222,7 @@ border:1px solid rgb(199, 197, 198);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px;color:rgb(57,140,255);</string>
+     <string notr="true">border:0px;</string>
     </property>
     <property name="text">
      <string>忘记密码？</string>

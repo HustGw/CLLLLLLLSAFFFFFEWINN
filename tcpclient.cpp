@@ -13,6 +13,13 @@
 #include <QMouseEvent>
 #include <QSettings>
 #include <QGraphicsDropShadowEffect>
+
+QStringList m_fontList1;
+QFont f1("冬青黑体简体",9,75);
+QFont m1;
+QFont f_h1("冬青黑体简体",10,60);
+QFont q1;
+
 QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
@@ -25,6 +32,29 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList1.clear();
+
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList1 << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m1.setFamily(m_fontList1.at(0));
+    f1.setFamily(m_fontList1.at(0));
+    f_h1.setFamily(m_fontList1.at(0));
+    q1.setFamily(m_fontList1.at(0));
+    m1.setPixelSize(14);
+    f1.setPixelSize(14);
+    f_h1.setPixelSize(22);
+    q1.setPixelSize(16);
+    m1.setWeight(QFont::Normal);
+    f1.setWeight(QFont::DemiBold);
+    f_h1.setWeight(QFont::Black);
+    q1.setWeight(QFont::Normal);
+
     ui->passwardLineEdit->setStyleSheet("QMenu {border: 1px solid black}"
                                         "QMenu::item:selected {background-color: grey;}");
     ui->userLineEdit->setStyleSheet("QMenu {border: 1px solid black} "
@@ -53,14 +83,14 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
 
     ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
-                "QPushButton{border:0px;color:rgb(102,102,102);font:16px;}"
+                "QPushButton{border:0px;color:rgb(40,40,40);}"
                 "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
     ui->forgetBtn->setStyleSheet(               //调整忘记密码按钮样式
-                "QPushButton{border:0px;color:rgb(57,140,255);}"
-                "QPushButton:hover{border:0px;color:rgb(85,170,255);}");
+                "QPushButton{border:0px;color:rgb(30,90,255);}"
+                "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
     ui->sendBtn->setStyleSheet(                 //调整登录按钮样式
-                "QPushButton{background-color: rgb(57, 140, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}"
-                "QPushButton:hover{background-color: rgb(85, 170, 255);font: 22px 黑体;font-weight:bold;border-radius:4px;color:white;}");
+                "QPushButton{background-color: rgb(57, 140, 255);border-radius:4px;color:white;}"
+                "QPushButton:hover{background-color: rgb(85, 170, 255);border-radius:4px;color:white;}");
     ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
                 "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
                 "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
@@ -73,6 +103,12 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->minBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
+    ui->userLineEdit->setFont(q1);
+    ui->passwardLineEdit->setFont(q1);
+    ui->Rem_Passwd->setFont(m1);
+    ui->forgetBtn->setFont(m1);
+    ui->sendBtn->setFont(f_h1);
+    ui->signBtn->setFont(m1);
 
     flag = 0;
 

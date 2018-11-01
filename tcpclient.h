@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QSettings>
 #include "msgbox.h"
+
 extern QString Mac_address;
 extern QString LoginUserID;
 extern QString UserPhoneNum;

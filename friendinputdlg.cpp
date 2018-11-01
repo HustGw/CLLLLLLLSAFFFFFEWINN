@@ -300,7 +300,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
 
                                                         "border-radius:40px;"
                                                         "border-width: 0 0 0 0;"
-                                                        "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
+                                                        "border-image: url(:/new/src/pictures/newAddFriendHead.png) 0 0 0 0 stretch strectch;"
                                                         );
                                 userHead->show();
                                 userName->setGeometry(180,140,80,30);
