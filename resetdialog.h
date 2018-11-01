@@ -26,7 +26,8 @@ public:
     explicit resetDialog(QWidget *parent = 0);
     ~resetDialog();
     int flag;  //步骤
-    int a;
+    int c;
+    QTimer *timer2;
 
 private slots:
     void on_codeBtn_clicked();

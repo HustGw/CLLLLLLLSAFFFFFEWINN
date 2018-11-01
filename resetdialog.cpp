@@ -10,6 +10,7 @@
 #include <QRegExpValidator>
 #include <Qvalidator>
 #include <QTimer>
+
 #include <QGraphicsDropShadowEffect>
 
 QStringList m_fontList2;
@@ -116,7 +117,7 @@ resetDialog::resetDialog(QWidget *parent) :
     setTabOrder(ui->codeBtn,ui->confirmBtn);
 
     flag = 0;
-    a = 61;
+    c = 61;
 
     qDebug()<<"hehe flag:"<<flag;
     m_accessManagerReset = new QNetworkAccessManager(this);
@@ -144,20 +145,24 @@ void resetDialog::on_confirmBtn_clicked()
    if(userName=="" || password=="" || code==""){//判断用户名、密码、验证码是否为空，为空弹出警告
        if(password != password_2){
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+           ui->confirmBtn->clearFocus();
        }
        if(userName != "" && QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
+           ui->confirmBtn->clearFocus();
        }
        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
    }else{
        if(password != password_2){
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+           ui->confirmBtn->clearFocus();
            flag_2 = 0;
        }
        if(QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
+           ui->confirmBtn->clearFocus();
            flag_2 = 0;
        }
        if(flag_2 == 1){
@@ -248,10 +253,10 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
              qDebug()<<"获取验证码";
 
              if(content.contains("success",Qt::CaseSensitive)){
-                 a = 61;
-                 QTimer *timer = new QTimer(this);
-                 connect(timer,SIGNAL(timeout()),this,SLOT(showTimelimit()));
-                 timer->start(1000);
+                 c = 61;
+                 timer2 = new QTimer(this);
+                 connect(timer2,SIGNAL(timeout()),this,SLOT(showTimelimit()));
+                 timer2->start(1000);
 
                  QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
              }else{
@@ -289,6 +294,8 @@ void resetDialog::on_passwordLineEdit_textChanged(){
         }else{
             ui->passwordAlert->setVisible(false);
         }
+    }else{
+        ui->passwordAlert->setVisible(false);
     }
 }
 
@@ -302,6 +309,10 @@ void resetDialog::on_passwordLineEdit_editingFinished(){
         }else{
             ui->passwordAlert->setVisible(false);
         }
+    }else if(password == ""){
+        ui->passwordAlert->setVisible(false);
+    }else{
+        ui->passwordAlert->setVisible(true);
     }
 }
 
@@ -310,11 +321,17 @@ void resetDialog::on_passwordLineEdit_2_textChanged(){
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
     if(passward != ""){
-        if(passward != passward_2){
-            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+        if(passward_2 == ""){
+            ui->passwordAlert->setVisible(false);
+        }else if(passward != passward_2){
+            ui->passwordAlert->setVisible(true);
         }else{
             ui->passwordAlert->setVisible(false);
         }
+    }else if(passward_2 == ""){
+        ui->passwordAlert->setVisible(false);
+    }else{
+        ui->passwordAlert->setVisible(true);
     }
 }
 
@@ -323,12 +340,16 @@ void resetDialog::on_passwordLineEdit_2_editingFinished(){
     QString passward=ui->passwordLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != ""){
-        if(passward != passward_2){
-            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
-        }else{
+    if(passward == ""){
+        if(passward_2 == ""){
             ui->passwordAlert->setVisible(false);
+        }else{
+            ui->passwordAlert->setVisible(true);
         }
+    }else if(passward != passward_2){
+        ui->passwordAlert->setVisible(true);
+    }else{
+        ui->passwordAlert->setVisible(false);
     }
 }
 
@@ -379,13 +400,14 @@ void resetDialog::mouseReleaseEvent(QMouseEvent *qevent)
 }
 
 void resetDialog::showTimelimit(){
-    if(a != 1){
+    if(c != 1){
         ui->codeBtn->setEnabled(false);
-        a = a-1;
-        QString num = QString::number(a);
+        c = c-1;
+        QString num = QString::number(c);
         ui->codeBtn->setText(num + "秒后再次发送");
     }else{
         ui->codeBtn->setEnabled(true);
         ui->codeBtn->setText("重新发送验证码");
+        timer2->stop();
     }
 }

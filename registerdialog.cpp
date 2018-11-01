@@ -67,7 +67,7 @@ registerDialog::registerDialog(QWidget *parent) :
 
    flag = 0;
    a = 61;
-   timer1 = new QTimer(this);
+
    ui->checklabel->setText(
                QObject::tr("<font style='color:#9999AB;font-size:13px;'>%1</font>").arg("阅读并接受")+
                QObject::tr("<font style='color:#2E82FF;font-size:13px;'>%1</font>").arg(" 《云加密用户协议》"));
@@ -375,7 +375,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                if(content.contains("success",Qt::CaseSensitive))
                {
                    a = 61;
-
+                   timer1 = new QTimer(this);
                    connect(timer1,SIGNAL(timeout()),this,SLOT(showTimelimit()));
                    timer1->start(1000);
                    QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
