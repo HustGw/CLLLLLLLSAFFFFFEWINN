@@ -35,11 +35,11 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 
 
 
-LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
-#LIBS += -L$$quote(C:/Users/Administrator/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+LIBS += -L$$quote(D:/windowsproject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 
 
@@ -126,7 +126,8 @@ SOURCES += \
     groupsharedialog.cpp \
     newdownloaddialog.cpp \
     decryptprobarthread.cpp \
-    heartthread.cpp
+    heartthread.cpp \
+    msgbox2.cpp
 
 
 
@@ -228,7 +229,8 @@ HEADERS += \
     groupsharedialog.h \
     newdownloaddialog.h \
     decryptprobarthread.h \
-    heartthread.h
+    heartthread.h \
+    msgbox2.h
 
 
 

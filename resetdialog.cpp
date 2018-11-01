@@ -1,5 +1,6 @@
 #include "resetdialog.h"
 #include "ui_resetdialog.h"
+#include "msgbox2.h"
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -133,6 +134,8 @@ resetDialog::~resetDialog()
 void resetDialog::on_confirmBtn_clicked()
 {
    //点击注册按钮的响应
+    ui->confirmBtn->setEnabled(false);
+
     QString userName=ui->userLineEdit->text();  //获取对话框中用户名
     QString code = ui->code->text();
     QString password=ui->passwordLineEdit->text();//获取对话框中密码
@@ -152,17 +155,21 @@ void resetDialog::on_confirmBtn_clicked()
            ui->userAlert->setVisible(true);
            ui->confirmBtn->clearFocus();
        }
-       QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
+       ui->confirmBtn->setEnabled(true);
+       MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("输入不能为空！"),this);
+       msgbox->exec();
    }else{
        if(password != password_2){
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
            ui->confirmBtn->clearFocus();
+           ui->confirmBtn->setEnabled(true);
            flag_2 = 0;
        }
        if(QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
            ui->confirmBtn->clearFocus();
+           ui->confirmBtn->setEnabled(true);
            flag_2 = 0;
        }
        if(flag_2 == 1){
@@ -238,17 +245,89 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
             }else{
                 ui->userAlert->setText("手机号未注册！");
                 ui->userAlert->setVisible(true);
+                ui->confirmBtn->setEnabled(true);
             }
             return;
          }
-         else if(flag==2){
-             qDebug()<<"判断是否重置成功";
+         else if(flag==2){ //重置密码
+             qDebug()<<"重置密码";
+             QJsonParseError jsonError;//Qt5新类
+             QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
+             if (jsonError.error == QJsonParseError::NoError)
+             {
+                 if (json.isObject())
+                 {
+                     QJsonObject rootObj = json.object();
+                     QString rootpath;
+                     int rootusernum;
+                     //是否含有key  rootpath
+                     if (rootObj.contains("status"))
+                     {
+                         //取出key为rootpath的值
+                         QJsonValue value = rootObj.value("status");
+                         //判断是否是string类型
+                         if (value.isString())
+                         {
+                             qDebug()<<rootpath;
+                             rootpath = value.toString();
+                             if(rootpath!="Success")
+                             {
 
-             if(content.contains("success",Qt::CaseSensitive)){
-                 QMessageBox::information(this,"提示","密码重置成功！",QMessageBox::Ok);
-                 this->close();
+                             }
+                         }
+
+                     }
+
+                     if (rootObj.contains("content"))
+                     {
+                         //取出key为rootpath的值
+                         QJsonValue value = rootObj.value("content");
+                         QString content;
+                         //判断是否是string类型
+                         if (value.isString())
+                         {
+                             qDebug()<<rootpath;
+                             content = value.toString();
+                             if(content.contains("error",Qt::CaseSensitive))
+                             {
+                                 //验证码错误。
+                                  ui->codeAlert->setVisible(true);
+                                  ui->confirmBtn->setEnabled(true);
+                                  return;
+
+                             }
+                             else if(content.contains("invalid",Qt::CaseSensitive))
+                             {
+                                 //验证码错误。
+                                  ui->codeAlert->setVisible(true);
+                                  ui->confirmBtn->setEnabled(true);
+                                  return;
+
+                             }
+                             else if(content.contains("success",Qt::CaseSensitive)){
+                                 ui->codeAlert->setVisible(false);
+                                 MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("密码重置成功！"),this);
+                                 msgbox->exec();
+                                 ui->confirmBtn->setEnabled(true);
+                                 this->close();
+                                 return;
+                             }
+                         }
+
+                     }
+                 }
              }
+             return;
          }
+//         else if(flag==2){
+//             qDebug()<<"判断是否重置成功";
+
+//             if(content.contains("success",Qt::CaseSensitive)){
+//                 MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("密码重置成功！"),this);
+//                 msgbox->exec();
+//                 this->close();
+//             }
+//         }
          else if(flag==3){
              qDebug()<<"获取验证码";
 
@@ -258,9 +337,11 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                  connect(timer2,SIGNAL(timeout()),this,SLOT(showTimelimit()));
                  timer2->start(1000);
 
-                 QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
+                 MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("验证码已发送！"),this);
+                 msgbox->exec();
              }else{
-                  QMessageBox::information(this,"警告","验证码发送失败！",QMessageBox::Ok);
+                 MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("验证码发送失败！"),this);
+                 msgbox->exec();
              }
              return;
          }else{

@@ -1,5 +1,6 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
+#include "msgbox2.h"
 
 #include "registerdialog.h"
 #include "resetdialog.h"
@@ -154,7 +155,8 @@ void TcpClient::on_sendBtn_clicked()
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
     if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告
-        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
+        MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("输入不能为空！"),this);
+        msgbox->exec();
     }else{
         Mac_address = getHostMacAddress();
         QString Ip_address = getHostIpAddress();
@@ -272,14 +274,22 @@ void TcpClient::readMessages()
     //登录、注册通过socket发送给服务器数据后，服务器返回数据调用的函数。
     QString data=tcpSocket->readAll();
     QStringList list=data.split("#");
-    if(list[0]=="a" && list[1]=="true")
-        QMessageBox::information(this,"信息提示","注册成功!",QMessageBox::Ok);
-    else if(list[0]=="a" && list[1]=="false")
-        QMessageBox::information(this,"信息提示","注册失败,用户名已经被注册!",QMessageBox::Ok);
-    else if(list[0]=="b" && list[1]=="true")
-        QMessageBox::information(this,"信息提示","登录成功!",QMessageBox::Ok);
-    else if(list[0]=="b" && list[1]=="false")
-            QMessageBox::information(this,"信息提示","登录失败,用户名或密码错误!",QMessageBox::Ok);
+    if(list[0]=="a" && list[1]=="true"){
+        MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("注册成功！"),this);
+        msgbox->exec();
+    }
+    else if(list[0]=="a" && list[1]=="false"){
+        MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("注册失败！"),this);
+        msgbox->exec();
+    }
+    else if(list[0]=="b" && list[1]=="true"){
+        MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("登录成功！"),this);
+        msgbox->exec();
+    }
+    else if(list[0]=="b" && list[1]=="false"){
+        MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("注册失败，用户名或密码错误！"),this);
+        msgbox->exec();
+    }
     else
         return;
 }
@@ -379,26 +389,25 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              if(content.contains("phonenull",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::warning(this,"警告","电话号不存在！",QMessageBox::Ok);
-
-
+                                 MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("电话号不存在！"),this);
+                                 msgbox->exec();
                              }
                              else if(content.contains("passworderror",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::warning(this,"警告","密码错误！",QMessageBox::Ok);
-
-
+                                 MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("密码错误！"),this);
+                                 msgbox->exec();
                              }
                              else if(content.contains("freezing",Qt::CaseSensitive))
                              {
                                  //验证码错误。
-                                  QMessageBox::warning(this,"警告","账号已冻结！",QMessageBox::Ok);
-
+                                 MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("账号已冻结！"),this);
+                                 msgbox->exec();
 
                              }else if(content.contains("repeatlogin",Qt::CaseSensitive))
                              {
-                                 QMessageBox::warning(this,"警告","禁止重复登录！",QMessageBox::Ok);
+                                 MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("静止重复登录！"),this);
+                                 msgbox->exec();
                              }
                              else{
                                  accept();
