@@ -22,6 +22,8 @@
 #include"msgbox.h"
 #include <QMouseEvent>
 #include <QMap>
+#include <QScrollBar>
+#include <QPainter>
 extern QString User_ID;
 extern int informationNum;
 extern int count;
@@ -51,6 +53,7 @@ public:
     QPushButton *closeBtn;
     QWidget *topWidget;
     QWidget *bottomWidget;
+    QLabel *lineLabel;
     void setItem();
 protected:
     void mouseMoveEvent(QMouseEvent* event);

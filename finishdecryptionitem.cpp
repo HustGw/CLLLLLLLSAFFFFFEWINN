@@ -15,6 +15,9 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     f_14.setWeight(QFont::Bold);
     f_12.setWeight(QFont::Normal);
     f_10.setWeight(QFont::Normal);
+    background = new QLabel(this);
+    background->setGeometry(0,0,695,71);
+    background->setStyleSheet("border-bottom:1px solid rgb(237,237,237)");
     label = new QLabel(this);
     label->setGeometry(0,0,34,16);
     label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png); }");
@@ -22,7 +25,7 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     elseLabel->setGeometry(49,25,30,16);
     elseLabel->setStyleSheet("background-color:#91A7B9;color:white;");
     elseLabel->raise();
-        elseLabel->setAlignment(Qt::AlignCenter);
+    elseLabel->setAlignment(Qt::AlignCenter);
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
@@ -72,18 +75,60 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     deleteBtn->setGeometry(664,12,13,13);
 
     checkBox->setGeometry(15,25,13,13);
-    checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
+    checkBox->setStyleSheet("QCheckBox {color: black;}"
+                            "QCheckBox::indicator {width: 13px;height: 13px;}"
+                            "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                            "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                            "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                            "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                            "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                            "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
 
     fileIcon->setGeometry(45,10,38,46);
-
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
 }
-
 void FinishDecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    painter.setPen(QColor(237,237,237));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
-
+void FinishDecryptionItem::changeBackground(){
+    background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
+}
+void FinishDecryptionItem::onStateChanged(int state){
+    if (state == Qt::Checked) // "选中"
+        {
+            fileIcon->setStyleSheet("background-color:#f6f7fa;");
+            background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
+            fileName->setStyleSheet("background-color:#f6f7fa");
+            label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:#f6f7fa; }");
+            timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
+            fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
+            fileDescription->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
+            openBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/open_button.png);background-color:#f6f7fa; }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/open_button_hover.png);background-color:#f6f7fa; }");
+            pathOpenBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/pathopen_button.png);background-color:#f6f7fa; }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/pathopen_button_hover.png);background-color:#f6f7fa; }");
+            deleteBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color:#f6f7fa; }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color:#f6f7fa; }");
+        }
+        else // 未选中 - Qt::Unchecked
+        {
+            fileIcon->setStyleSheet("background-color:white;");
+            background->setStyleSheet("background-color:white;border:none;border-bottom:1px solid rgb(237,237,237)");
+            fileName->setStyleSheet("background-color:white");
+            label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:white }");
+            timeLabel->setStyleSheet("background-color:white;color:#9999AB");
+            fileSize->setStyleSheet("color:#9999AB;background-color:white");
+            fileDescription->setStyleSheet("color:#9999AB;background-color:white");
+            openBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/open_button.png);background-color:white }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/open_button_hover.png);background-color:white }");
+            pathOpenBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/pathopen_button.png);background-color:white }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/pathopen_button_hover.png);background-color:white }");
+            deleteBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color:white }"
+                                               "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color:white }");
+        }
+}
 
 void FinishDecryptionItem::on_openBtn_clicked(){
     QString openPath;
@@ -106,7 +151,7 @@ void FinishDecryptionItem::on_openBtn_clicked(){
        }
        QFileInfo d_file(openfile);
        if(!d_file.isFile()){
-           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到文件，请检查文件是否已被删除或移动到新的位置。"),this);
+           MsgBox *msgbox = new MsgBox(2,QStringLiteral("未找到文件，请检查文件是否已被删除或移动到\n新的位置。"),this);
            msgbox->exec();
        }else{
            QDesktopServices::openUrl(QUrl(openPath, QUrl::TolerantMode));

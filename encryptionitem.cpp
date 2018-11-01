@@ -111,7 +111,7 @@ void EncryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
 
     if (!initPageFlag){
-        painter.setPen(QColor(139,139,139));
+        painter.setPen(QColor(237,237,237));
         painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
     }
 

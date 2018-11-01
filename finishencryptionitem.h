@@ -27,6 +27,7 @@ public:
     QSize sizeHint() const{
         return QSize(695,71);
     }
+    QLabel *background;
     QLabel *label;
     QLabel *elseLabel;
     QLabel *fileName;
@@ -49,6 +50,7 @@ public slots:
     void on_transprotBtn_clicked();
     void on_shareBtn_clicked();
     void on_pathOpenBtn_clicked();
+        void onStateChanged(int);
    // void on_deleteBtn_clicked();
 private:
 protected:

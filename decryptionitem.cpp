@@ -1,8 +1,14 @@
 #include "decryptionitem.h"
 extern QStringList m_fontList;
 int flag = 0;
+QPalette pa;
+
+
 DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 {
+    pa.setColor(QPalette::Background, QColor(0x00,0xff,0x00,0x00));
+
+
     QFont f_14;
      QFont f_12;
      QFont f_10;
@@ -15,6 +21,10 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
      f_14.setWeight(QFont::Bold);
      f_12.setWeight(QFont::Normal);
      f_10.setWeight(QFont::Normal);
+
+     background = new QLabel(this);
+     background->setGeometry(0,0,695,71);
+     background->setStyleSheet("border-bottom:1px solid rgb(237,237,237)");
 
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
@@ -47,9 +57,9 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     timeLabel = new QLabel(this);
     //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-
+    timeLabel->setPalette (pa);
     downloadBtn->setStyleSheet("background:transparent");
-    timeLabel->setStyleSheet("background:transparent");
+    //timeLabel->setStyleSheet("background:transparent");
 
     fileName->setGeometry(97,10,300,16);
     fileSize->setGeometry(97,28,300,12);
@@ -59,8 +69,14 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     downloadBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     checkBox->setGeometry(15,25,13,13);
-    checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-
+    checkBox->setStyleSheet("QCheckBox {color: black;}"
+                            "QCheckBox::indicator {width: 13px;height: 13px;}"
+                            "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                            "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                            "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                            "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                            "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                            "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
     fileIcon->setGeometry(45,10,38,46);
 
     timeLabel->setGeometry(294,31,230,10);
@@ -83,14 +99,38 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     f_14.setWeight(QFont::Normal);
     downloadBtn->setFont(f_14);
     f_14.setWeight(QFont::Bold);
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
 }
 //每一个Item绘制边界框
 void DecryptionItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    painter.setPen(QColor(237,237,237));
     painter.drawLine(0,this->height()-1,this->width()-1,this->height()-1);
 }
+void DecryptionItem::onStateChanged(int state){
+    if (state == Qt::Checked) // "选中"
+        {
+            fileIcon->setStyleSheet("background-color:#f6f7fa;");
+            background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
+            fileName->setStyleSheet("background-color:#f6f7fa");
+            label->setStyleSheet("background-color:#f6f7fa;");
+            timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
+            fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
+            fileDescription->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
 
+        }
+        else // 未选中 - Qt::Unchecked
+        {
+            fileIcon->setStyleSheet("background-color:white;");
+            background->setStyleSheet("background-color:white;border:none;border-bottom:1px solid rgb(237,237,237)");
+            fileName->setStyleSheet("background-color:white");
+            label->setStyleSheet("background-color:white");
+            timeLabel->setStyleSheet("background-color:white;color:#9999AB");
+            fileSize->setStyleSheet("color:#9999AB;background-color:white");
+            fileDescription->setStyleSheet("color:#9999AB;background-color:white");
+
+        }
+}
 void DecryptionItem::changeCheckBox(){
     if(flag==0){
         checkBox->setCheckState(Qt::Checked);

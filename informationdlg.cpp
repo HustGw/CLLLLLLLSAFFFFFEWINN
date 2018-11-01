@@ -30,7 +30,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     titleIcon->show();
  //   titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(506, 12, 13, 13);
+    closeBtn->setGeometry(522, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));   
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));
@@ -40,6 +40,14 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     ItemWidget = new QWidget();
     setItem();//布局函数
     CleanStatusLabel = new QLabel(this);
+//    lineLabel = new QLabel(this);
+//    lineLabel->setGeometry(1,1,this->width(),1);
+//    lineLabel->setStyleSheet("background-color:#000000");
+    QFrame *framline = new QFrame;
+    framline->setGeometry(0,this->height()-49,this->width(),3);
+    framline->setFrameShape(QFrame::HLine);
+    framline->setStyleSheet("color:#C7C5C6");
+//    framline->raise();
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
     cleanInforBtn->setStyleSheet("color:#3D6CFE");
@@ -57,11 +65,64 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         scrollArea = new QScrollArea();
         //scrollArea->setFrameRect(0,50,width-20,this->height()-50);
         //scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
-        scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        scrollArea->setStyleSheet("border:0;"
+                                  "padding:0;"
+                                  "spacing:0;");
+        scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,0%);"
+                                                       "margin:0px,0px,0px,0px;"
+                                                       "padding-top:9px;"
+                                                       "padding-bottom:9px;"
+                                                       "}"
+                                                       "QScrollBar::handle:vertical"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,25%);"
+                                                       " border-radius:4px;"
+                                                       "min-height:20;"
+                                                       "}"
+                                                       "QScrollBar::handle:vertical:hover"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,50%);"
+                                                       " border-radius:4px;"
+                                                       "min-height:20;"
+                                                       "}"
+                                                       "QScrollBar::add-line:vertical"
+                                                       "{"
+                                                       "height:5px;width:10px;"
+                                                       "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                       "subcontrol-position:bottom;"
+                                                       "}"
+                                                       "QScrollBar::sub-line:vertical"
+                                                       "{"
+                                                       "height:5px;width:10px;"
+                                                       "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                       "subcontrol-position:top;"
+                                                       "}"
+                                                       "QScrollBar::add-line:vertical:hover"
+                                                       "{"
+                                                       "height:9px;width:8px;"
+                                                       "border-image:url(:/images/a/4.png);"
+                                                       "subcontrol-position:bottom;"
+                                                       "}"
+                                                       "QScrollBar::sub-line:vertical:hover"
+                                                       "{"
+                                                       "height:9px;width:8px;"
+                                                       "border-image:url(:/images/a/2.png);"
+                                                       "subcontrol-position:top;"
+                                                       "}"
+                                                       "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                       "{"
+                                                       "background:rgba(0,0,0,5%);"
+                                                       "border-radius:4px;"
+                                                       "}"
+                                                       );
         scrollLayout = new QVBoxLayout();
-       // scrollArea->setWidget(CleanStatusLabel);
-       // scrollLayout->addWidget(titleLabel);
         scrollLayout->addWidget(scrollArea);
+        scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
     }
@@ -72,9 +133,62 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
         scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+        scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,0%);"
+                                                       "margin:0px,0px,0px,0px;"
+                                                       "padding-top:9px;"
+                                                       "padding-bottom:9px;"
+                                                       "}"
+                                                       "QScrollBar::handle:vertical"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,25%);"
+                                                       " border-radius:4px;"
+                                                       "min-height:20;"
+                                                       "}"
+                                                       "QScrollBar::handle:vertical:hover"
+                                                       "{"
+                                                       "width:8px;"
+                                                       "background:rgba(0,0,0,50%);"
+                                                       " border-radius:4px;"
+                                                       "min-height:20;"
+                                                       "}"
+                                                       "QScrollBar::add-line:vertical"
+                                                       "{"
+                                                       "height:5px;width:10px;"
+                                                       "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                       "subcontrol-position:bottom;"
+                                                       "}"
+                                                       "QScrollBar::sub-line:vertical"
+                                                       "{"
+                                                       "height:5px;width:10px;"
+                                                       "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                       "subcontrol-position:top;"
+                                                       "}"
+                                                       "QScrollBar::add-line:vertical:hover"
+                                                       "{"
+                                                       "height:9px;width:8px;"
+                                                       "border-image:url(:/images/a/4.png);"
+                                                       "subcontrol-position:bottom;"
+                                                       "}"
+                                                       "QScrollBar::sub-line:vertical:hover"
+                                                       "{"
+                                                       "height:9px;width:8px;"
+                                                       "border-image:url(:/images/a/2.png);"
+                                                       "subcontrol-position:top;"
+                                                       "}"
+                                                       "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                       "{"
+                                                       "background:rgba(0,0,0,5%);"
+                                                       "border-radius:4px;"
+                                                       "}"
+                                                       );
         scrollLayout = new QVBoxLayout();
         scrollArea->setWidget(ItemWidget);
         scrollLayout->addWidget(scrollArea);
+        scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
         bottomWidget->setLayout(scrollLayout);
     }
@@ -104,6 +218,7 @@ void informationDlg::recvReq(){
                     InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
                      q1->allowBtn->setEnabled(false);
                      q1->allowBtn->setText("已允许");
+                     q1->resetColor();
                      q1->allowBtn->setGeometry(340,75,80,30);
                      q1->ignoreBtn->hide();
                   //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
@@ -151,6 +266,7 @@ void informationDlg::ignoreReq(){
                     q1->allowBtn->hide();
                     q1->ignoreBtn->setEnabled(false);
                     q1->ignoreBtn->setText("已忽略");
+                    q1->resetColor();
                     q1->ignoreBtn->setGeometry(340,75,80,30);
                 }
                 else{
@@ -226,6 +342,10 @@ void informationDlg::setItem(){
                 m1->allowBtn->setText(QStringLiteral("已允许"));
                 m1->ignoreBtn->hide();
                 m1->allowBtn->setEnabled(false);
+//                m1->InforKindsLabel->setStyleSheet("color:#C7C5C6");
+//                m1->titleLabel->setStyleSheet("color:#C7C5C6");
+//                m1->timeLabel->setStyleSheet("color:#C7C5C6");
+                m1->resetColor();
                 m1->allowBtn->setGeometry(340,75,80,30);
                 vbox->addWidget(m1);
             }
@@ -236,6 +356,10 @@ void informationDlg::setItem(){
                 m1->allowBtn->hide();
                 m1->ignoreBtn->setText(QStringLiteral("已忽略"));
                 m1->ignoreBtn->setEnabled(false);
+//                m1->InforKindsLabel->setStyleSheet("color:#C7C5C6");
+//                m1->titleLabel->setStyleSheet("color:#C7C5C6");
+//                m1->timeLabel->setStyleSheet("color:#C7C5C6");
+                m1->resetColor();
                 m1->ignoreBtn->setGeometry(340,75,80,30);
                 vbox->addWidget(m1);
             }
@@ -284,6 +408,10 @@ void informationDlg::setItem(){
                 f1->allowBtn->setGeometry(340,75,80,30);
                 f1->allowBtn->setEnabled(false);
                 f1->ignoreBtn->hide();
+//                f1->InforKindsLabel->setStyleSheet("color:#C7C5C6");
+//                f1->titleLabel->setStyleSheet("color:#C7C5C6");
+//                f1->timeLabel->setStyleSheet("color:#C7C5C6");
+                f1->resetColor();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->allowBtn->setObjectName(friendQuery.record().value("id").toString()+"friendBtn");
                 int index1 = time_insertWidget(friend_time);
@@ -302,6 +430,10 @@ void informationDlg::setItem(){
                 f1->ignoreBtn->setEnabled(false);
                 f1->ignoreBtn->setGeometry(340,75,80,30);
                 f1->allowBtn->hide();
+//                f1->InforKindsLabel->setStyleSheet("color:#C7C5C6");
+//                f1->titleLabel->setStyleSheet("color:#C7C5C6");
+//                f1->timeLabel->setStyleSheet("color:#C7C5C6");
+                f1->resetColor();
                 f1->setObjectName(friendQuery.record().value("id").toString()+"friendInfor");
                 f1->ignoreBtn->setObjectName(friendQuery.record().value("id").toString()+"friendIgn");
                 int index1 = time_insertWidget(friend_time);
@@ -513,6 +645,7 @@ void informationDlg::AddFriendRequest(){
                 b1->setText("已允许");
                 m1->ignoreBtn->hide();
                 m1->allowBtn->setGeometry(340,75,80,30);
+                m1->resetColor();
                 b1->setEnabled(false);
             }
         }
@@ -567,6 +700,7 @@ void informationDlg::paintEvent(QPaintEvent *event){
         painter.setPen(color);
         painter.drawPath(path);
     }
+    painter.drawLine(0,this->height()-48,this->width(),this->height()-48);
 }
 
 void informationDlg::AddFriendIgnore(){
@@ -596,6 +730,7 @@ void informationDlg::AddFriendIgnore(){
                 b1->setText("已忽略");
                 m1->allowBtn->hide();
                 m1->ignoreBtn->setGeometry(340,75,80,30);
+                m1->resetColor();
                 b1->setEnabled(false);
                     }
                 }

@@ -2,6 +2,7 @@
 #include "ui_groupsenddialog.h"
 #include "mainwindow.h"
 extern QStringList m_fontList;
+extern bool groupSendDialogFlag;
 groupSendDialog::groupSendDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::groupSendDialog)
@@ -14,27 +15,69 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     f_2.setFamily(m_fontList.at(0));
     f_2.setPixelSize(14);
     f_2.setWeight(QFont::Bold);
-
+    groupSendDialogFlag = false;
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     db1 = ConnectionPool::openConnection();
     ui->setupUi(this);
     QSqlQuery query(db1);
-    ui->label_3->setStyleSheet("QLabel{border:1px solid gray;}");
-    ui->label_7->setStyleSheet("QLabel{border:1px solid gray;}");
+    ui->label_3->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);}");
+    ui->label_7->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);border-bottom:none;}");
     ui->label_2->setFont(f_1);
     ui->label_8->setFont(f_1);
     ui->label_3->setFont(f_1);
     ui->label_7->setFont(f_1);
     ui->label->setFont(f_1);
     ui->label_6->setFont(f_2);
+    ui->label_10->setFont(f_1);
+    ui->listWidget->setStyleSheet("QListWidget {border-top:none;"
+                                  "border-bottom:1px solid rgb(207,207,208);"
+                                  "border-left:1px solid rgb(207,207,208);"
+                                  "border-right:1px solid rgb(207,207,208);}"
+                                  "QListWidget::Item {border:none;padding-left:20px}");
+    ui->listWidget_2->setStyleSheet("QListWidget {border-top:none;"
+                                    "border-bottom:1px solid rgb(207,207,208);"
+                                    "border-left:1px solid rgb(207,207,208);"
+                                    "border-right:1px solid rgb(207,207,208);}"
+                                    "QListWidget::Item {border:none;padding-left:20px}");
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
-    ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
-    ui->pushButton_trans->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);background-color:#3A8CFF;color:white;}QPushButton:hover{background-color: rgb(119,146,183);color:black;}QPushButton:pressed{background-color: #3A8CFF;color:white;}");
+    ui->pushButton_close->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ui->pushButton_trans->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/trans_huge_btn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/trans_huge_btn_hover.png)}");
+    QString split_file_id;
+    QString fileName_ = "分享文件：";
+    QStringList list = file_id_list.split("||");
+    QString numberLabel = "等<font color=green>"+QString::number(list.count()-1)+"</font>个文件";
+    for(int j = 0;j<list.count();j++){
+        split_file_id = list[j];
+        QSqlQuery query(db1);
+        bool select_file_name = query.exec("select * from varticle where article_id ='"+split_file_id+"'");
+        if(!select_file_name){
+            qDebug()<<"bug!~!!!!!!";
+        }else{
+            while(query.next()){
+                fileName_ += query.record().value("article_name").toString()+"；";
 
+            }
+        }
+    }
+    fileName_.chop(1);
+    int fontSize = fontMetrics().width( fileName_ );//获取之前设置的字符串的像素大小
+    if( fontSize >= ui->label->width() ) //与label自身相比较
+    {
+        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, ui->label->width()-50);//返回一个带有省略号的字符串
+        ui->label->setText(str);       //重新设置label上的字符串
+       // ui->label_10->hide();
+        //ui->label->setGeometry(38,59,700,16);
+    }else{
+        ui->label->setText(fileName_);
+        ui->label->setGeometry(38,59,fontSize,16);
+        ui->label_10->setGeometry(38+fontSize,59,85,16);
+    }
+    ui->label->setText(fileName_);
+    ui->label_10->setText(numberLabel);
     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");
     if(!friendSelSuc){
         qDebug()<<"查询好友失败";
@@ -51,6 +94,14 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
             a1->setSizeHint(QSize(200,40));
             b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
+            b1->setStyleSheet("QCheckBox {color: black;}"
+                                               "QCheckBox::indicator {width: 13px;height: 13px;}"
+                                               "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                                               "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                               "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                                               "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
             ui->listWidget->addItem(a1);
             ui->listWidget->setItemWidget(a1,b1);
             count++;
@@ -82,7 +133,14 @@ void groupSendDialog::getCheckedItems(){
         QCheckBox * box =(QCheckBox*) widget;
         QString nick_name = box->text();
         isChecked = box ->isChecked();
-
+        box->setStyleSheet("QCheckBox {color: black;}"
+                     "QCheckBox::indicator {width: 13px;height: 13px;}"
+                     "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                     "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                     "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                     "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
         if(isChecked){
             QListWidgetItem *nick_name_item = new QListWidgetItem();
             nick_name_item->setText(nick_name);
@@ -97,6 +155,7 @@ void groupSendDialog::getCheckedItems(){
 void groupSendDialog::closeEvent(QCloseEvent *){
         file_id_list.clear();
     ConnectionPool::closeConnection(db1);
+    groupSendDialogFlag = false;
 }
 
 void groupSendDialog::onStageChanged(int stage){
@@ -181,6 +240,7 @@ void groupSendDialog::on_pushButton_trans_clicked()
         MsgBox *msgbox = new MsgBox(4,QStringLiteral("传输成功！"),this);
         msgbox->exec();
         file_id_list.clear();
+        groupSendDialogFlag = false;
         this->close();
     }else {
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("请选择需要传输的好友！"),this);
@@ -191,12 +251,14 @@ void groupSendDialog::on_pushButton_trans_clicked()
 void groupSendDialog::on_pushButton_close2_clicked()
 {
     file_id_list.clear();
+    groupSendDialogFlag = false;
     this->close();
 }
 
 void groupSendDialog::on_pushButton_close_clicked()
 {
     file_id_list.clear();
+    groupSendDialogFlag = false;
     this->close();
 }
 void groupSendDialog::paintEvent(QPaintEvent *event)

@@ -23,8 +23,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">
-</string>
+    <string notr="true"/>
    </property>
    <widget class="QLabel" name="userLable">
     <property name="geometry">
@@ -185,7 +184,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;</string>
     </property>
     <property name="text">
      <string/>
@@ -201,7 +200,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;</string>
     </property>
     <property name="text">
      <string>密码不一致，请重新输入</string>
@@ -217,7 +216,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;</string>
     </property>
     <property name="text">
      <string>验证码不正确</string>
@@ -280,9 +279,7 @@ border-top-right-radius:6px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font-size:13px;
-font-weight:bold;
-color:rgb(61,57,57);</string>
+     <string notr="true">color:rgb(61,57,57);</string>
     </property>
     <property name="text">
      <string>重置密码</string>

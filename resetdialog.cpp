@@ -10,7 +10,14 @@
 #include <QRegExpValidator>
 #include <Qvalidator>
 #include <QTimer>
+
 #include <QGraphicsDropShadowEffect>
+
+QStringList m_fontList2;
+QFont f2("冬青黑体简体",9,75);
+QFont m2;
+QFont f_h2("冬青黑体简体",10,60);
+QFont q2;
 QNetworkAccessManager *m_accessManagerReset;
 
 resetDialog::resetDialog(QWidget *parent) :
@@ -20,6 +27,28 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList2.clear();
+
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList2 << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m2.setFamily(m_fontList2.at(0));
+    f2.setFamily(m_fontList2.at(0));
+    f_h2.setFamily(m_fontList2.at(0));
+    q2.setFamily(m_fontList2.at(0));
+    m2.setPixelSize(14);
+    f2.setPixelSize(14);
+    f_h2.setPixelSize(30);
+    q2.setPixelSize(12);
+    m2.setWeight(QFont::Normal);
+    f2.setWeight(QFont::DemiBold);
+    f_h2.setWeight(QFont::Bold);
+    q2.setWeight(QFont::Normal);
 
     QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
     effect->setOffset(0,0);
@@ -33,6 +62,21 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->passwordLineEdit->setPlaceholderText("设置你的登录密码");
     ui->passwordLineEdit_2->setPlaceholderText("请再次输入你的密码");
 
+    ui->passwordLabel->setFont(m2);
+    ui->passwordLabel_2->setFont(m2);
+    ui->userLable->setFont(m2);
+    ui->codeLabel->setFont(m2);
+    ui->passwordAlert->setFont(m2);
+    ui->userAlert->setFont(m2);
+    ui->codeAlert->setFont(m2);
+    ui->passwordLineEdit->setFont(q2);
+    ui->passwordLineEdit_2->setFont(q2);
+    ui->userLineEdit->setFont(q2);
+    ui->code->setFont(q2);
+    ui->codeBtn->setFont(m2);
+    ui->icon_words->setFont(f2);
+    ui->confirmBtn->setFont(f2);
+
     ui->userAlert->setVisible(false);
     ui->passwordAlert->setVisible(false);
     ui->codeAlert->setVisible(false);
@@ -42,8 +86,8 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->confirmBtn->setStyleSheet(                 //调整确定按钮样式
-                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
-                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
+                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);color:white;}"
+                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);color:white;}");
     ui->codeBtn->setStyleSheet(                 //调整验证码按钮样式
                 "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -73,7 +117,7 @@ resetDialog::resetDialog(QWidget *parent) :
     setTabOrder(ui->codeBtn,ui->confirmBtn);
 
     flag = 0;
-    a = 61;
+    c = 61;
 
     qDebug()<<"hehe flag:"<<flag;
     m_accessManagerReset = new QNetworkAccessManager(this);
@@ -101,20 +145,24 @@ void resetDialog::on_confirmBtn_clicked()
    if(userName=="" || password=="" || code==""){//判断用户名、密码、验证码是否为空，为空弹出警告
        if(password != password_2){
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+           ui->confirmBtn->clearFocus();
        }
        if(userName != "" && QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
+           ui->confirmBtn->clearFocus();
        }
        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
    }else{
        if(password != password_2){
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+           ui->confirmBtn->clearFocus();
            flag_2 = 0;
        }
        if(QValidator::Acceptable!=v.validate(userName,pos)){
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
+           ui->confirmBtn->clearFocus();
            flag_2 = 0;
        }
        if(flag_2 == 1){
@@ -205,10 +253,10 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
              qDebug()<<"获取验证码";
 
              if(content.contains("success",Qt::CaseSensitive)){
-                 a = 61;
-                 QTimer *timer = new QTimer(this);
-                 connect(timer,SIGNAL(timeout()),this,SLOT(showTimelimit()));
-                 timer->start(1000);
+                 c = 61;
+                 timer2 = new QTimer(this);
+                 connect(timer2,SIGNAL(timeout()),this,SLOT(showTimelimit()));
+                 timer2->start(1000);
 
                  QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
              }else{
@@ -246,6 +294,8 @@ void resetDialog::on_passwordLineEdit_textChanged(){
         }else{
             ui->passwordAlert->setVisible(false);
         }
+    }else{
+        ui->passwordAlert->setVisible(false);
     }
 }
 
@@ -259,6 +309,10 @@ void resetDialog::on_passwordLineEdit_editingFinished(){
         }else{
             ui->passwordAlert->setVisible(false);
         }
+    }else if(password == ""){
+        ui->passwordAlert->setVisible(false);
+    }else{
+        ui->passwordAlert->setVisible(true);
     }
 }
 
@@ -266,10 +320,18 @@ void resetDialog::on_passwordLineEdit_2_textChanged(){
     QString passward=ui->passwordLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
-    }else{
+    if(passward != ""){
+        if(passward_2 == ""){
+            ui->passwordAlert->setVisible(false);
+        }else if(passward != passward_2){
+            ui->passwordAlert->setVisible(true);
+        }else{
+            ui->passwordAlert->setVisible(false);
+        }
+    }else if(passward_2 == ""){
         ui->passwordAlert->setVisible(false);
+    }else{
+        ui->passwordAlert->setVisible(true);
     }
 }
 
@@ -278,8 +340,14 @@ void resetDialog::on_passwordLineEdit_2_editingFinished(){
     QString passward=ui->passwordLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+    if(passward == ""){
+        if(passward_2 == ""){
+            ui->passwordAlert->setVisible(false);
+        }else{
+            ui->passwordAlert->setVisible(true);
+        }
+    }else if(passward != passward_2){
+        ui->passwordAlert->setVisible(true);
     }else{
         ui->passwordAlert->setVisible(false);
     }
@@ -332,13 +400,14 @@ void resetDialog::mouseReleaseEvent(QMouseEvent *qevent)
 }
 
 void resetDialog::showTimelimit(){
-    if(a != 1){
+    if(c != 1){
         ui->codeBtn->setEnabled(false);
-        a = a-1;
-        QString num = QString::number(a);
+        c = c-1;
+        QString num = QString::number(c);
         ui->codeBtn->setText(num + "秒后再次发送");
     }else{
         ui->codeBtn->setEnabled(true);
         ui->codeBtn->setText("重新发送验证码");
+        timer2->stop();
     }
 }

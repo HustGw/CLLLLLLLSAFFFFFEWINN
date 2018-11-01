@@ -1,7 +1,7 @@
 #include "informationitem.h"
-
 InformationItem::InformationItem(QWidget *parent) : QWidget(parent)
 {
+    lineFlag = 0;
     allowBtn = new QPushButton(this);
     ignoreBtn = new QPushButton(this);
     titleLabel = new QLabel(this);
@@ -26,9 +26,21 @@ InformationItem::InformationItem(QWidget *parent) : QWidget(parent)
 
 void InformationItem::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.setPen(QColor(139,139,139));
+    if(lineFlag){
+        painter.setPen("#C7C5C6");
+    }else{
+      painter.setPen(QColor(139,139,139));
+    }
     painter.drawLine(5,0,this->width()-1,0);
     painter.drawLine(5,0,5,this->height()-1);
     painter.drawLine(this->width()-1,0,this->width()-1,this->height()-1);
     painter.drawLine(5,this->height()-1,this->width()-1,this->height()-1);
+
+
+}
+
+void InformationItem::resetColor(){
+    this->setStyleSheet("color:#C7C5C6");
+    lineFlag =1;
+    this->update();
 }

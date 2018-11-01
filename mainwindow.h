@@ -76,6 +76,7 @@
 #include <QFontDatabase>
 #include <QCoreApplication>
 #include <QStringList>
+#include <QScrollBar>
 namespace Ui {
 class MainWindow;
 }
@@ -120,6 +121,12 @@ extern QString yzipfileUuid;
 extern QString file_item_name;
 extern QString DecProFileID;
 extern QStringList m_fontList;
+extern QFont m_w4;
+extern QFont f_h;
+extern QStringList m_fontList_W4;
+extern bool groupSendDialogFlag;
+extern bool groupShareDialogFlag;
+extern int IsLinkInfor;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

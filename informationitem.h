@@ -21,6 +21,8 @@ public:
     QLabel *titleLabel;
     QLabel *InforKindsLabel;
     QLabel *timeLabel;
+    int lineFlag;
+    void resetColor();
 signals:
 
 public slots:

@@ -9,6 +9,10 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTimer>
+#include <QFontDatabase>
+#include <QFont>
+#include <QCoreApplication>
+#include <QStringList>
 
 namespace Ui {
 class resetDialog;
@@ -22,7 +26,8 @@ public:
     explicit resetDialog(QWidget *parent = 0);
     ~resetDialog();
     int flag;  //步骤
-    int a;
+    int c;
+    QTimer *timer2;
 
 private slots:
     void on_codeBtn_clicked();

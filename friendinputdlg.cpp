@@ -51,9 +51,10 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     inputLineEdit->setPlaceholderText(tr("请输入好友手机号/昵称/用户名"));
     inputLineEdit->setFont(f_1);
     okBtn = new QPushButton(this);
-    okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    okBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
 //    cancelBtn = new QPushButton(this);
     okBtn->setText(QStringLiteral("查找"));
+    okBtn->setCursor(QCursor(Qt::PointingHandCursor));
 //    cancelBtn->setText(tr("取消"));
     okBtn->setGeometry(350,60,40,30);
     okBtn->setFont(f_1);
@@ -299,7 +300,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
 
                                                         "border-radius:40px;"
                                                         "border-width: 0 0 0 0;"
-                                                        "border-image: url(:/new/src/head2) 0 0 0 0 stretch strectch;"
+                                                        "border-image: url(:/new/src/pictures/newAddFriendHead.png) 0 0 0 0 stretch strectch;"
                                                         );
                                 userHead->show();
                                 userName->setGeometry(180,140,80,30);

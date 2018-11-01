@@ -266,7 +266,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;
+     <string notr="true">color:#D91111;
 </string>
     </property>
     <property name="text">
@@ -283,7 +283,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;</string>
     </property>
     <property name="text">
      <string>密码不一致，请重新输入</string>
@@ -299,7 +299,8 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;</string>
+     <string notr="true">color:#D91111;
+</string>
     </property>
     <property name="text">
      <string>手机号码格式不正确</string>
@@ -315,7 +316,7 @@ border-radius:4px;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:red;
+     <string notr="true">color:#D91111;
 </string>
     </property>
     <property name="text">
@@ -399,9 +400,7 @@ border:none;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font-size:13px;
-font-weight:bold;
-color:rgb(61,57,57);</string>
+     <string notr="true">color:rgb(61,57,57);</string>
     </property>
     <property name="text">
      <string>注册云加密账号</string>

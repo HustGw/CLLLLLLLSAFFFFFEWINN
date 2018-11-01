@@ -17,11 +17,11 @@ class DecryptionItem : public QWidget
 public:
     explicit DecryptionItem(QWidget *parent = nullptr);
     QSize sizeHint() const{
-        return QSize(695,71);
+        return QSize(687,71);
     }
     QLabel *label;
     QLabel *elseLabel;
-
+    QLabel *background;
     QLabel *fileName;
     QLabel *fileSize;
     QLabel *fileDescription;
@@ -38,6 +38,7 @@ signals:
 
 public slots:
     void changeCheckBox();
+    void onStateChanged(int);
 private:
 protected:
     void paintEvent(QPaintEvent *event);
