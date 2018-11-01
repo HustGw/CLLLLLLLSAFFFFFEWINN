@@ -10,6 +10,7 @@
         <file>pictures/system_question.png</file>
         <file>pictures/system_warning.png</file>
         <file>widgets.qm</file>
+        <file>pictures/newAddFriendHead.png</file>
     </qresource>
     <qresource prefix="/">
         <file>mainWindow.qss</file>
@@ -77,6 +78,13 @@
         <file>pictures/grouptrans_hover.png</file>
         <file>pictures/grouptrans_pressed.png</file>
         <file>pictures/head_likui.png</file>
+        <file>pictures/newfriend_hide.png</file>
+        <file>pictures/newfriend_show.png</file>
+        <file>pictures/newSearchIcon.png</file>
+        <file>pictures/newSearchIcon_hover.png</file>
+        <file>pictures/newUserhead.png</file>
+        <file>pictures/Scrollbar_bottom.png</file>
+        <file>pictures/Scrollbar_top.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>

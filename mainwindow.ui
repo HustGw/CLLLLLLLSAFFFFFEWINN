@@ -595,14 +595,14 @@
    <widget class="QPushButton" name="pushButton_13">
     <property name="geometry">
      <rect>
-      <x>1037</x>
+      <x>1038</x>
       <y>95</y>
-      <width>31</width>
-      <height>21</height>
+      <width>30</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>搜索</string>
+     <string/>
     </property>
    </widget>
    <widget class="Line" name="line_5">

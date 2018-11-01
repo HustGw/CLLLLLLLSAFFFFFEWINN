@@ -76,6 +76,7 @@
 #include <QFontDatabase>
 #include <QCoreApplication>
 #include <QStringList>
+#include <QScrollBar>
 namespace Ui {
 class MainWindow;
 }

@@ -116,8 +116,8 @@ MainWindow::MainWindow(QWidget *parent) :
     friendListLab->setFont(m);
     friendListLab->setGeometry(ui->RightWidget->width()/2-60,1,80,30);
     friendIcon = new QLabel(ui->RightWidget);
-    friendIcon->setGeometry(ui->RightWidget->width()/2-85,10,10,10);
-    friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
+    friendIcon->setGeometry(ui->RightWidget->width()/2-85,11,15,8);
+    friendIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/newfriend_show.png);");
     connect(friendListLab,SIGNAL(LabelClicked()),this,SLOT(FriendListWidgetHide()));
     friendListWidget = new QListWidget(ui->RightWidget);
     addFriendBtn = new QPushButton(ui->RightWidget);
@@ -134,28 +134,30 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->SearchEdit->setPlaceholderText(tr("好友昵称/手机号"));
+    ui->SearchEdit->setPlaceholderText(tr(" 好友昵称/手机号"));
     QSize editSize(190,20);
     QSize btsize(30,20);
     ui->SearchEdit->setFixedSize(editSize);
-    QPushButton *m_bt = new QPushButton();
-    Mylabel *bt_icon = new Mylabel(this);
-    bt_icon->setGeometry(1047,100,10,11);
-    bt_icon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/search.png);background-color:#398CFF;");
-    bt_icon->setCursor(QCursor(Qt::PointingHandCursor));
-    connect(bt_icon,SIGNAL(LabelClicked()),m_bt,SLOT(click()));
-    m_bt->setFixedSize(btsize);
-    m_bt->setStyleSheet("background-color:#398CFF;");
-    QHBoxLayout *m_layout=new QHBoxLayout();
-    m_layout->setContentsMargins(0,0,0,0);
-    m_layout->setSpacing(0);
-    m_layout->addStretch();
-    m_layout->addWidget(m_bt);
-    ui->SearchEdit->setLayout(m_layout);
-    ui->SearchEdit->setTextMargins(0,0,m_bt->width()-1,0);
-    m_bt->setCursor(QCursor(Qt::PointingHandCursor));
-    ui->pushButton_13->hide();
-    connect(m_bt,SIGNAL(clicked(bool)),this,SLOT(on_pushButton_13_clicked()));
+//    QPushButton *m_bt = new QPushButton();
+//    Mylabel *bt_icon = new Mylabel(this);
+//    bt_icon->setGeometry(1047,100,10,11);
+//    bt_icon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/search.png);background-color:#398CFF;");
+//    bt_icon->setCursor(QCursor(Qt::PointingHandCursor));
+//    connect(bt_icon,SIGNAL(LabelClicked()),m_bt,SLOT(click()));
+//    m_bt->setFixedSize(btsize);
+//    m_bt->setStyleSheet("background-color:#398CFF;");
+//    QHBoxLayout *m_layout=new QHBoxLayout();
+//    m_layout->setContentsMargins(0,0,0,0);
+//    m_layout->setSpacing(0);
+//    m_layout->addStretch();
+//    m_layout->addWidget(m_bt);
+//    ui->SearchEdit->setLayout(m_layout);
+//    ui->SearchEdit->setTextMargins(0,0,m_bt->width()-1,0);
+//    m_bt->setCursor(QCursor(Qt::PointingHandCursor));
+//    ui->pushButton_13->hide();
+//    connect(m_bt,SIGNAL(clicked(bool)),this,SLOT(on_pushButton_13_clicked()));
+    ui->pushButton_13->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/newSearchIcon.png); }"
+                                     "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/newSearchIcon_hover.png); }");
     ui->SearchEdit->setStyleSheet("border-radius:10px;"
                                   "border:1px groove gray;"
                                   );
@@ -171,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
                             "border-radius:22px;"
                             "border-width: 0 0 0 0;"
-                            "border-image: url(:/new/src/head1) 0 0 0 0 stretch strectch;"
+                            "border-image: url(:/new/mainwindow/pictures/newUserhead.png) 0 0 0 0 stretch strectch;"
                             );
 //    QPixmap pixmap(":/new/src/head1");
 //    pixmap.scaled(userHead->size(),Qt::KeepAspectRatio);
@@ -292,7 +294,58 @@ MainWindow::MainWindow(QWidget *parent) :
                decryptionViewController->vbox->setSpacing(0);
                QWidget *newItemWidget = new QWidget();
                newScrollArea = new QScrollArea();
-               newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//               newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+               newScrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,0%);"
+                                                                 "margin:0px,0px,0px,0px;"
+                                                                 "padding-top:9px;"
+                                                                 "padding-bottom:9px;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,25%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical:hover"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,50%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/4.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/2.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                                 "{"
+                                                                 "background:rgba(0,0,0,5%);"
+                                                                 "border-radius:4px;"
+                                                                 "}");
                newItemWidget->setLayout(decryptionViewController->vbox);
                newScrollArea->setWidget(newItemWidget);
                newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -647,7 +700,58 @@ void MainWindow::on_OpenFileBtn_clicked()
             ui->MidStaWidget->setCurrentWidget(encryptionViewController);
             QScrollArea *newScrollArea = new QScrollArea();
             //newScrollArea->setWidgetResizable(true);//铺满显示
-            newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//            newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            newScrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                              "{"
+                                                              "width:8px;"
+                                                              "background:rgba(0,0,0,0%);"
+                                                              "margin:0px,0px,0px,0px;"
+                                                              "padding-top:9px;"
+                                                              "padding-bottom:9px;"
+                                                              "}"
+                                                              "QScrollBar::handle:vertical"
+                                                              "{"
+                                                              "width:8px;"
+                                                              "background:rgba(0,0,0,25%);"
+                                                              " border-radius:4px;"
+                                                              "min-height:20;"
+                                                              "}"
+                                                              "QScrollBar::handle:vertical:hover"
+                                                              "{"
+                                                              "width:8px;"
+                                                              "background:rgba(0,0,0,50%);"
+                                                              " border-radius:4px;"
+                                                              "min-height:20;"
+                                                              "}"
+                                                              "QScrollBar::add-line:vertical"
+                                                              "{"
+                                                              "height:5px;width:10px;"
+                                                              "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                              "subcontrol-position:bottom;"
+                                                              "}"
+                                                              "QScrollBar::sub-line:vertical"
+                                                              "{"
+                                                              "height:5px;width:10px;"
+                                                              "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                              "subcontrol-position:top;"
+                                                              "}"
+                                                              "QScrollBar::add-line:vertical:hover"
+                                                              "{"
+                                                              "height:9px;width:8px;"
+                                                              "border-image:url(:/images/a/4.png);"
+                                                              "subcontrol-position:bottom;"
+                                                              "}"
+                                                              "QScrollBar::sub-line:vertical:hover"
+                                                              "{"
+                                                              "height:9px;width:8px;"
+                                                              "border-image:url(:/images/a/2.png);"
+                                                              "subcontrol-position:top;"
+                                                              "}"
+                                                              "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                              "{"
+                                                              "background:rgba(0,0,0,5%);"
+                                                              "border-radius:4px;"
+                                                              "}");
             newItemWidget->setLayout(encryptionViewController->vbox);
             newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
             //newItemWidget->setSizePolicy(QSizePolicy::Fixed);
@@ -796,7 +900,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         QScrollArea *newScrollArea = new QScrollArea();
         //newScrollArea->setWidgetResizable(true);//铺满显示
-        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         newItemWidget->setLayout(encryptionViewController->vbox);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
         //newItemWidget->setSizePolicy(QSizePolicy::Fixed);
@@ -1012,7 +1116,7 @@ void MainWindow::on_pushButton_3_clicked()
                   newItemWidget->setLayout(decryptionViewController->vbox);
                   newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                   newScrollArea->setWidget(newItemWidget);
-                  newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//                  newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                   QVBoxLayout *newVbox = new QVBoxLayout();
                   newVbox->setMargin(0);
                   newVbox->setSpacing(0);
@@ -1743,7 +1847,58 @@ void MainWindow::on_pushButton_8_clicked()
 
                //QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController->vbox);
-               finScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//               finScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+               finScrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,0%);"
+                                                                 "margin:0px,0px,0px,0px;"
+                                                                 "padding-top:9px;"
+                                                                 "padding-bottom:9px;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,25%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical:hover"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,50%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/4.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/2.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                                 "{"
+                                                                 "background:rgba(0,0,0,5%);"
+                                                                 "border-radius:4px;"
+                                                                 "}");
                finScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;margins:0;");
                finScrollArea->setWidget(newItemWidget);
@@ -2267,7 +2422,7 @@ void MainWindow::FileIsAllowed(){
                      newItemWidget->setLayout(decryptionViewController->vbox);
                      newScrollArea->setWidget(newItemWidget);
                      newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                      QVBoxLayout *newVbox = new QVBoxLayout();
                      newVbox->setMargin(0);
                      newVbox->setSpacing(0);
@@ -2629,7 +2784,7 @@ void MainWindow::ReLayout(){
     newItemWidget->setLayout(decryptionViewController->vbox);
     newScrollArea->setWidget(newItemWidget);
     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-    newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//    newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QVBoxLayout *newVbox = new QVBoxLayout();
     newVbox->setMargin(0);
     newVbox->setSpacing(0);
@@ -2881,12 +3036,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::FriendListWidgetHide(){
     if(isFriendListHide == 0){
       friendListWidget->hide();
-      friendIcon->setStyleSheet("border-image: url(://pictures/login_accounts_management_hide.png);");
+      friendIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/newfriend_hide.png);");
+      friendIcon->setGeometry(ui->RightWidget->width()/2-81,7,8,15);
       isFriendListHide = 1;
     }
     else{
       friendListWidget->show();
-      friendIcon->setStyleSheet("border-image: url(:/new/login/pictures/login_accounts_management.png);");
+      friendIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/newfriend_show.png);");
+      friendIcon->setGeometry(ui->RightWidget->width()/2-85,11,15,8);
       isFriendListHide = 0;
     }
 }
@@ -2966,7 +3123,7 @@ void MainWindow::FileIsIgnored(){
         newItemWidget->setLayout(decryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//        newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->setMargin(0);
         newVbox->setSpacing(0);
