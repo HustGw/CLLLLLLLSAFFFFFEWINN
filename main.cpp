@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
         if(L.exec()==QDialog::Accepted){
             //MainWindow *w = new MainWindow();
             //            w->show();
-            //            w->FileIsAllowed();
+            //             w->FileIsAllowed();
 
             MainWindow w;
             w.show();

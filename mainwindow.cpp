@@ -1,4 +1,4 @@
-  #include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -1847,9 +1847,9 @@ void MainWindow::on_pushButton_8_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
-               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
-                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-100 );//返回一个带有省略号的字符串
                    f1->fileName->setText( str );       //重新设置label上的字符串
                }else{
                    f1->fileName->setText(file_name);
@@ -3006,7 +3006,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
             workThread->exit(0);
             //qApp->exit(0);
             QApplication::closeAllWindows();
-            event->accept(); 
+            event->accept();
         }else{
             event->ignore();
         }

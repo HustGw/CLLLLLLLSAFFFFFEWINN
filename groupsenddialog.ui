@@ -18,7 +18,7 @@
     <rect>
      <x>38</x>
      <y>59</y>
-     <width>500</width>
+     <width>587</width>
      <height>16</height>
     </rect>
    </property>
@@ -228,22 +228,6 @@ border:1px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_10">
-   <property name="geometry">
-    <rect>
-     <x>538</x>
-     <y>59</y>
-     <width>87</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <zorder>label</zorder>
   <zorder>listWidget_2</zorder>
   <zorder>pushButton_trans</zorder>
@@ -258,7 +242,6 @@ border:1px;</string>
   <zorder>label_8</zorder>
   <zorder>label_2</zorder>
   <zorder>label_9</zorder>
-  <zorder>label_10</zorder>
  </widget>
  <resources/>
  <connections/>

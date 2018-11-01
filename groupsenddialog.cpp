@@ -29,7 +29,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     ui->label_7->setFont(f_1);
     ui->label->setFont(f_1);
     ui->label_6->setFont(f_2);
-    ui->label_10->setFont(f_1);
+
     ui->listWidget->setStyleSheet("QListWidget {border-top:none;"
                                   "border-bottom:1px solid rgb(207,207,208);"
                                   "border-left:1px solid rgb(207,207,208);"
@@ -64,20 +64,25 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
         }
     }
     fileName_.chop(1);
-    int fontSize = fontMetrics().width( fileName_ );//获取之前设置的字符串的像素大小
-    if( fontSize >= ui->label->width() ) //与label自身相比较
+     QFontMetrics fm(f_1);
+     int fontSize = fm.width(fileName_);
+    //int fontSize = fontMetrics().width( fileName_ )+50;//获取之前设置的字符串的像素大小
+    int t = ui->label->frameSize().width();
+    if( fontSize >= 500 ) //与label自身相比较
     {
-        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, ui->label->width()-50);//返回一个带有省略号的字符串
-        ui->label->setText(str);       //重新设置label上的字符串
+        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, fontSize - (fontSize - 500)-100,Qt::TextShowMnemonic);//返回一个带有省略号的字符串
+        ui->label->setText(str + numberLabel);       //重新设置label上的字符串
+        //ui->label->setGeometry(38,59,ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),16);
+        //ui->label_10->setGeometry(38+ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),59,85,16);
        // ui->label_10->hide();
         //ui->label->setGeometry(38,59,700,16);
     }else{
-        ui->label->setText(fileName_);
-        ui->label->setGeometry(38,59,fontSize,16);
-        ui->label_10->setGeometry(38+fontSize,59,85,16);
+        ui->label->setText(fileName_ + numberLabel);
+//        ui->label->setGeometry(38,59,fontSize,16);
+
     }
-    ui->label->setText(fileName_);
-    ui->label_10->setText(numberLabel);
+    //ui->label->setText(fileName_);
+
     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");
     if(!friendSelSuc){
         qDebug()<<"查询好友失败";
@@ -308,4 +313,3 @@ void groupSendDialog::mouseReleaseEvent(QMouseEvent *qevent)
     //设置鼠标为未被按下
     mouse_press = false;
 }
-
