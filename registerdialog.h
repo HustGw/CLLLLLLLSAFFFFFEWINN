@@ -9,14 +9,20 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTimer>
+#include <QFontDatabase>
+#include <QFont>
+#include <QCoreApplication>
+#include <QStringList>
+#include <QList>
 
-#include "msgbox.h"
+//#include "msgbox.h"
 
 
 
 namespace Ui {
 class registerDialog;
 }
+
 
 class registerDialog : public QDialog
 {
@@ -27,6 +33,9 @@ public:
     ~registerDialog();
     int flag;  //步骤
     int a;
+    int b;
+    QTimer *timer1;
+
 
 private slots:
     void on_closeBtn_clicked();
@@ -38,6 +47,8 @@ private slots:
     void on_codeBtn_clicked();
     void finishedSlot(QNetworkReply *reply);
     void showTimelimit();
+//    void on_nichengLineEdit_editingFinished();
+    void on_nichengLineEdit_textChanged();
 protected:
     QPoint move_point;                                    //移动的距离
     bool mouse_press;                                    //鼠标按下
