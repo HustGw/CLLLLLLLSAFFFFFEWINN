@@ -11,6 +11,12 @@
 #include <Qvalidator>
 #include <QTimer>
 #include <QGraphicsDropShadowEffect>
+
+QStringList m_fontList2;
+QFont f2("冬青黑体简体",9,75);
+QFont m2;
+QFont f_h2("冬青黑体简体",10,60);
+QFont q2;
 QNetworkAccessManager *m_accessManagerReset;
 
 resetDialog::resetDialog(QWidget *parent) :
@@ -20,6 +26,28 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
+
+    QString dir = QCoreApplication::applicationDirPath();
+    m_fontList2.clear();
+
+    int lcdFontId = QFontDatabase::addApplicationFont(":/pictures/W3.ttf"); // 从source资源文件
+    // int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+    if (lcdFontId != -1) // -1为加载失败
+    {
+        m_fontList2 << QFontDatabase::applicationFontFamilies(lcdFontId);
+    }
+    m2.setFamily(m_fontList2.at(0));
+    f2.setFamily(m_fontList2.at(0));
+    f_h2.setFamily(m_fontList2.at(0));
+    q2.setFamily(m_fontList2.at(0));
+    m2.setPixelSize(14);
+    f2.setPixelSize(14);
+    f_h2.setPixelSize(30);
+    q2.setPixelSize(12);
+    m2.setWeight(QFont::Normal);
+    f2.setWeight(QFont::DemiBold);
+    f_h2.setWeight(QFont::Bold);
+    q2.setWeight(QFont::Normal);
 
     QGraphicsDropShadowEffect *effect= new QGraphicsDropShadowEffect;
     effect->setOffset(0,0);
@@ -33,6 +61,21 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->passwordLineEdit->setPlaceholderText("设置你的登录密码");
     ui->passwordLineEdit_2->setPlaceholderText("请再次输入你的密码");
 
+    ui->passwordLabel->setFont(m2);
+    ui->passwordLabel_2->setFont(m2);
+    ui->userLable->setFont(m2);
+    ui->codeLabel->setFont(m2);
+    ui->passwordAlert->setFont(m2);
+    ui->userAlert->setFont(m2);
+    ui->codeAlert->setFont(m2);
+    ui->passwordLineEdit->setFont(q2);
+    ui->passwordLineEdit_2->setFont(q2);
+    ui->userLineEdit->setFont(q2);
+    ui->code->setFont(q2);
+    ui->codeBtn->setFont(m2);
+    ui->icon_words->setFont(f2);
+    ui->confirmBtn->setFont(f2);
+
     ui->userAlert->setVisible(false);
     ui->passwordAlert->setVisible(false);
     ui->codeAlert->setVisible(false);
@@ -42,8 +85,8 @@ resetDialog::resetDialog(QWidget *parent) :
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->confirmBtn->setStyleSheet(                 //调整确定按钮样式
-                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);font: 16px 黑体;font-weight:bold;color:white;}"
-                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);font: 16px 黑体;font-weight:bold;color:white;}");
+                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);color:white;}"
+                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);color:white;}");
     ui->codeBtn->setStyleSheet(                 //调整验证码按钮样式
                 "QPushButton{background-color: rgb(247, 247, 247);color:rgb(153,153,171);border:1px solid rgb(214,216,221);border-radius:4px;}"
                 "QPushButton:hover,QPushButton:focus{background-color: rgb(247, 247, 247);color:rgb(46,130,255);border:1px solid rgb(46,130,255);border-radius:4px;}");
@@ -266,10 +309,12 @@ void resetDialog::on_passwordLineEdit_2_textChanged(){
     QString passward=ui->passwordLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
-    }else{
-        ui->passwordAlert->setVisible(false);
+    if(passward != ""){
+        if(passward != passward_2){
+            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+        }else{
+            ui->passwordAlert->setVisible(false);
+        }
     }
 }
 
@@ -278,10 +323,12 @@ void resetDialog::on_passwordLineEdit_2_editingFinished(){
     QString passward=ui->passwordLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwordLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
-    }else{
-        ui->passwordAlert->setVisible(false);
+    if(passward != ""){
+        if(passward != passward_2){
+            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
+        }else{
+            ui->passwordAlert->setVisible(false);
+        }
     }
 }
 

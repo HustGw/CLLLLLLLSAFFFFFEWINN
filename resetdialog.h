@@ -9,6 +9,10 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTimer>
+#include <QFontDatabase>
+#include <QFont>
+#include <QCoreApplication>
+#include <QStringList>
 
 namespace Ui {
 class resetDialog;
