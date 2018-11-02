@@ -32,7 +32,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     closeBtn = new QPushButton(this);
     closeBtn->setGeometry(522, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
-    closeBtn->setCursor(QCursor(Qt::PointingHandCursor));   
+    closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));
     db = ConnectionPool::openConnection();
     setWindowTitle(tr("消息"));
@@ -250,7 +250,7 @@ void informationDlg::ignoreReq(){
             if(pt==b1){
                 bool updataSuccess = query.exec("update Decryption set status = 4 where id = '"+id+"'");
                 if(updataSuccess){
-                    InformationItem *q1 = this->findChild<InformationItem *>(id+"information");                   
+                    InformationItem *q1 = this->findChild<InformationItem *>(id+"information");
                     informationNum--;//发送信号数量减少
                     emit InforNumDecrease(); //发送信号通知InformationNum更新
 //                    delete q1;
@@ -723,7 +723,7 @@ void informationDlg::AddFriendIgnore(){
                 bool updateSuccess = updateQuery.exec("update friend set status = '2' where id = '"+ID+"'");
                 if(!updateSuccess){
                     qDebug()<<"update friend failed";
-                }                
+                }
                 FriendRequestCount--;//消息数量减一
                 FriendStatusNum--;
                 emit InforNumDecrease();

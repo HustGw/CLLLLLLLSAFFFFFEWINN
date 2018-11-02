@@ -22,7 +22,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         initPage = new QLabel(this);
         QFont font ("冬青黑体简体", 12, 75);
         initPage->setGeometry(241,162,285,30);
-        initPage->setStyleSheet("color:#afafaf;");
+        initPage->setStyleSheet("color:#dfdfdf;");
         initPage->setFont(font);
         initPage->setText("请调取本地文件进行加密");
          initLableFlag = true;

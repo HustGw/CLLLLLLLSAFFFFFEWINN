@@ -23,6 +23,7 @@ namespace Ui {
 class registerDialog;
 }
 
+extern QStringList m_fontList_;
 
 class registerDialog : public QDialog
 {

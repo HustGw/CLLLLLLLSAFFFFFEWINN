@@ -1,5 +1,6 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
+#include "msgbox2.h"
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -170,7 +171,8 @@ void registerDialog::on_signBtn_clicked()
            ui->signBtn->setEnabled(true);
            return;
        }
-       QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
+       MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("输入不能为空！"),this);
+       msgbox->exec();
        ui->signBtn->setEnabled(true);
        return;
    }
@@ -213,9 +215,10 @@ void registerDialog::on_signBtn_clicked()
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
            */
            }else{
-            QMessageBox::information(this,"警告","您未阅读并接受《云加密用户协议》！",QMessageBox::Ok);
-            ui->signBtn->setEnabled(true);
-            return;
+                MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("您未阅读并接受《云加密用户协议》！"),this);
+                msgbox->exec();
+                ui->signBtn->setEnabled(true);
+                return;
            }
        }
    }
@@ -359,7 +362,8 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
 
                                }
                                else if(content != ""){
-                                   QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
+                                   MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("注册成功！"),this);
+                                   msgbox->exec();
                                    ui->signBtn->setEnabled(true);
                                    this->close();
                                    return;
@@ -378,9 +382,11 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    timer1 = new QTimer(this);
                    connect(timer1,SIGNAL(timeout()),this,SLOT(showTimelimit()));
                    timer1->start(1000);
-                   QMessageBox::information(this,"提示","验证码已发送！",QMessageBox::Ok);
+                   MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("验证码已发送！"),this);
+                   msgbox->exec();
                }else{
-                    QMessageBox::warning(this,"警告","验证码发送失败！",QMessageBox::Ok);
+                   MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("验证码发送失败！"),this);
+                   msgbox->exec();
                }
                return;
 
@@ -426,26 +432,30 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                if(content.contains("phonenull",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::warning(this,"警告","电话号不存在",QMessageBox::Ok);
+                                   MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("电话号不存在！"),this);
+                                   msgbox->exec();
                                return;
 
                                }
                                else if(content.contains("passworderror",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::warning(this,"警告","密码错误",QMessageBox::Ok);
+                                   MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("密码错误！"),this);
+                                   msgbox->exec();
                                return;
 
                                }
                                else if(content.contains("freezing",Qt::CaseSensitive))
                                {
                                    //验证码错误。
-                                    QMessageBox::warning(this,"警告","账号已冻结",QMessageBox::Ok);
+                                   MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("账号已冻结！"),this);
+                                   msgbox->exec();
                                return;
 
                                }
                                else{
-                                   QMessageBox::information(this,"提示","注册成功",QMessageBox::Ok);
+                                   MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("注册成功！"),this);
+                                   msgbox->exec();
                                    this->close();
                                 return;
                                }
@@ -471,7 +481,8 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                 QNetworkReply* reply_2 = m_accessManagerRegister->post(request_2,postData_2);
                 return;
             }else{
-                QMessageBox::warning(this,"警告","手机号已注册！",QMessageBox::Ok);
+                MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("手机号已注册！"),this);
+                msgbox->exec();
                 ui->signBtn->setEnabled(true);
             }
             return;
