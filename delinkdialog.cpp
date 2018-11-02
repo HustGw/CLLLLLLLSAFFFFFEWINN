@@ -60,6 +60,8 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     inputLineEdit->setGeometry(40,80,391,31);
     inputLineEdit->setPlaceholderText(tr("输入链接"));
     inputLineEdit->setFont(f_1);
+    inputLineEdit->setStyleSheet("QLineEdit{border:1px solid rgb(214,216,221)}"
+                                 "QLineEdit:hover,QLineEdit:focus{border:1px solid rgb(46,130,255)}");
     connect(okBtn,SIGNAL(clicked(bool)),this,SLOT(sendLink()));
     connect(cancleBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));

@@ -406,7 +406,7 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
 
                              }else if(content.contains("repeatlogin",Qt::CaseSensitive))
                              {
-                                 MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("静止重复登录！"),this);
+                                 MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("禁止重复登录！"),this);
                                  msgbox->exec();
                              }
                              else{

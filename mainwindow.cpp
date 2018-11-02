@@ -264,7 +264,9 @@ MainWindow::MainWindow(QWidget *parent) :
                        f_progressBar = new QProgressBar();
                        f_progressBar = v1->progressBar;
                        f_progressBar->setObjectName(v1->objectName());
-
+//                       v1->fileIcon->stackUnder(f_progressBar);
+//                       v1->timeLabel->stackUnder(f_progressBar);
+                       f_progressBar->raise();
                        f_progressBar->hide();
                        f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
                        //decryptionViewController->vbox->addWidget(f_progressBar);
@@ -879,6 +881,9 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         f_progressBar = new QProgressBar();
         f_progressBar = v1->progressBar;
+        //f_progressBar->raise();
+        v1->fileIcon->stackUnder(f_progressBar);
+
         f_progressBar->setGeometry(0,0,700,75);
         f_progressBar->setTextVisible(false);
         QString strQSS = "QProgressBar { \
@@ -1438,6 +1443,7 @@ void MainWindow::ReceiveNewReq(){
                       decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
                       f_progressBar = new QProgressBar(this);
                       f_progressBar = v1->progressBar;
+                      f_progressBar->raise();
                       f_progressBar->setObjectName(v1->objectName());
                       f_progressBar->hide();
                       f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
@@ -1842,6 +1848,7 @@ void MainWindow::on_pushButton_8_clicked()
                    f1->elseLabel->raise();
                }
                f1->timeLabel->setText(query.record().value("article_uploadtime").toString());
+
                f1->checkBox->setObjectName(file_id + "check");
                f1->pathOpenBtn->setObjectName(file_id);
                f1->transprotBtn->setObjectName(file_id);
@@ -2778,6 +2785,9 @@ void MainWindow::LinkInsert(QString link){
         connect(a1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
         decryptionViewController->vbox->addWidget(a1);
         f_progressBar = new QProgressBar(this);
+        f_progressBar->raise();
+//        a1->fileIcon->stackUnder(f_progressBar);
+//        a1->timeLabel->stackUnder(f_progressBar);
         f_progressBar = a1->progressBar;
         f_progressBar->setObjectName(a1->objectName());
 //        f_progressBar->setMinimum(0);

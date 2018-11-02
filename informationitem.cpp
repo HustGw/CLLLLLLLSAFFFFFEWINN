@@ -8,9 +8,9 @@ InformationItem::InformationItem(QWidget *parent) : QWidget(parent)
     InforKindsLabel = new QLabel(this);
     timeLabel =  new QLabel(this);
     allowBtn->setText(QStringLiteral("允许"));
-    allowBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    allowBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ignoreBtn->setText(QStringLiteral("忽略"));
-    ignoreBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    ignoreBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     InforKindsLabel->setText("申请授权");
     timeLabel->setText("2018-8-2 14:33:59");
     allowBtn->setGeometry(285,75,80,30);

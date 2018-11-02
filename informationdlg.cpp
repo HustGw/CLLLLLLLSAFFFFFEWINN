@@ -220,6 +220,7 @@ void informationDlg::recvReq(){
                      q1->allowBtn->setText("已允许");
                      q1->resetColor();
                      q1->allowBtn->setGeometry(340,75,80,30);
+
                      q1->ignoreBtn->hide();
                   //   QMessageBox::warning(this,tr("Success"),tr("成功同意"),QMessageBox::Yes);
                 }
