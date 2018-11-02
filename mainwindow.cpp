@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->MidStaWidget->addWidget(decryptionViewController);
     ui->MidStaWidget->addWidget(finishViewController);
     ui->MidStaWidget->addWidget(finishViewController2);
-    ui->SearchEdit->setPlaceholderText(tr(" 好友昵称/手机号"));
+    ui->SearchEdit->setPlaceholderText(tr("好友昵称/手机号"));
     QSize editSize(190,20);
     QSize btsize(30,20);
     ui->SearchEdit->setFixedSize(editSize);
@@ -159,7 +159,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_13->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/newSearchIcon.png); }"
                                      "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/newSearchIcon_hover.png); }");
     ui->SearchEdit->setStyleSheet("border-radius:10px;"
-                                  "border:1px groove gray;"
+                                  "border:1px groove #D6D8DD;"
+                                  "padding-left:10px;"
+                                  "padding-right:32px;"
                                   );
     //查询数据库 获取用户名称
     setEmp_name();

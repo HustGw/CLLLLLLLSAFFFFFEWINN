@@ -103,7 +103,7 @@ void FinishEncryptionItem::onStateChanged(int state){
             fileIcon->setStyleSheet("background-color:#f6f7fa;");
             background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
             fileName->setStyleSheet("background-color:#f6f7fa");
-            label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:#f6f7fa; }");
+            label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finen_label.png);background-color:#f6f7fa; }");
             timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
             fileDescription->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");

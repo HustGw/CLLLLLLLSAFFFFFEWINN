@@ -41,8 +41,9 @@ shareDialog::shareDialog(QWidget *parent) :
 
     ui->textEdit->setPlainText(fake_address);
     ui->textEdit->setReadOnly(true);
-
-
+    ui->textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->textEdit->setStyleSheet("QMenu {border: 1px solid black}"
+                                        "QMenu::item:selected {background-color: grey;}");
 }
 
 shareDialog::~shareDialog()

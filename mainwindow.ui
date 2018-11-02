@@ -76,7 +76,7 @@
       <x>874</x>
       <y>87</y>
       <width>1</width>
-      <height>575</height>
+      <height>574</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -92,7 +92,7 @@
       <x>177</x>
       <y>87</y>
       <width>1</width>
-      <height>575</height>
+      <height>574</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -107,7 +107,7 @@
      <rect>
       <x>178</x>
       <y>127</y>
-      <width>697</width>
+      <width>696</width>
       <height>2</height>
      </rect>
     </property>
@@ -610,7 +610,7 @@
      <rect>
       <x>178</x>
       <y>623</y>
-      <width>697</width>
+      <width>696</width>
       <height>2</height>
      </rect>
     </property>
