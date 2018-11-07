@@ -103,5 +103,9 @@
         <file>pictures/login_main_logo.png</file>
         <file>pictures/login_password.png</file>
         <file>pictures/login_password_hover.png</file>
+        <file>pictures/login_check.png</file>
+        <file>pictures/login_check_hover.png</file>
+        <file>pictures/login_checked.png</file>
+        <file>pictures/login_checked_hover.png</file>
     </qresource>
 </RCC>

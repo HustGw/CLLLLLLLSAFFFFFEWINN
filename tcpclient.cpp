@@ -95,7 +95,14 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->clearBtn->setStyleSheet(                //调整清除密码账号按钮样式
                 "QPushButton{ background-image: url(:/new/login/pictures/login_clear_password.png);border:0px;}"
                 "QPushButton:hover{background-image: url(:/new/mainwindow/pictures/delete_button_hover.png);border:0px;}");
-
+    ui->Rem_Passwd->setStyleSheet("QCheckBox {color: black;}"
+                                        "QCheckBox::indicator {width: 16px;height: 16px;}"
+                                        "QCheckBox::indicator:enabled:unchecked {image: url(:/new/login/pictures/login_check.png);}"
+                                        "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/login/pictures/login_check_hover.png);}"
+                                        "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/login/pictures/login_check_hover.png);}"
+                                        "QCheckBox::indicator:enabled:checked {image: url(:/new/login/pictures/login_checked.png);}"
+                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/login/pictures/login_checked_hover.png);}"
+                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/login/pictures/login_checked_hover.png);}");
     ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->forgetBtn->setCursor(QCursor(Qt::PointingHandCursor));
@@ -103,7 +110,7 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->clearBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->minBtn->setCursor(QCursor(Qt::PointingHandCursor));
-
+    ui->Rem_Passwd->setCursor(QCursor(Qt::PointingHandCursor));
     ui->userLineEdit->setFont(q1);
     ui->passwardLineEdit->setFont(q1);
     ui->Rem_Passwd->setFont(m1);

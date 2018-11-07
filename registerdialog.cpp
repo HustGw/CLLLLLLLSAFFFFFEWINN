@@ -107,8 +107,13 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->signBtn->setCursor(QCursor(Qt::PointingHandCursor));
    ui->codeBtn->setCursor(QCursor(Qt::PointingHandCursor));
    ui->closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
-   ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}");
-
+   ui->checkBox->setStyleSheet("QCheckBox::indicator {width: 13px;height: 13px;}"
+                                     "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
+                                     "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                     "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
+                                     "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
+                                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
+                                     "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
    ui->signBtn->setStyleSheet(                 //调整登录按钮样式
                "QPushButton{border-radius:4px;background-color: rgb(46, 130, 255);color:white;}"
                "QPushButton:hover,QPushButton:focus{border-radius:4px;background-color: rgb(85, 170, 255);color:white;}");
