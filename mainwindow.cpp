@@ -461,6 +461,7 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_10:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                          "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                        //  "#line,#line_1,#line_2,#line_3,#line_4,#line_5,#line_6,#line_7,#line_8,#line_9,#line_10,#line_11 {background-color: rgb(243,243,243);}"
+                         "*{outline:0px;}"
                          );
 
 
@@ -2504,6 +2505,7 @@ void MainWindow::setEmp_name(){
             QString nickName = query.record().value("emp_name").toString();
             qDebug()<<nickName;
             ui->nameLabel->setFont(f_h);
+            ui->nameLabel->setStyleSheet("color:#3D3939");
             ui->nameLabel->setText(nickName);
 
         }

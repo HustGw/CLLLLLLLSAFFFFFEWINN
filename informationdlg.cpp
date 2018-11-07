@@ -30,7 +30,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     titleIcon->show();
  //   titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(522, 12, 13, 13);
+    closeBtn->setGeometry(525, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(closeBtn_press()));

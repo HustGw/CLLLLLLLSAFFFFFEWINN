@@ -25,18 +25,18 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     titleText = new QLabel(topWidget);
-    titleText->setGeometry(54,14,200,15);
+    titleText->setGeometry(54,11,200,15);
     titleText->setFont(f_2);
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("好友添加"));
     titleText->show();
     titleIcon = new QLabel(topWidget);
-    titleIcon->setGeometry(22,13,23,17);
+    titleIcon->setGeometry(22,10,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     titleIcon->show();
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(466, 12, 13, 13);
+    closeBtn->setGeometry(473, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
     closeBtn->setFont(f_1);
@@ -74,10 +74,10 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 //    userTitle->hide();
     addFriendBtn = new QPushButton(this);
     addFriendBtn->setFont(f_1);
-    addFriendBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    addFriendBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     cancelBtn = new QPushButton(this);
     cancelBtn->setFont(f_1);
-    cancelBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: rgb(119,146,183);}QPushButton:pressed{background-color: rgb(139,159,185);}");
+    cancelBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     addFriendBtn->hide();
     cancelBtn->hide();
     connect(cancelBtn,SIGNAL(clicked(bool)),this,SLOT(cancel()));

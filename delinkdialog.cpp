@@ -23,11 +23,11 @@ DelinkDialog::DelinkDialog(QWidget *parent):QDialog(parent)
     titleLabel = new QLabel(this);
     titleLabel->setGeometry(6,6,width-12,38);
     titleText = new QLabel(this);
-    titleText->setGeometry(54,19,200,15);
+    titleText->setGeometry(54,17,200,15);
     titleText->setFont(f_2);
     titleText->setStyleSheet("background-color: #EEF0F5;");
     titleIcon = new QLabel(this);
-    titleIcon->setGeometry(22,18,23,17);
+    titleIcon->setGeometry(22,16,23,17);
     titleIcon->setStyleSheet("border-image: url(:/new/mainwindow/pictures/system_icon.png);"
                              "background-color: #EEF0F5;");
     titleText->setText(QStringLiteral("链接下载"));
