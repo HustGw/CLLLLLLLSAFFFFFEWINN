@@ -27,6 +27,7 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     elseLabel->raise();
     elseLabel->setAlignment(Qt::AlignCenter);
     fileName = new QLabel(this);
+    fileName->setStyleSheet("color:#3D3939");
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
@@ -100,7 +101,7 @@ void FinishDecryptionItem::onStateChanged(int state){
         {
             fileIcon->setStyleSheet("background-color:#f6f7fa;");
             background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
-            fileName->setStyleSheet("background-color:#f6f7fa");
+            fileName->setStyleSheet("background-color:#f6f7fa;color:#3D3939");
             label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:#f6f7fa; }");
             timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
@@ -116,7 +117,7 @@ void FinishDecryptionItem::onStateChanged(int state){
         {
             fileIcon->setStyleSheet("background-color:white;");
             background->setStyleSheet("background-color:white;border:none;border-bottom:1px solid rgb(237,237,237)");
-            fileName->setStyleSheet("background-color:white");
+            fileName->setStyleSheet("background-color:white;color:#3D3939");
             label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:white }");
             timeLabel->setStyleSheet("background-color:white;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:white");

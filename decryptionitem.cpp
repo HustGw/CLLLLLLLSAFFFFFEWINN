@@ -29,7 +29,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
-
+    fileName->setStyleSheet("background-color:white;color:#3D3939");
 
     label = new QLabel(this);
     label->setGeometry(0,0,34,16);
@@ -94,7 +94,6 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
     progressBar->setStyleSheet(strQSS);
-    fileName->setStyleSheet("background:transparent");
     downloadBtn->setStyleSheet("background:transparent");
     f_14.setWeight(QFont::Normal);
     downloadBtn->setFont(f_14);
@@ -112,7 +111,7 @@ void DecryptionItem::onStateChanged(int state){
         {
             fileIcon->setStyleSheet("background-color:#f6f7fa;");
             background->setStyleSheet("background-color:#f6f7fa;border:1px solid #dae4ff");
-            fileName->setStyleSheet("background-color:#f6f7fa");
+            fileName->setStyleSheet("background-color:#f6f7fa;color:#3D3939");
             label->setStyleSheet("background-color:#f6f7fa;");
             timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
@@ -123,7 +122,7 @@ void DecryptionItem::onStateChanged(int state){
         {
             fileIcon->setStyleSheet("background-color:white;");
             background->setStyleSheet("background-color:white;border:none;border-bottom:1px solid rgb(237,237,237)");
-            fileName->setStyleSheet("background-color:white");
+            fileName->setStyleSheet("background-color:white;color:#3D3939");
             label->setStyleSheet("background-color:white");
             timeLabel->setStyleSheet("background-color:white;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:white");

@@ -42,7 +42,8 @@ sendDialog::sendDialog(QWidget *parent) :
                                     "border-bottom:1px solid rgb(207,207,208);"
                                     "border-left:1px solid rgb(207,207,208);"
                                     "border-right:1px solid rgb(207,207,208);}"
-                                    "QListWidget::Item {border:none;padding-left:20px}");
+                                    "QListWidget::Item {border:none;padding-left:20px}"
+                                    "QListWidget::item:selected{background-color:#f6f7fa;border:1px solid #dae4ff;color:#3D3939}");
     QString fileName_;
     QSqlQuery query(db1);
     bool select_file_name = query.exec("select * from varticle where article_id ='"+file_id+"'");
@@ -84,7 +85,7 @@ sendDialog::sendDialog(QWidget *parent) :
             b1->setFont(f_2);
             b1->setCursor(QCursor(Qt::PointingHandCursor));
 
-            b1->setStyleSheet("QCheckBox {color: black;spacing:-258px;padding-left:258px}"
+            b1->setStyleSheet("QCheckBox {color:#3D3939;spacing:-258px;padding-left:258px}"
                                                "QCheckBox::indicator {width: 13px;height: 13px;}"
                                                "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
                                                "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
@@ -123,7 +124,7 @@ void sendDialog::getCheckedItems(){
         QWidget * widget = ui->listWidget->itemWidget(item);
         QCheckBox * box =(QCheckBox*) widget;
         QString nick_name = box->text();
-        box->setStyleSheet("QCheckBox {color: black;spacing:-258px;padding-left:258px}"
+        box->setStyleSheet("QCheckBox {color:#3D3939;spacing:-258px;padding-left:258px}"
                                            "QCheckBox::indicator {width: 13px;height: 13px;}"
                                            "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
                                            "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"

@@ -42,7 +42,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
     titleLabel->setStyleSheet("QLabel{font-family :微软雅黑;font-size : 5em;color : rgb(255,255,255);background-color: #EEF0F5;}");
     titleLabel->setFont(f_2);
     closeBtn = new QPushButton(this);
-    closeBtn->setGeometry(414, 12, 13, 13);
+    closeBtn->setGeometry(423, 12, 13, 13);
     closeBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/delete_button.png);background-color: #EEF0F5;}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/delete_button_hover.png);background-color: #EEF0F5;}");
     closeBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
