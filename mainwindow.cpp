@@ -124,8 +124,10 @@ MainWindow::MainWindow(QWidget *parent) :
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(20,30,ui->RightWidget->width()-39,ui->RightWidget->height()-44);
     friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
-    friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
-
+    friendListWidget->setStyleSheet("QListWidget{border:0;padding:0;spacing:0;}"
+                                    "QListWidget::Item{border:none}"
+                                    "QListWidget::item:selected{background-color:#f6f7fa;border:1px solid #dae4ff;color:#3D3939}"
+                                    );
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
     connect(addFriendBtn,SIGNAL(clicked(bool)),this,SLOT(showAddfriendWidget()));//信号槽连接

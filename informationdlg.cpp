@@ -13,7 +13,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     topWidget->show();
     bottomWidget = new QWidget(this);
-    bottomWidget->setGeometry(7,43,540,463);
+    bottomWidget->setGeometry(7,43,540,460);//
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     titleText = new QLabel(topWidget);
     titleText->setGeometry(54,11,200,15);
@@ -38,6 +38,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     setWindowTitle(tr("消息"));
     vbox = new QVBoxLayout();
     ItemWidget = new QWidget();
+    ItemWidget->setContentsMargins(0,0,0,0);
     setItem();//布局函数
     CleanStatusLabel = new QLabel(this);
 //    lineLabel = new QLabel(this);
@@ -50,8 +51,9 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 //    framline->raise();
     cleanInforBtn = new Mylabel(this);
     cleanInforBtn->setText("清空消息记录");
+    cleanInforBtn->setAlignment(Qt::AlignCenter);
     cleanInforBtn->setStyleSheet("color:#3D6CFE");
-    cleanInforBtn->setGeometry(6,6,100,50);
+    cleanInforBtn->setGeometry(6,6,100,100);
     cleanInforBtn->setCursor(QCursor(Qt::PointingHandCursor));
     cleanInforBtn->setAlignment(Qt::AlignCenter);
     connect(cleanInforBtn,SIGNAL(LabelClicked()),this,SLOT(CleanAllInfor()));
@@ -63,8 +65,6 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         cleanInforBtn->setStyleSheet("color:#708090");
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
-        //scrollArea->setFrameRect(0,50,width-20,this->height()-50);
-        //scrollArea->setGeometry(QRect(0,50,width-20,this->height()-50));
         scrollArea->setStyleSheet("border:0;"
                                   "padding:0;"
                                   "spacing:0;");
@@ -124,12 +124,15 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         scrollLayout->addWidget(scrollArea);
         scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
+        scrollLayout->setMargin(0);
+        scrollLayout->setSpacing(0);
         bottomWidget->setLayout(scrollLayout);
     }
     else{
         CleanStatusLabel->hide();
         cleanInforBtn->setEnabled(true);
         cleanInforBtn->setStyleSheet("color:#3D6CFE");
+        ItemWidget->setContentsMargins(0,0,0,0);
         ItemWidget->setLayout(vbox);
         scrollArea = new QScrollArea();
         scrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
@@ -190,6 +193,8 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
         scrollLayout->addWidget(scrollArea);
         scrollLayout->addWidget(framline);
         scrollLayout->addWidget(cleanInforBtn);
+        scrollLayout->setMargin(0);
+        scrollLayout->setSpacing(0);
         bottomWidget->setLayout(scrollLayout);
     }
 
