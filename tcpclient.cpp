@@ -48,11 +48,11 @@ TcpClient::TcpClient(QWidget *parent) :
     f_h1.setFamily(m_fontList1.at(0));
     q1.setFamily(m_fontList1.at(0));
     m1.setPixelSize(14);
-    f1.setPixelSize(14);
+    f1.setPixelSize(16);
     f_h1.setPixelSize(22);
-    q1.setPixelSize(16);
+    q1.setPixelSize(19);
     m1.setWeight(QFont::Normal);
-    f1.setWeight(QFont::DemiBold);
+    f1.setWeight(QFont::Normal);
     f_h1.setWeight(QFont::Black);
     q1.setWeight(QFont::Normal);
 
@@ -84,7 +84,7 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
 
     ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
-                "QPushButton{border:0px;color:rgb(40,40,40);}"
+                "QPushButton{border:0px;color:rgb(102,102,102);}"
                 "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
     ui->forgetBtn->setStyleSheet(               //调整忘记密码按钮样式
                 "QPushButton{border:0px;color:rgb(30,90,255);}"
