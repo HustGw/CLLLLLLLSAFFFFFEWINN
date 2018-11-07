@@ -29,7 +29,7 @@ class friendInputDlg : public QDialog
 public:
     friendInputDlg(QWidget* parent= 0);
     QSize sizeHint() const{
-        return QSize(512,412);
+        return QSize(500,412);
     }
     QLabel *titleLabel;
     QLineEdit *inputLineEdit;

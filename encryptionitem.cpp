@@ -48,7 +48,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         line->setGeometry(0,76,750,1);
 
         fileDescription->setStyleSheet("background:transparent");
-        fileName->setStyleSheet("background:transparent");
+        fileName->setStyleSheet("background-color:white;color:#3D3939");
         fileSize->setStyleSheet("background:transparent");
         //timeInfo->setStyleSheet("background:transparent");
 

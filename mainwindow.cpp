@@ -124,7 +124,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addFriendBtn->setGeometry(22,505,155,26);//设置添加好友BUTTON位置
     friendListWidget->setGeometry(20,30,ui->RightWidget->width()-39,ui->RightWidget->height()-44);
     friendListWidget->setIconSize(QSize(50,20));//设置Item图标大小
-    friendListWidget->setStyleSheet("border:0;padding:0;spacing:0;");
+    friendListWidget->setStyleSheet("{border:0;padding:0;spacing:0;}"
+                                    "");
 
     addFriendBtn->setCursor(QCursor(Qt::PointingHandCursor));
     addFriendBtn->setStyleSheet("border-image: url(://pictures/AddFriend_icon.png);");
@@ -459,6 +460,7 @@ MainWindow::MainWindow(QWidget *parent) :
                          "QPushButton#pushButton_10:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                          "QPushButton#pushButton_11:hover { border-image: url(:/new/mainwindow/pictures/allselect_hover.png); }"
                        //  "#line,#line_1,#line_2,#line_3,#line_4,#line_5,#line_6,#line_7,#line_8,#line_9,#line_10,#line_11 {background-color: rgb(243,243,243);}"
+                         "*{outline:0px;}"
                          );
 
 
@@ -2502,6 +2504,7 @@ void MainWindow::setEmp_name(){
             QString nickName = query.record().value("emp_name").toString();
             qDebug()<<nickName;
             ui->nameLabel->setFont(f_h);
+            ui->nameLabel->setStyleSheet("color:#3D3939");
             ui->nameLabel->setText(nickName);
 
         }
