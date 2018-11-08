@@ -134,6 +134,7 @@ resetDialog::~resetDialog()
 void resetDialog::on_confirmBtn_clicked()
 {
    //点击注册按钮的响应
+    ui->passwordLineEdit->clearFocus();
     ui->confirmBtn->setEnabled(false);
 
     QString userName=ui->userLineEdit->text();  //获取对话框中用户名
@@ -156,16 +157,19 @@ void resetDialog::on_confirmBtn_clicked()
            ui->confirmBtn->clearFocus();
        }
        ui->confirmBtn->setEnabled(true);
+       ui->passwordLineEdit->clearFocus();
        MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("输入不能为空！"),this);
        msgbox->exec();
    }else{
        if(password != password_2){
+           ui->passwordLineEdit->clearFocus();
            ui->passwordAlert->setVisible(true);  //两次密码不一样，出现提示行
            ui->confirmBtn->clearFocus();
            ui->confirmBtn->setEnabled(true);
            flag_2 = 0;
        }
        if(QValidator::Acceptable!=v.validate(userName,pos)){
+           ui->passwordLineEdit->clearFocus();
            ui->userAlert->setText("手机号码格式不正确");
            ui->userAlert->setVisible(true);
            ui->confirmBtn->clearFocus();
@@ -192,6 +196,7 @@ void resetDialog::on_confirmBtn_clicked()
 
 
 void resetDialog::on_codeBtn_clicked(){
+    ui->codeBtn->clearFocus();
     //http 获取验证码
     QNetworkRequest request;
     //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
@@ -243,6 +248,7 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                 postData.append(ui->code->text());//参数
                 QNetworkReply* reply = m_accessManagerReset->post(request,postData);//发送http的post请求
             }else{
+                ui->passwordLineEdit->clearFocus();
                 ui->userAlert->setText("手机号未注册！");
                 ui->userAlert->setVisible(true);
                 ui->confirmBtn->setEnabled(true);
@@ -291,6 +297,7 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                              if(content.contains("error",Qt::CaseSensitive))
                              {
                                  //验证码错误。
+                                  ui->passwordLineEdit->clearFocus();
                                   ui->codeAlert->setVisible(true);
                                   ui->confirmBtn->setEnabled(true);
                                   return;
@@ -299,6 +306,7 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                              else if(content.contains("invalid",Qt::CaseSensitive))
                              {
                                  //验证码错误。
+                                  ui->passwordLineEdit->clearFocus();
                                   ui->codeAlert->setVisible(true);
                                   ui->confirmBtn->setEnabled(true);
                                   return;
@@ -306,6 +314,7 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                              }
                              else if(content.contains("success",Qt::CaseSensitive)){
                                  ui->codeAlert->setVisible(false);
+                                 ui->passwordLineEdit->clearFocus();
                                  MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("密码重置成功！"),this);
                                  msgbox->exec();
                                  ui->confirmBtn->setEnabled(true);
@@ -337,9 +346,11 @@ void resetDialog::finishedSlot(QNetworkReply *reply){
                  connect(timer2,SIGNAL(timeout()),this,SLOT(showTimelimit()));
                  timer2->start(1000);
 
+                 ui->passwordLineEdit->clearFocus();
                  MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("验证码已发送！"),this);
                  msgbox->exec();
              }else{
+                 ui->passwordLineEdit->clearFocus();
                  MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("验证码发送失败！"),this);
                  msgbox->exec();
              }
@@ -392,7 +403,7 @@ void resetDialog::on_passwordLineEdit_editingFinished(){
         }
     }else if(password == ""){
         ui->passwordAlert->setVisible(false);
-    }else{
+    }else if(!ui->passwordLineEdit_2->hasFocus()){
         ui->passwordAlert->setVisible(true);
     }
 }

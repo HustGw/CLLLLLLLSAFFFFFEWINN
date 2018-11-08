@@ -76,6 +76,8 @@ TcpClient::TcpClient(QWidget *parent) :
         ui->userLineEdit->setText(usersname);
         ui->passwardLineEdit->setText(passwd);
         ui->Rem_Passwd->setChecked(true);
+        ui->userLineEdit->editingFinished();
+        ui->passwardLineEdit->editingFinished();
     }
 
 
@@ -150,6 +152,7 @@ void TcpClient::on_forgetBtn_clicked()
 {   //点击忘记密码按钮的响应
 
     resetDialog *resDlg = new resetDialog(this);
+    ui->forgetBtn->clearFocus();
     resDlg->exec();
     return;
 }
@@ -494,6 +497,7 @@ void TcpClient::on_Rem_Passwd_clicked(){
     }else{
         remeberPasswd = false;
     }
+    ui->Rem_Passwd->clearFocus();
 }
 
 //登录成功后保存登录信息
