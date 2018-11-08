@@ -13,7 +13,7 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     topWidget->show();
     bottomWidget = new QWidget(this);
-    bottomWidget->setGeometry(7,43,541,460);//
+    bottomWidget->setGeometry(7,43,540,460);//
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     titleText = new QLabel(topWidget);
     titleText->setGeometry(54,11,200,15);
