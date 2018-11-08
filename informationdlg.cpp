@@ -7,13 +7,13 @@ informationDlg::informationDlg(QWidget *parent):QDialog(parent)
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
     //设置标题栏隐藏
     topWidget = new QWidget(this);
-    topWidget->setGeometry(6,6,540,37);
+    topWidget->setGeometry(6,6,541,37);
     topWidget->setStyleSheet("background-color:#EEF0F5");
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     topWidget->show();
     bottomWidget = new QWidget(this);
-    bottomWidget->setGeometry(7,43,540,460);//
+    bottomWidget->setGeometry(7,43,541,460);//
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     titleText = new QLabel(topWidget);
     titleText->setGeometry(54,11,200,15);
