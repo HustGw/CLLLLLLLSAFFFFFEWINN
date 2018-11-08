@@ -16,11 +16,11 @@ friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
     this->setFont(f_1);
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
     topWidget = new QWidget(this);
-    topWidget->setGeometry(6,6,500,37);
+    topWidget->setGeometry(6,6,488,37);
     topWidget->setStyleSheet("background-color:#EEF0F5");
     topWidget->show();
     bottomWidget = new QWidget(this);
-    bottomWidget->setGeometry(7,43,500,363);
+    bottomWidget->setGeometry(7,43,487,363);
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
