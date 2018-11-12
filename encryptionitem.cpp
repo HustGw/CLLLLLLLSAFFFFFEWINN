@@ -8,9 +8,12 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
     QFont f_14;
     QFont f_12;
     QFont f_10;
-    f_14.setFamily(m_fontList.at(0));
-    f_12.setFamily(m_fontList.at(0));
-    f_10.setFamily(m_fontList.at(0));
+//    f_14.setFamily(m_fontList.at(0));
+//    f_12.setFamily(m_fontList.at(0));
+//    f_10.setFamily(m_fontList.at(0));
+    f_10.setFamily("微软雅黑");
+    f_12.setFamily("微软雅黑");
+    f_14.setFamily("微软雅黑");
     f_14.setPixelSize(14);
     f_12.setPixelSize(12);
     f_10.setPixelSize(10);
@@ -48,7 +51,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         line->setGeometry(0,76,750,1);
 
         fileDescription->setStyleSheet("background:transparent");
-        fileName->setStyleSheet("background-color:white;color:#3D3939");
+        fileName->setStyleSheet("background:transparent;color:#3D3939");
         fileSize->setStyleSheet("background:transparent");
         //timeInfo->setStyleSheet("background:transparent");
 
@@ -61,7 +64,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         starEncptBtn->hide();
 
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-        fileName->setGeometry(95,12,150,16);
+        fileName->setGeometry(95,12,150,18);
         //timeInfo->setGeometry(300,31,200,30 );
         fileSize->setGeometry(95,31,100,12);
         fileDescription->setGeometry(95,48,200,14);

@@ -54,7 +54,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>  文件管理 </string>
+     <string>  文件管理</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="SearchEdit">
@@ -319,7 +319,7 @@
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
@@ -397,7 +397,7 @@
        </font>
       </property>
       <property name="text">
-       <string> 全选</string>
+       <string/>
       </property>
       <property name="iconSize">
        <size>
@@ -494,7 +494,7 @@
        </font>
       </property>
       <property name="text">
-       <string> 全选</string>
+       <string/>
       </property>
       <property name="iconSize">
        <size>
@@ -565,7 +565,7 @@
        </font>
       </property>
       <property name="text">
-       <string> 全选</string>
+       <string/>
       </property>
       <property name="iconSize">
        <size>

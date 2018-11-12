@@ -7,9 +7,12 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     QFont f_14;
     QFont f_12;
     QFont f_10;
-    f_14.setFamily(m_fontList.at(0));
-    f_12.setFamily(m_fontList.at(0));
-    f_10.setFamily(m_fontList.at(0));
+//    f_14.setFamily(m_fontList.at(0));
+//    f_12.setFamily(m_fontList.at(0));
+//    f_10.setFamily(m_fontList.at(0));
+    f_10.setFamily("微软雅黑");
+    f_12.setFamily("微软雅黑");
+    f_14.setFamily("微软雅黑");
     f_14.setPixelSize(14);
     f_12.setPixelSize(12);
     f_10.setPixelSize(10);
@@ -68,8 +71,8 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     pathOpenBtn->setCursor(QCursor(Qt::PointingHandCursor));
     deleteBtn->setCursor(QCursor(Qt::PointingHandCursor));
 
-    fileName->setGeometry(97,10,300,16);
-    fileSize->setGeometry(97,28,300,12);
+    fileName->setGeometry(97,9,300,18);
+    fileSize->setGeometry(97,29,300,12);
     fileDescription->setGeometry(97,42,400,14);
 
     transprotBtn->setGeometry(553,10,13,15);

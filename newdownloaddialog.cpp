@@ -7,14 +7,15 @@ newDownloadDialog::newDownloadDialog(QWidget *parent) :
     ui(new Ui::newDownloadDialog)
 {
     QFont f_1;
-    f_1.setFamily(m_fontList.at(0));
+    //f_1.setFamily(m_fontList.at(0));
     f_1.setPixelSize(14);
     f_1.setWeight(QFont::Normal);
     QFont f_2;
-    f_2.setFamily(m_fontList.at(0));
+    //f_2.setFamily(m_fontList.at(0));
     f_2.setPixelSize(14);
     f_2.setWeight(QFont::Bold);
-
+    f_1.setFamily("微软雅黑");
+    f_2.setFamily("微软雅黑");
 
     db1 = ConnectionPool::openConnection();
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);

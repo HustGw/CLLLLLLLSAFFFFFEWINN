@@ -51,6 +51,9 @@
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
     </property>
+    <property name="maxLength">
+     <number>11</number>
+    </property>
    </widget>
    <widget class="QLabel" name="passwordLabel">
     <property name="geometry">
@@ -77,6 +80,9 @@ border-radius:4px;</string>
     <property name="styleSheet">
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
+    </property>
+    <property name="maxLength">
+     <number>20</number>
     </property>
    </widget>
    <widget class="QLabel" name="passwordLabel_2">
@@ -105,6 +111,9 @@ border-radius:4px;</string>
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
     </property>
+    <property name="maxLength">
+     <number>20</number>
+    </property>
    </widget>
    <widget class="QLabel" name="codeLabel">
     <property name="geometry">
@@ -131,6 +140,9 @@ border-radius:4px;</string>
     <property name="styleSheet">
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
+    </property>
+    <property name="maxLength">
+     <number>6</number>
     </property>
    </widget>
    <widget class="QPushButton" name="confirmBtn">
@@ -231,11 +243,17 @@ border-radius:4px;</string>
       <height>1</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#eef0f5;</string>
+    </property>
     <property name="frameShape">
      <enum>QFrame::HLine</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
     </property>
    </widget>
   </widget>

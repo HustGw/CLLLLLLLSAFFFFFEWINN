@@ -6,21 +6,24 @@ extern QStringList m_fontList;
 friendInputDlg::friendInputDlg(QWidget *parent):QDialog(parent)
 {
     QFont f_1;
-    f_1.setFamily(m_fontList.at(0));
+    //f_1.setFamily(m_fontList.at(0));
     f_1.setPixelSize(14);
     f_1.setWeight(QFont::Normal);
     QFont f_2;
-    f_2.setFamily(m_fontList.at(0));
+    //f_2.setFamily(m_fontList.at(0));
+    f_2.setFamily("微软雅黑");
+    f_1.setFamily("微软雅黑");
+
     f_2.setPixelSize(14);
     f_2.setWeight(QFont::Bold);
     this->setFont(f_1);
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
     topWidget = new QWidget(this);
-    topWidget->setGeometry(6,6,500,37);
+    topWidget->setGeometry(6,6,488,37);
     topWidget->setStyleSheet("background-color:#EEF0F5");
     topWidget->show();
     bottomWidget = new QWidget(this);
-    bottomWidget->setGeometry(7,43,500,363);
+    bottomWidget->setGeometry(7,43,487,363);
     bottomWidget->setStyleSheet("background-color: #FFFFFF");
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);

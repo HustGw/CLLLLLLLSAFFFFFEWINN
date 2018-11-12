@@ -43,16 +43,20 @@ TcpClient::TcpClient(QWidget *parent) :
     {
         m_fontList1 << QFontDatabase::applicationFontFamilies(lcdFontId);
     }
-    m1.setFamily(m_fontList1.at(0));
-    f1.setFamily(m_fontList1.at(0));
-    f_h1.setFamily(m_fontList1.at(0));
-    q1.setFamily(m_fontList1.at(0));
+//    m1.setFamily(m_fontList1.at(0));
+//    f1.setFamily(m_fontList1.at(0));
+//    f_h1.setFamily(m_fontList1.at(0));
+//    q1.setFamily(m_fontList1.at(0));
+    m1.setFamily("微软雅黑");
+    f1.setFamily("微软雅黑");
+    f_h1.setFamily("微软雅黑");
+    q1.setFamily("微软雅黑");
     m1.setPixelSize(14);
-    f1.setPixelSize(14);
+    f1.setPixelSize(16);
     f_h1.setPixelSize(22);
-    q1.setPixelSize(16);
+    q1.setPixelSize(19);
     m1.setWeight(QFont::Normal);
-    f1.setWeight(QFont::DemiBold);
+    f1.setWeight(QFont::Normal);
     f_h1.setWeight(QFont::Black);
     q1.setWeight(QFont::Normal);
 
@@ -76,6 +80,8 @@ TcpClient::TcpClient(QWidget *parent) :
         ui->userLineEdit->setText(usersname);
         ui->passwardLineEdit->setText(passwd);
         ui->Rem_Passwd->setChecked(true);
+        ui->userLineEdit->editingFinished();
+        ui->passwardLineEdit->editingFinished();
     }
 
 
@@ -84,7 +90,7 @@ TcpClient::TcpClient(QWidget *parent) :
     ui->passwardLineEdit->setPlaceholderText(tr("请输入密码"));//设置密码提示信息
 
     ui->signBtn->setStyleSheet(                 //调整注册账号按钮样式
-                "QPushButton{border:0px;color:rgb(40,40,40);}"
+                "QPushButton{border:0px;color:rgb(102,102,102);}"
                 "QPushButton:hover{border:0px;color:rgb(57,140,255);}");
     ui->forgetBtn->setStyleSheet(               //调整忘记密码按钮样式
                 "QPushButton{border:0px;color:rgb(30,90,255);}"
@@ -150,6 +156,7 @@ void TcpClient::on_forgetBtn_clicked()
 {   //点击忘记密码按钮的响应
 
     resetDialog *resDlg = new resetDialog(this);
+    ui->forgetBtn->clearFocus();
     resDlg->exec();
     return;
 }
@@ -494,6 +501,7 @@ void TcpClient::on_Rem_Passwd_clicked(){
     }else{
         remeberPasswd = false;
     }
+    ui->Rem_Passwd->clearFocus();
 }
 
 //登录成功后保存登录信息

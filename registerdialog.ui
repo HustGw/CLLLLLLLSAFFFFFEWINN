@@ -65,6 +65,9 @@ border-bottom-right-radius:6px;</string>
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
     </property>
+    <property name="maxLength">
+     <number>20</number>
+    </property>
    </widget>
    <widget class="QLabel" name="passwardLabel">
     <property name="geometry">
@@ -91,6 +94,9 @@ border-radius:4px;</string>
     <property name="styleSheet">
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
+    </property>
+    <property name="maxLength">
+     <number>20</number>
     </property>
    </widget>
    <widget class="QLabel" name="passwardLabel_2">
@@ -122,6 +128,9 @@ border-radius:4px;</string>
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
     </property>
+    <property name="maxLength">
+     <number>20</number>
+    </property>
    </widget>
    <widget class="QLabel" name="userLabel">
     <property name="geometry">
@@ -149,6 +158,9 @@ border-radius:4px;</string>
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
     </property>
+    <property name="maxLength">
+     <number>11</number>
+    </property>
    </widget>
    <widget class="QLabel" name="codeLabel">
     <property name="geometry">
@@ -175,6 +187,9 @@ border-radius:4px;</string>
     <property name="styleSheet">
      <string notr="true">border:1px solid rgb(214,216,221);
 border-radius:4px;</string>
+    </property>
+    <property name="maxLength">
+     <number>6</number>
     </property>
    </widget>
    <widget class="QPushButton" name="codeBtn">

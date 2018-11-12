@@ -14,14 +14,15 @@ MsgBox2::MsgBox2(int style,QString text,QWidget* parent):QDialog(parent)
     }
     this->resize(450,190);
     QFont f3;
-    f3.setFamily(m_fontList3.at(0));
+    //f3.setFamily(m_fontList3.at(0));
     f3.setPixelSize(14);
     f3.setWeight(QFont::Normal);
     QFont f4;
-    f4.setFamily(m_fontList3.at(0));
+    //f4.setFamily(m_fontList3.at(0));
     f4.setPixelSize(14);
     f4.setWeight(QFont::Bold);
-
+    f3.setFamily("微软雅黑");
+    f4.setFamily("微软雅黑");
   //获取主界面的宽度
     int width = this->width();
     setStyleSheet("QWidget{background-color: #FFFFFF;}");

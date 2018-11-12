@@ -39,10 +39,14 @@ registerDialog::registerDialog(QWidget *parent) :
    {
        m_fontList_ << QFontDatabase::applicationFontFamilies(lcdFontId);
    }
-   m_.setFamily(m_fontList_.at(0));
-   f_.setFamily(m_fontList_.at(0));
-   f_h_.setFamily(m_fontList_.at(0));
-   q.setFamily(m_fontList_.at(0));
+   m_.setFamily("微软雅黑");
+   f_.setFamily("微软雅黑");
+   f_h_.setFamily("微软雅黑");
+   q.setFamily("微软雅黑");
+//   m_.setFamily(m_fontList_.at(0));
+//   f_.setFamily(m_fontList_.at(0));
+//   f_h_.setFamily(m_fontList_.at(0));
+//   q.setFamily(m_fontList_.at(0));
    m_.setPixelSize(14);
    f_.setPixelSize(14);
    f_h_.setPixelSize(30);
@@ -154,6 +158,7 @@ registerDialog::~registerDialog()
 
 void registerDialog::on_signBtn_clicked()
 {
+    ui->nichengLineEdit->clearFocus();
     ui->signBtn->setEnabled(false);
 //    ui->nichengAlert->setVisible(false);
 //    ui->passwardAlert->setVisible(false);
@@ -172,10 +177,12 @@ void registerDialog::on_signBtn_clicked()
 
    if(userName=="" || passward==""|| nicheng==""){//判断用户名、密码是否为空，为空弹出警告
        if(passward != passward_2){
+           ui->nichengLineEdit->clearFocus();
            ui->passwardAlert->setVisible(true);
            ui->signBtn->setEnabled(true);
            return;
        }
+       ui->nichengLineEdit->clearFocus();
        MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("输入不能为空！"),this);
        msgbox->exec();
        ui->signBtn->setEnabled(true);
@@ -183,9 +190,11 @@ void registerDialog::on_signBtn_clicked()
    }
    else{
        if(passward != passward_2){
+           ui->nichengLineEdit->clearFocus();
            ui->passwardAlert->setVisible(true);
            ui->signBtn->setEnabled(true);
        }else if(QValidator::Acceptable!=v.validate(userName,pos)){
+           ui->nichengLineEdit->clearFocus();
            ui->userAlert->setVisible(true);
            ui->signBtn->setEnabled(true);
        }else{
@@ -220,6 +229,7 @@ void registerDialog::on_signBtn_clicked()
            QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
            */
            }else{
+               ui->nichengLineEdit->clearFocus();
                 MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("您未阅读并接受《云加密用户协议》！"),this);
                 msgbox->exec();
                 ui->signBtn->setEnabled(true);
@@ -230,6 +240,8 @@ void registerDialog::on_signBtn_clicked()
 }
 
 void registerDialog::on_codeBtn_clicked(){
+    ui->codeBtn->clearFocus();
+    ui->nichengLineEdit->clearFocus();
     //http 获取验证码
     QNetworkRequest request;
     //request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
@@ -245,7 +257,9 @@ void registerDialog::on_codeBtn_clicked(){
 //http 返回响应
 void registerDialog::finishedSlot(QNetworkReply *reply)
 {
-
+    if(!ui->nichengLineEdit->hasFocus()){
+        ui->nichengLineEdit->clearFocus();
+    }
     if (reply->error() == QNetworkReply::NoError)
     {
         QByteArray bytes = reply->readAll();
@@ -304,6 +318,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
                    return;
                }else{
+                   ui->nichengLineEdit->clearFocus();
                     ui->nichengAlert->setVisible(true);
                     ui->user_id_label->setVisible(false);
                     ui->signBtn->setEnabled(true);
@@ -353,6 +368,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                if(content.contains("error",Qt::CaseSensitive))
                                {
                                    //验证码错误。
+                                    ui->nichengLineEdit->clearFocus();
                                     ui->codeAlert->setVisible(true);
                                     ui->signBtn->setEnabled(true);
                                     return;
@@ -361,12 +377,14 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                else if(content.contains("invalid",Qt::CaseSensitive))
                                {
                                    //验证码错误。
+                                    ui->nichengLineEdit->clearFocus();
                                     ui->codeAlert->setVisible(true);
                                     ui->signBtn->setEnabled(true);
                                     return;
 
                                }
                                else if(content != ""){
+                                   ui->nichengLineEdit->clearFocus();
                                    MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("注册成功！"),this);
                                    msgbox->exec();
                                    ui->signBtn->setEnabled(true);
@@ -387,9 +405,11 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    timer1 = new QTimer(this);
                    connect(timer1,SIGNAL(timeout()),this,SLOT(showTimelimit()));
                    timer1->start(1000);
+                   ui->nichengLineEdit->clearFocus();
                    MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("验证码已发送！"),this);
                    msgbox->exec();
                }else{
+                   ui->nichengLineEdit->clearFocus();
                    MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("验证码发送失败！"),this);
                    msgbox->exec();
                }
@@ -437,6 +457,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                if(content.contains("phonenull",Qt::CaseSensitive))
                                {
                                    //验证码错误。
+                                   ui->nichengLineEdit->clearFocus();
                                    MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("电话号不存在！"),this);
                                    msgbox->exec();
                                return;
@@ -445,6 +466,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                else if(content.contains("passworderror",Qt::CaseSensitive))
                                {
                                    //验证码错误。
+                                   ui->nichengLineEdit->clearFocus();
                                    MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("密码错误！"),this);
                                    msgbox->exec();
                                return;
@@ -453,12 +475,14 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                                else if(content.contains("freezing",Qt::CaseSensitive))
                                {
                                    //验证码错误。
+                                   ui->nichengLineEdit->clearFocus();
                                    MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("账号已冻结！"),this);
                                    msgbox->exec();
                                return;
 
                                }
                                else{
+                                   ui->nichengLineEdit->clearFocus();
                                    MsgBox2 *msgbox = new MsgBox2(4,QStringLiteral("注册成功！"),this);
                                    msgbox->exec();
                                    this->close();
@@ -486,6 +510,7 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                 QNetworkReply* reply_2 = m_accessManagerRegister->post(request_2,postData_2);
                 return;
             }else{
+                ui->nichengLineEdit->clearFocus();
                 MsgBox2 *msgbox = new MsgBox2(3,QStringLiteral("手机号已注册！"),this);
                 msgbox->exec();
                 ui->signBtn->setEnabled(true);
@@ -551,6 +576,8 @@ void registerDialog::on_passwardLineEdit_textChanged(){
         }else{
             ui->passwardAlert->setVisible(false);
         }
+    }else{
+        ui->passwardAlert->setVisible(false);
     }
 }
 
@@ -564,6 +591,10 @@ void registerDialog::on_passwardLineEdit_editingFinished(){
         }else{
             ui->passwardAlert->setVisible(false);
         }
+    }else if(passward == ""){
+        ui->passwardAlert->setVisible(false);
+    }else if(!ui->passwardLineEdit_2->hasFocus()){
+        ui->passwardAlert->setVisible(true);
     }
 }
 
@@ -571,10 +602,18 @@ void registerDialog::on_passwardLineEdit_2_textChanged(){
     QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwardAlert->setVisible(true);  //两次密码不一样，出现提示行
-    }else{
+    if(passward != ""){
+        if(passward_2 == ""){
+            ui->passwardAlert->setVisible(false);
+        }else if(passward != passward_2){
+            ui->passwardAlert->setVisible(true);
+        }else{
+            ui->passwardAlert->setVisible(false);
+        }
+    }else if(passward_2 == ""){
         ui->passwardAlert->setVisible(false);
+    }else{
+        ui->passwardAlert->setVisible(true);
     }
 }
 
@@ -583,8 +622,14 @@ void registerDialog::on_passwardLineEdit_2_editingFinished(){
     QString passward=ui->passwardLineEdit->text();  //获取对话框中密码
     QString passward_2=ui->passwardLineEdit_2->text();  //获取确认密码框中密码
 
-    if(passward != passward_2){
-        ui->passwardAlert->setVisible(true);  //两次密码不一样，出现提示行
+    if(passward == ""){
+        if(passward_2 == ""){
+            ui->passwardAlert->setVisible(false);
+        }else{
+            ui->passwardAlert->setVisible(true);
+        }
+    }else if(passward != passward_2){
+        ui->passwardAlert->setVisible(true);
     }else{
         ui->passwardAlert->setVisible(false);
     }

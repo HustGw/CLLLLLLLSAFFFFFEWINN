@@ -500,10 +500,14 @@ void MainWindow::InitUi(){
     {
         m_fontList_W4 << QFontDatabase::applicationFontFamilies(lcdFontId_2);
     }
-    m_w4.setFamily(m_fontList_W4.at(0));
-    m.setFamily(m_fontList.at(0));
-    f.setFamily(m_fontList.at(0));
-    f_h.setFamily(m_fontList.at(0));
+    m_w4.setFamily("微软雅黑");
+    m.setFamily("微软雅黑");
+    f.setFamily("微软雅黑");
+    f_h.setFamily("微软雅黑");
+//    m_w4.setFamily(m_fontList_W4.at(0));
+//    m.setFamily(m_fontList.at(0));
+//    f.setFamily(m_fontList.at(0));
+//    f_h.setFamily(m_fontList.at(0));
     m.setPixelSize(14);
     m_w4.setPixelSize(14);
     f.setPixelSize(14);
@@ -539,33 +543,33 @@ void MainWindow::InitUi(){
     ui->FinishedBtn->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_groupshare->setCursor(QCursor(Qt::PointingHandCursor));
     ui->finen_checkBox->setStyleSheet("QCheckBox {color: black;}"
-                                      "QCheckBox::indicator {width: 13px;height: 13px;}"
-                                      "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
-                                      "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                      "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                      "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
-                                      "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
-                                      "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
+                                      "QCheckBox::indicator {width: 52px;height: 14px;}"
+                                      "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_all.png);}"
+                                      "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                      "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                      "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked.png);}"
+                                      "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}"
+                                      "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}");
     ui->finen_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     ui->finen_checkBox->setFont(m);
     ui->finen_checkBox_2->setStyleSheet("QCheckBox {color: black;}"
-                                        "QCheckBox::indicator {width: 13px;height: 13px;}"
-                                        "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
-                                        "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                        "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                        "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
-                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
-                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
+                                        "QCheckBox::indicator {width: 52px;height: 14px;}"
+                                        "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_all.png);}"
+                                        "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                        "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                        "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked.png);}"
+                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}"
+                                        "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}");
     ui->finen_checkBox_2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->finen_checkBox_2->setFont(m);
     ui->de_checkBox->setStyleSheet("QCheckBox {color: black;}"
-                                   "QCheckBox::indicator {width: 13px;height: 13px;}"
-                                   "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/checkBox.png);}"
-                                   "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                   "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/checkBoxHover);}"
-                                   "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/checkBoxChecked);}"
-                                   "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}"
-                                   "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/checkBoxCheckedHover);}");
+                                   "QCheckBox::indicator {width: 52px;height: 14px;}"
+                                   "QCheckBox::indicator:enabled:unchecked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_all.png);}"
+                                   "QCheckBox::indicator:enabled:unchecked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                   "QCheckBox::indicator:enabled:unchecked:pressed {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_hover.png);}"
+                                   "QCheckBox::indicator:enabled:checked {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked.png);}"
+                                   "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}"
+                                   "QCheckBox::indicator:enabled:checked:hover {image: url(:/new/mainwindow/pictures/mainwindow_checkbox_checked_hover.png);}");
     ui->de_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     ui->de_checkBox->setFont(m);
 

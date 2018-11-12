@@ -8,13 +8,15 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     ui(new Ui::groupSendDialog)
 {
     QFont f_1;
-    f_1.setFamily(m_fontList.at(0));
+    //f_1.setFamily(m_fontList.at(0));
     f_1.setPixelSize(14);
     f_1.setWeight(QFont::Normal);
     QFont f_2;
-    f_2.setFamily(m_fontList.at(0));
+    //f_2.setFamily(m_fontList.at(0));
     f_2.setPixelSize(14);
     f_2.setWeight(QFont::Bold);
+    f_2.setFamily("微软雅黑");
+    f_1.setFamily("微软雅黑");
     groupSendDialogFlag = false;
     this->setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
@@ -23,7 +25,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     QSqlQuery query(db1);
     ui->label_3->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);}");
     ui->label_7->setStyleSheet("QLabel{border:1px solid rgb(207,207,208);border-bottom:none;}");
-    ui->label_2->setFont(f_1);
+    //ui->label_2->setFont(f_1);
     ui->label_8->setFont(f_1);
     ui->label_3->setFont(f_1);
     ui->label_7->setFont(f_1);
