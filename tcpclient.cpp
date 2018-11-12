@@ -43,10 +43,14 @@ TcpClient::TcpClient(QWidget *parent) :
     {
         m_fontList1 << QFontDatabase::applicationFontFamilies(lcdFontId);
     }
-    m1.setFamily(m_fontList1.at(0));
-    f1.setFamily(m_fontList1.at(0));
-    f_h1.setFamily(m_fontList1.at(0));
-    q1.setFamily(m_fontList1.at(0));
+//    m1.setFamily(m_fontList1.at(0));
+//    f1.setFamily(m_fontList1.at(0));
+//    f_h1.setFamily(m_fontList1.at(0));
+//    q1.setFamily(m_fontList1.at(0));
+    m1.setFamily("微软雅黑");
+    f1.setFamily("微软雅黑");
+    f_h1.setFamily("微软雅黑");
+    q1.setFamily("微软雅黑");
     m1.setPixelSize(14);
     f1.setPixelSize(16);
     f_h1.setPixelSize(22);

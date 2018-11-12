@@ -498,10 +498,14 @@ void MainWindow::InitUi(){
     {
         m_fontList_W4 << QFontDatabase::applicationFontFamilies(lcdFontId_2);
     }
-    m_w4.setFamily(m_fontList_W4.at(0));
-    m.setFamily(m_fontList.at(0));
-    f.setFamily(m_fontList.at(0));
-    f_h.setFamily(m_fontList.at(0));
+    m_w4.setFamily("微软雅黑");
+    m.setFamily("微软雅黑");
+    f.setFamily("微软雅黑");
+    f_h.setFamily("微软雅黑");
+//    m_w4.setFamily(m_fontList_W4.at(0));
+//    m.setFamily(m_fontList.at(0));
+//    f.setFamily(m_fontList.at(0));
+//    f_h.setFamily(m_fontList.at(0));
     m.setPixelSize(14);
     m_w4.setPixelSize(14);
     f.setPixelSize(14);

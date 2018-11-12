@@ -39,10 +39,14 @@ registerDialog::registerDialog(QWidget *parent) :
    {
        m_fontList_ << QFontDatabase::applicationFontFamilies(lcdFontId);
    }
-   m_.setFamily(m_fontList_.at(0));
-   f_.setFamily(m_fontList_.at(0));
-   f_h_.setFamily(m_fontList_.at(0));
-   q.setFamily(m_fontList_.at(0));
+   m_.setFamily("微软雅黑");
+   f_.setFamily("微软雅黑");
+   f_h_.setFamily("微软雅黑");
+   q.setFamily("微软雅黑");
+//   m_.setFamily(m_fontList_.at(0));
+//   f_.setFamily(m_fontList_.at(0));
+//   f_h_.setFamily(m_fontList_.at(0));
+//   q.setFamily(m_fontList_.at(0));
    m_.setPixelSize(14);
    f_.setPixelSize(14);
    f_h_.setPixelSize(30);

@@ -54,7 +54,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>  文件管理 </string>
+     <string>  文件管理</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="SearchEdit">
