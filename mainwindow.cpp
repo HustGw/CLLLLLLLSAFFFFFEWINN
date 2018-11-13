@@ -19,7 +19,7 @@ QStringList m_fontList;
 QStringList m_fontList_W4;
 bool groupSendDialogFlag;
 bool groupShareDialogFlag;
-
+QNetworkAccessManager *d_accessManager;
 
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
@@ -374,7 +374,7 @@ MainWindow::MainWindow(QWidget *parent) :
          while(query.next()){
              QString Friend_nickname = query.record().value("friend_nickname").toString();
              QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-             add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
+             add_item->setIcon(QIcon(":/new/mainwindow/pictures/FriendListIcon_new.png"));
              add_item->setText(Friend_nickname);
              add_item->setFont(m);
              add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
@@ -473,6 +473,8 @@ MainWindow::MainWindow(QWidget *parent) :
         threadTimer = new QTimer();
         QObject::connect( threadTimer, SIGNAL(timeout()), workThread, SLOT( work() ),Qt::AutoConnection );
         threadTimer->start(10000);   // 计时器，每隔几秒钟唤起工作线程；
+        d_accessManager = new QNetworkAccessManager(this);
+        connect(d_accessManager,SIGNAL(finished(QNetworkReply*)),this,SLOT(finishedSlot(QNetworkReply*)));
 
 }
 
@@ -1623,7 +1625,7 @@ void MainWindow::inforDlgaddFriend(QString name){
                         int i = friendListWidget->count();
                         i++;
                         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-                        add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
+                        add_item->setIcon(QIcon(":/new/mainwindow/pictures/FriendListIcon_new.png"));
                         add_item->setText(name);
                         add_item->setFont(m);
                         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
@@ -1699,7 +1701,7 @@ void MainWindow::inforDlgaddFriend(QString name){
         int i = friendListWidget->count();
         i++;
         QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-        add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
+        add_item->setIcon(QIcon(":/new/mainwindow/pictures/FriendListIcon_new.png"));
         add_item->setText(name);
         add_item->setFont(m);
         add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
@@ -2940,20 +2942,14 @@ void MainWindow::InforNum_Changed(){
 void MainWindow::on_pushButton_13_clicked()
 {
     QString searchcontent = ui->SearchEdit->text();
-    QListWidgetItem *finditem = new QListWidgetItem();
-    QList <QListWidgetItem *> item = friendListWidget->findItems(searchcontent,Qt::MatchContains);
-    if(item.size()==0){
-        qDebug()<<"查找0失败";
-    }
-    else{
-        finditem = item[0];
-    }
-    if(finditem ==nullptr){
-        qDebug()<<"查找失败！";
-    }
-    else{
-     friendListWidget->setCurrentItem(finditem);
-    }
+   //用户输入手机号 获取用户昵称
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://www.yunjiami1.com/cloud/Employee/FindUser.do"));
+    QByteArray postData;
+    postData.append("data=");//请求参数名
+    postData.append(searchcontent);
+    QNetworkReply *reply = d_accessManager->post(request,postData);
+
 
 
 }
@@ -3119,7 +3115,7 @@ void MainWindow::NewFriendAgree(){
         while(query.next()){
             QString Friend_nickname = query.record().value("friend_nickname").toString();
             QListWidgetItem *add_item = new QListWidgetItem(friendListWidget);
-            add_item->setIcon(QIcon(":/new/mainwindow/pictures/head_likui.png"));
+            add_item->setIcon(QIcon(":/new/mainwindow/pictures/FriendListIcon_new.png"));
             add_item->setText(Friend_nickname);
             add_item->setFont(m);
             add_item->setTextAlignment(Qt::AlignLeft|Qt::AlignLeft);
@@ -3343,4 +3339,83 @@ void MainWindow::clearCheckBox(){
     finencrypt_flag = 0;//已加密全选判断变量
     ui->finen_checkBox->setChecked(false);
     ui->finen_checkBox_2->setChecked(false);
+}
+
+void MainWindow::finishedSlot(QNetworkReply *reply){
+    if(reply->error()==QNetworkReply::NoError){
+        QByteArray bytes = reply->readAll();
+        qDebug()<<bytes;
+        QJsonParseError jsonError;//Qt5新类
+        QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
+        if(jsonError.error==QJsonParseError::NoError){
+            if(json.isObject()){
+                QJsonObject rootObj = json.object();
+                QString rootpath;
+                if(rootObj.contains("status")){
+                    QJsonValue value = rootObj.value("status");
+                    if(value.isString()){
+                        rootpath = value.toString();
+                        if(rootpath=="success"){
+                            QJsonObject contentValue = rootObj.value("content").toObject();
+                            QJsonValue CV = rootObj.value("content");
+                            QJsonValue a = contentValue.take("emp_name");
+                            QString output = a.toString();
+                            qDebug()<<output;
+                            output = CV.toString();
+                            qDebug()<<output;
+                            QString ename = "emp_name";
+                            QString lastindex = "emp_password";
+                            QString key = "qq_num";
+                            int index = output.indexOf(ename);
+                            int last = output.indexOf(lastindex);
+                            int qq = output.indexOf(key);
+                            qq +=9;
+
+                            //last-=5;
+                            qDebug()<<last;
+                            index+=11;
+                            qDebug()<<index;
+                            int lenth = last-index-3;
+                            QString ddd = output.mid(index,lenth);
+                            if(output==NULL){
+
+                            }
+                            else{
+                               QListWidgetItem *finditem = new QListWidgetItem();
+                               QList <QListWidgetItem *> item = friendListWidget->findItems(ddd,Qt::MatchContains);
+                               if(item.size()==0){
+                                   qDebug()<<"查找0失败";
+                               }
+                               else{
+                                   finditem = item[0];
+                               }
+                               if(finditem ==nullptr){
+                                   qDebug()<<"查找失败！";
+                               }
+                               else{
+                                friendListWidget->setCurrentItem(finditem);
+                               }
+                            }
+
+                        }
+                        else{
+                            //查询失败
+                            qDebug()<<"查询失败";
+
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+    else{
+        qDebug()<<"handle errors here";
+        QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        qDebug( "found error ....code: %d %d\n", statusCodeV.toInt(), (int)reply->error());
+        qDebug(qPrintable(reply->errorString()));
+
+    }
+    reply->deleteLater();
 }

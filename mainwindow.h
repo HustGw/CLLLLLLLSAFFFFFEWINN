@@ -77,6 +77,12 @@
 #include <QCoreApplication>
 #include <QStringList>
 #include <QScrollBar>
+#include <QtNetwork>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
 namespace Ui {
 class MainWindow;
 }
@@ -346,6 +352,7 @@ private slots:
     void clearCheckBox();
 
    // void on_pushButton_max_clicked();
+    void finishedSlot(QNetworkReply *reply);
 
 protected:
     void closeEvent(QCloseEvent *event);
