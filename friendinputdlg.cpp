@@ -295,7 +295,7 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                             }
                             else{
                                 //好友存在 对output进行处理
-                                userHead->setGeometry(60,110,80,80);
+                                userHead->setGeometry(60,118,80,80);
                                 userHead->setStyleSheet("min-width:  80px;"
                                                         "max-width:  80px;"
                                                         "min-height: 80px;"
@@ -306,7 +306,8 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
                                                         "border-image: url(:/new/src/pictures/newAddFriendHead.png) 0 0 0 0 stretch strectch;"
                                                         );
                                 userHead->show();
-                                userName->setGeometry(180,140,80,30);
+                                userName->setGeometry(180,110,200,40);
+                                userName->setFont(QFont("微软雅黑",18,QFont::Normal));
                                 userName->setText(ddd);
                                 userName->show();
                                // userPhone->setGeometry(240,110,80,30);
@@ -318,10 +319,10 @@ void friendInputDlg::finishedSlot(QNetworkReply *reply){
 //                                userId->setGeometry(220,160,80,30);
 //                                userId->setText(qq_num);
 //                                userId->show();
-                                addFriendBtn->setGeometry(180,220,80,40);
+                                addFriendBtn->setGeometry(180,159,80,40);
                                 addFriendBtn->setText("添加好友");
                                 addFriendBtn->show();
-                                cancelBtn->setGeometry(280,220,50,40);
+                                cancelBtn->setGeometry(280,159,50,40);
                                 cancelBtn->setText("取消");
                                 cancelBtn->show();
 

@@ -121,7 +121,8 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
 
 void groupSendDialog::getCheckedItems(){
     QFont f_2;
-    f_2.setFamily(m_fontList.at(0));
+    //f_2.setFamily(m_fontList.at(0));
+    f_2.setFamily("微软雅黑");
     f_2.setPixelSize(14);
     f_2.setWeight(QFont::Bold);
     int count = ui->listWidget->count();

@@ -127,9 +127,9 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
   <widget class="QListWidget" name="listWidget">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>56</x>
      <y>130</y>
-     <width>421</width>
+     <width>451</width>
      <height>291</height>
     </rect>
    </property>

@@ -31,6 +31,7 @@ newDownloadDialog::newDownloadDialog(QWidget *parent) :
     ui->pushButtoncancel->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
     ui->pushButtoncancel->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButtoncancel->setText(QStringLiteral("忽略"));
+    ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     connect(this,SIGNAL(downloadOne(QString)),parent,SLOT(downloadOneFile(QString)));
 }
 
@@ -47,7 +48,8 @@ void newDownloadDialog::clearlist(){
 }
 void newDownloadDialog::change_list_view(){
     QFont f_1;
-    f_1.setFamily(m_fontList.at(0));
+    //f_1.setFamily(m_fontList.at(0));
+    f_1.setFamily("微软雅黑");
     f_1.setPixelSize(14);
     f_1.setWeight(QFont::Normal);
     int count = ui->listWidget->count();
@@ -79,7 +81,20 @@ void newDownloadDialog::change_list_view(){
                 }else{
 
                 }
-                QString the_words = "用户"+sender_name+"向您传输文件"+file_name+"  时间："+file_time;
+                QString the_words = "用户"+sender_name+"向您传输文件"+file_name+"  时间："+file_time.left(file_time.length()-3);
+                QFontMetrics fm(f_1);
+                int fontSize = fm.width(the_words);
+                int fontSizeName = fm.width(file_name);
+                QString filetype_extra = file_name.section(".",0,0).mid(file_name.section(".",0,0).length()-2)+"."+file_name.section(".",1,1).trimmed().toStdString().c_str() ;
+               //int t = ui->listWidget->frameSize().width();
+               if( fontSize >= 451 ) //与label自身相比较
+               {
+                   QString str = fontMetrics().elidedText(file_name, Qt::ElideRight, fontSizeName - (fontSize - 381),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+                   the_words = "用户"+sender_name+"向您传输文件"+str+"  时间："+file_time.left(file_time.length()-3);        //重新设置label上的字符串
+
+               }else{
+
+               }
                 QListWidgetItem *file_item = new QListWidgetItem();
                 file_item->setText(the_words);
                 file_item->setSizeHint(QSize(200,40));
