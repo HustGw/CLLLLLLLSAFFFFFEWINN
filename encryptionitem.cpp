@@ -64,7 +64,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
         starEncptBtn->hide();
 
         //设置fileName、fileName fileDescription checkBox fileIcon 的位置
-        fileName->setGeometry(95,12,150,18);
+        fileName->setGeometry(95,12,400,20);
         //timeInfo->setGeometry(300,31,200,30 );
         fileSize->setGeometry(95,31,100,12);
         fileDescription->setGeometry(95,48,200,14);
