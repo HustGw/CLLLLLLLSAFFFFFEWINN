@@ -49,7 +49,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
 
 
     fileName->setFont(f_14);
-    fileSize->setFont(f_10);
+    fileSize->setFont(f_12);
     fileDescription->setFont(f_12);
     fileSize->setStyleSheet("QLabel{color:#9999AB;background:transparent}");
     fileDescription->setStyleSheet("QLabel{color:#9999AB;background:transparent}");

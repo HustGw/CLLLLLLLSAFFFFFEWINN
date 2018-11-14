@@ -34,7 +34,7 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     fileDescription = new QLabel(this);
     fileName->setStyleSheet("color:#3D3939");
     fileName->setFont(f_14);
-    fileSize->setFont(f_10);
+    fileSize->setFont(f_12);
     fileDescription->setFont(f_12);
     fileSize->setStyleSheet("color:#9999AB");
     fileDescription->setStyleSheet("color:#9999AB");

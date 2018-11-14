@@ -100,7 +100,7 @@ registerDialog::registerDialog(QWidget *parent) :
    ui->passwardLineEdit_2->setFont(q);
    ui->userLineEdit->setFont(q);
    ui->code->setFont(q);
-   ui->checklabel->setFont(m_);
+   //ui->checklabel->setFont(m_);
 
    ui->nichengAlert->setVisible(false);
    ui->passwardAlert->setVisible(false);

@@ -29,9 +29,9 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>192</y>
+      <y>186</y>
       <width>54</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -59,9 +59,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>52</y>
+      <y>46</y>
       <width>66</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -89,9 +89,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>122</y>
+      <y>116</y>
       <width>66</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -119,9 +119,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>262</y>
+      <y>256</y>
       <width>60</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">

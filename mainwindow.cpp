@@ -590,6 +590,7 @@ void MainWindow::on_FinishedBtn_clicked()
     clearCheckBox();
     ui->FinishedBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->FinishedBtn->setIcon(QIcon(":/new/mainwindow/pictures/fin_icon_selected.png"));
+    ui->FinishedBtn->setFont(f);
     ui->blue_encrypt_3->setStyleSheet("background-color: #3A8CFF");
     //点击已加密判断按钮是否需要隐藏下方按钮
     if(isFinishedBtn==0){
@@ -621,6 +622,7 @@ void MainWindow::on_DecryptionBtn_clicked()
     clearCheckBox();
     ui->blue_encrypt_2->setStyleSheet("background-color: #3A8CFF");
     ui->DecryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->DecryptionBtn->setFont(f);
     ui->DecryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/decryption_icon_selected.png"));
     ui->MidStaWidget->setCurrentWidget(decryptionViewController);
     ui->BtnStaWidget->setCurrentIndex(1);
@@ -641,6 +643,7 @@ void MainWindow::on_EncryptionBtn_clicked()
     ui->blue_encrypt->setStyleSheet("background-color: #3A8CFF");
     ui->EncryptionBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
     ui->EncryptionBtn->setIcon(QIcon(":/new/mainwindow/pictures/encryption_icon_selected.png"));
+    ui->EncryptionBtn->setFont(f);
 
     if (encryptionViewController->vbox->count()==0){
         //ui->BtnStaWidget->setCurrentWidget(encryptionPage);
@@ -674,6 +677,7 @@ void MainWindow::on_FinEnpBtn_clicked()
     clearCheckBox();
     ui->blue_encrypt_4->setStyleSheet("background-color: #3A8CFF");
     ui->FinEnpBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->FinEnpBtn->setFont(f);
     ui->MidStaWidget->setCurrentWidget(finishViewController);
     ui->BtnStaWidget->setCurrentIndex(2);
     on_pushButton_8_clicked();
@@ -691,6 +695,7 @@ void MainWindow::on_FinDepBtn_clicked()
     clearCheckBox();
     ui->blue_encrypt_5->setStyleSheet("background-color: #3A8CFF");
     ui->FinDepBtn->setStyleSheet("border-image: url(:/new/mainwindow/pictures/mainwindow_button_bg_selected.png);color:#3A8CFF;");
+    ui->FinDepBtn->setFont(f);
     ui->MidStaWidget->setCurrentWidget(finishViewController2);
     ui->BtnStaWidget->setCurrentIndex(3);
     on_pushButton_9_clicked();
@@ -2272,6 +2277,8 @@ void MainWindow::on_pushButton_9_clicked()
                delete f2;
 
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
+
+
                f1->setObjectName(file_id);
 
                QString filetype = file_name.section(".",1,1).trimmed().toStdString().c_str();
@@ -2315,9 +2322,9 @@ void MainWindow::on_pushButton_9_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
-               if( fontSize >= f1->fileName->width()-50 ) //与label自身相比较
+               if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
-                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-50 );//返回一个带有省略号的字符串
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-100 );//返回一个带有省略号的字符串
                    f1->fileName->setText( str );       //重新设置label上的字符串
                }else{
                    f1->fileName->setText(file_name);

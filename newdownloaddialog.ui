@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
+    <width>593</width>
     <height>512</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>6</x>
      <y>6</y>
-     <width>551</width>
+     <width>581</width>
      <height>38</height>
     </rect>
    </property>
@@ -65,7 +65,7 @@ border-image: url(:/new/mainwindow/pictures/system_icon.png);</string>
   <widget class="QPushButton" name="pushButton_close">
    <property name="geometry">
     <rect>
-     <x>536</x>
+     <x>566</x>
      <y>12</y>
      <width>13</width>
      <height>13</height>
@@ -84,7 +84,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
     <rect>
      <x>6</x>
      <y>44</y>
-     <width>551</width>
+     <width>581</width>
      <height>462</height>
     </rect>
    </property>
@@ -129,7 +129,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
     <rect>
      <x>56</x>
      <y>130</y>
-     <width>451</width>
+     <width>481</width>
      <height>291</height>
     </rect>
    </property>
@@ -137,7 +137,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
   <widget class="QPushButton" name="pushButtonconfirm">
    <property name="geometry">
     <rect>
-     <x>328</x>
+     <x>358</x>
      <y>460</y>
      <width>89</width>
      <height>27</height>
@@ -150,7 +150,7 @@ border-image: url(:/new/mainwindow/pictures/exit_button.png);</string>
   <widget class="QPushButton" name="pushButtoncancel">
    <property name="geometry">
     <rect>
-     <x>442</x>
+     <x>472</x>
      <y>460</y>
      <width>89</width>
      <height>27</height>

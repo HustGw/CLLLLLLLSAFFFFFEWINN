@@ -43,9 +43,9 @@ border-bottom-right-radius:6px;</string>
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>53</y>
+      <y>47</y>
       <width>39</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -73,9 +73,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>122</y>
+      <y>117</y>
       <width>66</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -103,9 +103,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>192</y>
+      <y>187</y>
       <width>66</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -136,9 +136,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>262</y>
+      <y>257</y>
       <width>54</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -166,9 +166,9 @@ border-radius:4px;</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>332</y>
+      <y>327</y>
       <width>60</width>
-      <height>15</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -360,7 +360,7 @@ border-radius:4px;</string>
       <x>142</x>
       <y>393</y>
       <width>193</width>
-      <height>14</height>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
