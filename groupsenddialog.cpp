@@ -73,7 +73,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
     int t = ui->label->frameSize().width();
     if( fontSize >= 500 ) //与label自身相比较
     {
-        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, fontSize - (fontSize - 500)-100,Qt::TextShowMnemonic);//返回一个带有省略号的字符串
+        QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, fontSize - (fontSize - 500) - 100,Qt::TextShowMnemonic);//返回一个带有省略号的字符串
         ui->label->setText(str + numberLabel);       //重新设置label上的字符串
         //ui->label->setGeometry(38,59,ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),16);
         //ui->label_10->setGeometry(38+ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),59,85,16);

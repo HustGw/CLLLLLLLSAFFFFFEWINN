@@ -64,7 +64,7 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
     downloadBtn->setStyleSheet("background:transparent");
     //timeLabel->setStyleSheet("background:transparent");
 
-    fileName->setGeometry(97,9,300,18);
+    fileName->setGeometry(97,9,350,18);
     fileSize->setGeometry(97,29,300,12);
     fileDescription->setGeometry(97,42,400,14);
 

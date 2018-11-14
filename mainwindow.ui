@@ -319,7 +319,7 @@
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
@@ -383,7 +383,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>13</y>
         <width>56</width>
         <height>14</height>
        </rect>
@@ -480,7 +480,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>13</y>
         <width>56</width>
         <height>14</height>
        </rect>
@@ -551,7 +551,7 @@
       <property name="geometry">
        <rect>
         <x>22</x>
-        <y>14</y>
+        <y>13</y>
         <width>56</width>
         <height>14</height>
        </rect>

@@ -97,7 +97,7 @@ void newDownloadDialog::change_list_view(){
                }
                 QListWidgetItem *file_item = new QListWidgetItem();
                 file_item->setText(the_words);
-                file_item->setSizeHint(QSize(200,40));
+                file_item->setSizeHint(QSize(400,40));
                 file_item->setFont(f_1);
                 ui->listWidget->insertItem(i,file_item);
             }

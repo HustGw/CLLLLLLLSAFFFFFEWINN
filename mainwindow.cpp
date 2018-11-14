@@ -202,9 +202,10 @@ MainWindow::MainWindow(QWidget *parent) :
                    DecryptionItem *v1 =  new DecryptionItem();
                    QString fName = query.record().value("file_name").toString();
                    int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
-                   if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                   QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
+                   if( fontSize >= v1->fileName->width()-100 ) //与label自身相比较
                    {
-                       QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                       QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
                        v1->fileName->setText( str );       //重新设置label上的字符串
                    }else{
                        v1->fileName->setText(fName);
@@ -514,7 +515,7 @@ void MainWindow::InitUi(){
     f_h.setPixelSize(20);
     m.setWeight(QFont::Normal);
     m_w4.setWeight(QFont::Normal);
-    f.setWeight(QFont::DemiBold);
+    f.setWeight(QFont::Bold);
     f_h.setWeight(QFont::Bold);
     ui->BtnStaWidget->setCurrentIndex(0);//BtnStaWidget跳转到加密界面
     ui->pushButton_3->setCursor(QCursor(Qt::PointingHandCursor));
@@ -832,9 +833,10 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         v1->setObjectName(fName);
         int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+        QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
         if( fontSize >= v1->fileName->width() ) //与label自身相比较
         {
-            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-100 )+filetype_extra;//返回一个带有省略号的字符串
             v1->fileName->setText( str );       //重新设置label上的字符串
         }else{
             v1->fileName->setText(fName);
@@ -1355,9 +1357,10 @@ void MainWindow::ReceiveNewReq(){
                   QString fName;
                   fName = query.record().value("file_name").toString();
                   int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
-                  if( fontSize >= v1->fileName->width()-50 ) //与label自身相比较
+                  QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
+                  if( fontSize >= v1->fileName->width()-100 ) //与label自身相比较
                   {
-                      QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-50 );//返回一个带有省略号的字符串
+                      QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
                       v1->fileName->setText( str );       //重新设置label上的字符串
                   }else{
                       v1->fileName->setText(fName);
@@ -1870,9 +1873,10 @@ void MainWindow::on_pushButton_8_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               QString filetype_extra = file_name.section(".",0,0).mid(file_name.section(".",0,0).length()-2)+"."+file_name.section(".",1,1).trimmed().toStdString().c_str() ;
                if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
-                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-100 );//返回一个带有省略号的字符串
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
                    f1->fileName->setText( str );       //重新设置label上的字符串
                }else{
                    f1->fileName->setText(file_name);
@@ -2322,9 +2326,10 @@ void MainWindow::on_pushButton_9_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
+               QString filetype_extra = file_name.section(".",0,0).mid(file_name.section(".",0,0).length()-2)+"."+file_name.section(".",1,1).trimmed().toStdString().c_str() ;
                if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
-                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-100 );//返回一个带有省略号的字符串
+                   QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
                    f1->fileName->setText( str );       //重新设置label上的字符串
                }else{
                    f1->fileName->setText(file_name);
@@ -2784,9 +2789,10 @@ void MainWindow::LinkInsert(QString link){
             a1->elseLabel->raise();
         }
         int fontSize = fontMetrics().width( Link_filename );//获取之前设置的字符串的像素大小
-        if( fontSize >= a1->fileName->width()-50 ) //与label自身相比较
+        QString filetype_extra = Link_filename.section(".",0,0).mid(Link_filename.section(".",0,0).length()-2)+"."+Link_filename.section(".",1,1).trimmed().toStdString().c_str() ;
+        if( fontSize >= a1->fileName->width()-100 ) //与label自身相比较
         {
-            QString str = fontMetrics().elidedText( Link_filename, Qt::ElideRight, a1->fileName->width()-50 );//返回一个带有省略号的字符串
+            QString str = fontMetrics().elidedText( Link_filename, Qt::ElideRight, a1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
             a1->fileName->setText( str );       //重新设置label上的字符串
         }else{
             a1->fileName->setText(Link_filename);

@@ -57,8 +57,22 @@ sendDialog::sendDialog(QWidget *parent) :
         }
     }
     fileName_="分享文件："+fileName_;
-    qDebug()<<fileName_;
-    ui->label->setText(fileName_);
+    QFontMetrics fm(f_1);
+    int fontSize = fm.width(fileName_);
+    QString filetype_extra = fileName_.section(".",0,0).mid(fileName_.section(".",0,0).length()-2)+"."+fileName_.section(".",1,1).trimmed().toStdString().c_str() ;
+   if( fontSize >= 500 ) //与label自身相比较
+   {
+       QString str = fontMetrics().elidedText(fileName_, Qt::ElideRight, fontSize - (fontSize - 500) - 100,Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+       ui->label->setText(str);       //重新设置label上的字符串
+       //ui->label->setGeometry(38,59,ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),16);
+       //ui->label_10->setGeometry(38+ui->label->frameSize().width() - (fontSize - ui->label->frameSize().width()),59,85,16);
+      // ui->label_10->hide();
+       //ui->label->setGeometry(38,59,700,16);
+   }else{
+       ui->label->setText(fileName_);
+//        ui->label->setGeometry(38,59,fontSize,16);
+
+   }
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));

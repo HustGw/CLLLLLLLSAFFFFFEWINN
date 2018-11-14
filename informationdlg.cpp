@@ -5,7 +5,7 @@ QList<QString>timelist;
 QFont font_;
 informationDlg::informationDlg(QWidget *parent):QDialog(parent)
 {
-    font_.setPixelSize(14);
+    font_.setPixelSize(15);
     setStyleSheet("QWidget{background-color: #FFFFFF;}");
     //设置标题栏隐藏
     topWidget = new QWidget(this);
@@ -327,19 +327,19 @@ void informationDlg::setItem(){
             }
             QString filename = query.record().value("file_name").toString();
             QString title = nickName+"请求文件"+filename+"密钥文件下载";
-
+            m1->titleLabel->setFont(font_);
             QFontMetrics fm(font_);
             int fontSize = fm.width(title);
             int fontSizeName = fm.width(filename);
             QString filetype_extra = filename.section(".",0,0).mid(filename.section(".",0,0).length()-2)+"."+filename.section(".",1,1).trimmed().toStdString().c_str() ;
            //int t = ui->listWidget->frameSize().width();
-           if( fontSize >= 451 ) //与label自身相比较
+           if( fontSize >= 400 ) //与label自身相比较
            {
-               QString str = fontMetrics().elidedText(filename, Qt::ElideRight, fontSizeName - (fontSize - 381),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+               QString str = fontMetrics().elidedText(filename, Qt::ElideRight, fontSizeName - (fontSize - 300),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
                title = nickName+"请求文件"+str+"密钥文件下载";        //重新设置label上的字符串
            }else{
            }
-            m1->titleLabel->setFont(font_);
+
             m1->titleLabel->setText(title);
             //判断当前状态 给予不同的按钮状态
             QString time = query.record().value("apply_time").toString();
@@ -492,19 +492,19 @@ void informationDlg::setItem(){
             }
             QString s = name+"传输文件"+fileName;
             m1->InforKindsLabel->setText("文件传输");
-
+            m1->titleLabel->setFont(font_);
             QFontMetrics fm(font_);
             int fontSize = fm.width(s);
             int fontSizeName = fm.width(fileName);
             QString filetype_extra = fileName.section(".",0,0).mid(fileName.section(".",0,0).length()-2)+"."+fileName.section(".",1,1).trimmed().toStdString().c_str() ;
            //int t = ui->listWidget->frameSize().width();
-           if( fontSize >= 451 ) //与label自身相比较
+           if( fontSize >= 400 ) //与label自身相比较
            {
-               QString str = fontMetrics().elidedText(fileName, Qt::ElideRight, fontSizeName - (fontSize - 381),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+               QString str = fontMetrics().elidedText(fileName, Qt::ElideRight, fontSizeName - (fontSize - 270),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
                s = name+"传输文件"+str;        //重新设置label上的字符串
            }else{
            }
-            m1->titleLabel->setFont(font_);
+
 
             m1->titleLabel->setText(s);
             int index2 = time_insertWidget(time);
