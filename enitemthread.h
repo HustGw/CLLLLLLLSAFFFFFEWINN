@@ -14,7 +14,7 @@ public:
 protected:
     void run() ;
 signals:
-    void resultReady(int value,QString itemName);
+    void resultReady(int value,QString itemName,double debugTime,double uploadTime);
 
 };
 

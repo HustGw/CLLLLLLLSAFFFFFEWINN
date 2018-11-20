@@ -18,6 +18,6 @@ void enItemThread::run()
 
         // 准备更新
         //qDebug()<<item;
-        emit resultReady(nValue,item);
+        emit resultReady(nValue,item,-1,-1);
     }
 }

@@ -13,7 +13,7 @@ void encryptthread::run(){
     int nValue = 21;
     if (ecptFlag==2){
 
-         emit result(0,item);
+         emit result(0,item,-1,-1);
 
     }
     else{
@@ -24,7 +24,7 @@ void encryptthread::run(){
             msleep(5);
             ++nValue;
             // 准备更新
-            emit result(nValue,item);
+            emit result(nValue,item,encpt->debugTime,encpt->uploadTime);
         }
     }
 

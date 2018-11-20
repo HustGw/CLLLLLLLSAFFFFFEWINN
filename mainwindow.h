@@ -276,7 +276,7 @@ private slots:
     void ChangeItemBtnText(QString fileID);
 
     // 更新进度条
-    void handleResults(int value,QString itemName);
+    void handleResults(int value,QString itemName,double debugTime,double uploadTime);
     // 开启进度条线程
     void startProgressBarThread(QString itemName);
     //开启加密进程

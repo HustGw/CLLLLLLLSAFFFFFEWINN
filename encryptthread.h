@@ -18,7 +18,7 @@ public:
 
 
 signals:
-    void result(int value,QString itemName);
+    void result(int value,QString itemName,double debugTime,double uploadTime);
 };
 
 #endif // ENCRYPTTHREAD_H

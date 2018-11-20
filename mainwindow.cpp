@@ -975,7 +975,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 }
 
 // 更新进度条
-void MainWindow::handleResults(int value,QString itemName)
+void MainWindow::handleResults(int value,QString itemName,double debugTime,double uploadTime)
 {
     EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
     //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
@@ -986,9 +986,85 @@ void MainWindow::handleResults(int value,QString itemName)
 
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
-        QString str = itemName + "加密已完成！";
-        str.toStdString();
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"),this);
+        itemName = itemName.toUtf8();
+
+        QString str  ;
+        str.append("加密已完成！");
+        //str.toStdString();
+
+        QString temstr ;
+        temstr.sprintf("%s%s%s","加密已完成！","\n","加密用时：");
+
+        int ss = 1000;
+        int mi = ss * 60;
+        int hh = mi * 60;
+        long hour = debugTime / hh;
+        long minute = (debugTime - hour * hh) / mi;
+        long second = (debugTime - hour * hh - minute * mi) / ss;
+        long milliSecond = debugTime - hour * hh - minute * mi - second * ss;
+
+        QString hou = QString::number(hour,10);
+        QString min = QString::number(minute,10);
+        QString sec = QString::number(second,10);
+        QString msec = QString::number(milliSecond,10);
+
+        if (debugTime < 60){
+            temstr.append(QString::number(debugTime,10,2));
+            temstr.append("秒");
+        }else{
+            //显示时间
+
+
+            //int dd = hh * 24;
+
+            //long day = ms / dd;
+
+
+            if (hour >0){
+                temstr.append(hou);
+                temstr.append("时");
+            }
+            if (minute >0){
+                temstr.append(min);
+                temstr.append("分");
+            }
+            if (second >0){
+                temstr.append(sec);
+                temstr.append("秒");
+            }
+        }
+
+
+        if (uploadTime < 60){
+            temstr.append("\n");
+            temstr.append("上传用时：");
+            temstr.append(QString::number(uploadTime,10,2));
+            temstr.append("秒");
+        }else{
+            hour = uploadTime / hh;
+            minute = (uploadTime - hour * hh) / mi;
+            second = (uploadTime - hour * hh - minute * mi) / ss;
+            hou = QString::number(hour,10);
+            min = QString::number(minute,10);
+            sec = QString::number(second,10);
+
+            if (hour >0){
+                temstr.append(hou);
+                temstr.append("时");
+            }
+            if (minute >0){
+                temstr.append(min);
+                temstr.append("分");
+            }
+            if (second >0){
+                temstr.append(sec);
+                temstr.append("秒");
+            }
+        }
+
+
+        //QString *temstr = "加密已完成！"+"加密时间："+ QString::number( debugTime,10)+"s   上传时间："+ QString::number(uploadTime,10)+"s";
+        MsgBox *msgbox = new MsgBox(4,temstr,this);
         msgbox->exec();
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
@@ -1077,7 +1153,7 @@ void MainWindow::startProgressBarThread( QString  itemName)
         //enit->item = itemName;
         enitemArr[enitemNum] = new enItemThread(this);
         //enItemThread *workerThread = new enItemThread(this);
-        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString)), this, SLOT(handleResults(int,QString)));
+        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString,double,double)), this, SLOT(handleResults(int,QString,double,double)));
         // 线程结束后，自动销毁
         connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
        enitemArr[enitemNum]->start();
@@ -1085,7 +1161,7 @@ void MainWindow::startProgressBarThread( QString  itemName)
         //startEncryptThread();
         encptThreadArr[encptThreadNum] = new encryptthread(this);
         //encryptthread *ecpThread = new encryptthread(this);
-        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString)),this,SLOT(handleResults(int,QString)));
+        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString,double,double)),this,SLOT(handleResults(int,QString,double,double)));
         // 线程结束后，自动销毁
         connect(encptThreadArr[encptThreadNum], SIGNAL(finished()), encptThreadArr[encptThreadNum], SLOT(deleteLater()));
         //ecpThread->start();

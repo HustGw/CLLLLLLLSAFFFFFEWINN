@@ -66,7 +66,7 @@ MsgBox::MsgBox(int style,QString text,QWidget* parent):QDialog(parent)
         msgBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/system_success.png);background: transparent;border:none;}");
     }
     askLabel = new QLabel(this);
-    askLabel->setGeometry(89,64,300,40);
+    askLabel->setGeometry(89,64,300,60);
     askLabel->setText(text);
     askLabel->setFont(f_1);
     deleteBtn = new QPushButton(this);
