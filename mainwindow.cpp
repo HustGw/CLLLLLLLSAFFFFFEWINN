@@ -995,7 +995,7 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
         QString temstr ;
         temstr.sprintf("%s%s%s","加密已完成！","\n","加密用时：");
 
-        int ss = 1000;
+        int ss = 1;
         int mi = ss * 60;
         int hh = mi * 60;
         long hour = debugTime / hh;
@@ -1034,10 +1034,10 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
             }
         }
 
-
+        temstr.append("\n");
+        temstr.append("上传用时：");
         if (uploadTime < 60){
-            temstr.append("\n");
-            temstr.append("上传用时：");
+
             temstr.append(QString::number(uploadTime,10,2));
             temstr.append("秒");
         }else{
