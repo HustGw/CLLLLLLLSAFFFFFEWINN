@@ -13,10 +13,17 @@
 #include <QPainter>
 #include <QSettings>
 #include "msgbox.h"
-
+extern QString version_id;
 extern QString Mac_address;
 extern QString LoginUserID;
 extern QString UserPhoneNum;
+extern QNetworkAccessManager *m_accessManager;
+extern QStringList m_fontList1;
+extern QFont f1;
+extern QFont m1;
+extern QFont f_h1;
+extern QFont q1;
+
 namespace Ui {
 class TcpClient;
 }
