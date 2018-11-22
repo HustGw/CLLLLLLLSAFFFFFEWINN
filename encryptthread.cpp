@@ -33,7 +33,7 @@ void encryptthread::run(){
         fSize=(double)(fSize/1024.);
         fSize = (int) fSize;
         long ss = fSize/100;
-        while (nValue < 100)
+        while (nValue < 300)
         {
             if (encptResultFlag==2){
 
