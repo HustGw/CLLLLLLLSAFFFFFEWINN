@@ -62,6 +62,7 @@ QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
 QString DecProFileID = nullptr;
 QString file_item_name;
+QFileInfo file_item_fileInfo;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -202,7 +203,13 @@ MainWindow::MainWindow(QWidget *parent) :
                    DecryptionItem *v1 =  new DecryptionItem();
                    QString fName = query.record().value("file_name").toString();
                    int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
-                   QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
+                   int pos = 0;int d_count = 0;
+                   pos = fName.indexOf(".");
+                   while (pos>-1) {
+                       d_count++;
+                       pos = fName.indexOf(".",pos+1);
+                   }
+                   QString filetype_extra = fName.section(".",d_count-1,d_count-1).mid(fName.section(".",d_count-1,d_count-1).length()-2)+"."+fName.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
                    if( fontSize >= v1->fileName->width()-100 ) //与label自身相比较
                    {
                        QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
@@ -831,12 +838,20 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         EncryptionItem *v1 = new EncryptionItem();
 
-        v1->setObjectName(fName);
+        v1->setObjectName(yzipFileID);
         int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
-        QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
-        if( fontSize >= v1->fileName->width() ) //与label自身相比较
+
+        int pos = 0;int d_count = 0;
+        pos = fName.indexOf(".");
+        while (pos>-1) {
+            d_count++;
+            pos = fName.indexOf(".",pos+1);
+        }
+
+        QString filetype_extra = fName.section(".",d_count-1,d_count-1).mid(fName.section(".",d_count-1,d_count-1).length()-2)+"."+fName.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
+        if( fontSize >= v1->fileName->width() - 100) //与label自身相比较
         {
-            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-100 )+filetype_extra;//返回一个带有省略号的字符串
+            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
             v1->fileName->setText( str );       //重新设置label上的字符串
         }else{
             v1->fileName->setText(fName);
@@ -876,7 +891,7 @@ void MainWindow::on_OpenFileBtn_clicked()
             v1->fileIcon->setPixmap(pixmap);
         }
 
-        v1->encryptStaBtn->setObjectName(fName);
+        v1->encryptStaBtn->setObjectName(yzipFileID);
         v1->encryptStaBtn->show();
         v1->encryptStaBtn->setEnabled(false);
         v1->encryptStaBtn->setText("加密中...");
@@ -888,7 +903,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         //qDebug()<<v1->checkBox->objectName();
 
-        v1->progressBar->setObjectName(fName);
+        v1->progressBar->setObjectName(yzipFileID);
         encryptionViewController->vbox->addWidget(v1);
 
         //ecptProgressbarItem *v2 = new ecptProgressbarItem();
@@ -911,7 +926,7 @@ void MainWindow::on_OpenFileBtn_clicked()
                 background-color: rgba(230, 277, 255,180); \
             }";
 //        f_progressBar->setStyleSheet(strQSS);
-        f_progressBar->setObjectName(fName);
+        f_progressBar->setObjectName(yzipFileID);
         //emit starEcptItem(fName);
         //connect(v1,SIGNAL(starEncptItem(QString)),on_OpenFileBtn_clicked(),SLOT(startProgressBarThread(QString)));
 //        f_progressBar->setMinimum(0);
@@ -961,20 +976,101 @@ void MainWindow::on_OpenFileBtn_clicked()
 }
 
 // 更新进度条
-void MainWindow::handleResults(int value,QString itemName)
+void MainWindow::handleResults(int value,QString itemName,double debugTime,double uploadTime)
 {
     EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
     //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
     //f_progressBar->setValue(value);
     v1->progressBar->setValue(value);
+    //v1->encryptStaBtn->setText("上传中...");
+    if (value>26){
+        v1->encryptStaBtn->setText("上传中...");
+        v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
+    }
 
     if (value==100){
 
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
-        QString str = itemName + "加密已完成！";
-        str.toStdString();
-        MsgBox *msgbox = new MsgBox(4,QStringLiteral("加密已完成！"),this);
+        itemName = itemName.toUtf8();
+
+        QString str  ;
+        str.append("加密已完成！");
+        //str.toStdString();
+
+        QString temstr ;
+        temstr.sprintf("%s%s%s","加密已完成！","\n","加密用时：");
+
+        int ss = 1;
+        int mi = ss * 60;
+        int hh = mi * 60;
+        long hour = debugTime / hh;
+        long minute = (debugTime - hour * hh) / mi;
+        long second = (debugTime - hour * hh - minute * mi) / ss;
+        long milliSecond = debugTime - hour * hh - minute * mi - second * ss;
+
+        QString hou = QString::number(hour,10);
+        QString min = QString::number(minute,10);
+        QString sec = QString::number(second,10);
+        QString msec = QString::number(milliSecond,10);
+
+        if (debugTime < 60){
+            temstr.append(QString::number(debugTime,10,2));
+            temstr.append("秒");
+        }else{
+            //显示时间
+
+
+            //int dd = hh * 24;
+
+            //long day = ms / dd;
+
+
+            if (hour >0){
+                temstr.append(hou);
+                temstr.append("时");
+            }
+            if (minute >0){
+                temstr.append(min);
+                temstr.append("分");
+            }
+            if (second >0){
+                temstr.append(sec);
+                temstr.append("秒");
+            }
+        }
+
+        temstr.append("\n");
+        temstr.append("上传用时：");
+        if (uploadTime < 60){
+
+            temstr.append(QString::number(uploadTime,10,2));
+            temstr.append("秒");
+        }else{
+            hour = uploadTime / hh;
+            minute = (uploadTime - hour * hh) / mi;
+            second = (uploadTime - hour * hh - minute * mi) / ss;
+            hou = QString::number(hour,10);
+            min = QString::number(minute,10);
+            sec = QString::number(second,10);
+
+            if (hour >0){
+                temstr.append(hou);
+                temstr.append("时");
+            }
+            if (minute >0){
+                temstr.append(min);
+                temstr.append("分");
+            }
+            if (second >0){
+                temstr.append(sec);
+                temstr.append("秒");
+            }
+        }
+
+
+        //QString *temstr = "加密已完成！"+"加密时间："+ QString::number( debugTime,10)+"s   上传时间："+ QString::number(uploadTime,10)+"s";
+        MsgBox *msgbox = new MsgBox(4,temstr,this);
         msgbox->exec();
 ///////////////////////////////删除加密完成的项目
         //EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(f_progressBar->objectName());
@@ -1044,26 +1140,29 @@ void MainWindow::on_encryptStaBtn_clicked(){
     v1->encryptStaBtn->show();
     v1->encryptStaBtn->setEnabled(false);
     v1->encryptStaBtn->setText("加密已完成！");
+    v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
 }
 
 void MainWindow::on_starEncptBtn_clicked(){
-    QString fName = openFileInfo.fileName();
-    startProgressBarThread(fName);
+    //QString fName = openFileInfo.fileName();
+    QString fName = yzipfileUuid;
+    startProgressBarThread(fName,openFileInfo);
 }
 
 // 开启进度条
-void MainWindow::startProgressBarThread( QString  itemName)
+void MainWindow::startProgressBarThread( QString  itemName,QFileInfo fileInfo)
 {
     if (fileOpenFlag){
 
         encryptthread *ecry = new encryptthread(this);
         file_item_name = itemName;
+        file_item_fileInfo = fileInfo;
         //ecry->itemName = itemName;
         enItemThread *enit = new enItemThread(this);
         //enit->item = itemName;
         enitemArr[enitemNum] = new enItemThread(this);
         //enItemThread *workerThread = new enItemThread(this);
-        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString)), this, SLOT(handleResults(int,QString)));
+        connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString,double,double)), this, SLOT(handleResults(int,QString,double,double)));
         // 线程结束后，自动销毁
         connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
        enitemArr[enitemNum]->start();
@@ -1071,7 +1170,7 @@ void MainWindow::startProgressBarThread( QString  itemName)
         //startEncryptThread();
         encptThreadArr[encptThreadNum] = new encryptthread(this);
         //encryptthread *ecpThread = new encryptthread(this);
-        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString)),this,SLOT(handleResults(int,QString)));
+        connect(encptThreadArr[encptThreadNum],SIGNAL(result(int,QString,double,double)),this,SLOT(handleResults(int,QString,double,double)));
         // 线程结束后，自动销毁
         connect(encptThreadArr[encptThreadNum], SIGNAL(finished()), encptThreadArr[encptThreadNum], SLOT(deleteLater()));
         //ecpThread->start();
@@ -1316,6 +1415,7 @@ void MainWindow::OssDownLoadFile(){
                     connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
                     connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
                     connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),decryBarThread[DecryBarNum],SLOT(run()));
+                    connect(downThread[threadNum],SIGNAL(sendTime(QString,double)),this,SLOT(setDecItemDowntime(QString,double)));
                     downThread[threadNum]->start();
 //                     emit DecryProBarID(onlyId);
 //                    decryBarThread[DecryBarNum]->start();
@@ -1357,7 +1457,13 @@ void MainWindow::ReceiveNewReq(){
                   QString fName;
                   fName = query.record().value("file_name").toString();
                   int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
-                  QString filetype_extra = fName.section(".",0,0).mid(fName.section(".",0,0).length()-2)+"."+fName.section(".",1,1).trimmed().toStdString().c_str() ;
+                  int pos = 0;int d_count = 0;
+                  pos = fName.indexOf(".");
+                  while (pos>-1) {
+                      d_count++;
+                      pos = fName.indexOf(".",pos+1);
+                  }
+                  QString filetype_extra = fName.section(".",d_count-1,d_count-1).mid(fName.section(".",d_count-1,d_count-1).length()-2)+"."+fName.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
                   if( fontSize >= v1->fileName->width()-100 ) //与label自身相比较
                   {
                       QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
@@ -1873,7 +1979,13 @@ void MainWindow::on_pushButton_8_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
-               QString filetype_extra = file_name.section(".",0,0).mid(file_name.section(".",0,0).length()-2)+"."+file_name.section(".",1,1).trimmed().toStdString().c_str() ;
+               int pos = 0;int d_count = 0;
+               pos = file_name.indexOf(".");
+               while (pos>-1) {
+                   d_count++;
+                   pos = file_name.indexOf(".",pos+1);
+               }
+               QString filetype_extra = file_name.section(".",d_count-1,d_count-1).mid(file_name.section(".",d_count-1,d_count-1).length()-2)+"."+file_name.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
                if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
                    QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
@@ -2326,7 +2438,13 @@ void MainWindow::on_pushButton_9_clicked()
                f1->deleteBtn->setObjectName(file_id);
 
                int fontSize = fontMetrics().width( file_name );//获取之前设置的字符串的像素大小
-               QString filetype_extra = file_name.section(".",0,0).mid(file_name.section(".",0,0).length()-2)+"."+file_name.section(".",1,1).trimmed().toStdString().c_str() ;
+               int pos = 0;int d_count = 0;
+               pos = file_name.indexOf(".");
+               while (pos>-1) {
+                   d_count++;
+                   pos = file_name.indexOf(".",pos+1);
+               }
+               QString filetype_extra = file_name.section(".",d_count-1,d_count-1).mid(file_name.section(".",d_count-1,d_count-1).length()-2)+"."+file_name.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
                if( fontSize >= f1->fileName->width()-100 ) //与label自身相比较
                {
                    QString str = fontMetrics().elidedText( file_name, Qt::ElideRight, f1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
@@ -2444,47 +2562,51 @@ void MainWindow::FileIsAllowed(){
                  //开始下载文件
                  depThread[DepThreadNum] = new DecryptionThread();
                  connect(depThread[DepThreadNum],SIGNAL(finished()),depThread[DepThreadNum],SLOT(deleteLater()));
-                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 connect(this,SIGNAL(sendFileID(QString,QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString,QString)));
                  connect(depThread[DepThreadNum],SIGNAL(decryptionFailed()),this,SLOT(RecDecryptionFailed()));
+                 connect(depThread[DepThreadNum],SIGNAL(sendDecTime(QString,double)),this,SLOT(setDecItemDectime(QString,double)));
                  depThread[DepThreadNum]->start();
-                 emit sendFileID(enkey_id,file_id,fileName);
+                 emit sendFileID(enkey_id,file_id,fileName,id);
                  DepThreadNum++;
-                 if(decryptionFlag == 0){
-                     //解密完成后将数据库该条数据状态status改成5
-                     QSqlQuery updateQuery(db);
-                     bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
-                     if(updataSuccess){
-                         RequsetAllowNum--;
-                         qDebug()<<"status=5 update success!";
-                     }
-                     else{
-                         qDebug()<<"status=5 update failed";
-                     }
-                     //解密完成后删除本地密钥和密文
-
-                     //解密完成后删除控件
-                     delete f1;
-                     //重新布局
-                     delete decryptionViewController->layout();
-                     decryptionViewController->vbox->setMargin(0);
-                     decryptionViewController->vbox->setSpacing(0);
-                     QWidget *newItemWidget = new QWidget();
-                     newItemWidget->setContentsMargins(0,0,0,0);
-                     newItemWidget->setLayout(decryptionViewController->vbox);
-                     newScrollArea->setWidget(newItemWidget);
-                     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-                     QVBoxLayout *newVbox = new QVBoxLayout();
-                     newVbox->setMargin(0);
-                     newVbox->setSpacing(0);
-                     newVbox->addWidget(newScrollArea);
-                     decryptionViewController->setLayout(newVbox);
-                     MsgBox *msgbox = new MsgBox(4,QStringLiteral("文件解密同意并成功解密"),this);
-                     msgbox->exec();
-                 }
-                 else{
-                     return;
-                 }
+//                 if(decryptionFlag == 0){
+//                     //解密完成后将数据库该条数据状态status改成5
+//                     QSqlQuery updateQuery(db);
+//                     bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+//                     if(updataSuccess){
+//                         RequsetAllowNum--;
+//                         qDebug()<<"status=5 update success!";
+//                     }
+//                     else{
+//                         qDebug()<<"status=5 update failed";
+//                     }
+//                     //解密完成后删除本地密钥和密文
+//                     QString dec_time = CreateTimeTitle(f1->dec_time);
+//                     QString dec_title = "文件解密同意并成功解密，解密时间为：";
+//                     dec_title.append(dec_time);
+//                     //解密完成后删除控件
+//                     delete f1;
+//                     qDebug()<<"删除后的打印";
+//                     //重新布局
+//                     delete decryptionViewController->layout();
+//                     decryptionViewController->vbox->setMargin(0);
+//                     decryptionViewController->vbox->setSpacing(0);
+//                     QWidget *newItemWidget = new QWidget();
+//                     newItemWidget->setContentsMargins(0,0,0,0);
+//                     newItemWidget->setLayout(decryptionViewController->vbox);
+//                     newScrollArea->setWidget(newItemWidget);
+//                     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+////                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//                     QVBoxLayout *newVbox = new QVBoxLayout();
+//                     newVbox->setMargin(0);
+//                     newVbox->setSpacing(0);
+//                     newVbox->addWidget(newScrollArea);
+//                     decryptionViewController->setLayout(newVbox);
+//                     MsgBox *msgbox = new MsgBox(4,dec_title,this);
+//                     msgbox->exec();
+//                 }
+//                 else{
+//                     return;
+//                 }
              }
          }
      }
@@ -2789,7 +2911,13 @@ void MainWindow::LinkInsert(QString link){
             a1->elseLabel->raise();
         }
         int fontSize = fontMetrics().width( Link_filename );//获取之前设置的字符串的像素大小
-        QString filetype_extra = Link_filename.section(".",0,0).mid(Link_filename.section(".",0,0).length()-2)+"."+Link_filename.section(".",1,1).trimmed().toStdString().c_str() ;
+        int pos = 0;int d_count = 0;
+        pos = Link_filename.indexOf(".");
+        while (pos>-1) {
+            d_count++;
+            pos = Link_filename.indexOf(".",pos+1);
+        }
+        QString filetype_extra = Link_filename.section(".",d_count-1,d_count-1).mid(Link_filename.section(".",d_count-1,d_count-1).length()-2)+"."+Link_filename.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
         if( fontSize >= a1->fileName->width()-100 ) //与label自身相比较
         {
             QString str = fontMetrics().elidedText( Link_filename, Qt::ElideRight, a1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
@@ -3237,6 +3365,14 @@ void MainWindow::ChangeDecItemProBar(int value, QString itemID){
         m1->label->show();
         delete n1;
         ReLayout();
+        //跳出弹框显示下载时间
+        qDebug()<<"downtime现在为：";
+        qDebug()<<m1->down_time;
+        QString time_get = CreateTimeTitle(m1->down_time);
+        QString time_title = "下载完成！下载时间为：";
+        time_title.append(time_get);
+        MsgBox *msgbox = new MsgBox(4,time_title,this);
+        msgbox->exec();
         //解除原有信号槽
         disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(DeProgressBarStart()));
         //连接新的信号槽
@@ -3431,4 +3567,103 @@ void MainWindow::finishedSlot(QNetworkReply *reply){
 
     }
     reply->deleteLater();
+}
+
+void MainWindow::setDecItemDowntime(QString id, double time){
+    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
+    m1->down_time=time;
+    qDebug()<<"downtime赋值为：";
+    qDebug()<<m1->down_time;
+}
+
+void MainWindow::setDecItemDectime(QString id, double time){
+    qDebug()<<"实施：";
+    qDebug()<<id;
+    qDebug()<<time;
+    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
+    if(m1==nullptr){
+        qDebug()<<"查找ID失败";
+        return;
+    }
+    m1->dec_time=time;
+    qDebug()<<"dec赋值为";
+    qDebug()<<m1->dec_time;
+    if(decryptionFlag == 0){
+        //解密完成后将数据库该条数据状态status改成5
+        QSqlQuery updateQuery(db);
+        bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+        if(updataSuccess){
+            RequsetAllowNum--;
+            qDebug()<<"status=5 update success!";
+        }
+        else{
+            qDebug()<<"status=5 update failed";
+        }
+        //解密完成后删除本地密钥和密文
+        QString dec_time = CreateTimeTitle(m1->dec_time);
+        QString dec_title = "文件解密同意并成功解密，解密时间为：";
+        dec_title.append(dec_time);
+        //解密完成后删除控件
+        delete m1;
+        //重新布局
+        delete decryptionViewController->layout();
+        decryptionViewController->vbox->setMargin(0);
+        decryptionViewController->vbox->setSpacing(0);
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
+        newItemWidget->setLayout(decryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
+        newVbox->addWidget(newScrollArea);
+        decryptionViewController->setLayout(newVbox);
+        MsgBox *msgbox = new MsgBox(4,dec_title,this);
+        msgbox->exec();
+    }
+    else{
+        return;
+    }
+}
+
+QString MainWindow::CreateTimeTitle(double time){
+    QString temstr;
+    int ss = 1;
+    int mi = ss * 60;
+    int hh = mi * 60;
+    long hour = time / hh;
+    long minute = (time - hour * hh) / mi;
+    long second = (time - hour * hh - minute * mi) / ss;
+
+    QString hou = QString::number(hour,10);
+    QString min = QString::number(minute,10);
+    QString sec = QString::number(second,10);
+    if (time < 60){
+        temstr.append(QString::number(time,10,2));
+        temstr.append("秒");
+    }else{
+        //显示时间
+
+
+        //int dd = hh * 24;
+
+        //long day = ms / dd;
+
+
+        if (hour >0){
+            temstr.append(hou);
+            temstr.append("时");
+        }
+        if (minute >0){
+            temstr.append(min);
+            temstr.append("分");
+        }
+        if (second >0){
+            temstr.append(sec);
+            temstr.append("秒");
+        }
+    }
+    return temstr;
 }

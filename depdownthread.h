@@ -6,6 +6,7 @@
 #include "downloadoss.h"
 #include "decryptionfile.h"
 #include <QMessageBox>
+#include <QTime>
 extern QString dekey_id;
 extern QString d_id;
 extern QString User_qqPath;
@@ -22,6 +23,7 @@ private slots:
     void DownContent(QString id,QString enkey_id);
 signals:
     void ChangeBtnText(QString fileID);
+    void sendTime(QString fileID,double time);
 
 };
 

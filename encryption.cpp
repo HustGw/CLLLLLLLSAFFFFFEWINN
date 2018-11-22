@@ -1,4 +1,4 @@
-#include "encryption.h"
+ #include "encryption.h"
 #include "downloadoss.h"//测试下载
 extern QString User_ID;
 extern QFileInfo openFileInfo;
@@ -74,6 +74,7 @@ void encryption::connect(){
 
 int encryption::encrypt(){
 
+    QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
     oss_PutFile_Flag=2;
     //drawItem(50);
@@ -127,7 +128,14 @@ int encryption::encrypt(){
     MsgBox *msgbox02;
     MsgBox *msgbox03;
     //QString path = fInfo.filePath();
-    switch (enfile->encryptFile(originalFilePath ,ykeyAbPath,uuPath,0,originalFileName,userID)) {
+
+    //记录加密时间
+    debug_Time.start();
+    int catgNum = enfile->encryptFile(originalFilePath ,ykeyAbPath,uuPath,0,originalFileName,userID);
+    //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
+    //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
+
+    switch (catgNum) {
     case 41:
         //QMessageBox::critical(NULL,"错误","打开源文件失败！",QMessageBox::Yes,NULL);
         msgbox01 = new MsgBox(2,QStringLiteral("打开源文件失败！"));
@@ -147,6 +155,7 @@ int encryption::encrypt(){
         return 2;
         break;
     }
+    debugTime = debug_Time.elapsed()/1000.0;
     //EncryptionItem *I1 = new EncryptionItem();
 
 
@@ -162,6 +171,9 @@ int encryption::encrypt(){
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
     qDebug()<<originalFileName;
     //密钥上传OSS
+    //记录上传文件时间
+    upload_Time.start();
+
     uploadoss *upKey = new uploadoss;
     upKey->OBJECT_NAME=enKeyID.c_str();
     upKey->BUCKET_NAME="cloudsafe-pc-ykey";
@@ -196,6 +208,7 @@ int encryption::encrypt(){
         {
             file.remove();
         }
+        file.close();
 
     }else if (oss_PutKey_Flag == 3) {
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
@@ -213,6 +226,11 @@ int encryption::encrypt(){
     upFile->filepath=yFile_oss_Path.data();
     //upFile->filepath = codec->fromUnicode(yFile_oss_Path.data()).data();
     oss_PutFile_Flag = upFile->put_object_from_file();
+
+    //qDebug()<<upload_Time.elapsed()/1000.0<<"s";
+    //tistr = upload_Time.elapsed()/1000.0;
+
+
     if (oss_PutFile_Flag==0){
         //QMessageBox::warning(this,"Success","申请成功请等待！",QMessageBox::Yes);
         //QMessageBox::critical(NULL,"错误","密钥上传错误",QMessageBox::Yes,NULL);
@@ -250,22 +268,27 @@ int encryption::encrypt(){
         newName =yPath+ "副本 1 "+originalFileName ;
         int count = 2;
         bool yes = yZipFile.rename(newName);
-        qDebug()<<yes;
+
         while (!yes) {
 
             QString num = QString::number(count);
             newName = yPath+"副本 "+num+" "+originalFileName ;
             yes = yZipFile.rename(newName);
             count++;
+            qDebug()<<"创建副本"<<yes;
         }
 
     }else {
         bool yes = yZipFile.rename(yzipAbPath);
-        qDebug()<<yes;
+        //qDebug()<<"创建副本"<<yes;
     }
-
+    yZipFile.close();
+    file.close();
+    uploadTime = upload_Time.elapsed()/1000.0;
 
     ConnectionPool::closeConnection(conn);
+    //debugTime = debug_Time.toString().toInt();
+    //uploadTime = upload_Time.toString().toInt();
     return 1;
 
     /////////////////////////////////密文下载测试

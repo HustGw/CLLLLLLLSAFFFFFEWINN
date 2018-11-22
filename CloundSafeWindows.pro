@@ -36,7 +36,7 @@ LIBS += -Loss-c-sdk/lib/Release/ -lmxml1
 
 
 
-LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
+#LIBS += -L$$quote(C:/Users/Administrator/Desktop/CLLLLLLLSAFFFFFEWINN-master/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
 #LIBS += -L$$quote(F:/QTProject/CLLLLLLLSAFFFFFEWINN/oss-c-sdk/lib/Release)
 
@@ -128,7 +128,8 @@ SOURCES += \
     newdownloaddialog.cpp \
     decryptprobarthread.cpp \
     heartthread.cpp \
-    msgbox2.cpp
+    msgbox2.cpp \
+    startencryptthread.cpp
 
 
 
@@ -231,7 +232,8 @@ HEADERS += \
     newdownloaddialog.h \
     decryptprobarthread.h \
     heartthread.h \
-    msgbox2.h
+    msgbox2.h \
+    startencryptthread.h
 
 
 

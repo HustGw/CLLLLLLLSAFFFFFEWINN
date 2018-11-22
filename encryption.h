@@ -24,6 +24,7 @@
 #include "QMessageBox"
 #include "QtWidgets"
 #include <msgbox.h>
+#include <QTime>
 
 class encryption
 {
@@ -41,6 +42,7 @@ public:
     QSqlDatabase conn ;
     int oss_PutKey_Flag;
     int oss_PutFile_Flag;
+    double debugTime,uploadTime;
 
 
 public:

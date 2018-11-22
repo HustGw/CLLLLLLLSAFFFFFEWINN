@@ -2,6 +2,8 @@
 QString Denkey_id = NULL;
 QString Dfile_id = NULL;
 QString Dfile_name = NULL;
+QString DItem_id=NULL;//Decryption表中的Item的ID
+QTime Dec_timer;
 DecryptionThread::DecryptionThread(QObject *parent):QThread(parent)
 {
     downKey=new downloadoss;
@@ -18,7 +20,7 @@ void DecryptionThread::run(){
     downKey->get_object_to_file();
     //下载完成后开始解密
     DecryptionFile *fileD = new DecryptionFile();
-
+    Dec_timer.start();
     QString contentPath = User_qqPath+"//Decrypt//content//"+Dfile_id;
     QString filePath = User_qqPath+"//Decrypt//file//"+Dfile_name;
 
@@ -35,7 +37,8 @@ void DecryptionThread::run(){
         }
     }
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
-        qDebug()<<"success";
+        double dectime = Dec_timer.elapsed()/1000.0;
+        emit sendDecTime(DItem_id,dectime);
         //解密成功后删除本地密文和密钥文件
         //QFile::remove(contentPath);//删除密文
         //QFile::remove(downPath);//删除密钥
@@ -45,10 +48,11 @@ void DecryptionThread::run(){
    }
 }
 
-void DecryptionThread::DecryptionThread_RecvID(QString enkey_id, QString file_id, QString file_name){
+void DecryptionThread::DecryptionThread_RecvID(QString enkey_id, QString file_id, QString file_name,QString item_id){
    Denkey_id = enkey_id;
    Dfile_id = file_id;
    Dfile_name = file_name;
+   DItem_id = item_id;
 }
 void DecryptionThread::RecProgressValue(double recValue){
     qDebug()<<recValue;
