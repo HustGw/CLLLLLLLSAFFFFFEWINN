@@ -208,6 +208,7 @@ int encryption::encrypt(){
         {
             file.remove();
         }
+        file.close();
 
     }else if (oss_PutKey_Flag == 3) {
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
@@ -267,19 +268,22 @@ int encryption::encrypt(){
         newName =yPath+ "副本 1 "+originalFileName ;
         int count = 2;
         bool yes = yZipFile.rename(newName);
-        qDebug()<<yes;
+
         while (!yes) {
 
             QString num = QString::number(count);
             newName = yPath+"副本 "+num+" "+originalFileName ;
             yes = yZipFile.rename(newName);
             count++;
+            qDebug()<<"创建副本"<<yes;
         }
 
     }else {
         bool yes = yZipFile.rename(yzipAbPath);
-        qDebug()<<yes;
+        //qDebug()<<"创建副本"<<yes;
     }
+    yZipFile.close();
+    file.close();
     uploadTime = upload_Time.elapsed()/1000.0;
 
     ConnectionPool::closeConnection(conn);

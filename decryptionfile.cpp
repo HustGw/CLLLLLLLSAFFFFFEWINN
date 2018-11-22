@@ -16,19 +16,19 @@
 using namespace std;
 extern errno_t err1, err2, err3, err4;
 
-extern FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
+ FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
 //extern QFile *origin_file_t,*key_file_t, *decryption_file_t, *ciphertext_file_t;
-extern int file_num;
-extern int single_key;
-extern double encryptPercent;
-extern size_t file_bytes;
-extern size_t file_length;
-extern size_t file_length_2;
-extern size_t key_length;
+ int d_file_num;
+ int d_single_key;
+ double d_encryptPercent;
+ size_t d_file_bytes;
+ size_t d_file_length;
+ size_t d_file_length_2;
+ size_t d_key_length;
 
 
-extern char file_buffer[BUFFER_SIZE];
-extern char key_buffer[BUFFER_SIZE];
+ char d_file_buffer[BUFFER_SIZE];
+ char d_key_buffer[BUFFER_SIZE];
 
 DecryptionFile::DecryptionFile()
 {
@@ -58,11 +58,22 @@ bool de_UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode){
 int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath) {
 
 
+    d_origin_file = nullptr;
+    d_key_file = nullptr;
+    d_decryption_file = nullptr;
+    d_ciphertext_file = nullptr;
+    d_file_num = 0;
+    d_single_key = 0;
+    d_encryptPercent = 0;
+    d_file_bytes = 0;
+    d_file_length = 0;
+    d_file_length_2 = 0;
+
         char de_originalFileLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
         char de_keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
         char de_ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
 
-        int extractionRate = 100;
+        int extractionRate = 20;
 
         abPath = abPath.toUtf8();
         ykeyAbPath = ykeyAbPath.toUtf8();
@@ -74,7 +85,7 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 
         wchar_t strUnicode1[260];
         de_UTF8ToUnicode(de_originalFileLocalPath, strUnicode1);
-        origin_file = _wfopen(strUnicode1, L"wb");
+        d_origin_file = _wfopen(strUnicode1, L"wb");
 
 //        err1 = fopen_s(&origin_file, de_originalFileLocalPath, "wb+");
 //        if (err1 != 0)
@@ -87,7 +98,7 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 //        qDebug()<<openflag2;
         wchar_t strUnicode2[260];
         de_UTF8ToUnicode(de_keyLocalPath, strUnicode2);
-        key_file = _wfopen(strUnicode2, L"rb");
+        d_key_file = _wfopen(strUnicode2, L"rb");
 //        err2 = fopen_s(&key_file, de_keyLocalPath, "rb+");
 //        if (err2 != 0)
 //        {
@@ -99,7 +110,7 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 //        qDebug()<<openflag3;
         wchar_t strUnicode3[260];
         de_UTF8ToUnicode(de_ciphertextPath, strUnicode3);
-        decryption_file = _wfopen(strUnicode3, L"rb");
+        d_decryption_file = _wfopen(strUnicode3, L"rb");
 //        err3 = fopen_s(&decryption_file, de_ciphertextPath, "rb+");
 //        if (err3 != 0)
 //        {
@@ -108,23 +119,23 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 //        }
 //        while ((file_length_2 = decryption_file_t->read(file_buffer,BUFFER_SIZE)) >0
 //               &&(key_length = key_file_t->read(key_buffer,BUFFER_SIZE / extractionRate)) >0) {
-        while (((file_length_2 = fread(file_buffer, 1, BUFFER_SIZE, decryption_file)) > 0)
-            && ((key_length = fread(key_buffer, 1, BUFFER_SIZE / extractionRate, key_file)) > 0)) {
+        while (((d_file_length_2 = fread(d_file_buffer, 1, BUFFER_SIZE, d_decryption_file)) > 0)
+            && ((d_key_length = fread(d_key_buffer, 1, BUFFER_SIZE / extractionRate, d_key_file)) > 0)) {
             qDebug()<<'1';
-            for (int i = 1; i <= key_length; i++) {
-                file_buffer[i * extractionRate] = key_buffer[i - 1];
+            for (int i = 1; i <= d_key_length; i++) {
+                d_file_buffer[i * extractionRate] = d_key_buffer[i - 1];
             }
-            fwrite(file_buffer, sizeof(char), file_length_2, origin_file);
+            fwrite(d_file_buffer, sizeof(char), d_file_length_2, d_origin_file);
             //origin_file_t->write(file_buffer,file_length_2);
-            memset(file_buffer, 0, BUFFER_SIZE);
+            memset(d_file_buffer, 0, BUFFER_SIZE);
         }
 
 //        origin_file_t->close();
 //        decryption_file_t->close();
 //        key_file_t->close();
-        fclose(origin_file);
-        fclose(decryption_file);
-        fclose(key_file);
+        fclose(d_origin_file);
+        fclose(d_decryption_file);
+        fclose(d_key_file);
 
         return DECRYPTION_SUCCESS;
 }

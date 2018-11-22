@@ -128,7 +128,8 @@ SOURCES += \
     newdownloaddialog.cpp \
     decryptprobarthread.cpp \
     heartthread.cpp \
-    msgbox2.cpp
+    msgbox2.cpp \
+    startencryptthread.cpp
 
 
 
@@ -231,7 +232,8 @@ HEADERS += \
     newdownloaddialog.h \
     decryptprobarthread.h \
     heartthread.h \
-    msgbox2.h
+    msgbox2.h \
+    startencryptthread.h
 
 
 

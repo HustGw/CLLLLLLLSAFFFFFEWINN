@@ -21,11 +21,8 @@
 
 using namespace std;
 
-
 errno_t err1, err2, err3, err4;
-
 FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
-
 int file_num;
 int single_key;
 double encryptPercent;
@@ -66,14 +63,25 @@ bool UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode)
 
 int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify){
 
-//    qDebug()<<'1';
+    qDebug()<<'1';
 
+    origin_file = nullptr;
+    key_file = nullptr;
+    decryption_file = nullptr;
+    ciphertext_file = nullptr;
+    file_num = 0;
+    single_key = 0;
+    encryptPercent = 0;
+    file_bytes = 0;
+    file_length = 0;
+    file_length_2 = 0;
+//    key_length = 0;
 
     char originalFileLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
     encryptPercent = percent / 100;
-    int extractionRate = 100;
+    int extractionRate = 20;
     qDebug()<<'2';
     ykeyAbPath = ykeyAbPath.toUtf8();
     fileAbPath = fileAbPath.toUtf8();

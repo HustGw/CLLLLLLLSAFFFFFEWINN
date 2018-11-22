@@ -62,6 +62,7 @@ QString yzipfileUuid;
 QString file_id_list; //批量分享时用的文件表
 QString DecProFileID = nullptr;
 QString file_item_name;
+QFileInfo file_item_fileInfo;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -837,7 +838,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         EncryptionItem *v1 = new EncryptionItem();
 
-        v1->setObjectName(fName);
+        v1->setObjectName(yzipFileID);
         int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
 
         int pos = 0;int d_count = 0;
@@ -890,7 +891,7 @@ void MainWindow::on_OpenFileBtn_clicked()
             v1->fileIcon->setPixmap(pixmap);
         }
 
-        v1->encryptStaBtn->setObjectName(fName);
+        v1->encryptStaBtn->setObjectName(yzipFileID);
         v1->encryptStaBtn->show();
         v1->encryptStaBtn->setEnabled(false);
         v1->encryptStaBtn->setText("加密中...");
@@ -902,7 +903,7 @@ void MainWindow::on_OpenFileBtn_clicked()
 
         //qDebug()<<v1->checkBox->objectName();
 
-        v1->progressBar->setObjectName(fName);
+        v1->progressBar->setObjectName(yzipFileID);
         encryptionViewController->vbox->addWidget(v1);
 
         //ecptProgressbarItem *v2 = new ecptProgressbarItem();
@@ -925,7 +926,7 @@ void MainWindow::on_OpenFileBtn_clicked()
                 background-color: rgba(230, 277, 255,180); \
             }";
 //        f_progressBar->setStyleSheet(strQSS);
-        f_progressBar->setObjectName(fName);
+        f_progressBar->setObjectName(yzipFileID);
         //emit starEcptItem(fName);
         //connect(v1,SIGNAL(starEncptItem(QString)),on_OpenFileBtn_clicked(),SLOT(startProgressBarThread(QString)));
 //        f_progressBar->setMinimum(0);
@@ -981,6 +982,11 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
     //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
     //f_progressBar->setValue(value);
     v1->progressBar->setValue(value);
+    //v1->encryptStaBtn->setText("上传中...");
+    if (value>26){
+        v1->encryptStaBtn->setText("上传中...");
+        v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
+    }
 
     if (value==100){
 
@@ -1134,20 +1140,23 @@ void MainWindow::on_encryptStaBtn_clicked(){
     v1->encryptStaBtn->show();
     v1->encryptStaBtn->setEnabled(false);
     v1->encryptStaBtn->setText("加密已完成！");
+    v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
 }
 
 void MainWindow::on_starEncptBtn_clicked(){
-    QString fName = openFileInfo.fileName();
-    startProgressBarThread(fName);
+    //QString fName = openFileInfo.fileName();
+    QString fName = yzipfileUuid;
+    startProgressBarThread(fName,openFileInfo);
 }
 
 // 开启进度条
-void MainWindow::startProgressBarThread( QString  itemName)
+void MainWindow::startProgressBarThread( QString  itemName,QFileInfo fileInfo)
 {
     if (fileOpenFlag){
 
         encryptthread *ecry = new encryptthread(this);
         file_item_name = itemName;
+        file_item_fileInfo = fileInfo;
         //ecry->itemName = itemName;
         enItemThread *enit = new enItemThread(this);
         //enit->item = itemName;
