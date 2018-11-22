@@ -8,7 +8,7 @@ extern QString User_qqNum;
 int dir_Flag = 0;
 encryption::encryption()
 {
-    conn = ConnectionPool::openConnection();
+
     //创建加密目录
     //创建CloundSafe 主目录
     if (dir_Flag != 0 ){
@@ -73,6 +73,8 @@ void encryption::connect(){
 }
 
 int encryption::encrypt(){
+
+    e_conn = ConnectionPool::openConnection();
 
     QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
@@ -166,7 +168,7 @@ int encryption::encrypt(){
 
 
     //conn.close();
-    QSqlQuery query(conn);
+    QSqlQuery query(e_conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
     qDebug()<<originalFileName;
@@ -258,6 +260,9 @@ int encryption::encrypt(){
         msgbox->exec();
     }
 
+    ConnectionPool::closeConnection(e_conn);
+    //e_conn.close();
+
     //QFile file(yzipAbPath);
     QString newName = yzipAbPath;
     QFile yZipFile(yFile_oss_Path);
@@ -286,7 +291,7 @@ int encryption::encrypt(){
     file.close();
     uploadTime = upload_Time.elapsed()/1000.0;
 
-    ConnectionPool::closeConnection(conn);
+
     //debugTime = debug_Time.toString().toInt();
     //uploadTime = upload_Time.toString().toInt();
     return 1;
