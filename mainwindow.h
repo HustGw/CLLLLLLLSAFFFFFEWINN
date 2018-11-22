@@ -352,7 +352,13 @@ private slots:
     void clearCheckBox();
 
    // void on_pushButton_max_clicked();
+    void setDecItemDowntime(QString id,double time);//设置ID为id的DecryptionItem的下载时间
+
     void finishedSlot(QNetworkReply *reply);
+
+    void setDecItemDectime(QString id,double time);
+
+    QString CreateTimeTitle(double time);//根据传入时间 生成完成时间
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -362,7 +368,7 @@ protected:
     void paintEvent(QPaintEvent *event);
 signals:
 //    void sendUserID(QString user_id);
-    void sendFileID(QString enkey_id,QString file_id,QString file_name);
+    void sendFileID(QString enkey_id,QString file_id,QString file_name,QString item_id);
     void OSSfileDownFileID(QString id,QString enkey_id);
     void SendInforToInforDlg(QString nickname,QString fileName,QString time);
     void showDownDialog(QString id);

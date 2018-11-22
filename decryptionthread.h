@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QFileInfo>
+#include <QTime>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;
@@ -23,10 +24,11 @@ public:
     explicit DecryptionThread(QObject *parent = 0);
     downloadoss *downKey;
 private slots:
-    void DecryptionThread_RecvID(QString enkey_id,QString file_id,QString file_name);
+    void DecryptionThread_RecvID(QString enkey_id,QString file_id,QString file_name,QString item_id);
     void RecProgressValue(double recValue);
 signals:
     void decryptionFailed();
+    void sendDecTime(QString fileID,double time);
 };
 
 #endif // DECRYPTIONTHREAD_H

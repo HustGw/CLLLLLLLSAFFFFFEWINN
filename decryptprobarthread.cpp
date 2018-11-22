@@ -1,5 +1,6 @@
 #include "decryptprobarthread.h"
 extern QString DecProFileID;
+extern double down_time;
 DecryptProBarThread::DecryptProBarThread(QObject *parent):QThread(parent){
     ItemID = DecProFileID;
 }
