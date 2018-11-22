@@ -32,6 +32,8 @@ public:
     QLabel *timeLabel;
     int flag;
     QProgressBar *progressBar;
+    double down_time;
+    double dec_time;
 
 
 signals:

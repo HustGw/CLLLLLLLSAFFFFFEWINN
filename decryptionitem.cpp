@@ -28,7 +28,8 @@ DecryptionItem::DecryptionItem(QWidget *parent) : QWidget(parent)
      background = new QLabel(this);
      background->setGeometry(0,0,695,71);
      background->setStyleSheet("border-bottom:1px solid rgb(237,237,237)");
-
+    down_time=0;
+    dec_time=0;
     fileName = new QLabel(this);
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);

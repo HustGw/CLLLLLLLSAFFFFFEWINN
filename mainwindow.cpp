@@ -1415,6 +1415,7 @@ void MainWindow::OssDownLoadFile(){
                     connect(downThread[threadNum],SIGNAL(finished()),downThread[threadNum],SLOT(deleteLater()));
                     connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
                     connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),decryBarThread[DecryBarNum],SLOT(run()));
+                    connect(downThread[threadNum],SIGNAL(sendTime(QString,double)),this,SLOT(setDecItemDowntime(QString,double)));
                     downThread[threadNum]->start();
 //                     emit DecryProBarID(onlyId);
 //                    decryBarThread[DecryBarNum]->start();
@@ -2561,47 +2562,51 @@ void MainWindow::FileIsAllowed(){
                  //开始下载文件
                  depThread[DepThreadNum] = new DecryptionThread();
                  connect(depThread[DepThreadNum],SIGNAL(finished()),depThread[DepThreadNum],SLOT(deleteLater()));
-                 connect(this,SIGNAL(sendFileID(QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString)));
+                 connect(this,SIGNAL(sendFileID(QString,QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString,QString)));
                  connect(depThread[DepThreadNum],SIGNAL(decryptionFailed()),this,SLOT(RecDecryptionFailed()));
+                 connect(depThread[DepThreadNum],SIGNAL(sendDecTime(QString,double)),this,SLOT(setDecItemDectime(QString,double)));
                  depThread[DepThreadNum]->start();
-                 emit sendFileID(enkey_id,file_id,fileName);
+                 emit sendFileID(enkey_id,file_id,fileName,id);
                  DepThreadNum++;
-                 if(decryptionFlag == 0){
-                     //解密完成后将数据库该条数据状态status改成5
-                     QSqlQuery updateQuery(db);
-                     bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
-                     if(updataSuccess){
-                         RequsetAllowNum--;
-                         qDebug()<<"status=5 update success!";
-                     }
-                     else{
-                         qDebug()<<"status=5 update failed";
-                     }
-                     //解密完成后删除本地密钥和密文
-
-                     //解密完成后删除控件
-                     delete f1;
-                     //重新布局
-                     delete decryptionViewController->layout();
-                     decryptionViewController->vbox->setMargin(0);
-                     decryptionViewController->vbox->setSpacing(0);
-                     QWidget *newItemWidget = new QWidget();
-                     newItemWidget->setContentsMargins(0,0,0,0);
-                     newItemWidget->setLayout(decryptionViewController->vbox);
-                     newScrollArea->setWidget(newItemWidget);
-                     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-                     QVBoxLayout *newVbox = new QVBoxLayout();
-                     newVbox->setMargin(0);
-                     newVbox->setSpacing(0);
-                     newVbox->addWidget(newScrollArea);
-                     decryptionViewController->setLayout(newVbox);
-                     MsgBox *msgbox = new MsgBox(4,QStringLiteral("文件解密同意并成功解密"),this);
-                     msgbox->exec();
-                 }
-                 else{
-                     return;
-                 }
+//                 if(decryptionFlag == 0){
+//                     //解密完成后将数据库该条数据状态status改成5
+//                     QSqlQuery updateQuery(db);
+//                     bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+//                     if(updataSuccess){
+//                         RequsetAllowNum--;
+//                         qDebug()<<"status=5 update success!";
+//                     }
+//                     else{
+//                         qDebug()<<"status=5 update failed";
+//                     }
+//                     //解密完成后删除本地密钥和密文
+//                     QString dec_time = CreateTimeTitle(f1->dec_time);
+//                     QString dec_title = "文件解密同意并成功解密，解密时间为：";
+//                     dec_title.append(dec_time);
+//                     //解密完成后删除控件
+//                     delete f1;
+//                     qDebug()<<"删除后的打印";
+//                     //重新布局
+//                     delete decryptionViewController->layout();
+//                     decryptionViewController->vbox->setMargin(0);
+//                     decryptionViewController->vbox->setSpacing(0);
+//                     QWidget *newItemWidget = new QWidget();
+//                     newItemWidget->setContentsMargins(0,0,0,0);
+//                     newItemWidget->setLayout(decryptionViewController->vbox);
+//                     newScrollArea->setWidget(newItemWidget);
+//                     newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+////                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//                     QVBoxLayout *newVbox = new QVBoxLayout();
+//                     newVbox->setMargin(0);
+//                     newVbox->setSpacing(0);
+//                     newVbox->addWidget(newScrollArea);
+//                     decryptionViewController->setLayout(newVbox);
+//                     MsgBox *msgbox = new MsgBox(4,dec_title,this);
+//                     msgbox->exec();
+//                 }
+//                 else{
+//                     return;
+//                 }
              }
          }
      }
@@ -3360,6 +3365,14 @@ void MainWindow::ChangeDecItemProBar(int value, QString itemID){
         m1->label->show();
         delete n1;
         ReLayout();
+        //跳出弹框显示下载时间
+        qDebug()<<"downtime现在为：";
+        qDebug()<<m1->down_time;
+        QString time_get = CreateTimeTitle(m1->down_time);
+        QString time_title = "下载完成！下载时间为：";
+        time_title.append(time_get);
+        MsgBox *msgbox = new MsgBox(4,time_title,this);
+        msgbox->exec();
         //解除原有信号槽
         disconnect(m1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(DeProgressBarStart()));
         //连接新的信号槽
@@ -3554,4 +3567,103 @@ void MainWindow::finishedSlot(QNetworkReply *reply){
 
     }
     reply->deleteLater();
+}
+
+void MainWindow::setDecItemDowntime(QString id, double time){
+    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
+    m1->down_time=time;
+    qDebug()<<"downtime赋值为：";
+    qDebug()<<m1->down_time;
+}
+
+void MainWindow::setDecItemDectime(QString id, double time){
+    qDebug()<<"实施：";
+    qDebug()<<id;
+    qDebug()<<time;
+    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
+    if(m1==nullptr){
+        qDebug()<<"查找ID失败";
+        return;
+    }
+    m1->dec_time=time;
+    qDebug()<<"dec赋值为";
+    qDebug()<<m1->dec_time;
+    if(decryptionFlag == 0){
+        //解密完成后将数据库该条数据状态status改成5
+        QSqlQuery updateQuery(db);
+        bool updataSuccess = updateQuery.exec("update Decryption set status = 5 where id ='"+id+"'");
+        if(updataSuccess){
+            RequsetAllowNum--;
+            qDebug()<<"status=5 update success!";
+        }
+        else{
+            qDebug()<<"status=5 update failed";
+        }
+        //解密完成后删除本地密钥和密文
+        QString dec_time = CreateTimeTitle(m1->dec_time);
+        QString dec_title = "文件解密同意并成功解密，解密时间为：";
+        dec_title.append(dec_time);
+        //解密完成后删除控件
+        delete m1;
+        //重新布局
+        delete decryptionViewController->layout();
+        decryptionViewController->vbox->setMargin(0);
+        decryptionViewController->vbox->setSpacing(0);
+        QWidget *newItemWidget = new QWidget();
+        newItemWidget->setContentsMargins(0,0,0,0);
+        newItemWidget->setLayout(decryptionViewController->vbox);
+        newScrollArea->setWidget(newItemWidget);
+        newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        QVBoxLayout *newVbox = new QVBoxLayout();
+        newVbox->setMargin(0);
+        newVbox->setSpacing(0);
+        newVbox->addWidget(newScrollArea);
+        decryptionViewController->setLayout(newVbox);
+        MsgBox *msgbox = new MsgBox(4,dec_title,this);
+        msgbox->exec();
+    }
+    else{
+        return;
+    }
+}
+
+QString MainWindow::CreateTimeTitle(double time){
+    QString temstr;
+    int ss = 1;
+    int mi = ss * 60;
+    int hh = mi * 60;
+    long hour = time / hh;
+    long minute = (time - hour * hh) / mi;
+    long second = (time - hour * hh - minute * mi) / ss;
+
+    QString hou = QString::number(hour,10);
+    QString min = QString::number(minute,10);
+    QString sec = QString::number(second,10);
+    if (time < 60){
+        temstr.append(QString::number(time,10,2));
+        temstr.append("秒");
+    }else{
+        //显示时间
+
+
+        //int dd = hh * 24;
+
+        //long day = ms / dd;
+
+
+        if (hour >0){
+            temstr.append(hou);
+            temstr.append("时");
+        }
+        if (minute >0){
+            temstr.append(min);
+            temstr.append("分");
+        }
+        if (second >0){
+            temstr.append(sec);
+            temstr.append("秒");
+        }
+    }
+    return temstr;
 }
