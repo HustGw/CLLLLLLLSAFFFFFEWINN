@@ -21,7 +21,7 @@ QFont m_;
 QFont f_h_("冬青黑体简体",10,60);
 QFont q;
 QNetworkAccessManager *m_accessManagerRegister;
-
+extern QString version_id;
 registerDialog::registerDialog(QWidget *parent) :
    QDialog(parent),
    ui(new Ui::registerDialog)
@@ -315,6 +315,8 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    postData.append("");//
                    postData.append("&emp_name=");//昵称
                    postData.append(ui->nichengLineEdit->text());//
+                   postData.append("&version_id=");
+                   postData.append(version_id);
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
                    return;
                }else{
