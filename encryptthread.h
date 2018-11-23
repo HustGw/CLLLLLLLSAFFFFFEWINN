@@ -3,6 +3,7 @@
 #include "QThread"
 #include "encryption.h"
 #include "QDebug"
+#include "startencryptthread.h"
 
 class encryptthread : public QThread
 {
@@ -14,8 +15,9 @@ public:
     explicit encryptthread(QObject *parent = 0);
     encryption *encpt= new encryption();
     QString item ;
+    startEncryptThread *ecry;
 private slots:
-    void handEncptResult(int resultNum,double debug_Time,double upload_Time);
+    void handEncptResult(int resultNum,QString itemName,double debug_Time,double upload_Time);
 
 
 

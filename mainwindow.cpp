@@ -15,6 +15,7 @@
 #include <QFile>
 
 extern int const EXIT_CODE_REBOOT;
+extern QString tempFilePath;
 QStringList m_fontList;
 QStringList m_fontList_W4;
 bool groupSendDialogFlag;
@@ -101,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     QString qq_Path = "C://CloundSafe//"+User_qqNum;
     User_qqPath = qq_Path;//给User_qqPath赋值
+    tempFilePath = "C://CloundSafe//"+User_qqNum+"//temp//";
     // 连接进度条信号槽
     //connect(ui->OpenFileBtn, SIGNAL(clicked(bool)), encptThreadArr[encptThreadNum], SLOT(startProgressBarThread()));
     //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
@@ -979,17 +981,20 @@ void MainWindow::on_OpenFileBtn_clicked()
 void MainWindow::handleResults(int value,QString itemName,double debugTime,double uploadTime)
 {
     EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
+    qDebug()<<"进度条name"<<itemName;
     //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
     //f_progressBar->setValue(value);
     v1->progressBar->setValue(value);
+    qDebug()<<"VVV"<<value;
     //v1->encryptStaBtn->setText("上传中...");
-    if (value>26){
+    if (value>=25){
         v1->encryptStaBtn->setText("上传中...");
         v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
     }
 
-    if (value==100){
+    if (value>=100){
 
+        qDebug()<<"删除"<<itemName;
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
         itemName = itemName.toUtf8();
@@ -999,7 +1004,7 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
         //str.toStdString();
 
         QString temstr ;
-        temstr.sprintf("%s%s%s","加密已完成！","\n","加密用时：");
+        temstr.sprintf("%s%s%s","加密已完成！","\n","加密文件耗时：");
 
         int ss = 1;
         int mi = ss * 60;
@@ -1041,7 +1046,7 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
         }
 
         temstr.append("\n");
-        temstr.append("上传用时：");
+        temstr.append("上传文件耗时：");
         if (uploadTime < 60){
 
             temstr.append(QString::number(uploadTime,10,2));
@@ -1068,7 +1073,7 @@ void MainWindow::handleResults(int value,QString itemName,double debugTime,doubl
             }
         }
 
-
+        //v1->progressBar->setValue(100);
         //QString *temstr = "加密已完成！"+"加密时间："+ QString::number( debugTime,10)+"s   上传时间："+ QString::number(uploadTime,10)+"s";
         MsgBox *msgbox = new MsgBox(4,temstr,this);
         msgbox->exec();
@@ -1154,11 +1159,11 @@ void MainWindow::startProgressBarThread( QString  itemName,QFileInfo fileInfo)
 {
     if (fileOpenFlag){
 
-        encryptthread *ecry = new encryptthread(this);
+        //encryptthread *ecry = new encryptthread(this);
         file_item_name = itemName;
         file_item_fileInfo = fileInfo;
         //ecry->itemName = itemName;
-        enItemThread *enit = new enItemThread(this);
+        //enItemThread *enit = new enItemThread(this);
         //enit->item = itemName;
         enitemArr[enitemNum] = new enItemThread(this);
         //enItemThread *workerThread = new enItemThread(this);

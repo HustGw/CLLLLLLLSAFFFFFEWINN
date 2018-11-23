@@ -1,5 +1,6 @@
 #include "decryptionfile.h"
 #include <QFile>
+#include "QDir"
 #define BUFFER_SIZE 52428800
 #define MAX_FILE_ADDRESS_LENGTH 512
 
@@ -14,6 +15,7 @@
 #define DECRYPTION_SUCCESS 54			  //解密成功
 
 using namespace std;
+extern QString tempFilePath;
 extern errno_t err1, err2, err3, err4;
 
  FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
@@ -69,17 +71,34 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
     d_file_length = 0;
     d_file_length_2 = 0;
 
-        char de_originalFileLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
-        char de_keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
-        char de_ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
+    char de_originalFileLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
+    char de_keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
+    char de_ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
 
-        int extractionRate = 20;
+    int extractionRate = 200;
 
+    QFileInfo or_fileInfo (abPath);
+    QFileInfo yz_fileInfo (yzipAbPath);
+    //QString tempFilePath = "C://CloundSafe//"+User_qqNum+"//temp//" + originalFileName;
+    QString temp_filePath = tempFilePath +"tmp"+ yz_fileInfo.fileName();
+    QString fileSuffix = or_fileInfo.suffix();
+    qDebug()<<"后缀名："<<fileSuffix;
+    //base64解码
+    if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+        temp_filePath = temp_filePath.toUtf8();
+        strcpy_s(de_originalFileLocalPath, temp_filePath.toStdString().c_str());
+    }else{
         abPath = abPath.toUtf8();
+        strcpy_s(de_originalFileLocalPath, abPath.toStdString().c_str());
+    }
+
+
+
+
         ykeyAbPath = ykeyAbPath.toUtf8();
         yzipAbPath = yzipAbPath.toUtf8();
 
-        strcpy_s(de_originalFileLocalPath, abPath.toStdString().c_str());
+
         strcpy_s(de_keyLocalPath, ykeyAbPath.toStdString().c_str());
         strcpy_s(de_ciphertextPath, yzipAbPath.toStdString().c_str());
 
@@ -137,6 +156,35 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
         fclose(d_decryption_file);
         fclose(d_key_file);
 
+
+
+        //QString fileSuffix = fileInfo.suffix();
+        qDebug()<<"后缀名："<<fileSuffix;
+        //base64解码
+        if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+            QFile read_fileToBase64(temp_filePath);
+            if(!read_fileToBase64.open(QIODevice::ReadOnly))
+                return false;
+
+            QByteArray decryption_Array = QByteArray::fromBase64(read_fileToBase64.readAll());
+
+
+            QFile write_fileToBase64(abPath);
+            if(!write_fileToBase64.open(QIODevice::WriteOnly))
+                return false;
+
+            write_fileToBase64.write(decryption_Array);
+            read_fileToBase64.close();
+            write_fileToBase64.close();
+        }
+//        QFile file_tem(temp_filePath);
+//        if (file_tem.exists())
+//        {
+//            file_tem.remove();
+//        }
+//        file_tem.close();
+
+            //yzipAbPath = temp_filePath;
         return DECRYPTION_SUCCESS;
 }
 

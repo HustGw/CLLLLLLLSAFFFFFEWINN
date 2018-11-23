@@ -12,10 +12,11 @@ protected:
 public:
     startEncryptThread();
     explicit startEncryptThread(QObject *parent = 0);
-    encryption *encpt= new encryption();
+    //encryption *encpt= new encryption();
+    QString item;
 
 signals:
-    void encptResult(int resultNum,double debugTime,double uploadTime);
+    void encptResult(int resultNum,QString itemName,double debugTime,double uploadTime);
 };
 
 #endif // STARTENCRYPTTHREAD_H

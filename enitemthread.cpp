@@ -17,7 +17,7 @@ void enItemThread::run()
         ++nValue;
 
         // 准备更新
-        //qDebug()<<item;
+        //qDebug()<<"QQQ"<<nValue;
         emit resultReady(nValue,item,-1,-1);
     }
 }
