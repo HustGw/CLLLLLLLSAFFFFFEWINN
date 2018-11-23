@@ -6,9 +6,10 @@ extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString User_qqNum;
 int dir_Flag = 0;
+QString tempFilePath;
 encryption::encryption()
 {
-    conn = ConnectionPool::openConnection();
+e_conn = ConnectionPool::openConnection();
     //创建加密目录
     //创建CloundSafe 主目录
     if (dir_Flag != 0 ){
@@ -41,38 +42,48 @@ encryption::encryption()
             dir.mkpath(qq_Path); //创建文件夹
         }
         //encrypt();
+        QString temp_Path = "C://CloundSafe//"+User_qqNum+"//temp";
+        //创建yZip子目录
+        dir.cd(temp_Path);  //进入某文件夹
+        if(!dir.exists(temp_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(temp_Path); //创建文件夹
+        }
+
     }
     dir_Flag ++;
 
 }
 void encryption::connect(){
     //连接数据库
-    connectSql *con = new connectSql;
-    con->setDbName("Cloud_Encryption");
-    con->setPort(3306);
-    con->setSIP("119.23.138.181");
-    con->setSPwd("F103-backup");
-    con->setUserName("root");
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");//选择要连接的数据库驱动
-    db.setHostName(con->getSIP());
-    db.setPort(con->getPort());
-    db.setDatabaseName(con->getDbName());
-    db.setUserName(con->getUserName());
-    db.setPassword(con->getSPwd());
-    bool ok = db.open();
-    if(ok)
-    {
-        qDebug() << "connect MySql success!";
-    }
-    else // 打开数据库失败
-    {
+//    connectSql *con = new connectSql;
+//    con->setDbName("Cloud_Encryption");
+//    con->setPort(3306);
+//    con->setSIP("119.23.138.181");
+//    con->setSPwd("F103-backup");
+//    con->setUserName("root");
+//    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");//选择要连接的数据库驱动
+//    db.setHostName(con->getSIP());
+//    db.setPort(con->getPort());
+//    db.setDatabaseName(con->getDbName());
+//    db.setUserName(con->getUserName());
+//    db.setPassword(con->getSPwd());
+//    bool ok = db.open();
+//    if(ok)
+//    {
+//        qDebug() << "connect MySql success!";
+//    }
+//    else // 打开数据库失败
+//    {
 
-        //QMessageBox::information(this, tr("提示"), tr("MySql数据库连接失败！"), tr("确定"));
-        qDebug() <<"error_MySql:\n" << db.lastError().text();
-    }
+//        //QMessageBox::information(this, tr("提示"), tr("MySql数据库连接失败！"), tr("确定"));
+//        qDebug() <<"error_MySql:\n" << db.lastError().text();
+//    }
 }
 
 int encryption::encrypt(){
+
+
 
     QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
@@ -88,8 +99,33 @@ int encryption::encrypt(){
     qint64 fSize;
     fSize=fInfo.size();
     originalFileSize = (double)(fSize/1024.);
-    //拆分原文件路径
+    QString temp_filePath = tempFilePath + originalFileName;
+    //tempFilePath = "C://CloundSafe//"+User_qqNum+"//temp//" + originalFileName;
+    QString fileSuffix = fInfo.suffix();
+    qDebug()<<"后缀名："<<fileSuffix;
+    //base64编码
+    if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+        QFile read_fileToBase64 (originalFilePath);
+        if(!read_fileToBase64.open(QIODevice::ReadOnly))
+            {
+                return false;
+            }
+        QByteArray  encryption_Array = read_fileToBase64.readAll().toBase64();
 
+        QFile write_fileToBase64 (temp_filePath);
+        if(!write_fileToBase64.open(QIODevice::WriteOnly))
+            {
+                return false;
+            }
+        write_fileToBase64.write(encryption_Array);
+        read_fileToBase64.close();
+        write_fileToBase64.close();
+
+        originalFilePath = temp_filePath;
+    }
+
+
+    //拆分原文件路径
     qDebug()<<originalFilePath ;
     QStringList file_part = originalFilePath.split("/");
     originalFilePath = file_part[0];
@@ -166,7 +202,7 @@ int encryption::encrypt(){
 
 
     //conn.close();
-    QSqlQuery query(conn);
+    QSqlQuery query(e_conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
     qDebug()<<originalFileName;
@@ -208,6 +244,7 @@ int encryption::encrypt(){
         {
             file.remove();
         }
+        file.close();
 
     }else if (oss_PutKey_Flag == 3) {
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
@@ -257,6 +294,9 @@ int encryption::encrypt(){
         msgbox->exec();
     }
 
+    ConnectionPool::closeConnection(e_conn);
+    //e_conn.close();
+
     //QFile file(yzipAbPath);
     QString newName = yzipAbPath;
     QFile yZipFile(yFile_oss_Path);
@@ -267,22 +307,36 @@ int encryption::encrypt(){
         newName =yPath+ "副本 1 "+originalFileName ;
         int count = 2;
         bool yes = yZipFile.rename(newName);
-        qDebug()<<yes;
+
         while (!yes) {
 
             QString num = QString::number(count);
             newName = yPath+"副本 "+num+" "+originalFileName ;
             yes = yZipFile.rename(newName);
             count++;
+            qDebug()<<"创建副本"<<!yes;
         }
 
     }else {
         bool yes = yZipFile.rename(yzipAbPath);
-        qDebug()<<yes;
+        //qDebug()<<"创建副本"<<yes;
     }
+    yZipFile.close();
+    file.close();
     uploadTime = upload_Time.elapsed()/1000.0;
 
-    ConnectionPool::closeConnection(conn);
+
+    //删除base64后的文件
+
+    if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+        QFile file_tem(originalFilePath);
+        if (file_tem.exists())
+        {
+            file_tem.remove();
+        }
+        file_tem.close();
+    }
+
     //debugTime = debug_Time.toString().toInt();
     //uploadTime = upload_Time.toString().toInt();
     return 1;

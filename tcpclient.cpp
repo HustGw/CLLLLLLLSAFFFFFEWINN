@@ -25,11 +25,12 @@ QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
 QNetworkAccessManager *m_accessManager;
-
+QString version_id;
 TcpClient::TcpClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::TcpClient)
 {
+    version_id = "1";
     ui->setupUi(this);
     setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -188,6 +189,8 @@ void TcpClient::on_sendBtn_clicked()
         postData.append(Mac_address);//参数
         postData.append("&ip_address=");//参数
         postData.append(Ip_address);//参数
+        postData.append("&version_id=");
+        postData.append(version_id);
         m_accessManager->post(request,postData);//发送http的post请求
     }
 }

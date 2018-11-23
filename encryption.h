@@ -39,7 +39,7 @@ public:
     //文件信息
     QFileInfo fInfo;
     EncryptionViewController *encryptionViewController ;
-    QSqlDatabase conn ;
+    QSqlDatabase e_conn ;
     int oss_PutKey_Flag;
     int oss_PutFile_Flag;
     double debugTime,uploadTime;

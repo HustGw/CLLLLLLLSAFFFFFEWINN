@@ -278,7 +278,7 @@ private slots:
     // 更新进度条
     void handleResults(int value,QString itemName,double debugTime,double uploadTime);
     // 开启进度条线程
-    void startProgressBarThread(QString itemName);
+    void startProgressBarThread(QString itemName,QFileInfo openFileInfo);
     //开启加密进程
     void startEncryptThread(QString itemName);
 

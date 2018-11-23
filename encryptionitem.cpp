@@ -72,7 +72,7 @@ EncryptionItem::EncryptionItem(QWidget *parent) : QWidget(parent)
 
         //checkBox->setGeometry(10,70,20,20);
         fileIcon->setGeometry(50,13,38,46);
-        encryptStaBtn->setGeometry(95,47,100,12);
+        encryptStaBtn->setGeometry(95,47,60,12);
         encryptStaBtn->setFont(QFont("Timers",8));
         encryptStaBtn->setStyleSheet("color:#9999AB");
         encryptStaBtn->setStyleSheet("background:transparent");

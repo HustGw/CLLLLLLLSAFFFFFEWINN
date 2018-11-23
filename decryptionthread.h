@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QTime>
+#include <QDir>
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;

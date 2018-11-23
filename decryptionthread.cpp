@@ -23,6 +23,14 @@ void DecryptionThread::run(){
 //    QString contentPath = "D://CloundSafeWindows//content//"+Dfile_id;
 //    QString filePath = "D://CloundSafeWindows//file//"+Dfile_name;
     QString filePath_c = "C:/CloundSafe/"+User_qqNum+"/Decrypt/file/"+Dfile_name;
+    QString temp_Path = "C://CloundSafe//"+User_qqNum+"//temp";
+    //创建yZip子目录
+    QDir dir;
+    dir.cd(temp_Path);  //进入某文件夹
+    if(!dir.exists(temp_Path))//判断需要创建的文件夹是否存在
+    {
+        dir.mkpath(temp_Path); //创建文件夹
+    }
     for(int i=1;i<50;i++){
         QFileInfo d_file(filePath_c);
         if(d_file.isFile()){
