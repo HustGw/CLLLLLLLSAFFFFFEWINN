@@ -23,6 +23,10 @@ protected:
 public:
     explicit DecryptionThread(QObject *parent = 0);
     downloadoss *downKey;
+    QString DItem_id;
+    QString Denkey_id;
+    QString Dfile_id;
+    QString Dfile_name;
 private slots:
     void DecryptionThread_RecvID(QString enkey_id,QString file_id,QString file_name,QString item_id);
     void RecProgressValue(double recValue);

@@ -1,8 +1,6 @@
 #include "depdownthread.h"
 #include <QThread>
 #include <QDebug>
-QString dekey_id = NULL;
-QString d_id = NULL;
 QTime dpwnLoadTimer;
 QTime dec_Timer;
 double down_time;
@@ -25,6 +23,7 @@ void DepDownThread::run(){
     downKey->download_filePath=down_oss_Path.data();
     downKey->get_object_to_file();
     down_time=dpwnLoadTimer.elapsed()/1000.0;
+    qDebug()<<"depdownthread此时的fileId为："+d_id;
     emit sendTime(d_id,down_time);
     emit ChangeBtnText(d_id);
 
@@ -53,5 +52,6 @@ void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString fi
 
 void DepDownThread::DownContent(QString id,QString enkey_id){
       dekey_id = enkey_id;
+      qDebug()<<"depdownthread接收到的id为"+id;
       d_id = id;
 }

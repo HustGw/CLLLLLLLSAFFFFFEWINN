@@ -1398,8 +1398,9 @@ void MainWindow::OssDownLoadFile(){
                     f_proccess->show();
                     f_proccess->setValue(20);
                     downThread[threadNum] = new DepDownThread();
-                    DecProFileID = onlyId;
+//                    DecProFileID = onlyId;
                     decryBarThread[DecryBarNum] = new DecryptProBarThread(this);
+                    decryBarThread[DecryBarNum]->ItemID = onlyId;
 //                    connect(this,SIGNAL(DecryProBarID(QString)),decryBarThread[DecryBarNum],SLOT(setItemID(QString)));
                     connect(decryBarThread[DecryBarNum],SIGNAL(reslut(int,QString)),this,SLOT(ChangeDecItemProBar(int,QString)));
                     connect(decryBarThread[DecryBarNum],SIGNAL(finished()),decryBarThread[DecryBarNum],SLOT(deleteLater()));
@@ -1407,10 +1408,15 @@ void MainWindow::OssDownLoadFile(){
                     connect(this,SIGNAL(OSSfileDownFileID(QString,QString)),downThread[threadNum],SLOT(DownContent(QString,QString)));
                     connect(downThread[threadNum],SIGNAL(ChangeBtnText(QString)),decryBarThread[DecryBarNum],SLOT(run()));
                     connect(downThread[threadNum],SIGNAL(sendTime(QString,double)),this,SLOT(setDecItemDowntime(QString,double)));
+//                    emit OSSfileDownFileID(onlyId,enkey_id);
+                    //给onlyId enkey_id赋值
+                    downThread[threadNum]->dekey_id=enkey_id;
+                    downThread[threadNum]->d_id=onlyId;
+                    qDebug()<<"mainwindow中的fileID为："+onlyId;
                     downThread[threadNum]->start();
 //                     emit DecryProBarID(onlyId);
 //                    decryBarThread[DecryBarNum]->start();
-                    emit OSSfileDownFileID(onlyId,enkey_id);
+
                     threadNum++;
                     DecryBarNum++;
                     //更新按钮内容
@@ -2502,13 +2508,6 @@ void MainWindow::FileIsAllowed(){
     if(!dir.exists(file_path)){
         dir.mkdir(file_path);
     }
-    //创建密文文件夹
-//    QDir cdir;
-//    cdir.cd("C://CloundSafe");  //进入某文件夹
-//    if(!cdir.exists("C://CloundSafe"))//判断需要创建的文件夹是否存在
-//    {
-//        cdir.mkdir("C://CloundSafe"); //创建文件夹
-//    }
     QString path_finished = file_path+"//file";
     //创建子目录
     dir.cd(path_finished);  //进入某文件夹
@@ -2556,8 +2555,15 @@ void MainWindow::FileIsAllowed(){
                  connect(this,SIGNAL(sendFileID(QString,QString,QString,QString)),depThread[DepThreadNum],SLOT(DecryptionThread_RecvID(QString,QString,QString,QString)));
                  connect(depThread[DepThreadNum],SIGNAL(decryptionFailed()),this,SLOT(RecDecryptionFailed()));
                  connect(depThread[DepThreadNum],SIGNAL(sendDecTime(QString,double)),this,SLOT(setDecItemDectime(QString,double)));
+
+                 qDebug()<<"mainwindow:"+id;
+//                 emit sendFileID(enkey_id,file_id,fileName,id);
+                 //给DecryptionThread中enkey_id,file_id,fileName，id赋值
+                 depThread[DepThreadNum]->Denkey_id=enkey_id;
+                 depThread[DepThreadNum]->Dfile_id=file_id;
+                 depThread[DepThreadNum]->Dfile_name=fileName;
+                 depThread[DepThreadNum]->DItem_id=id;
                  depThread[DepThreadNum]->start();
-                 emit sendFileID(enkey_id,file_id,fileName,id);
                  DepThreadNum++;
 //                 if(decryptionFlag == 0){
 //                     //解密完成后将数据库该条数据状态status改成5
@@ -3568,9 +3574,7 @@ void MainWindow::setDecItemDowntime(QString id, double time){
 }
 
 void MainWindow::setDecItemDectime(QString id, double time){
-    qDebug()<<"实施：";
-    qDebug()<<id;
-    qDebug()<<time;
+    qDebug()<<"mainWINDOW:SETDECITEMDECTIME："+id;
     DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(id+"decryption");
     if(m1==nullptr){
         qDebug()<<"查找ID失败";
@@ -3605,7 +3609,6 @@ void MainWindow::setDecItemDectime(QString id, double time){
         newItemWidget->setLayout(decryptionViewController->vbox);
         newScrollArea->setWidget(newItemWidget);
         newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
-//                     newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         QVBoxLayout *newVbox = new QVBoxLayout();
         newVbox->setMargin(0);
         newVbox->setSpacing(0);
@@ -3636,13 +3639,6 @@ QString MainWindow::CreateTimeTitle(double time){
         temstr.append("秒");
     }else{
         //显示时间
-
-
-        //int dd = hh * 24;
-
-        //long day = ms / dd;
-
-
         if (hour >0){
             temstr.append(hou);
             temstr.append("时");

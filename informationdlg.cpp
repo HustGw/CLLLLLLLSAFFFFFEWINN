@@ -217,7 +217,6 @@ void informationDlg::recvReq(){
             if(!pt)
                 return;
             if(pt==b1){
-                qDebug()<<id;
                 bool updataSuccess = query.exec("update Decryption set status = 3 where id = '"+id+"'");
                 if(updataSuccess){
                     informationNum--;//发送数量减少信号
@@ -312,7 +311,6 @@ void informationDlg::setItem(){
             count++;
             InformationItem *m1 = new InformationItem();
             QString oemp_id= query.record().value("oemp_id").toString();
-            qDebug()<<oemp_id;
             //找出用户昵称
             QSqlQuery nameQuery(db);
             QString nickName;
@@ -596,7 +594,6 @@ void informationDlg::NewRequestRec(QString name, QString fileName,QString time){
 }
 
 void informationDlg::NewFriend(){
-    qDebug()<<"new friend";
     FriendCount++;//
     CleanStatusLabel->hide();
     cleanInforBtn->setEnabled(true);
@@ -773,12 +770,10 @@ void informationDlg::AddFriendIgnore(){
 }
 //比较函数 通过传入的时间，返回插入list的index
 int informationDlg::time_insertWidget(QString time){
-    qDebug()<<time;
     for(int i = 0;i!=timelist.size();i++){
         if(time_compare(time,timelist.at(i))){
             //time靠后则将time插入timelist中
             timelist.insert(i,time);
-            qDebug()<<i;
             return i;
         }else if(i== timelist.size()-1){
             timelist.append(time);

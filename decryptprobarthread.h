@@ -7,10 +7,10 @@ class DecryptProBarThread : public QThread
 {
     Q_OBJECT
 protected:
-    QString ItemID;
 public:
     DecryptProBarThread();
     explicit DecryptProBarThread(QObject *parent = 0);
+    QString ItemID;
 private slots:
     void setItemID(QString id);
     void run();//执行线程函数

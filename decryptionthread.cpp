@@ -1,8 +1,4 @@
 #include "decryptionthread.h"
-QString Denkey_id = NULL;
-QString Dfile_id = NULL;
-QString Dfile_name = NULL;
-QString DItem_id=NULL;//Decryption表中的Item的ID
 QTime Dec_timer;
 DecryptionThread::DecryptionThread(QObject *parent):QThread(parent)
 {
@@ -38,6 +34,8 @@ void DecryptionThread::run(){
     }
    if((fileD->decryptFile(downPath,contentPath,filePath))==54){
         double dectime = Dec_timer.elapsed()/1000.0;
+        qDebug()<<"当前的fileUUID为："+DItem_id;
+        qDebug()<<"当前的fileID:"+Dfile_id;
         emit sendDecTime(DItem_id,dectime);
         //解密成功后删除本地密文和密钥文件
         //QFile::remove(contentPath);//删除密文
