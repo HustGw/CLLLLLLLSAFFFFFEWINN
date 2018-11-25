@@ -425,6 +425,10 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              {
                                  MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("禁止重复登录！"),this);
                                  msgbox->exec();
+                             }else if(content.contains("versionexpired",Qt::CaseSensitive))
+                             {
+                                 MsgBox2 *msgbox = new MsgBox2(2,QStringLiteral("您的试用时间已到！无法登陆！"),this);
+                                 msgbox->exec();
                              }
                              else{
                                  accept();
