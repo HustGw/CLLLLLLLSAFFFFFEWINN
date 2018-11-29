@@ -15,7 +15,7 @@ InformationItem::InformationItem(QWidget *parent) : QWidget(parent)
     timeLabel->setText("2018-8-2 14:33:59");
     allowBtn->setGeometry(285,75,80,30);
     ignoreBtn->setGeometry(395,75,80,30);
-    titleLabel->setGeometry(10,30,400,45);
+    titleLabel->setGeometry(10,30,450,45);
     QFont font("Microsoft YaHei",10,75);
     InforKindsLabel->setGeometry(10,5,80,20);
     InforKindsLabel->setFont(font);

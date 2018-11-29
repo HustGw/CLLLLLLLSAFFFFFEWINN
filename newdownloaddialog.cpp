@@ -81,7 +81,11 @@ void newDownloadDialog::change_list_view(){
                 }else{
 
                 }
-                QString the_words = "用户"+sender_name+"向您传输文件"+file_name+"  时间："+file_time.left(file_time.length()-3);
+                QString time_1 = "时间："+file_time.left(file_time.length()-3);
+                QString the_words = "用户"+sender_name+"向您传输文件"+file_name;
+                QListWidgetItem *file_item = new QListWidgetItem();
+                QString the_extern_words = time_1+ "\n" + the_words;
+                file_item->setToolTip(the_extern_words);
                 QFontMetrics fm(f_1);
                 int fontSize = fm.width(the_words);
                 int fontSizeName = fm.width(file_name);
@@ -90,14 +94,14 @@ void newDownloadDialog::change_list_view(){
                if( fontSize >= 451 ) //与label自身相比较
                {
                    QString str = fontMetrics().elidedText(file_name, Qt::ElideRight, fontSizeName - (fontSize - 381),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
-                   the_words = "用户"+sender_name+"向您传输文件"+str+"  时间："+file_time.left(file_time.length()-3);        //重新设置label上的字符串
-
+                   the_words = "用户"+sender_name+"向您传输文件"+str;        //重新设置label上的字符串
+                   the_extern_words = time_1 + "\n" + the_words;
                }else{
 
                }
-                QListWidgetItem *file_item = new QListWidgetItem();
-                file_item->setText(the_words);
-                file_item->setSizeHint(QSize(400,40));
+
+                file_item->setText(the_extern_words);
+                file_item->setSizeHint(QSize(400,50));
                 file_item->setFont(f_1);
                 ui->listWidget->insertItem(i,file_item);
             }

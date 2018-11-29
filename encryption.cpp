@@ -5,7 +5,7 @@ extern QFileInfo openFileInfo;
 extern QString orfileUuid;
 extern QString yzipfileUuid;
 extern QString User_qqNum;
-int dir_Flag = 0;
+extern int dir_Flag;
 QString tempFilePath;
 encryption::encryption()
 {

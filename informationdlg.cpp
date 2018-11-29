@@ -331,9 +331,9 @@ void informationDlg::setItem(){
             int fontSizeName = fm.width(filename);
             QString filetype_extra = filename.section(".",0,0).mid(filename.section(".",0,0).length()-2)+"."+filename.section(".",1,1).trimmed().toStdString().c_str() ;
            //int t = ui->listWidget->frameSize().width();
-           if( fontSize >= 400 ) //与label自身相比较
+           if( fontSize >= 420 ) //与label自身相比较
            {
-               QString str = fontMetrics().elidedText(filename, Qt::ElideRight, fontSizeName - (fontSize - 300),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+               QString str = fontMetrics().elidedText(filename, Qt::ElideRight, fontSizeName - (fontSize - 320),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
                title = nickName+"请求文件"+str+"密钥文件下载";        //重新设置label上的字符串
            }else{
            }
@@ -496,9 +496,9 @@ void informationDlg::setItem(){
             int fontSizeName = fm.width(fileName);
             QString filetype_extra = fileName.section(".",0,0).mid(fileName.section(".",0,0).length()-2)+"."+fileName.section(".",1,1).trimmed().toStdString().c_str() ;
            //int t = ui->listWidget->frameSize().width();
-           if( fontSize >= 400 ) //与label自身相比较
+           if( fontSize >= 420 ) //与label自身相比较
            {
-               QString str = fontMetrics().elidedText(fileName, Qt::ElideRight, fontSizeName - (fontSize - 270),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+               QString str = fontMetrics().elidedText(fileName, Qt::ElideRight, fontSizeName - (fontSize - 290),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
                s = name+"传输文件"+str;        //重新设置label上的字符串
            }else{
            }

@@ -316,8 +316,8 @@ void registerDialog::finishedSlot(QNetworkReply *reply)
                    postData.append("");//
                    postData.append("&emp_name=");//昵称
                    postData.append(ui->nichengLineEdit->text());//
-                   postData.append("&version_id=");
-                   postData.append(version_id);
+                   //postData.append("&version_id=");
+                   //postData.append(version_id);
                    QNetworkReply* reply = m_accessManagerRegister->post(request,postData);//发送http的post请求
                    return;
                }else{

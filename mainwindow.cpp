@@ -13,9 +13,11 @@
 #include "QProgressBar"
 #include <qt_windows.h>
 #include <QFile>
+#include <QTextStream>
 
 extern int const EXIT_CODE_REBOOT;
 extern QString tempFilePath;
+int dir_Flag = 0;
 QStringList m_fontList;
 QStringList m_fontList_W4;
 bool groupSendDialogFlag;
@@ -74,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     InitUi();
 
+
     //encryptionPage = new EncryptionItem();
     decryptionPage = new DecryptionItem();
     encryptionBtnItem = new EncryptionBtnView();
@@ -108,6 +111,48 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(this, SIGNAL(starEncptItem(QString)), this, SLOT(startProgressBarThread(QString)));
     //开始加密信号槽
     //connect(ui->OpenFileBtn,SIGNAL(clicked(bool)),this,SLOT(starEncryptThread()));
+
+    if (dir_Flag != 0 ){
+        QString qq_Path = "C://CloundSafe//"+User_qqNum;
+        QDir dir;
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = qq_Path+"//encrypt";
+        //创建encrypt子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = qq_Path+"//yKey";
+        //创建yKey子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        qq_Path = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip";
+        //创建yZip子目录
+        dir.cd(qq_Path);  //进入某文件夹
+        if(!dir.exists(qq_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(qq_Path); //创建文件夹
+        }
+        //encrypt();
+        QString temp_Path = "C://CloundSafe//"+User_qqNum+"//temp";
+        //创建yZip子目录
+        dir.cd(temp_Path);  //进入某文件夹
+        if(!dir.exists(temp_Path))//判断需要创建的文件夹是否存在
+        {
+            dir.mkpath(temp_Path); //创建文件夹
+        }
+
+    }
+    dir_Flag ++;
+
     connect(this,SIGNAL(showDownDialog(QString)),this,SLOT(ShowNewDownDialog(QString)));
     finScrollArea = new QScrollArea();
     //ui->MidStaWidget->addWidget(encryptionPage);
@@ -221,7 +266,22 @@ MainWindow::MainWindow(QWidget *parent) :
                    }
 
                    QString m_filesize = query.record().value("file_size").toString();
-                   v1->fileSize->setText(m_filesize+"KB");//设置文件大小
+                   double filesize_double = m_filesize.toDouble();
+                   int filesize_count = 0;
+                   while(filesize_double>1024){
+                       filesize_double = filesize_double/1024;
+                       filesize_count++;
+                   }
+                   if(filesize_count == 0){
+                       v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+                   }else if(filesize_count == 1){
+                       v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+                   }else if(filesize_count == 2){
+                       v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+                   }else if(filesize_count == 3){
+                       v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+                   }
+                   //设置文件大小
                    v1->timeLabel->setText(query.record().value("createtime").toString());
                    //设置fileIcon的图片
                    QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
@@ -859,7 +919,22 @@ void MainWindow::on_OpenFileBtn_clicked()
             v1->fileName->setText(fName);
         }
 
-        v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
+        //v1->fileSize->setText(amfSize+codec->toUnicode(" KB"));
+        double filesize_double = mfSize;
+        int filesize_count = 0;
+        while(filesize_double>1024){
+            filesize_double = filesize_double/1024;
+            filesize_count++;
+        }
+        if(filesize_count == 0){
+            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+        }else if(filesize_count == 1){
+            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+        }else if(filesize_count == 2){
+            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+        }else if(filesize_count == 3){
+            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+        }
         QString filetype = fName.section(".",1,1).trimmed().toStdString().c_str();
         if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
             QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
@@ -1483,7 +1558,22 @@ void MainWindow::ReceiveNewReq(){
                       v1->fileName->setText(fName);
                   }
                   QString m_filesize = query.record().value("file_size").toString();
-                  v1->fileSize->setText(m_filesize+"KB");//设置文件大小
+                  double filesize_double = m_filesize.toDouble();
+                  int filesize_count = 0;
+                  while(filesize_double>1024){
+                      filesize_double = filesize_double/1024;
+                      filesize_count++;
+                  }
+                  if(filesize_count == 0){
+                      v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+                  }else if(filesize_count == 1){
+                      v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+                  }else if(filesize_count == 2){
+                      v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+                  }else if(filesize_count == 3){
+                      v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+                  }
+
                   v1->timeLabel->setText(query.record().value("createtime").toString());//设置创建时间
                   //设置fileIcon的图片
                   QString filetype = query.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
@@ -1930,7 +2020,8 @@ void MainWindow::on_pushButton_8_clicked()
            while(query.next())
            {
                file_name = query.record().value("article_name").toString();
-               file_size = query.record().value("article_size").toString()+"kb";
+               //file_size = query.record().value("article_size").toString()+"kb";
+               QString m_filesize = query.record().value("article_size").toString();
                file_status = query.record().value("article_status").toString();
                file_id = query.record().value("article_id").toString();
 
@@ -2006,7 +2097,24 @@ void MainWindow::on_pushButton_8_clicked()
                }
 
                //f1->fileName->setText(file_name);
-               f1->fileSize->setText(file_size);
+
+               double filesize_double = m_filesize.toDouble();
+               qDebug()<<filesize_double;
+               qDebug()<<m_filesize;
+               int filesize_count = 0;
+               while(filesize_double>1024){
+                   filesize_double = filesize_double/1024;
+                   filesize_count++;
+               }
+               if(filesize_count == 0){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+               }else if(filesize_count == 1){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+               }else if(filesize_count == 2){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+               }else if(filesize_count == 3){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+               }
                f1->fileDescription->setText(file_discryption);
                finishViewController->vbox->setMargin(0);
                finishViewController->vbox->setSpacing(0);
@@ -2393,8 +2501,8 @@ void MainWindow::on_pushButton_9_clicked()
            while(query.next())
            {
                file_name = query.record().value("file_name").toString();
-               file_size = query.record().value("file_size").toString()+"kb";
-
+               //file_size = query.record().value("file_size").toString()+"kb";
+                QString m_filesize = query.record().value("file_size").toString();
 
                file_id = query.record().value("file_id").toString();
 
@@ -2465,7 +2573,21 @@ void MainWindow::on_pushButton_9_clicked()
                }
 
                //f1->fileName->setText(file_name);
-               f1->fileSize->setText(file_size);
+               double filesize_double = m_filesize.toDouble();
+               int filesize_count = 0;
+               while(filesize_double>1024){
+                   filesize_double = filesize_double/1024;
+                   filesize_count++;
+               }
+               if(filesize_count == 0){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+               }else if(filesize_count == 1){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+               }else if(filesize_count == 2){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+               }else if(filesize_count == 3){
+                   f1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+               }
                f1->fileDescription->setText(file_discryption);
 
                finishViewController2->vbox->addWidget(f1);
@@ -2936,7 +3058,22 @@ void MainWindow::LinkInsert(QString link){
         }else{
             a1->fileName->setText(Link_filename);
         }
-        a1->fileSize->setText(Link_filesize+"KB");
+        //a1->fileSize->setText(Link_filesize+"KB");
+        double filesize_double = Link_filesize.toDouble();
+        int filesize_count = 0;
+        while(filesize_double>1024){
+            filesize_double = filesize_double/1024;
+            filesize_count++;
+        }
+        if(filesize_count == 0){
+            a1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+        }else if(filesize_count == 1){
+            a1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+        }else if(filesize_count == 2){
+            a1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+        }else if(filesize_count == 3){
+            a1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+        }
         a1->checkBox->setObjectName(id+"Decheck");
         a1->setObjectName(id+"decryption");
         a1->downloadBtn->setObjectName(id+"btn");
