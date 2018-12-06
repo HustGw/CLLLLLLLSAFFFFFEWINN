@@ -83,8 +83,6 @@ void encryption::connect(){
 
 int encryption::encrypt(){
 
-
-
     QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
     oss_PutFile_Flag=2;

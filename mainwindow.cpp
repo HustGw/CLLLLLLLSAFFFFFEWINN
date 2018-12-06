@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QtSql/QSqlError>
 #include "QProgressBar"
+#include <QPropertyAnimation>
 #include <qt_windows.h>
 #include <QFile>
 #include <QTextStream>
@@ -1056,19 +1057,26 @@ void MainWindow::on_OpenFileBtn_clicked()
 void MainWindow::handleResults(int value,QString itemName,double debugTime,double uploadTime)
 {
     EncryptionItem *v1 = ui->MidStaWidget->findChild<EncryptionItem*>(itemName);
-    qDebug()<<"进度条name"<<itemName;
+    //qDebug()<<"进度条name"<<itemName;
     //QProgressBar *f_progressBar = f_progressBar->findChild<QProgressBar *>(itemName);
     //f_progressBar->setValue(value);
-    v1->progressBar->setValue(value);
-    qDebug()<<"VVV"<<value;
+    //进度条效果
+    v1->m_proAnimation->setStartValue(v1->m_proAnimation->endValue());
+    v1->m_proAnimation->setEndValue(value);
+    v1->m_proAnimation->setDuration(300);
+    v1->m_proAnimation->start();
+    //v1->progressBar->setValue(value);
+    //v1->progressBar->setMaximum(value);
+    //v1->progressBar->setMinimum(value);
+    //qDebug()<<"VVV"<<value;
     //v1->encryptStaBtn->setText("上传中...");
-    if (value>=25){
+    if (value>26){
         v1->encryptStaBtn->setText("上传中...");
         v1->encryptStaBtn->setStyleSheet("background:transparent;text-align: left;");
     }
 
     if (value>=100){
-
+        v1->m_proAnimation->setEndValue(100);
         qDebug()<<"删除"<<itemName;
         v1->encryptStaBtn->clicked();
         //QMessageBox::information(NULL,tr("成功"),tr("加密完成！"),QMessageBox::Yes,NULL);
@@ -1244,7 +1252,7 @@ void MainWindow::startProgressBarThread( QString  itemName,QFileInfo fileInfo)
         //enItemThread *workerThread = new enItemThread(this);
         connect(enitemArr[enitemNum], SIGNAL(resultReady(int,QString,double,double)), this, SLOT(handleResults(int,QString,double,double)));
         // 线程结束后，自动销毁
-        connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
+       connect(enitemArr[enitemNum], SIGNAL(finished()), enitemArr[enitemNum], SLOT(deleteLater()));
        enitemArr[enitemNum]->start();
        enitemNum++;
         //startEncryptThread();

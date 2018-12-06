@@ -169,6 +169,7 @@ public:
     heartThread *heartTread_;
     QProgressBar *f_progressBar;
     QProgressBar *d_progressBar;
+
     encryption *contest = new encryption();
     DelinkDialog *linkDialog;
     groupSendDialog *grpDlg;

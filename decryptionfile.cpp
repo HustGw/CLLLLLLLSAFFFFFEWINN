@@ -75,7 +75,7 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
     char de_keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char de_ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
 
-    int extractionRate = 200;
+    int extractionRate = 100;
 
     QFileInfo or_fileInfo (abPath);
     QFileInfo yz_fileInfo (yzipAbPath);

@@ -81,7 +81,7 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     char keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
     encryptPercent = percent / 100;
-    int extractionRate = 200;
+    int extractionRate = 100;
     qDebug()<<'2';
     ykeyAbPath = ykeyAbPath.toUtf8();
     fileAbPath = fileAbPath.toUtf8();

@@ -10,10 +10,10 @@ void enItemThread::run()
 {
     //qDebug() << "enItem Run Thread : " << QThread::currentThreadId();
     int nValue = 0;
-    while (nValue < 25)
+    while (nValue < 26)
     {
         // 休眠50毫秒
-        msleep(30);
+        msleep(10);
         ++nValue;
 
         // 准备更新

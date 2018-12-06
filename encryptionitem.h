@@ -10,6 +10,7 @@
 #include <QLine>
 #include <QPainter>
 #include "QProgressBar"
+#include <QPropertyAnimation>
 #include "enitemthread.h"
 #include <QPushButton>
 #include <qdatetime.h>
@@ -34,7 +35,7 @@ public:
     //QPushButton *downloadBtn;
     QHBoxLayout *hbox1;
     QProgressBar *progressBar = new QProgressBar(this);
-
+    QPropertyAnimation *m_proAnimation;
 
     QPushButton *encryptStaBtn;
     QPushButton *starEncptBtn;
