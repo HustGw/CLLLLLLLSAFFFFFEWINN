@@ -19,6 +19,7 @@ void encryptthread::run(){
     fSize=(double)(fSize/1024.);
     fSize = (int) fSize;
     if(fSize > 6000){
+        emit result(28,item,encpt->debugTime,encpt->uploadTime);
         startEncryptThread *ecry = new startEncryptThread(this);
         ecry->item = item;
         //msleep(1000);
