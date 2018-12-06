@@ -299,6 +299,7 @@ int encryption::encrypt(){
     QString newName = yzipAbPath;
     QFile yZipFile(yFile_oss_Path);
     QFile file(yzipAbPath);
+    newName = "C:/CloundSafe/"+User_qqNum+"/encrypt/yZip/"+originalFileName;
     if (file.exists())
     {
         //若有重复文件
@@ -309,13 +310,16 @@ int encryption::encrypt(){
         while (!yes) {
 
             QString num = QString::number(count);
-            newName = yPath+"副本 "+num+" "+originalFileName ;
-            yes = yZipFile.rename(newName);
+            QString renewName = yPath+"副本 "+num+" "+originalFileName ;
+//            newName = yPath+"副本 "+num+" "+originalFileName ;
+            yes = yZipFile.rename(newName,renewName);
+            newName = renewName;
             count++;
             if(yes){
                 qDebug()<<"创建副本"<<yes;
                 break;
             }
+            qDebug()<<"正在创建副本"<<count;
 
         }
 
@@ -323,8 +327,8 @@ int encryption::encrypt(){
         bool yes = yZipFile.rename(yzipAbPath);
         //qDebug()<<"创建副本"<<yes;
     }
-    yZipFile.close();
-    file.close();
+    //yZipFile.close();
+    //file.close();
 
 
 
