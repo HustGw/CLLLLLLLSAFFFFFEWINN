@@ -312,7 +312,11 @@ int encryption::encrypt(){
             newName = yPath+"副本 "+num+" "+originalFileName ;
             yes = yZipFile.rename(newName);
             count++;
-            qDebug()<<"创建副本"<<!yes;
+            if(yes){
+                qDebug()<<"创建副本"<<yes;
+                break;
+            }
+
         }
 
     }else {
@@ -321,7 +325,7 @@ int encryption::encrypt(){
     }
     yZipFile.close();
     file.close();
-    uploadTime = upload_Time.elapsed()/1000.0;
+
 
 
     //删除base64后的文件
@@ -334,7 +338,7 @@ int encryption::encrypt(){
         }
         file_tem.close();
     }
-
+    uploadTime = upload_Time.elapsed()/1000.0;
     //debugTime = debug_Time.toString().toInt();
     //uploadTime = upload_Time.toString().toInt();
     return 1;
