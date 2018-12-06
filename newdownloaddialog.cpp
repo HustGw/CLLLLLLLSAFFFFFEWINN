@@ -32,6 +32,8 @@ newDownloadDialog::newDownloadDialog(QWidget *parent) :
     ui->pushButtoncancel->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButtoncancel->setText(QStringLiteral("忽略"));
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
+
+    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(this,SIGNAL(downloadOne(QString)),parent,SLOT(downloadOneFile(QString)));
 }
 
