@@ -90,20 +90,26 @@ int encryption::encrypt(){
     fInfo=openFileInfo;
     QTextCodec *codec = QTextCodec::codecForName("utf8");
     originalFileName = codec->fromUnicode(fInfo.fileName()).data();
+
+    QString userFileName = originalFileName;
+
     //originalFileName=fInfo.fileName();
     //originalFilePath=fInfo.filePath();
     originalFilePath = codec->fromUnicode(fInfo.filePath()).data();
     //originalFilePath = originalFilePath.toLocal8Bit().constData();
+
+    QString userFilePath = originalFilePath;
+
     qint64 fSize;
     fSize=fInfo.size();
     originalFileSize = (double)(fSize/1024.);
-    QString temp_filePath = tempFilePath + originalFileName;
+    QString temp_filePath = tempFilePath + userFileName;
     //tempFilePath = "C://CloundSafe//"+User_qqNum+"//temp//" + originalFileName;
     QString fileSuffix = fInfo.suffix();
     qDebug()<<"后缀名："<<fileSuffix;
     //base64编码
     if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
-        QFile read_fileToBase64 (originalFilePath);
+        QFile read_fileToBase64 (userFilePath);
         if(!read_fileToBase64.open(QIODevice::ReadOnly))
             {
                 return false;
@@ -119,18 +125,18 @@ int encryption::encrypt(){
         read_fileToBase64.close();
         write_fileToBase64.close();
 
-        originalFilePath = temp_filePath;
+        userFilePath = temp_filePath;
     }
 
 
     //拆分原文件路径
-    qDebug()<<originalFilePath ;
-    QStringList file_part = originalFilePath.split("/");
-    originalFilePath = file_part[0];
+    qDebug()<<userFilePath ;
+    QStringList file_part = userFilePath.split("/");
+    userFilePath = file_part[0];
     for(int i=1;i<file_part.size();i++)
     {
         qDebug()<<file_part[i];
-        originalFilePath = originalFilePath + "\\" + file_part[i];
+        userFilePath = userFilePath + "\\" + file_part[i];
     }
     //生成用户唯一标识
     QString userID = User_ID;
@@ -151,13 +157,13 @@ int encryption::encrypt(){
     //设置密钥地址
     QString ykeyAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yKey//"+ QString::fromStdString(enKeyID)+".ykey";
     //设置密文地址
-    QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+originalFileName;
+    QString yzipAbPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+userFileName;
     QString yPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//";
 
     QString uuPath = "C://CloundSafe//"+User_qqNum+"//encrypt//yZip//"+enfile_id;
     encryptfile *enfile = new encryptfile();
     //文件加密
-    //enfile->encryptFile(originalFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
+    //enfile->encryptFile(userFilePath ,ykeyAbPath,yzipAbPath,0,orFileID,userID);
     MsgBox *msgbox01 ;
     MsgBox *msgbox02;
     MsgBox *msgbox03;
@@ -165,7 +171,7 @@ int encryption::encrypt(){
 
     //记录加密时间
     debug_Time.start();
-    int catgNum = enfile->encryptFile(originalFilePath ,ykeyAbPath,uuPath,0,originalFileName,userID);
+    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID);
     //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
     //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
 
@@ -203,7 +209,7 @@ int encryption::encrypt(){
     QSqlQuery query(e_conn);
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
-    qDebug()<<originalFileName;
+    qDebug()<<userFileName;
     //密钥上传OSS
     //记录上传文件时间
     upload_Time.start();
@@ -299,43 +305,65 @@ int encryption::encrypt(){
     QString newName = yzipAbPath;
     QFile yZipFile(yFile_oss_Path);
     QFile file(yzipAbPath);
+
     //newName = "C:/CloundSafe/"+User_qqNum+"/encrypt/yZip/"+originalFileName;
     if (file.exists())
     {
         //若有重复文件
-        newName =yPath+ "副本 1 "+originalFileName ;
         int count = 2;
-        bool yes = yZipFile.rename(newName);
-
-        while (!yes) {
-
+        newName =yPath+ "副本 1 "+userFileName ;
+        while((QFile::exists(newName))){
             QString num = QString::number(count);
-            QString renewName = yPath+"副本 "+num+" "+originalFileName ;
-//            newName = yPath+"副本 "+num+" "+originalFileName ;
-            yes = QFile::rename(newName,renewName);
-            newName = renewName;
+            newName = yPath+"副本 "+num+" "+userFileName ;
             count++;
-            if(yes){
-                qDebug()<<"创建副本"<<yes;
-                break;
-            }
-            qDebug()<<"正在创建副本"<<count;
+        }
+        yZipFile.close();
+
+
+        //yZipFile.setFileName(newName);
+        bool yes = QFile::rename(yFile_oss_Path.toStdString().c_str(),newName.toStdString().c_str());
+        if(!yes){
+            yes = QFile::copy(yFile_oss_Path.toStdString().c_str(),newName.toStdString().c_str());
 
         }
+
+        qDebug()<<"创建副本"<<yes<<newName;
+
+//        newName =yPath+ "副本 1 "+userFileName ;
+//        int count = 2;
+//        bool yes = QFile::rename(yFile_oss_Path,newName);
+
+//        while (!yes) {
+
+//            QString num = QString::number(count);
+//            QString renewName = yPath+"副本 "+num+" "+userFileName ;
+//            QString oldName = yFile_oss_Path;
+////            newName = yPath+"副本 "+num+" "+originalFileName ;
+//            yes = QFile::rename( oldName,renewName);
+
+//            //newName = renewName;
+//            count++;
+//            if(yes){
+//                qDebug()<<"创建副本"<<yes;
+//                break;
+//            }
+//            qDebug()<<"正在创建副本"<<"oldName"<<oldName<<"renewName"<<renewName;
+
+//        }
 
     }else {
         bool yes = QFile::rename(yFile_oss_Path,newName);
         //qDebug()<<"创建副本"<<yes;
     }
-    //yZipFile.close();
-    //file.close();
+    yZipFile.close();
+    file.close();
 
 
 
     //删除base64后的文件
 
     if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
-        QFile file_tem(originalFilePath);
+        QFile file_tem(userFilePath);
         if (file_tem.exists())
         {
             file_tem.remove();

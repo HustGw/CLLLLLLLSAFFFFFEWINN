@@ -28,7 +28,7 @@ void startEncryptThread::run(){
                 msleep(5*ss);
                 resultNum += 5;
                 // 准备更新
-                //qDebug()<<"startEncryptThread"<<item;
+                qDebug()<<"startEncryptThread"<<item;
                 if(resultNum <90){
                    emit encptResult(resultNum,item,0,0);
                 }else{

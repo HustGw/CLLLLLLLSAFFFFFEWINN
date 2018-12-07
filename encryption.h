@@ -25,6 +25,8 @@
 #include "QtWidgets"
 #include <msgbox.h>
 #include <QTime>
+#include "QThread"
+#include "startencryptthread.h"
 
 class encryption
 {

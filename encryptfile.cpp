@@ -22,7 +22,7 @@
 using namespace std;
 
 errno_t err1, err2, err3, err4;
-FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
+
 int file_num;
 int single_key;
 double encryptPercent;
@@ -63,6 +63,7 @@ bool UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode)
 
 int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify){
 
+    FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
     qDebug()<<'1';
 
     origin_file = nullptr;
@@ -129,6 +130,7 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
  //   qDebug()<<'4';
 
     fclose(key_file);
+    fclose(origin_file);
 
     fseek(origin_file, 0, SEEK_SET);
 
@@ -136,6 +138,10 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     wchar_t strUnicode3[260];
     UTF8ToUnicode(ciphertextPath, strUnicode3);
     ciphertext_file = _wfopen(strUnicode3, L"wb");
+
+    wchar_t strUnicode4[260];
+    UTF8ToUnicode(originalFileLocalPath, strUnicode4);
+    origin_file = _wfopen(strUnicode4, L"rb");
 //    err4 = fopen_s(&ciphertext_file, ciphertextPath, "wb+");
 //    if (err4 != 0)
 //    {

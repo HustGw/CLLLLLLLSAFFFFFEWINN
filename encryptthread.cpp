@@ -27,7 +27,7 @@ void encryptthread::run(){
         connect(ecry, SIGNAL(finished()), ecry, SLOT(deleteLater()));
         ecry->start();
     }else{
-        msleep(100);
+        //msleep(100);
         emit result(nValue,item,encpt->debugTime,encpt->uploadTime);
     }
 

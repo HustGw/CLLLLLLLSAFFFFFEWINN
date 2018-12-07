@@ -878,6 +878,7 @@ void MainWindow::on_OpenFileBtn_clicked()
       for (int i=0;i<file_full_list.size();++i){
           //if ()
         fInfo=QFileInfo(file_full_list.at(i));
+
         openFileInfo=fInfo;
         //fName=fInfo.fileName();
         std::string name = codec->fromUnicode(fInfo.fileName()).data();
