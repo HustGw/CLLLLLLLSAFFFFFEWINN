@@ -61,7 +61,7 @@ bool UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode)
  return true;
 }
 
-int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify){
+int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify,int encryptRate){
 
     FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
     qDebug()<<'1';
@@ -82,7 +82,7 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     char keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
     encryptPercent = percent / 100;
-    int extractionRate = 100;
+    int extractionRate = encryptRate;
     qDebug()<<'2';
     ykeyAbPath = ykeyAbPath.toUtf8();
     fileAbPath = fileAbPath.toUtf8();
