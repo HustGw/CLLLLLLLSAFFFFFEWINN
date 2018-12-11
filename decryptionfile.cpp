@@ -18,7 +18,7 @@ using namespace std;
 extern QString tempFilePath;
 extern errno_t err1, err2, err3, err4;
 
- FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
+
 //extern QFile *origin_file_t,*key_file_t, *decryption_file_t, *ciphertext_file_t;
  int d_file_num;
  int d_single_key;
@@ -57,9 +57,9 @@ bool de_UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode){
 }
 
 
-int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath) {
+int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate) {
 
-
+    FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
     d_origin_file = nullptr;
     d_key_file = nullptr;
     d_decryption_file = nullptr;
@@ -75,7 +75,7 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
     char de_keyLocalPath[MAX_FILE_ADDRESS_LENGTH] = {};
     char de_ciphertextPath[MAX_FILE_ADDRESS_LENGTH] = {};
 
-    int extractionRate = 100;
+    int extractionRate = decryptRate;
 
     QFileInfo or_fileInfo (abPath);
     QFileInfo yz_fileInfo (yzipAbPath);

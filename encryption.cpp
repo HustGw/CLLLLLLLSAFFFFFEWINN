@@ -171,7 +171,7 @@ int encryption::encrypt(){
 
     //记录加密时间
     debug_Time.start();
-    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID);
+    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID,100);
     //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
     //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
 

@@ -13,7 +13,7 @@ class DecryptionFile
 {
 public:
     DecryptionFile();
-    int decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath);
+    int decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate);
 };
 
 #endif // DECRYPTIONFILE_H

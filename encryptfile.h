@@ -13,7 +13,8 @@ class encryptfile
 {
 public:
     encryptfile();
-    int encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify);
+    //int encrypt_Rate;
+    int encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify, int encryptRate);
     //string qstr2str(const QString qstr);
 };
 
