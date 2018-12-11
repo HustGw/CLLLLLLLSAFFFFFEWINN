@@ -1951,7 +1951,9 @@ void MainWindow::HeadClickedSlot(){
 //    userHead->setPixmap(pixmap);
     Infor_requestNum = 0;
     InforNum_Changed();
+
     inforDlg->show();
+    inforDlg->raise();
 }
 
 
