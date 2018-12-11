@@ -2500,7 +2500,7 @@ void MainWindow::on_pushButton_9_clicked()
     QString file_name;
     QString file_size;
     QString file_discryption;
-    finishViewController2->vbox = new QVBoxLayout();
+    //finishViewController2->vbox = new QVBoxLayout();
     QSqlQuery query(db);
        bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"' order by apply_time DESC");
        if(!success){
@@ -2508,19 +2508,19 @@ void MainWindow::on_pushButton_9_clicked()
            return;
        }else{
            qDebug()<<"查询成功";
-
+           finishViewController2->vbox = new QVBoxLayout();//将原有视图清空
            while(query.next())
            {
                file_name = query.record().value("file_name").toString();
                //file_size = query.record().value("file_size").toString()+"kb";
                 QString m_filesize = query.record().value("file_size").toString();
-
+                QString the_id = query.record().value("id").toString();
                file_id = query.record().value("file_id").toString();
 
                file_discryption = "文件已成功解密。";
 
-               FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
-               delete f2;
+//               FinishDecryptionItem *f2 = ui->MidStaWidget->findChild<FinishDecryptionItem*>(file_id);
+//               delete f2;
 
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
 
@@ -2610,6 +2610,58 @@ void MainWindow::on_pushButton_9_clicked()
               // QScrollArea *newScrollArea = new QScrollArea();
                newItemWidget->setLayout(finishViewController2->vbox);
                finScrollArea->setWidget(newItemWidget);
+               finScrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,0%);"
+                                                                 "margin:0px,0px,0px,0px;"
+                                                                 "padding-top:9px;"
+                                                                 "padding-bottom:9px;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,25%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::handle:vertical:hover"
+                                                                 "{"
+                                                                 "width:8px;"
+                                                                 "background:rgba(0,0,0,50%);"
+                                                                 " border-radius:4px;"
+                                                                 "min-height:20;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical"
+                                                                 "{"
+                                                                 "height:5px;width:10px;"
+                                                                 "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/4.png);"
+                                                                 "subcontrol-position:bottom;"
+                                                                 "}"
+                                                                 "QScrollBar::sub-line:vertical:hover"
+                                                                 "{"
+                                                                 "height:9px;width:8px;"
+                                                                 "border-image:url(:/images/a/2.png);"
+                                                                 "subcontrol-position:top;"
+                                                                 "}"
+                                                                 "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                                 "{"
+                                                                 "background:rgba(0,0,0,5%);"
+                                                                 "border-radius:4px;"
+                                                                 "}");
+               finScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                finScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
                QVBoxLayout *newVbox = new QVBoxLayout();
                newVbox->setMargin(0);
@@ -2908,6 +2960,7 @@ void MainWindow::on_pushButton_10_clicked()
         return;
     }else{
         qDebug()<<"查询成功";
+
         while(query.next())
         {
             QString file_id = query.record().value("file_id").toString();
@@ -3584,16 +3637,28 @@ void MainWindow::on_finen_checkBox_2_stateChanged(int arg1)
         return;
     }else{
         qDebug()<<"查询成功";
-        while(query.next())
-        {
-            QString file_id = query.record().value("file_id").toString();
-            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
-            if(finencrypt_flag == 0){
-                checkcheck->setChecked(true);
-            }else if(finencrypt_flag == 1){
-                checkcheck->setChecked(false);
+        QList<QCheckBox*> checkboxList = ui->MidStaWidget->findChildren<QCheckBox*>();
+            for(int i = 0; i < checkboxList.size(); i++)
+            {
+
+                QCheckBox *checkcheck = checkboxList.at(i);
+                qDebug()<< checkcheck->objectName();
+                if(finencrypt_flag == 0){
+                    checkcheck->setChecked(true);
+                }else if(finencrypt_flag == 1){
+                    checkcheck->setChecked(false);
+                }
             }
-        }
+//        while(query.next())
+//        {
+//            QString file_id = query.record().value("file_id").toString();
+//            QCheckBox *checkcheck = ui->MidStaWidget->findChild<QCheckBox*>(file_id+"check");
+//            if(finencrypt_flag == 0){
+//                checkcheck->setChecked(true);
+//            }else if(finencrypt_flag == 1){
+//                checkcheck->setChecked(false);
+//            }
+//        }
     }
     if(finencrypt_flag == 0){
         finencrypt_flag = 1;

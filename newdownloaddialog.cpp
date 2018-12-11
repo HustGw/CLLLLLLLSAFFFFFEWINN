@@ -95,7 +95,7 @@ void newDownloadDialog::change_list_view(){
                //int t = ui->listWidget->frameSize().width();
                if( fontSize >= 451 ) //与label自身相比较
                {
-                   QString str = fontMetrics().elidedText(file_name, Qt::ElideRight, fontSizeName - (fontSize - 381),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
+                   QString str = fontMetrics().elidedText(file_name, Qt::ElideRight, fontSizeName - (fontSize - 371),Qt::TextShowMnemonic) + filetype_extra;//返回一个带有省略号的字符串
                    the_words = "用户"+sender_name+"向您传输文件"+str;        //重新设置label上的字符串
                    the_extern_words = time_1 + "\n" + the_words;
                }else{
