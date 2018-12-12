@@ -2733,6 +2733,7 @@ void MainWindow::FileIsAllowed(){
      if(success){
          while(query.next()){
              QString onlyID = query.record().value("id").toString();
+             QString file_decrypt_num = query.record().value("file_encrypt_num").toString();
              QString file_id = query.record().value("file_id").toString();
              DecryptionItem *f1 = ui->MidStaWidget->findChild<DecryptionItem *>(onlyID+"decryption");
              if(f1==nullptr){
@@ -2745,6 +2746,7 @@ void MainWindow::FileIsAllowed(){
                  //查找秘钥ID
                  QSqlQuery keyQuery(db);
                  QString enkey_id;
+
                  bool keySuccess = keyQuery.exec("select * from varticle where article_id = '"+file_id+"'");
                  if(keySuccess){
                      while(keyQuery.next()){
@@ -2767,6 +2769,7 @@ void MainWindow::FileIsAllowed(){
                  depThread[DepThreadNum]->Dfile_id=file_id;
                  depThread[DepThreadNum]->Dfile_name=fileName;
                  depThread[DepThreadNum]->DItem_id=id;
+                 depThread[DepThreadNum]->Decrypt_num = file_decrypt_num;
                  depThread[DepThreadNum]->start();
                  DepThreadNum++;
 //                 if(decryptionFlag == 0){
