@@ -40,7 +40,9 @@ void DecryptionThread::run(){
             break;
         }
     }
-   if((fileD->decryptFile(downPath,contentPath,filePath,100))==54){
+    int file_decrypt_num = Decrypt_num.toInt();
+    qDebug()<<"此时的解密Num为："+file_decrypt_num;
+   if((fileD->decryptFile(downPath,contentPath,filePath,file_decrypt_num))==54){
         double dectime = Dec_timer.elapsed()/1000.0;
         qDebug()<<"当前的fileUUID为："+DItem_id;
         qDebug()<<"当前的fileID:"+Dfile_id;

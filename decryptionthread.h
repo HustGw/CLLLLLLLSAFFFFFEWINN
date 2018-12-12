@@ -10,6 +10,7 @@
 #include <QFileInfo>
 #include <QTime>
 #include <QDir>
+
 extern QString Denkey_id;
 extern QString Dfile_id;
 extern QString Dfile_name;
@@ -28,6 +29,7 @@ public:
     QString Denkey_id;
     QString Dfile_id;
     QString Dfile_name;
+    QString Decrypt_num;
 private slots:
     void DecryptionThread_RecvID(QString enkey_id,QString file_id,QString file_name,QString item_id);
     void RecProgressValue(double recValue);
