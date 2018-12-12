@@ -34,6 +34,7 @@ public:
     QLabel *fileSize;
     QLabel *fileDescription;
     QLabel *fileIcon;
+    QLabel *fileLevel;
     QCheckBox *checkBox;
     QPushButton *transprotBtn;
     QSqlDatabase db;

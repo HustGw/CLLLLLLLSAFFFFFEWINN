@@ -34,6 +34,11 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
     fileSize = new QLabel(this);
     fileDescription = new QLabel(this);
 
+    fileLevel = new QLabel(this);
+    fileLevel->setGeometry(305,42,200,14);
+    fileLevel->setFont(f_12);
+    fileLevel->setStyleSheet("color:#9999AB");
+
     timeLabel = new QLabel(this);
     timeLabel->setStyleSheet("background:transparent");
     timeLabel->setGeometry(294,31,230,10);
@@ -72,7 +77,7 @@ FinishDecryptionItem::FinishDecryptionItem(QWidget *parent): QWidget(parent){
 
     fileName->setGeometry(97,9,350,18);
     fileSize->setGeometry(97,29,300,12);
-    fileDescription->setGeometry(97,42,400,14);
+    fileDescription->setGeometry(97,42,200,14);
 
     openBtn->setGeometry(590,10,14,16);
     pathOpenBtn->setGeometry(625,11,15,14);
@@ -108,6 +113,7 @@ void FinishDecryptionItem::onStateChanged(int state){
             label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finde_label.png);background-color:#f6f7fa; }");
             timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
+            fileLevel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileDescription->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
             openBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/open_button.png);background-color:#f6f7fa; }"
                                                "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/open_button_hover.png);background-color:#f6f7fa; }");
@@ -125,6 +131,7 @@ void FinishDecryptionItem::onStateChanged(int state){
             timeLabel->setStyleSheet("background-color:white;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:white");
             fileDescription->setStyleSheet("color:#9999AB;background-color:white");
+            fileLevel->setStyleSheet("color:#9999AB");
             openBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/open_button.png);background-color:white }"
                                                "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/open_button_hover.png);background-color:white }");
             pathOpenBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/pathopen_button.png);background-color:white }"
