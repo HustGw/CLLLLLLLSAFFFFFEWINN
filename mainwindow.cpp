@@ -250,6 +250,16 @@ MainWindow::MainWindow(QWidget *parent) :
                {
                    DecryptionItem *v1 =  new DecryptionItem();
                    QString fName = query.record().value("file_name").toString();
+                   QString rate = query.record().value("file_encrypt_num").toString();
+                   QString file_level;
+                   if(rate == "20"){
+                       file_level = "加密等级：强";
+                   }else if(rate == "30"){
+                       file_level = "加密等级：中";
+                   }else {
+                       file_level = "加密等级：弱";
+                   }
+                   v1->fileLevel->setText(file_level);
                    int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
                    int pos = 0;int d_count = 0;
                    pos = fName.indexOf(".");
@@ -1556,6 +1566,16 @@ void MainWindow::ReceiveNewReq(){
 
                   QString fName;
                   fName = query.record().value("file_name").toString();
+                  QString rate = query.record().value("file_encrypt_num").toString();
+                  QString file_level;
+                  if(rate == "20"){
+                      file_level = "加密等级：强";
+                  }else if(rate == "30"){
+                      file_level = "加密等级：中";
+                  }else {
+                      file_level = "加密等级：弱";
+                  }
+                  v1->fileLevel->setText(file_level);
                   int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
                   int pos = 0;int d_count = 0;
                   pos = fName.indexOf(".");
@@ -2040,6 +2060,15 @@ void MainWindow::on_pushButton_8_clicked()
                QString m_filesize = query.record().value("article_size").toString();
                file_status = query.record().value("article_status").toString();
                file_id = query.record().value("article_id").toString();
+               QString rate = query.record().value("encrypt_num").toString();
+               QString file_level;
+               if(rate == "20"){
+                   file_level = "加密等级：强";
+               }else if(rate == "30"){
+                   file_level = "加密等级：中";
+               }else {
+                   file_level = "加密等级：弱";
+               }
 
                if(file_status == "1"){
                    file_discryption = "文件未上传，请上传。";
@@ -2053,7 +2082,7 @@ void MainWindow::on_pushButton_8_clicked()
 
                FinishEncryptionItem *f1 = new FinishEncryptionItem();
                f1->setObjectName(file_id);
-
+               f1->fileLevel->setText(file_level);
                QString filetype = file_name.section(".",1,1).trimmed().toStdString().c_str();
                if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
                    QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
@@ -2519,6 +2548,16 @@ void MainWindow::on_pushButton_9_clicked()
                file_name = query.record().value("file_name").toString();
                //file_size = query.record().value("file_size").toString()+"kb";
                 QString m_filesize = query.record().value("file_size").toString();
+                QString rate = query.record().value("file_encrypt_num").toString();
+                QString file_level;
+                if(rate == "20"){
+                    file_level = "加密等级：强";
+                }else if(rate == "30"){
+                    file_level = "加密等级：中";
+                }else {
+                    file_level = "加密等级：弱";
+                }
+
                 QString the_id = query.record().value("id").toString();
                file_id = query.record().value("file_id").toString();
 
@@ -2529,6 +2568,7 @@ void MainWindow::on_pushButton_9_clicked()
 
                FinishDecryptionItem *f1 = new FinishDecryptionItem();
 
+                f1->fileLevel->setText(file_level);
 
                f1->setObjectName(file_id);
 
@@ -3056,6 +3096,7 @@ void MainWindow::LinkInsert(QString link){
     QString Link_extraRate;
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
+    QString file_level;
     bool success = query.exec("select * from varticle where article_id = '"+GetLink+"'");
     if(!success){
         qDebug()<<"linkSelectFailed";
@@ -3066,6 +3107,16 @@ void MainWindow::LinkInsert(QString link){
             Link_filename = query.record().value("article_name").toString();
             Link_filesize = query.record().value("article_size").toString();
             Link_extraRate = query.record().value("encrypt_num").toString();
+            QString rate = query.record().value("file_encrypt_num").toString();
+
+            if(rate == "20"){
+                file_level = "加密等级：强";
+            }else if(rate == "30"){
+                file_level = "加密等级：中";
+            }else {
+                file_level = "加密等级：弱";
+            }
+
         }
     }
     if(Link_empid == nullptr){
@@ -3082,7 +3133,7 @@ void MainWindow::LinkInsert(QString link){
     }
     else{
         DecryptionItem *a1 = new DecryptionItem();
-
+        a1->fileLevel->setText(file_level);
         QString filetype = Link_filename.section(".",1,1).trimmed().toStdString().c_str();
         if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
             QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
@@ -3647,7 +3698,7 @@ void MainWindow::on_finen_checkBox_2_stateChanged(int arg1)
         return;
     }else{
         qDebug()<<"查询成功";
-        QList<QCheckBox*> checkboxList = ui->MidStaWidget->findChildren<QCheckBox*>();
+        QList<QCheckBox*> checkboxList = ui->MidStaWidget->currentWidget()->findChildren<QCheckBox*>();
             for(int i = 0; i < checkboxList.size(); i++)
             {
 

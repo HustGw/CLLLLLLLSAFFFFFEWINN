@@ -38,7 +38,10 @@ FinishEncryptionItem::FinishEncryptionItem(QWidget *parent): QWidget(parent){
     fileDescription->setFont(f_12);
     fileSize->setStyleSheet("color:#9999AB");
     fileDescription->setStyleSheet("color:#9999AB");
-
+    fileLevel = new QLabel(this);
+    fileLevel->setGeometry(305,42,200,14);
+    fileLevel->setFont(f_12);
+    fileLevel->setStyleSheet("color:#9999AB");
     transprotBtn = new QPushButton(this);
     shareBtn = new QPushButton(this);
     pathOpenBtn = new QPushButton(this);
@@ -108,6 +111,7 @@ void FinishEncryptionItem::onStateChanged(int state){
             fileName->setStyleSheet("background-color:#f6f7fa;color:#3D3939");
             label->setStyleSheet("QLabel{ border-image:url(:/new/mainwindow/pictures/finen_label.png);background-color:#f6f7fa; }");
             timeLabel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
+            fileLevel->setStyleSheet("background-color:#f6f7fa;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
             fileDescription->setStyleSheet("color:#9999AB;background-color:#f6f7fa;");
             transprotBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/trans_button.png);background-color:#f6f7fa }"
@@ -128,6 +132,7 @@ void FinishEncryptionItem::onStateChanged(int state){
             timeLabel->setStyleSheet("background-color:white;color:#9999AB");
             fileSize->setStyleSheet("color:#9999AB;background-color:white");
             fileDescription->setStyleSheet("color:#9999AB;background-color:white");
+            fileLevel->setStyleSheet("color:#9999AB");
             transprotBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/trans_button.png);background-color:white }"
                                                "QPushButton:hover { border-image:url(:/new/mainwindow/pictures/trans_button_hover.png); background-color:white}");
             shareBtn->setStyleSheet("QPushButton { border-image:url(:/new/mainwindow/pictures/share_button.png);background-color:white }"
