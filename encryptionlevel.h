@@ -10,19 +10,24 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtMath>
-
+#include <QDebug>
 class encryptionLevel : public QDialog
 {
     Q_OBJECT
 public:
-    encryptionLevel(int style,QString text,QWidget* parent= nullptr);
+    encryptionLevel(QWidget* parent= nullptr);
     ~encryptionLevel(void);
 public:
     QPushButton *okBtn;
     QPushButton *cancleBtn;
     QPushButton *closeBtn;
-    QPushButton * msgBtn;
     QPushButton *deleteBtn;
+    QPushButton *weakBtn;
+    QPushButton *midBtn;
+    QPushButton *hardBtn;
+    QLabel *weakLabel;
+    QLabel *midLabel;
+    QLabel *hardLabel;
     QLabel * titleLabel;
     QLabel *askLabel;
     QLabel * titleText;
@@ -39,6 +44,9 @@ public slots:
     void cancleBtn_press();
     void closeBtn_press();
     void deletBtn_press();
+    void weakBtn_press();
+    void midBtn_press();
+    void hardBtn_press();
 };
 
 

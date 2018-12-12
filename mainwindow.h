@@ -18,6 +18,7 @@
 #include "finishviewcontroller.h"
 #include "finishdecryptionItem.h"
 #include "finishviewcontroller2.h"
+#include "encryptionlevel.h"
 #include <QLabel>
 #include <QImage>
 #include <QFile>

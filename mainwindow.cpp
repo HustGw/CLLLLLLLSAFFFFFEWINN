@@ -24,7 +24,7 @@ QStringList m_fontList_W4;
 bool groupSendDialogFlag;
 bool groupShareDialogFlag;
 QNetworkAccessManager *d_accessManager;
-
+int extraction_rate;
 int AddFriendFlag = 0;
 int LinkInsertFlag = 0;
 int IsLinkInfor = 0;//用于判断是否链接插入的消息
@@ -774,6 +774,11 @@ void MainWindow::on_FinDepBtn_clicked()
 
 void MainWindow::on_OpenFileBtn_clicked()
 {
+    encryptionLevel *levelbox = new encryptionLevel(this);
+    int nRes = levelbox->exec();
+    if (nRes != QDialog::Accepted){
+
+    }else{
     QTextCodec *codec = QTextCodec::codecForName("utf8");//18030
     //QString file_full,fName,fPath,amfSize;
     QString file_full,fPath,amfSize;
@@ -1049,9 +1054,9 @@ void MainWindow::on_OpenFileBtn_clicked()
         newVbox->addWidget(newScrollArea);
         encryptionViewController->setLayout(newVbox);
 
-}
+        }
     }
-
+}
 }
 
 // 更新进度条
@@ -3045,6 +3050,7 @@ void MainWindow::LinkInsert(QString link){
     QString Link_empid;
     QString Link_filename;
     QString Link_filesize;
+    QString Link_extraRate;
     QDateTime time = QDateTime::currentDateTime();
     QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
     bool success = query.exec("select * from varticle where article_id = '"+GetLink+"'");
@@ -3056,6 +3062,7 @@ void MainWindow::LinkInsert(QString link){
             Link_empid = query.record().value("emp_id").toString();
             Link_filename = query.record().value("article_name").toString();
             Link_filesize = query.record().value("article_size").toString();
+            Link_extraRate = query.record().value("encrypt_num").toString();
         }
     }
     if(Link_empid == nullptr){
@@ -3066,7 +3073,7 @@ void MainWindow::LinkInsert(QString link){
     QUuid strid = QUuid::createUuid();
     QString id = strid.toString();
     QSqlQuery insertQuery(db);
-    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"',0,0)");
+    bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+GetLink+"','"+Link_filename+"','"+Link_empid+"','','"+User_ID+"','',0,'"+time_str+"','"+Link_filesize+"',0,0,"+Link_extraRate+")");
     if(!insertSuccess){
         qDebug()<<"LinkInsertFailed";
     }

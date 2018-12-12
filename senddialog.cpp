@@ -195,6 +195,7 @@ void sendDialog::reciveUserId(QString data){
 void sendDialog::on_pushButton_trans_clicked()
 {
     QString fileName;
+    QString extraRate;
     int count = ui->listWidget_2->count();
     if(count!=0){
     qDebug()<<file_id;
@@ -205,6 +206,7 @@ void sendDialog::on_pushButton_trans_clicked()
     }else{
         while(query.next()){
             fileName = query.record().value("article_name").toString();
+            extraRate = query.record().value("encrypt_num").toString();
             QString file_size = query.record().value("article_size").toString();
             for(int i = 0;i<count;i++){
                 QDateTime time = QDateTime::currentDateTime();
@@ -226,7 +228,7 @@ void sendDialog::on_pushButton_trans_clicked()
                 while(query.next()){
                      emp_phone = query.record().value("emp_phone").toString();
                 }
-                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status,createtime,file_size,is_solved,apply_time) values (?,?,?,?,?,?,?,0,?,?,0,0)");
+                query.prepare("insert into Decryption (id,file_id,file_name,emp_id,emp_phone,oemp_id,oemp_phone,status,createtime,file_size,is_solved,apply_time,file_encrypt_num) values (?,?,?,?,?,?,?,0,?,?,0,0,?)");
                 query.bindValue(0,QUuid::createUuid().toString());
                 query.bindValue(1,file_id);
                 query.bindValue(2,fileName);
@@ -236,6 +238,7 @@ void sendDialog::on_pushButton_trans_clicked()
                 query.bindValue(6,oemp_phone);
                 query.bindValue(7,time_str);
                 query.bindValue(8,file_size);
+                query.bindValue(9,extraRate);
                 bool success = query.exec();
                 if(success){
                     qDebug()<<"插入待解密表成功";

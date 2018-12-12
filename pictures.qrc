@@ -96,6 +96,12 @@
         <file>pictures/mainwindow_checkbox_checked.png</file>
         <file>pictures/mainwindow_checkbox_checked_hover.png</file>
         <file>pictures/mainwindow_checkbox_hover.png</file>
+        <file>pictures/level_green.png</file>
+        <file>pictures/level_grey.png</file>
+        <file>pictures/level_orange.png</file>
+        <file>pictures/level_red.png</file>
+        <file>pictures/levelBtn.png</file>
+        <file>pictures/levelBtn_hover.png</file>
     </qresource>
     <qresource prefix="/new/login">
         <file>pictures/login_account.png</file>
