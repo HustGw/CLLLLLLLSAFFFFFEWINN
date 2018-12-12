@@ -45,7 +45,7 @@ public:
     int oss_PutKey_Flag;
     int oss_PutFile_Flag;
     double debugTime,uploadTime;
-    int encpt_rate;
+    int encptRate;
 
 
 public:

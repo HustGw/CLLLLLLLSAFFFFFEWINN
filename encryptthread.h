@@ -16,6 +16,7 @@ public:
     encryption *encpt= new encryption();
     QString item ;
     int encptResultFlag ;
+    int encpt_rate;
     //startEncryptThread *ecry;
 private slots:
     void handEncptResult(int resultNum,QString itemName,double debug_Time,double upload_Time);

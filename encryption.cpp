@@ -171,7 +171,7 @@ int encryption::encrypt(){
 
     //记录加密时间
     debug_Time.start();
-    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID,100);
+    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID,encptRate);
     //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
     //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
 
@@ -283,9 +283,10 @@ int encryption::encrypt(){
         //上传至密文信息表
         //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
         char article_status = '0';
+
         QString article_size=QString::number(originalFileSize,10,2);
-        QString savesql_efile = QString ("INSERT INTO varticle(article_id,article_uploadtime,article_name,emp_id,emp_phone,article_address,article_size,article_status,key_id)");
-        savesql_efile+=QString("VALUES ('"+enfile_id+"','"+time_str+"','"+fInfo.fileName()+"','"+userID+"','"+111+"','"+yzipAbPath+"','"+article_size+"',"+ article_status +",'"+enkey_id+"')");
+        QString savesql_efile = QString ("INSERT INTO varticle(article_id,article_uploadtime,article_name,emp_id,emp_phone,article_address,article_size,article_status,key_id,encrypt_num)");
+        savesql_efile+=QString("VALUES ('"+enfile_id+"','"+time_str+"','"+fInfo.fileName()+"','"+userID+"','"+111+"','"+yzipAbPath+"','"+article_size+"',"+ article_status +",'"+enkey_id+"','"+QString::number(encptRate)+"')");
         bool isok=query.exec(savesql_efile);
         if(isok){
           qDebug()<<"ok";

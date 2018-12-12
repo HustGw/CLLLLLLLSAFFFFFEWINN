@@ -1268,6 +1268,7 @@ void MainWindow::startProgressBarThread( QString  itemName,QFileInfo fileInfo)
         // 线程结束后，自动销毁
         connect(encptThreadArr[encptThreadNum], SIGNAL(finished()), encptThreadArr[encptThreadNum], SLOT(deleteLater()));
         //ecpThread->start();
+        encptThreadArr[encptThreadNum]->encpt_rate = extraction_rate;
         encptThreadArr[encptThreadNum]->start();
         encptThreadNum++;
     }

@@ -32,6 +32,7 @@ void encryptthread::run(){
     }
 
     //int ecptFlag;
+    encpt->encptRate = encpt_rate;
     encptResultFlag = encpt->encrypt();
 
      //msleep(1000);
