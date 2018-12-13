@@ -167,6 +167,10 @@ void TcpClient::on_sendBtn_clicked()
 {
 
     //点击登录按钮的响应
+    if(!ui->Rem_Passwd->isChecked()){
+       remeberPasswd = false;
+    }
+
     QString userName=ui->userLineEdit->text();//获得对话框中用户名
     QString passward=ui->passwardLineEdit->text();//获得对话框中密码
     if(userName=="" || passward==""){//判断用户名密码是否为空，为空弹出警告
