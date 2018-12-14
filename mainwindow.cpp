@@ -785,10 +785,8 @@ void MainWindow::on_FinDepBtn_clicked()
 void MainWindow::on_OpenFileBtn_clicked()
 {
     encryptionLevel *levelbox = new encryptionLevel(this);
-    int nRes = levelbox->exec();
-    if (nRes != QDialog::Accepted){
 
-    }else{
+
     QTextCodec *codec = QTextCodec::codecForName("utf8");//18030
     //QString file_full,fName,fPath,amfSize;
     QString file_full,fPath,amfSize;
@@ -813,7 +811,10 @@ void MainWindow::on_OpenFileBtn_clicked()
 
     }else{
         fileOpenFlag = true;
+        int nRes = levelbox->exec();
+        if (nRes != QDialog::Accepted){
 
+        }else{
 
         if (initLableFlag){
 
@@ -1065,9 +1066,10 @@ void MainWindow::on_OpenFileBtn_clicked()
         encryptionViewController->setLayout(newVbox);
 
         }
+        }
     }
 }
-}
+
 
 // 更新进度条
 void MainWindow::handleResults(int value,QString itemName,double debugTime,double uploadTime)
