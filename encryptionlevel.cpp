@@ -108,9 +108,10 @@ encryptionLevel::encryptionLevel(QWidget* parent):QDialog(parent)
 
     okBtn=new QPushButton(this);
     okBtn->setGeometry(331,222,88,26);
-    okBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/levelBtn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/levelBtn_hover.png)}");
+    okBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/levelBtn_disable.png);}");
     okBtn->setCursor(QCursor(Qt::PointingHandCursor));
     okBtn->setFont(f_1);
+    okBtn->setEnabled(false);
 
     cancleBtn=new QPushButton(this);
     cancleBtn->setGeometry(217,222,88,26);
@@ -179,9 +180,12 @@ void encryptionLevel::deletBtn_press(){
 }
 void encryptionLevel::weakBtn_press()
 {
+
     weakBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_red.png)}");
     midBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_grey.png)}");
     hardBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_grey.png)}");
+    okBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/levelBtn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/levelBtn_hover.png)}");
+    okBtn->setEnabled(true);
     weakLabel->setFont(f_5);
     midLabel->setFont(f_4);
     hardLabel->setFont(f_4);
@@ -193,6 +197,8 @@ void encryptionLevel::midBtn_press()
     weakBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_orange.png)}");
     midBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_orange.png)}");
     hardBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_grey.png)}");
+    okBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/levelBtn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/levelBtn_hover.png)}");
+    okBtn->setEnabled(true);
     weakLabel->setFont(f_4);
     midLabel->setFont(f_5);
     hardLabel->setFont(f_4);
@@ -204,6 +210,8 @@ void encryptionLevel::hardBtn_press()
     weakBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_green.png)}");
     midBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_green.png)}");
     hardBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/level_green.png)}");
+    okBtn->setStyleSheet("QPushButton{border-image:url(:/new/mainwindow/pictures/levelBtn.png);}QPushButton:hover{border-image:url(:/new/mainwindow/pictures/levelBtn_hover.png)}");
+    okBtn->setEnabled(true);
     weakLabel->setFont(f_4);
     midLabel->setFont(f_4);
     hardLabel->setFont(f_5);
