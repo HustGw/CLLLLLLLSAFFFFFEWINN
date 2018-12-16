@@ -34,6 +34,7 @@ newDownloadDialog::newDownloadDialog(QWidget *parent) :
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
 
     ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(this,SIGNAL(downloadOne(QString)),parent,SLOT(downloadOneFile(QString)));
 }
 
@@ -54,6 +55,8 @@ void newDownloadDialog::change_list_view(){
     f_1.setFamily("微软雅黑");
     f_1.setPixelSize(14);
     f_1.setWeight(QFont::Normal);
+    ui->listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     int count = ui->listWidget->count();
     for (int j = 0;j<count;j++){
         QListWidgetItem * item = ui->listWidget->takeItem(0);
@@ -103,7 +106,7 @@ void newDownloadDialog::change_list_view(){
                }
 
                 file_item->setText(the_extern_words);
-                file_item->setSizeHint(QSize(400,50));
+                file_item->setSizeHint(QSize(480,50));
                 file_item->setFont(f_1);
                 ui->listWidget->insertItem(i,file_item);
             }
