@@ -330,6 +330,7 @@ void informationDlg::setItem(){
             int fontSize = fm.width(title);
             int fontSizeName = fm.width(filename);
             QString filetype_extra = filename.section(".",0,0).mid(filename.section(".",0,0).length()-2)+"."+filename.section(".",1,1).trimmed().toStdString().c_str() ;
+            m1->titleLabel->setToolTip(title);
            //int t = ui->listWidget->frameSize().width();
            if( fontSize >= 420 ) //与label自身相比较
            {
@@ -495,6 +496,7 @@ void informationDlg::setItem(){
             int fontSize = fm.width(s);
             int fontSizeName = fm.width(fileName);
             QString filetype_extra = fileName.section(".",0,0).mid(fileName.section(".",0,0).length()-2)+"."+fileName.section(".",1,1).trimmed().toStdString().c_str() ;
+            m1->timeLabel->setToolTip(s);
            //int t = ui->listWidget->frameSize().width();
            if( fontSize >= 420 ) //与label自身相比较
            {

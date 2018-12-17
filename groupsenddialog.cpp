@@ -84,6 +84,7 @@ groupSendDialog::groupSendDialog(QWidget *parent) :
 //        ui->label->setGeometry(38,59,fontSize,16);
 
     }
+    ui->label->setToolTip(fileName_ + numberLabel);
     //ui->label->setText(fileName_);
 
     bool friendSelSuc = query.exec("select * from friend where user_id ='"+User_ID+"' and status = 1");

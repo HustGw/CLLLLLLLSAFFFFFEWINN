@@ -73,6 +73,7 @@ sendDialog::sendDialog(QWidget *parent) :
 //        ui->label->setGeometry(38,59,fontSize,16);
 
    }
+    ui->label->setToolTip(fileName_);
     ui->pushButton_close->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_close2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->pushButton_trans->setCursor(QCursor(Qt::PointingHandCursor));
