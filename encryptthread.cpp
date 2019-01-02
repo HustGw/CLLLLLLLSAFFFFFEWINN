@@ -11,6 +11,7 @@ encryptthread::encryptthread(QObject *parent):QThread(parent)
 }
 
 void encryptthread::run(){
+    //encpt = new encryption;
     encptResultFlag = 0;
     nValue = 26;
 //    debugTime=0;uploadTime=0;

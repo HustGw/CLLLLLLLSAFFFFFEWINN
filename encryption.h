@@ -1,7 +1,7 @@
 #ifndef ENCRYPTION_H
 #define ENCRYPTION_H
 
-
+#include<QObject>
 #include <connectsql.h>
 #include <encryptfile.h>
 #include <QtSql/QSqlDatabase>
@@ -28,10 +28,20 @@
 #include "QThread"
 #include "startencryptthread.h"
 
-class encryption
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include "msgbox.h"
+#include "msgbox2.h"
+
+class encryption: public QObject
 {
+    Q_OBJECT
 
 public:
+    explicit encryption(QObject* parent = 0);
     QString originalFileName;
     QString originalFilePath;
     double originalFileSize;
@@ -53,6 +63,9 @@ public:
     void connect();
     int encrypt();
     void drawItem();
+
+private slots:
+    void finishedSlot(QNetworkReply *reply);
 };
 
 #endif // ENCRYPTION_H

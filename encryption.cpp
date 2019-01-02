@@ -7,7 +7,7 @@ extern QString yzipfileUuid;
 extern QString User_qqNum;
 extern int dir_Flag;
 QString tempFilePath;
-encryption::encryption()
+encryption::encryption(QObject* parent) : QObject(parent)
 {
 e_conn = ConnectionPool::openConnection();
     //创建加密目录
@@ -83,6 +83,9 @@ void encryption::connect(){
 
 int encryption::encrypt(){
 
+    QNetworkAccessManager *m_accessManager;
+    m_accessManager = new QNetworkAccessManager(this);
+    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
     QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
     oss_PutFile_Flag=2;
@@ -223,6 +226,7 @@ int encryption::encrypt(){
     //记录上传文件时间
     upload_Time.start();
 
+
     uploadoss *upKey = new uploadoss;
     upKey->OBJECT_NAME=enKeyID.c_str();
     upKey->BUCKET_NAME="cloudsafe-pc-ykey";
@@ -263,7 +267,22 @@ int encryption::encrypt(){
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
         msgbox->exec();
     }
+    //密钥上传之前需要与服务器通信
+    //QNetworkAccessManager *m_accessManager;
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://www.yunjiami1.com/cloud/File/UpLoadOSSFile.do"));  //保存文件上传到OSS的记录
+    QByteArray postData;
 
+    postData.append("fileName=");//参数文件名
+    postData.append(enKeyID.c_str());
+    postData.append("file_id=");//参数文件编号
+    postData.append(enKeyID.c_str());//
+    postData.append("fp_num=");//参数文件段编号
+    postData.append("1");//参数
+    postData.append("user_identify=");//参数用户标识
+    postData.append(enKeyID.c_str());//参数
+
+    m_accessManager->post(request,postData);//发送http的post请求
 
 
 
@@ -385,44 +404,84 @@ int encryption::encrypt(){
     //uploadTime = upload_Time.toString().toInt();
     return 1;
 
-    /////////////////////////////////密文下载测试
-    /// 密钥下载
-    /// 密文下载
-//    QString downPath = "E://CloundSafe//download_test//"+enkey_id;
-//    QByteArray down_oss_Path = downPath.toLatin1();
 
-//    downloadoss *downKey=new downloadoss;
-//    downKey->OBJECT_NAME=enFileID.c_str();
-//    downKey->BUCKET_NAME="cloudsafe-pc-ykey";
-//    downKey->download_filePath=down_oss_Path.data();
-//    downKey->get_object_to_file();
 }
 
-//void encryption::drawItem(){
-//    //delete encryptionViewController->layout();
-//    QTextCodec *codec = QTextCodec::codecForName("GB18030");
-//    QString fName,fPath;
-//    qint64 fSize;
-//    double mfSize;
-//    fName=fInfo.fileName();
-//    fPath=fInfo.filePath();
-//    fSize=fInfo.size();
-//    mfSize=(double)(fSize/1024.);//字节转换为KB
-//    EncryptionItem *v1 = new EncryptionItem();
-//    v1->fileName->setText(fName);
-//    v1->fileSize->setText(QString::number( mfSize)+codec->toUnicode(" KB"));
-//    v1->fileIcon->setText(fName);
-//    v1->fileDescription->setText("密钥正在上传...");
-//    v1->progressBar->setValue(100);
-//    //EncryptionViewController *encryptionViewController = new EncryptionViewController();
-//    encryptionViewController->vbox->addWidget(v1);
+void encryption::finishedSlot(QNetworkReply *reply){
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray bytes = reply->readAll();
+        qDebug()<<bytes;
+            QJsonParseError jsonError;//Qt5新类
+            QJsonDocument json = QJsonDocument::fromJson(bytes, &jsonError);//Qt5新类
+            if (jsonError.error == QJsonParseError::NoError)
+            {
+                if (json.isObject())
+                {
+                    QJsonObject rootObj = json.object();
+                    QString rootpath;
+                    //是否含有key  rootpath
+                    if (rootObj.contains("status"))
+                    {
+                        //取出key为rootpath的值
+                        QJsonValue value = rootObj.value("status");
+                        //判断是否是string类型
+                        if (value.isString())
+                        {
+                            qDebug()<<rootpath;
+                            rootpath = value.toString();
+                            if(rootpath!="Success")
+                            {
 
-//    delete encryptionViewController->layout();
-//    QWidget *newItemWidget = new QWidget();
-//    QScrollArea *newScrollArea = new QScrollArea();
-//    newItemWidget->setLayout(encryptionViewController->vbox);
-//    newScrollArea->setWidget(newItemWidget);
-//    QVBoxLayout *newVbox = new QVBoxLayout();
-//    newVbox->addWidget(newScrollArea);
-//    encryptionViewController->setLayout(newVbox);
-//}
+                            }
+                        }
+
+                    }
+                    if (rootObj.contains("content"))
+                    {
+                        //取出key为rootpath的值
+                        QJsonValue value = rootObj.value("content");
+                        QString content;
+                        //判断是否是string类型
+                        if (value.isString())
+                        {
+                            qDebug()<<rootpath;
+                            content = value.toString();
+
+                            if(content.contains("employee is null",Qt::CaseSensitive))
+                            {
+                                //用户不存在
+                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("用户不存在！"));
+                                msgbox->exec();
+                            }
+                            else if(content.contains("passworderror",Qt::CaseSensitive))
+                            {
+                                //文件为空
+                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件为空！"));
+                                msgbox->exec();
+                            }
+                            else if(content.contains("freezing",Qt::CaseSensitive))
+                            {
+                                //uploadfile success
+                                MsgBox *msgbox = new MsgBox(2,QStringLiteral("成功！"));
+                                msgbox->exec();
+
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+    else
+    {
+        qDebug()<<"handle errors here";
+        QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        qDebug("found error ....code: %d %d\n", statusCodeV.toInt(), reply->error());
+        qDebug(qPrintable(reply->errorString()));
+    }
+    reply->deleteLater();
+}

@@ -13,7 +13,7 @@ protected:
 public:
     encryptthread();
     explicit encryptthread(QObject *parent = 0);
-    encryption *encpt= new encryption();
+    encryption *encpt= new encryption(this);
     QString item ;
     int encptResultFlag ;
     int encpt_rate;

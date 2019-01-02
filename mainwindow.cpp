@@ -786,7 +786,6 @@ void MainWindow::on_OpenFileBtn_clicked()
 {
     encryptionLevel *levelbox = new encryptionLevel(this);
 
-
     QTextCodec *codec = QTextCodec::codecForName("utf8");//18030
     //QString file_full,fName,fPath,amfSize;
     QString file_full,fPath,amfSize;

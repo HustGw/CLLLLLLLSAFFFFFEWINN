@@ -171,7 +171,7 @@ public:
     QProgressBar *f_progressBar;
     QProgressBar *d_progressBar;
 
-    encryption *contest = new encryption();
+    encryption *contest = new encryption(this);
     DelinkDialog *linkDialog;
     groupSendDialog *grpDlg;
     groupshareDialog *grpShareDlg;
