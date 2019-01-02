@@ -6,8 +6,10 @@
 #include <string>
 #include <QDebug>
 
-#define BUFFER_SIZE 52428800
+#define BUFFER_SIZE 1000
 #define MAX_FILE_ADDRESS_LENGTH 512
+
+
 
 #define FAIL_OPEN_ORIGIN 41           //源文件打开失败
 #define FAIL_OPEN_KEY_FILE 42         //新建密钥文件失败
@@ -61,7 +63,9 @@ bool UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode)
  return true;
 }
 
-int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString file_id, QString user_identify,int encryptRate){
+
+int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzipAbPath, int percent, QString version,QString file_id, QString user_identify,int encryptRate){
+
 
     FILE *origin_file, *key_file, *decryption_file, *ciphertext_file;
     qDebug()<<'1';
@@ -165,5 +169,39 @@ int encryptfile::encryptFile(QString fileAbPath, QString ykeyAbPath, QString yzi
     qDebug()<<'5';
     fclose(ciphertext_file);
     fclose(origin_file);
+    FILE* fa ; // 文件指针
+    QString str_fileidmark = "$$$$";
+    str_fileidmark.append(file_id);
+    QString str_useridmark = "$$$$";
+    str_useridmark.append(user_identify);
+    QString str_versiondmark = "$$$$";
+    str_versiondmark.append(version);
+    char* szAppendStr1 ;
+    char* szAppendStr2 ;
+    char* szAppendStr3 ;
+
+
+    errno_t eResult;
+    // 以附加方式打开可读/写的文件, 如果没有此文件则会进行创建，然后以附加方式打开可读/写的文件
+    //eResult = fopen_s(&fa, "FILE_NAME", "a+");
+    fa = fopen(ciphertextPath,"a+");
+
+    QByteArray ba = str_fileidmark.toLatin1();
+    szAppendStr1 = ba.data();
+    fputs(szAppendStr1, fa);
+
+    ba = str_useridmark.toLatin1();
+    szAppendStr2 = ba.data();
+    fputs(szAppendStr2, fa);
+
+    ba = str_versiondmark.toLatin1();
+    szAppendStr3 = ba.data();
+    fputs(szAppendStr3, fa);
+
+    fclose(fa);
+
+//    ofstream saveFile( ciphertext_file,ios::app);//打开record.txt文件，以ios::app追加的方式输入
+//    saveFile<<" seconds"<<endl;
+//    saveFile.close();//关闭文件
     return ENCRYPTION_SUCCESS;
 }

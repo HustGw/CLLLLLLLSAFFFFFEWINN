@@ -13,6 +13,9 @@ class DecryptionFile
 {
 public:
     DecryptionFile();
+
+    int VerifyFile(QString yzipAbPath, char v_dest[], char f_dest[], char u_dest[]);
+
     int decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate);
 };
 

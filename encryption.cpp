@@ -171,7 +171,16 @@ int encryption::encrypt(){
 
     //记录加密时间
     debug_Time.start();
-    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,userFileName,userID,encptRate);
+    //判断加密精度 生成版本号
+    QString version;
+    if (encptRate == 100){
+       version = "version1010";
+    }else if (encptRate == 30){
+        version = "version1030";
+    }else if(encptRate == 20){
+        version = "version1020";
+    }
+    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,version,userFileName,userID,encptRate);
     //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
     //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
 
