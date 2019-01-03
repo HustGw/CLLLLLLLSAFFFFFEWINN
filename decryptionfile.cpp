@@ -5,6 +5,7 @@
 #define MAX_FILE_ADDRESS_LENGTH 512
 
 #define FAIL_ERRO_VERSION 30          //版本号不匹配
+#define FAIL_NOTYFILE 31              //文件不是密文
 
 #define FAIL_OPEN_ORIGIN 41           //源文件打开失败
 #define FAIL_OPEN_KEY_FILE 42         //新建密钥文件失败
@@ -64,7 +65,7 @@ bool de_UTF8ToUnicode(const char * UTF8, wchar_t * strUnicode){
 //版本号
 //1
 //0 前两位表示当前软件版本
-//1 表示加密等级  1 表示加密等级1%
+//1 表示加密等级  1--100 2--20 3--30
 //0 表示加密客户端类型 0 PC端  1 安卓端  2 iOS端
 int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],char u_dest[]){
     FILE *yzipAbPath_file;
@@ -95,6 +96,7 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
      int v_length = 0;
      int u_length = 0;
      int f_length = 0;
+     int verNum = 0;
     /*初始化dest数组*/
      memset(v_dest, 0, sizeof(v_dest));
      memset(v_dest, 0, sizeof(f_dest));
@@ -104,12 +106,17 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
     /*从后往前寻找第一个$符号为止*/
     while ((ch = (char)fgetc(yzipAbPath_file)) != CR)
     {
-        qDebug()<<ch;
-        /*将找到的字符加入dest数组*/
-        char src[2] = { ch, '\0' };
-        strcat(v_dest, src);
-        offset += -1;
-        current_pos = fseek(yzipAbPath_file, offset, SEEK_END);
+        verNum ++;
+        if (verNum >= 100){
+            return FAIL_NOTYFILE;
+        }else {
+            //qDebug()<<ch;
+            /*将找到的字符加入dest数组*/
+            char src[2] = { ch, '\0' };
+            strcat(v_dest, src);
+            offset += -1;
+            current_pos = fseek(yzipAbPath_file, offset, SEEK_END);
+        }
     }
     v_length -= offset + 1;
     //offset += -1;
