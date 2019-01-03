@@ -3958,30 +3958,312 @@ void MainWindow::on_pushButton_16_clicked()
     char u_dest[100];//userId
     if (!filename.isNull()) { //用户选择了文件
         qDebug()<<filename;
-        QString __version = QString(v_dest);
-        qDebug()<<"__version1";
-        qDebug()<<__version;
+
         int __result = fileD->VerifyFile(filename,v_dest,f_dest,u_dest);
-        //QString __version = QString(v_dest);
-        qDebug()<<"__version2";
+        QString __version = QString(v_dest);
+        QString __keyId = QString(f_dest).section("}",0,0)+"}";
+        QString __userId = QString(u_dest);
         qDebug()<<__version;
         qDebug()<<__result;
         if(__version.length()){
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("所选文件是密文！"),this);
             msgbox->exec();
-            QNetworkRequest request;
-            request.setUrl(QUrl("http://www.yunjiami1.com/cloud/Employee/FindUser.do"));
-            QByteArray postData;
-            postData.append("data=");//请求参数名
-            postData.append("");
-            QNetworkReply *reply = d_accessManager->post(request,postData);
-        }else{
+            if(__version == "version1011"){
+
+            }else if(__version == "version1012"){
+
+            }else{
+
+                QSqlQuery query(db);
+                QString _fileId;
+                QString empid;
+                QString _filename;
+                QString filesize;
+                QString extraRate;
+                QDateTime time = QDateTime::currentDateTime();
+                QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");
+                QString file_level;
+                bool success = query.exec("select * from varticle where key_id = '"+__keyId+"'");
+                qDebug()<<"id:::::::::::::::::::::::::::::::::"+__keyId;
+                if(!success){
+                    qDebug()<<"Failed";
+                }
+                else{
+                    while(query.next()){
+                        _fileId = query.record().value("article_id").toString();
+                        empid = query.record().value("emp_id").toString();
+                        _filename = query.record().value("article_name").toString();
+                        filesize = query.record().value("article_size").toString();
+                        extraRate = query.record().value("encrypt_num").toString();
+                        QString rate = query.record().value("file_encrypt_num").toString();
+                        if(rate == "20"){
+                            file_level = "加密等级：强";
+                        }else if(rate == "30"){
+                            file_level = "加密等级：中";
+                        }else {
+                            file_level = "加密等级：弱";
+                        }
+                        QString path = "C://CloundSafe//"+User_qqNum+"//Decrypt//content//"+_fileId;
+                        if(copyFileToPath(filename,path,1)){
+                            QUuid strid = QUuid::createUuid();
+                            QString id = strid.toString();
+                            QSqlQuery insertQuery(db);
+                            bool insertSuccess = insertQuery.exec("insert into Decryption values('"+id+"','"+_fileId+"','"+_filename+"','"+empid+"','','"+User_ID+"','',1,'"+time_str+"','"+filesize+"',0,0,"+extraRate+")");
+                            if(!insertSuccess){
+                                qDebug()<<"LinkInsertFailed";
+                            }
+                            else{
+                                QSqlQuery query1(db);
+                                bool success = query1.exec("select * from Decryption where oemp_id='"+User_ID+"' order by createtime DESC");
+                                if(!success){
+                                qDebug() << "查询user失败";
+                                return;
+                                }else{
+                                    qDebug()<<"查询成功";
+                                    //将数据库查到的数据添加到视图中
+                                    while(query1.next()){
+                                        DecryptionItem *v1 =  new DecryptionItem();
+                                        QString fName = query1.record().value("file_name").toString();
+                                        QString rate = query1.record().value("file_encrypt_num").toString();
+                                        QString file_level;
+                                        if(rate == "20"){
+                                            file_level = "加密等级：强";
+                                        }else if(rate == "30"){
+                                            file_level = "加密等级：中";
+                                        }else {
+                                            file_level = "加密等级：弱";
+                                        }
+                                        v1->fileLevel->setText(file_level);
+                                        int fontSize = fontMetrics().width( fName );//获取之前设置的字符串的像素大小
+                                        int pos = 0;int d_count = 0;
+                                        pos = fName.indexOf(".");
+                                        while (pos>-1) {
+                                            d_count++;
+                                            pos = fName.indexOf(".",pos+1);
+                                        }
+                                        QString filetype_extra = fName.section(".",d_count-1,d_count-1).mid(fName.section(".",d_count-1,d_count-1).length()-2)+"."+fName.section(".",d_count,d_count).trimmed().toStdString().c_str() ;
+                                        if( fontSize >= v1->fileName->width()-100 ) //与label自身相比较
+                                        {
+                                            QString str = fontMetrics().elidedText( fName, Qt::ElideRight, v1->fileName->width()-150 )+filetype_extra;//返回一个带有省略号的字符串
+                                            v1->fileName->setText( str );       //重新设置label上的字符串
+                                        }else{
+                                            v1->fileName->setText(fName);
+                                        }
+                                        QString m_filesize = query1.record().value("file_size").toString();
+                                        double filesize_double = m_filesize.toDouble();
+                                        int filesize_count = 0;
+                                        while(filesize_double>1024){
+                                            filesize_double = filesize_double/1024;
+                                            filesize_count++;
+                                        }
+                                        if(filesize_count == 0){
+                                            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"KB");
+                                        }else if(filesize_count == 1){
+                                            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"MB");
+                                        }else if(filesize_count == 2){
+                                            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"GB");
+                                        }else if(filesize_count == 3){
+                                            v1->fileSize->setText(QString::number(filesize_double, 10, 2)+"TB");
+                                        }
+                                        //设置文件大小
+                                        v1->timeLabel->setText(query1.record().value("createtime").toString());
+                                        //设置fileIcon的图片
+                                        QString filetype = query1.record().value("file_name").toString().section(".",1,1).trimmed().toStdString().c_str();
+                                        if((filetype=="jpg")||(filetype=="png")||(filetype=="jpeg")||(filetype=="bmp")||(filetype=="gif")||(filetype=="webp")||(filetype=="psd")||(filetype=="svg")||(filetype=="tiff")){
+                                            QPixmap pixmap(":/new/mainwindow/pictures/pic_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                        }else if((filetype=="avi")||(filetype=="rmvb")||(filetype=="rm")||(filetype=="asf")||(filetype=="divx")||(filetype=="wmv")||(filetype=="mp4")||(filetype=="mkv")||(filetype=="vob")||(filetype=="mpeg")){
+                                            QPixmap pixmap(":/new/mainwindow/pictures/video_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                        }else if((filetype=="doc")||(filetype=="docx")||(filetype=="xls")||(filetype=="xlsx")||(filetype=="ppt")||(filetype=="pptx")||(filetype=="txt")||(filetype=="docm")){
+                                            QPixmap pixmap(":/new/mainwindow/pictures/doc_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                        }else if((filetype=="rar")||(filetype=="zip")||(filetype=="arj")||(filetype=="z")){
+                                            QPixmap pixmap(":/new/mainwindow/pictures/zip_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                        }else if((filetype=="mp3")||(filetype=="wma")||(filetype=="wav")||(filetype=="ape")||(filetype=="flac")||(filetype=="ogg")||(filetype=="aac")){
+                                            QPixmap pixmap(":/new/mainwindow/pictures/music_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                        }else{
+                                            QPixmap pixmap(":/new/mainwindow/pictures/else_icon.png");
+                                            pixmap.scaled(v1->fileIcon->size(),Qt::KeepAspectRatio);
+                                            v1->fileIcon->setScaledContents(true);
+                                            v1->fileIcon->setPixmap(pixmap);
+                                            v1->elseLabel->setText(filetype.left(3));
+                                            v1->elseLabel->raise();
+                                        }
+                                        QString initID = query1.record().value("id").toString();
+                                        v1->checkBox->setObjectName(initID+"Decheck");//设置checkbox的ID
+                                        v1->setObjectName(initID+"decryption");//设置Item的ID
+                                        v1->downloadBtn->setObjectName(initID+"btn");//设置downloadBtn的ID
+                                        v1->downloadBtn->setStyleSheet("QPushButton{border:1px groove gray;border-radius:4px;border-color: rgb(139,159,185);}QPushButton:hover{background-color: #3A8CFF;color:white;}QPushButton:pressed{background-color: rgb(139,159,185);}");
+                                        //连接信号槽
+                   //                   connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                                        if(query1.record().value("status").toString()=="0"){//待下载状态
+                                            RequestIDArray[RequsetIndex]=initID;
+                                            RequsetIndex++;
+                                            v1->fileDescription->setText("主体文件指定分享需确认下载.");
+                                            v1->downloadBtn->setText("确认下载");
+                                            connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(OssDownLoadFile()));
+                                            decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
+                    //                      connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                                            f_progressBar = new QProgressBar();
+                                            f_progressBar = v1->progressBar;
+                                            f_progressBar->setObjectName(v1->objectName());
+                   //                       v1->fileIcon->stackUnder(f_progressBar);
+                   //                       v1->timeLabel->stackUnder(f_progressBar);
+                                            f_progressBar->raise();
+                                            f_progressBar->hide();
+                                            f_progressBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);  // 对齐方式
+                                            //decryptionViewController->vbox->addWidget(f_progressBar);
+                                        }
+                                        else if(query1.record().value("status").toString()=="1"){//待申请状态
+                                            v1->fileDescription->setText("文件已加密需下载密钥文件.");
+                                            v1->downloadBtn->setText("申请解密");
+                                            v1->label->show();
+                   //                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                                            connect(v1->downloadBtn,SIGNAL(clicked(bool)),this,SLOT(getFileID()));
+                                            decryptionViewController->vbox->addWidget(v1);//将v1添加到视图中
+                                        }
+                                        else if(query1.record().value("status").toString()=="2"){//申请等待状态
+                                            v1->fileDescription->setText("正在申请解密，请等待！");
+                                            v1->downloadBtn->setText("申请中");
+                                            v1->label->show();
+                   //                       connect(ui->pushButton,SIGNAL(clicked()),v1,SLOT(changeCheckBox()));
+                                            decryptionViewController->vbox->addWidget(v1);
+                                        }
+                                        else if(query1.record().value("status").toString()=="3"){//申请请求已同意
+                                            v1->fileDescription->setText("正在申请解密，请等待！");
+                                            v1->downloadBtn->setText("申请中");
+                                            v1->label->show();
+                                            decryptionViewController->vbox->addWidget(v1);
+                                        }
+                                    }
+                                    decryptionViewController->vbox->setMargin(0);
+                                    decryptionViewController->vbox->setSpacing(0);
+                                    QWidget *newItemWidget = new QWidget();
+                                    newScrollArea = new QScrollArea();
+                   //               newScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                                    newScrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical"
+                                                                                    "{"
+                                                                                    "width:8px;"
+                                                                                    "background:rgba(0,0,0,0%);"
+                                                                                    "margin:0px,0px,0px,0px;"
+                                                                                    "padding-top:9px;"
+                                                                                    "padding-bottom:9px;"
+                                                                                    "}"
+                                                                                    "QScrollBar::handle:vertical"
+                                                                                    "{"
+                                                                                    "width:8px;"
+                                                                                    "background:rgba(0,0,0,25%);"
+                                                                                    " border-radius:4px;"
+                                                                                    "min-height:20;"
+                                                                                    "}"
+                                                                                    "QScrollBar::handle:vertical:hover"
+                                                                                    "{"
+                                                                                    "width:8px;"
+                                                                                    "background:rgba(0,0,0,50%);"
+                                                                                    " border-radius:4px;"
+                                                                                    "min-height:20;"
+                                                                                    "}"
+                                                                                    "QScrollBar::add-line:vertical"
+                                                                                    "{"
+                                                                                    "height:5px;width:10px;"
+                                                                                    "border-image:url(:/new/mainwindow/pictures/Scrollbar_bottom.png);"
+                                                                                    "subcontrol-position:bottom;"
+                                                                                    "}"
+                                                                                    "QScrollBar::sub-line:vertical"
+                                                                                    "{"
+                                                                                    "height:5px;width:10px;"
+                                                                                    "border-image:url(:/new/mainwindow/pictures/Scrollbar_top.png);"
+                                                                                    "subcontrol-position:top;"
+                                                                                    "}"
+                                                                                    "QScrollBar::add-line:vertical:hover"
+                                                                                    "{"
+                                                                                    "height:9px;width:8px;"
+                                                                                    "border-image:url(:/images/a/4.png);"
+                                                                                    "subcontrol-position:bottom;"
+                                                                                    "}"
+                                                                                    "QScrollBar::sub-line:vertical:hover"
+                                                                                    "{"
+                                                                                    "height:9px;width:8px;"
+                                                                                    "border-image:url(:/images/a/2.png);"
+                                                                                    "subcontrol-position:top;"
+                                                                                    "}"
+                                                                                    "QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical"
+                                                                                    "{"
+                                                                                    "background:rgba(0,0,0,5%);"
+                                                                                    "border-radius:4px;"
+                                                                                    "}");
+                                    newItemWidget->setLayout(decryptionViewController->vbox);
+                                    newScrollArea->setWidget(newItemWidget);
+                                    newScrollArea->setStyleSheet("border:0;padding:0;spacing:0;");
+                                    QVBoxLayout *newVbox = new QVBoxLayout();
+                                    newVbox->setMargin(0);
+                                    newVbox->setSpacing(0);
+                                    newVbox->addWidget(newScrollArea);
+                                    decryptionViewController->setLayout(newVbox);
+                                    }
+                            }
+                        }else{
+                            qDebug()<<"文件拷贝失败";
+                        }
+                    }
+                }
+            }
+        }
+        /*
+         * 解密需要发的https请求
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://www.yunjiami1.com/cloud/File/DownLoadOSSFile.do"));
+        QByteArray postData;
+        postData.append("user_identify=");//请求参数名
+        postData.append(__userId);
+        postData.append("file_id=");//请求参数名
+        postData.append(_fileId);
+        QNetworkReply *reply = d_accessManager->post(request,postData);
+        */
+        else{
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("所选文件并非密文！"),this);
             msgbox->exec();
         }
-
-    } else // 用户取消选择
+    }else // 用户取消选择
     {
 
     }
+}
+//拷贝文件：
+bool MainWindow::copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
+{
+    toDir.replace("\\","/");
+    if (sourceDir == toDir){
+        return true;
+    }
+    if (!QFile::exists(sourceDir)){
+        return false;
+    }
+    QDir *createfile     = new QDir;
+    bool exist = createfile->exists(toDir);
+    if (exist){
+        if(coverFileIfExist){
+            createfile->remove(toDir);
+        }
+    }//end if
+
+    if(!QFile::copy(sourceDir, toDir))
+    {
+        return false;
+    }
+    qDebug()<<"copy成功";
+    return true;
 }

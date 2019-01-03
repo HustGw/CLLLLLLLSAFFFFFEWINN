@@ -284,7 +284,7 @@ private slots:
     //开启加密进程
     void startEncryptThread(QString itemName);
 
-
+    bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
     //设置主界面用户名称
     void setEmp_name();
     //清楚左侧Button点击效果
