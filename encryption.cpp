@@ -54,6 +54,8 @@ e_conn = ConnectionPool::openConnection();
 
     }
     dir_Flag ++;
+    m_accessManager = new QNetworkAccessManager(this);
+    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
 
 }
 void encryption::connect(){
@@ -86,8 +88,8 @@ void encryption::connect(){
 int encryption::encrypt(){
 
 
-    m_accessManager = new QNetworkAccessManager(this);
-    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
+//    m_accessManager = new QNetworkAccessManager(this);
+//    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
     QTime debug_Time,upload_Time;
     oss_PutKey_Flag=2;
     oss_PutFile_Flag=2;
@@ -272,7 +274,7 @@ int encryption::encrypt(){
     //密钥上传之前需要与服务器通信
     //QNetworkAccessManager *m_accessManager;
     QNetworkRequest request;
-    request.setUrl(QUrl("https://www.yunjiami1.com/cloud/File/UpLoadOSSFile.do"));  //保存文件上传到OSS的记录
+    request.setUrl(QUrl("http://www.yunjiami1.com/cloud/File/UpLoadOSSFile.do"));  //保存文件上传到OSS的记录
     QByteArray postData;
 
     postData.append("fileName=");//参数文件名

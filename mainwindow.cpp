@@ -3958,10 +3958,14 @@ void MainWindow::on_pushButton_16_clicked()
     char u_dest[100];//userId
     if (!filename.isNull()) { //用户选择了文件
         qDebug()<<filename;
-
-        fileD->VerifyFile(filename,v_dest,f_dest,u_dest);
         QString __version = QString(v_dest);
+        qDebug()<<"__version1";
         qDebug()<<__version;
+        int __result = fileD->VerifyFile(filename,v_dest,f_dest,u_dest);
+        //QString __version = QString(v_dest);
+        qDebug()<<"__version2";
+        qDebug()<<__version;
+        qDebug()<<__result;
         if(__version.length()){
             MsgBox *msgbox = new MsgBox(3,QStringLiteral("所选文件是密文！"),this);
             msgbox->exec();
