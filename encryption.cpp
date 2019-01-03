@@ -55,10 +55,10 @@ e_conn = ConnectionPool::openConnection();
     }
     dir_Flag ++;
     m_accessManager = new QNetworkAccessManager(this);
-    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
+    connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)),Qt::AutoConnection);
 
 }
-void encryption::connect(){
+//void encryption::connect(){
     //连接数据库
 //    connectSql *con = new connectSql;
 //    con->setDbName("Cloud_Encryption");
@@ -83,7 +83,7 @@ void encryption::connect(){
 //        //QMessageBox::information(this, tr("提示"), tr("MySql数据库连接失败！"), tr("确定"));
 //        qDebug() <<"error_MySql:\n" << db.lastError().text();
 //    }
-}
+//}
 
 int encryption::encrypt(){
 
@@ -271,7 +271,8 @@ int encryption::encrypt(){
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
         msgbox->exec();
     }
-    //密钥上传之前需要与服务器通信
+    //密钥上传需要与服务器通信
+    qDebug()<<"服务器通信";
     //QNetworkAccessManager *m_accessManager;
     QNetworkRequest request;
     request.setUrl(QUrl("http://www.yunjiami1.com/cloud/File/UpLoadOSSFile.do"));  //保存文件上传到OSS的记录
