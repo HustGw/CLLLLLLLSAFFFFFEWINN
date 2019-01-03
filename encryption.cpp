@@ -185,7 +185,7 @@ int encryption::encrypt(){
     }else if(encptRate == 20){
         version = "version1020";
     }
-    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,version,userFileName,userID,encptRate);
+    int catgNum = enfile->encryptFile(userFilePath ,ykeyAbPath,uuPath,0,version,enkey_id,userID,encptRate);
     //qDebug()<<debug_Time.elapsed()/1000.0<<"s";
     //QString tistr = QString::number((debug_Time.elapsed()/1000.0),10,4);
 
@@ -276,7 +276,7 @@ int encryption::encrypt(){
     QByteArray postData;
 
     postData.append("fileName=");//参数文件名
-    postData.append(enKeyID.c_str());
+    postData.append(ykeyAbPath);
     postData.append("file_id=");//参数文件编号
     postData.append(enKeyID.c_str());//
     postData.append("fp_num=");//参数文件段编号
