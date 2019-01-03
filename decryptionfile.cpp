@@ -108,6 +108,7 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
     {
         verNum ++;
         if (verNum >= 100){
+            memset(u_dest,'\0',sizeof(u_dest));
             return FAIL_NOTYFILE;
         }else {
             //qDebug()<<ch;
