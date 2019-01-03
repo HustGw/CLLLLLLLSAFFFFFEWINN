@@ -7,6 +7,8 @@ extern QString yzipfileUuid;
 extern QString User_qqNum;
 extern int dir_Flag;
 QString tempFilePath;
+
+QNetworkAccessManager *m_accessManager;
 encryption::encryption(QObject* parent) : QObject(parent)
 {
 e_conn = ConnectionPool::openConnection();
@@ -83,7 +85,7 @@ void encryption::connect(){
 
 int encryption::encrypt(){
 
-    QNetworkAccessManager *m_accessManager;
+
     m_accessManager = new QNetworkAccessManager(this);
     QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
     QTime debug_Time,upload_Time;

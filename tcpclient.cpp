@@ -24,7 +24,7 @@ QFont q1;
 QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
-QNetworkAccessManager *m_accessManager;
+
 QString version_id;
 TcpClient::TcpClient(QWidget *parent) :
     QDialog(parent),

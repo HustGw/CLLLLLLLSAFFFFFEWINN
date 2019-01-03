@@ -56,6 +56,7 @@ public:
     int oss_PutFile_Flag;
     double debugTime,uploadTime;
     int encptRate;
+    QNetworkAccessManager *m_accessManager;
 
 
 public:
