@@ -319,7 +319,7 @@
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="OpenFileBtn">
@@ -404,6 +404,22 @@
         <width>13</width>
         <height>13</height>
        </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_16">
+      <property name="geometry">
+       <rect>
+        <x>237</x>
+        <y>4</y>
+        <width>110</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="accessibleDescription">
+       <string>批量删除</string>
+      </property>
+      <property name="text">
+       <string>解密本地文件</string>
       </property>
      </widget>
     </widget>
