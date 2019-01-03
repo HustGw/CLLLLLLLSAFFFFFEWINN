@@ -3944,3 +3944,40 @@ QString MainWindow::CreateTimeTitle(double time){
     }
     return temstr;
 }
+
+void MainWindow::on_pushButton_16_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(
+       this,
+       "请选择需要解密的文件",
+       QDir::currentPath(),
+       "All files(*.*)");
+    DecryptionFile *fileD = new DecryptionFile();
+    char v_dest[100];//version
+    char f_dest[100];//fileId
+    char u_dest[100];//userId
+    if (!filename.isNull()) { //用户选择了文件
+        qDebug()<<filename;
+
+        fileD->VerifyFile(filename,v_dest,f_dest,u_dest);
+        QString __version = QString(v_dest);
+        qDebug()<<__version;
+        if(__version.length()){
+            MsgBox *msgbox = new MsgBox(3,QStringLiteral("所选文件是密文！"),this);
+            msgbox->exec();
+            QNetworkRequest request;
+            request.setUrl(QUrl("http://www.yunjiami1.com/cloud/Employee/FindUser.do"));
+            QByteArray postData;
+            postData.append("data=");//请求参数名
+            postData.append("");
+            QNetworkReply *reply = d_accessManager->post(request,postData);
+        }else{
+            MsgBox *msgbox = new MsgBox(3,QStringLiteral("所选文件并非密文！"),this);
+            msgbox->exec();
+        }
+
+    } else // 用户取消选择
+    {
+
+    }
+}

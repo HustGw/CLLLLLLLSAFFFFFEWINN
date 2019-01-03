@@ -362,6 +362,8 @@ private slots:
 
     QString CreateTimeTitle(double time);//根据传入时间 生成完成时间
 
+    void on_pushButton_16_clicked();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void mousePressEvent(QMouseEvent *event);
