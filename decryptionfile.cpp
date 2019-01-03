@@ -1,7 +1,7 @@
 #include "decryptionfile.h"
 #include <QFile>
 #include "QDir"
-#define BUFFER_SIZE 52428800
+#define BUFFER_SIZE 1000
 #define MAX_FILE_ADDRESS_LENGTH 512
 
 #define FAIL_ERRO_VERSION 30          //版本号不匹配
