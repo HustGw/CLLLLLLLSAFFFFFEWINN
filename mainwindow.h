@@ -95,6 +95,7 @@ extern int findecrypt_flag;//已解密全选判断变量
 extern int finencrypt_flag;//已加密全选判断变量
 extern int DeSelect_flag;//解密全选判断变量
 extern QString User_ID;
+extern QString UserIdentify;
 extern QString URL;
 extern bool fileOpenFlag;
 extern bool initLableFlag;
@@ -143,6 +144,7 @@ signals:
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    int httpFlag;
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
     EncryptionViewController *encryptionViewController;
@@ -183,6 +185,10 @@ public:
     QTimer *threadTimer;
     QThread *thread_11;
     heartThread *workThread;
+
+    QFile *avatorFile;//文件指针
+    QNetworkReply *avatorReply;
+    QNetworkAccessManager *avatorManager;
 
     //鼠标所在区域
     enum WindowStretchRectState
@@ -271,6 +277,8 @@ private slots:
 
     void HeadChanged();
 
+    void httpDowload();
+    void httpDowloadFinished();
 //    void FileIsAllowed();//请求同意槽函数
 
     void FileIsIgnored();//请求忽略槽函数
@@ -283,7 +291,7 @@ private slots:
     void startProgressBarThread(QString itemName,QFileInfo openFileInfo);
     //开启加密进程
     void startEncryptThread(QString itemName);
-
+    void androidDecrypt();
     bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
     //设置主界面用户名称
     void setEmp_name();

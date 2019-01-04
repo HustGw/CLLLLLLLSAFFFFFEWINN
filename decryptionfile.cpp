@@ -99,8 +99,8 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
      int verNum = 0;
     /*初始化dest数组*/
      memset(v_dest, 0, sizeof(v_dest));
-     memset(v_dest, 0, sizeof(f_dest));
-     memset(v_dest, 0, sizeof(u_dest));
+     memset(f_dest, 0, sizeof(f_dest));
+     memset(u_dest, 0, sizeof(u_dest));
     /*将文件指针移动到倒数第一个字符*/
     current_pos = fseek(yzipAbPath_file, offset, SEEK_END);
     /*从后往前寻找第一个$符号为止*/

@@ -24,7 +24,7 @@ QFont q1;
 QString Mac_address;
 QString LoginUserID = nullptr;
 QString UserPhoneNum = nullptr;
-
+QString UserIdentify = nullptr;
 QString version_id;
 TcpClient::TcpClient(QWidget *parent) :
     QDialog(parent),
@@ -436,11 +436,13 @@ void TcpClient::finishedSlot(QNetworkReply *reply)
                              }
                              else{
                                  accept();
+                                 qDebug()<<content;
                                  int index = content.lastIndexOf('_');
                                  QString midQString = content.mid(0,index);
                                  index = midQString.lastIndexOf('_');
                                  UserPhoneNum = midQString.mid(0,index);
                                  LoginUserID = midQString.mid(index+1);
+                                 UserIdentify = content.section("_",2,2);
                                  qDebug()<<LoginUserID;
 
                                  savecfg();
