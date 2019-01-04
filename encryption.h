@@ -61,7 +61,7 @@ public:
 
 public:
     encryption();
-    void connect();
+    //void connect();
     int encrypt();
     void drawItem();
 

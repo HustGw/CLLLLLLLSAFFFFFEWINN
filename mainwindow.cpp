@@ -4151,8 +4151,10 @@ void MainWindow::on_pushButton_16_clicked()
         int __result = fileD->VerifyFile(filename,v_dest,f_dest,u_dest);
         QString __version = QString(v_dest);
         QString __keyId = QString(f_dest).toUtf8();//.section("}",0,0)+"}";
-        QString __userId = QString(u_dest).section("?",0,0);
+        QString __userId = QString(QLatin1String(u_dest));;
         qDebug()<<__version;
+        qDebug()<<__keyId;
+        qDebug()<<__userId;
         qDebug()<<__result;
         qDebug()<<__userId;
         qDebug()<<__keyId;

@@ -55,10 +55,10 @@ e_conn = ConnectionPool::openConnection();
     }
     dir_Flag ++;
     m_accessManager = new QNetworkAccessManager(this);
-    QObject::connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)));
+    connect(m_accessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedSlot(QNetworkReply*)),Qt::AutoConnection);
 
 }
-void encryption::connect(){
+//void encryption::connect(){
     //连接数据库
 //    connectSql *con = new connectSql;
 //    con->setDbName("Cloud_Encryption");
@@ -83,7 +83,7 @@ void encryption::connect(){
 //        //QMessageBox::information(this, tr("提示"), tr("MySql数据库连接失败！"), tr("确定"));
 //        qDebug() <<"error_MySql:\n" << db.lastError().text();
 //    }
-}
+//}
 
 int encryption::encrypt(){
 
@@ -248,8 +248,23 @@ int encryption::encrypt(){
         //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
         //上传至密钥信息表
         //将用户唯一标识、源文件名、密文密钥唯一标识存入数据库
+
+        //获取手机号
+        bool success = query.exec("select * from employee where qq_num='"+User_qqNum+"'");
+         QString emp_phone;
+        if(!success){
+            qDebug() << "查询user失败";
+            return -1;
+         }else{
+            while(query.next()){
+                emp_phone = query.record().value("emp_phone").toString();
+                qDebug()<<emp_phone;
+            }
+        }
+
+
         QString savesql_key = QString ("INSERT INTO vfile(file_id,file_uploadtime,file_name,emp_id,emp_phone)");
-        savesql_key+=QString("VALUES ('"+ enkey_id +"','"+time_str+"','"+enkey_id+"','"+userID+"','"+111+"')");
+        savesql_key+=QString("VALUES ('"+ enkey_id +"','"+time_str+"','"+enkey_id+"','"+userID+"','"+emp_phone+"')");
         //QSqlQuery query;
 
         bool aok=query.exec(savesql_key);
@@ -271,19 +286,20 @@ int encryption::encrypt(){
         MsgBox *msgbox = new MsgBox(2,QStringLiteral("文件打开错误！"));
         msgbox->exec();
     }
-    //密钥上传之前需要与服务器通信
+    //密钥上传需要与服务器通信
+    qDebug()<<"服务器通信";
     //QNetworkAccessManager *m_accessManager;
     QNetworkRequest request;
     request.setUrl(QUrl("http://www.yunjiami1.com/cloud/File/UpLoadOSSFile.do"));  //保存文件上传到OSS的记录
     QByteArray postData;
 
-    postData.append("fileName=");//参数文件名
+    postData.append("&fileName=");//参数文件名
     postData.append(ykeyAbPath);
-    postData.append("file_id=");//参数文件编号
+    postData.append("&file_id=");//参数文件编号
     postData.append(enKeyID.c_str());//
-    postData.append("fp_num=");//参数文件段编号
+    postData.append("&fp_num=");//参数文件段编号
     postData.append("1");//参数
-    postData.append("user_identify=");//参数用户标识
+    postData.append("&user_identify=");//参数用户标识
     postData.append(enKeyID.c_str());//参数
 
     m_accessManager->post(request,postData);//发送http的post请求
