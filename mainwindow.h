@@ -141,10 +141,15 @@ class MainWindow : public QMainWindow
 signals:
     void fileData(QString);
     void sendUserId(QString);
+    void decryptSignal(QString,QString);
+    void FinishedDecryption(QString);
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     int httpFlag;
+    QString dcrypt_contentName;
+    QString dcrypt_ykeyName;
+    QString dcrypt_ykeyId;
     DecryptionItem *decryptionPage;
     EncryptionItem *encryptionPage;
     EncryptionViewController *encryptionViewController;
@@ -279,6 +284,8 @@ private slots:
 
     void httpDowload();
     void httpDowloadFinished();
+    void decryptSlot(QString keypath,QString filepath);
+    void finishDecryption(QString decryption_id);
 //    void FileIsAllowed();//请求同意槽函数
 
     void FileIsIgnored();//请求忽略槽函数

@@ -272,6 +272,9 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
         wchar_t strUnicode2[260];
         de_UTF8ToUnicode(de_keyLocalPath, strUnicode2);
         d_key_file = _wfopen(strUnicode2, L"rb");
+        if(d_key_file==nullptr){
+            return FAIL_OPEN_DOWNLOAD_KEY_FILE;
+        }
 //        err2 = fopen_s(&key_file, de_keyLocalPath, "rb+");
 //        if (err2 != 0)
 //        {
@@ -284,6 +287,9 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
         wchar_t strUnicode3[260];
         de_UTF8ToUnicode(de_ciphertextPath, strUnicode3);
         d_decryption_file = _wfopen(strUnicode3, L"rb");
+        if(d_decryption_file==nullptr){
+            return FAIL_OPEN_DOWNLOAD_KEY_FILE;
+        }
 //        err3 = fopen_s(&decryption_file, de_ciphertextPath, "rb+");
 //        if (err3 != 0)
 //        {
@@ -292,9 +298,10 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 //        }
 //        while ((file_length_2 = decryption_file_t->read(file_buffer,BUFFER_SIZE)) >0
 //               &&(key_length = key_file_t->read(key_buffer,BUFFER_SIZE / extractionRate)) >0) {
+       qDebug()<<"111111111";
         while (((d_file_length_2 = fread(d_file_buffer, 1, BUFFER_SIZE, d_decryption_file)) > 0)
             && ((d_key_length = fread(d_key_buffer, 1, BUFFER_SIZE / extractionRate, d_key_file)) > 0)) {
-            qDebug()<<'1';
+            qDebug()<<"开始解密";
             for (int i = 1; i <= d_key_length; i++) {
                 d_file_buffer[i * extractionRate] = d_key_buffer[i - 1];
             }
