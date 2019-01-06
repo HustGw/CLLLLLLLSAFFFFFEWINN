@@ -3772,7 +3772,7 @@ void MainWindow::on_finen_checkBox_stateChanged(int arg1)
 void MainWindow::on_finen_checkBox_2_stateChanged(int arg1)
 {
     QSqlQuery query(db);
-    bool success = query.exec("select * from Decryption where (status = 5 or status = 15) and oemp_id ='" + User_ID+"'");
+    bool success = query.exec("select * from Decryption where status = 5 and oemp_id ='" + User_ID+"'");
     if(!success){
         qDebug() << "查询密文失败";
         return;
@@ -4233,7 +4233,7 @@ void MainWindow::finishedSlot(QNetworkReply *reply){
                                                    link = valueJson.toString();
                                                    QDir file;
                                                    QString fileName="C://CloundSafe//"+User_qqNum+"//Decrypt//ykey//"+dcrypt_ykeyName;
-                                                   dcrypt_contentName = "tmp.content";
+                                                   //dcrypt_contentName = "tmp.content";
                                                    avatorFile=new QFile(fileName);
                                                    //判断文件是否可写入 不可写删除 指针赋值0
                                                    if(!avatorFile->open(QIODevice::WriteOnly)){
@@ -4479,7 +4479,10 @@ void MainWindow::on_pushButton_16_clicked()
                         extraRate = "100";
                         //QString rate = query.record().value("file_encrypt_num").toString();
                         file_level = "加密等级：弱";
-                        QString path = "C://CloundSafe//"+User_qqNum+"//Decrypt//content//"+"tmp.content";
+                        QUuid _strid = QUuid::createUuid();
+                        QString _id = _strid.toString();
+                        QString path = "C://CloundSafe//"+User_qqNum+"//Decrypt//content//"+_id;
+                        dcrypt_contentName = _id;
                         if(copyFileToPath(filename,path,1)){
                             qDebug()<<"2";
                             QUuid strid = QUuid::createUuid();
