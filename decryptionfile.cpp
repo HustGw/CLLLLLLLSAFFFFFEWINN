@@ -6,6 +6,7 @@
 
 #define FAIL_ERRO_VERSION 30          //版本号不匹配
 #define FAIL_NOTYFILE 31              //文件不是密文
+#define VERFY_SUCCESS 34              //文件不是密文
 
 #define FAIL_OPEN_ORIGIN 41           //源文件打开失败
 #define FAIL_OPEN_KEY_FILE 42         //新建密钥文件失败
