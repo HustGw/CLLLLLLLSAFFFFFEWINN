@@ -214,6 +214,12 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
     u_length = u_length - v_length - 4;
     fseek(yzipAbPath_file, 0, SEEK_SET);
     fclose(yzipAbPath_file);
+    if (v_length == 11) {
+        return VERFY_SUCCESS;
+    }else
+    {
+        return FAIL_NOTYFILE;
+    }
 }
 
 int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate) {
@@ -259,6 +265,9 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
         wchar_t strUnicode1[260];
         de_UTF8ToUnicode(de_originalFileLocalPath, strUnicode1);
         d_origin_file = _wfopen(strUnicode1, L"wb");
+        if(d_origin_file==nullptr){
+            return FAIL_NEW_ORIGIN;
+        }
 
 //        err1 = fopen_s(&origin_file, de_originalFileLocalPath, "wb+");
 //        if (err1 != 0)
