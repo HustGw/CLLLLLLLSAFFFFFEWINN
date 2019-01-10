@@ -3876,7 +3876,7 @@ void MainWindow::decryptSlot(QString keypath,QString filepath){
     QString key_path = User_qqPath+"//Decrypt//ykey//" + keypath;
     QString content_path = User_qqPath+"//Decrypt//content//" + filepath;
     qDebug()<<key_path+"::::"+content_path+"::::"+decryptpath;
-    int a = fileD->decryptFile(key_path,content_path,decryptpath,100);
+    int a = fileD->decryptFile(key_path,content_path,decryptpath,100,1);
     if(a==54){
         emit FinishedDecryption(dcrypt_ykeyId);
     }
