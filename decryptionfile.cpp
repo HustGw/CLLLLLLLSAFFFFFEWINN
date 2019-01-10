@@ -227,7 +227,7 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
 //int base64Flag 0----无需base64解码  1------需要base64解码
 int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate,int base64Flag) {
 
-    FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
+    FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file,*d_decryption_file_1;
     d_origin_file = nullptr;
     d_key_file = nullptr;
     d_decryption_file = nullptr;
@@ -278,47 +278,182 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
             return FAIL_NEW_ORIGIN;
         }
 
-//        err1 = fopen_s(&origin_file, de_originalFileLocalPath, "wb+");
-//        if (err1 != 0)
-//        {
-//            qDebug()<<("new origin file create error");
-//            return FAIL_NEW_ORIGIN;
-//        }
-//        key_file_t = new QFile(ykeyAbPath);
-//        bool openflag2 = key_file_t->open(QIODevice::ReadWrite);
-//        qDebug()<<openflag2;
+
         wchar_t strUnicode2[260];
         de_UTF8ToUnicode(de_keyLocalPath, strUnicode2);
         d_key_file = _wfopen(strUnicode2, L"rb");
         if(d_key_file==nullptr){
             return FAIL_OPEN_DOWNLOAD_KEY_FILE;
         }
-//        err2 = fopen_s(&key_file, de_keyLocalPath, "rb+");
-//        if (err2 != 0)
-//        {
-//            qDebug()<<("key file open error");
-//            return FAIL_OPEN_DOWNLOAD_KEY_FILE;
-//        }
-//        decryption_file_t = new QFile(yzipAbPath);
-//        bool openflag3 = decryption_file_t->open(QIODevice::ReadWrite);
-//        qDebug()<<openflag3;
+
         wchar_t strUnicode3[260];
         de_UTF8ToUnicode(de_ciphertextPath, strUnicode3);
-        d_decryption_file = _wfopen(strUnicode3, L"rb");
+        d_decryption_file = _wfopen(strUnicode3, L"rb+");
         if(d_decryption_file==nullptr){
             return FAIL_OPEN_DOWNLOAD_KEY_FILE;
         }
-//        err3 = fopen_s(&decryption_file, de_ciphertextPath, "rb+");
-//        if (err3 != 0)
-//        {
-//            qDebug()<<("origin file open error");
-//            return FAIL_OPEN_DOWNLOAD_CIPHERTEXT;
-//        }
-//        while ((file_length_2 = decryption_file_t->read(file_buffer,BUFFER_SIZE)) >0
-//               &&(key_length = key_file_t->read(key_buffer,BUFFER_SIZE / extractionRate)) >0) {
-       //qDebug()<<"111111111";
+
+        //读取源文件，判断版本是否满足解密
+            int current_pos = 0;
+            char ch = 0;
+            long offset = -1;
+            const char CR = '$';
+
+            int v_length = 0;
+            int u_length = 0;
+            int f_length = 0;
+
+            char v_dest[100];
+            char u_dest[100];
+            char f_dest[100];
+
+
+            /*初始化dest数组*/
+            memset(v_dest, 0, sizeof(v_dest));
+            memset(u_dest, 0, sizeof(u_dest));
+            memset(f_dest, 0, sizeof(f_dest));
+            /*将文件指针移动到倒数第一个字符*/
+            current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            /*从后往前寻找第一个$符号为止*/
+            while ((ch = (char)fgetc(d_decryption_file)) != CR)
+            {
+                //qDebug() << ch;
+                //printf("ch = %c \n", ch);
+                /*将找到的字符加入dest数组*/
+                char src[2] = { ch, '\0' };
+                strcat(v_dest, src);
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+            v_length -= offset + 1;
+            //offset += -1;
+            current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            int num = 0;
+            for (int i = 0; i < 4; i++) {
+
+                if ((ch = (char)fgetc(d_decryption_file)) == CR) {
+                    num++;
+                    //qDebug() << ch;
+                }
+                else {
+                    //不是相连四个$，清空数组
+                    memset(v_dest, '\0', sizeof(v_dest));
+                }
+                if (num == 4) {
+                    for (int j = 0; j < v_length; j++) {
+                        char temp;
+                        temp = v_dest[j];
+                        v_dest[j] = v_dest[v_length - j - 1];
+                        v_dest[v_length - j - 1] = temp;
+                    }
+                    for (int j = 0; j < v_length+4; j++) {
+                        //qDebug() << v_dest[j];
+                        fseek(d_decryption_file, -1-j, SEEK_END);
+                        fputc('\0', d_decryption_file);
+                        //printf("v_dest = %c \n", v_dest[j]);
+                    }
+                }
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+
+
+            //读取源文件，存储userid
+            while ((ch = (char)fgetc(d_decryption_file)) != CR)
+            {
+                /*将找到的字符加入dest数组*/
+                char src[2] = { ch, '\0' };
+                strcat(u_dest, src);
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+            u_length -= offset + 1;
+            current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            num = 0;
+            for (int i = 0; i < 4; i++) {
+
+                if ((ch = (char)fgetc(d_decryption_file)) == CR) {
+                    num++;
+                    //qDebug() << ch;
+                }
+                else {
+                    //不是相连四个$，清空数组
+                    memset(u_dest, '\0', sizeof(u_dest));
+                }
+                if (num == 4) {
+                    //qDebug() << "userid";
+                    //printf("userid \n");
+                    /*因为dest中存入的数字是按文件从后往前顺序排列的，所以需要倒置顺序*/
+                    //_strrev(u_dest);
+                    for (int j = 0; j < (u_length - v_length - 4); j++) {
+                        char temp;
+                        temp = u_dest[j];
+                        u_dest[j] = u_dest[u_length - v_length - 4 - j - 1];
+                        u_dest[u_length - v_length - 4 - j - 1] = temp;
+                    }
+                    for (int j = 0; j < (u_length +4 ); j++) {
+                        fseek(d_decryption_file, -1 - j, SEEK_END);
+                        fputc('\0', d_decryption_file);
+                        //printf("u_dest = %c \n", u_dest[j]);
+                    }
+                }
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+            //读取源文件，存储fileid
+            while ((ch = (char)fgetc(d_decryption_file)) != CR)
+            {
+                /*将找到的字符加入dest数组*/
+                char src[2] = { ch, '\0' };
+                strcat(f_dest, src);
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+            f_length -= offset + 1;
+            current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            num = 0;
+            for (int i = 0; i < 4; i++) {
+
+                if ((ch = (char)fgetc(d_decryption_file)) == CR) {
+                    num++;
+                    //qDebug() << ch;
+                }
+                else {
+                    //不是相连四个$，清空数组
+                    memset(f_dest, '\0', sizeof(f_dest));
+                }
+                if (num == 4) {
+                    //qDebug() << "fileid";
+                    //qDebug() << f_length;
+                    //printf("fileid \n");
+                    /*因为dest中存入的数字是按文件从后往前顺序排列的，所以需要倒置顺序*/
+                    //_strrev(f_dest);
+                    for (int j = 0; j < (f_length - u_length - 4); j++) {
+                        char temp;
+                        temp = f_dest[j];
+                        f_dest[j] = f_dest[f_length - u_length - 4 - j - 1];
+                        f_dest[f_length - u_length - 4 - j - 1] = temp;
+                    }
+                    for (int j = 0; j < (f_length + 4 ); j++) {
+                        fseek(d_decryption_file, -1 - j, SEEK_END);
+                        fputc('\0', d_decryption_file);
+                        //printf("f_dest = %c \n", f_dest[j]);
+                    }
+                }
+                offset += -1;
+                current_pos = fseek(d_decryption_file, offset, SEEK_END);
+            }
+            f_length = f_length - u_length - 4;
+            u_length = u_length - v_length - 4;
+            fseek(d_decryption_file, 0, SEEK_SET);
+            fclose(d_decryption_file);
+
+            //wchar_t strUnicode4[260];
+            //de_UTF8ToUnicode(de_ciphertextPath, strUnicode4);
+            d_decryption_file_1 = fopen(de_ciphertextPath, "rb");
+
         qDebug()<<"开始解密";
-        while (((d_file_length_2 = fread(d_file_buffer, 1, BUFFER_SIZE, d_decryption_file)) > 0)
+        while (((d_file_length_2 = fread(d_file_buffer, 1, BUFFER_SIZE, d_decryption_file_1)) > 0)
             && ((d_key_length = fread(d_key_buffer, 1, BUFFER_SIZE / extractionRate, d_key_file)) > 0)) {
             //qDebug()<<"开始解密";
             for (int i = 1; i <= d_key_length; i++) {
@@ -328,12 +463,8 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
             //origin_file_t->write(file_buffer,file_length_2);
             memset(d_file_buffer, 0, BUFFER_SIZE);
         }
-
-//        origin_file_t->close();
-//        decryption_file_t->close();
-//        key_file_t->close();
         fclose(d_origin_file);
-        fclose(d_decryption_file);
+        fclose(d_decryption_file_1);
         fclose(d_key_file);
         //QString fileSuffix = fileInfo.suffix();
         qDebug()<<"后缀名："<<fileSuffix;
@@ -357,15 +488,6 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
                 //return FAIL_ERRO_BASE64;
             }
         }
-
-//        QFile file_tem(temp_filePath);
-//        if (file_tem.exists())
-//        {
-//            file_tem.remove();
-//        }
-//        file_tem.close();
-
-            //yzipAbPath = temp_filePath;
         return DECRYPTION_SUCCESS;
 }
 
