@@ -44,7 +44,7 @@ void DepDownThread::DownTread_RecvID(QString enkey_id,QString file_id,QString fi
     DecryptionFile *fileD = new DecryptionFile();
     QString contentPath = User_qqPath+"//Decrypt//content//"+file_id;
     QString filePath = User_qqPath+"//Decrypt//file//"+file_name;
-   if((fileD->decryptFile(downPath,contentPath,filePath,100))==54){
+   if((fileD->decryptFile(downPath,contentPath,filePath,100,1))==54){
         qDebug()<<"success";
         dec_time=dec_Timer.elapsed()/1000.0;
     };//解密函数

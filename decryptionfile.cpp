@@ -7,6 +7,7 @@
 #define FAIL_ERRO_VERSION 30          //版本号不匹配
 #define FAIL_NOTYFILE 31              //文件不是密文
 #define VERFY_SUCCESS 34              //文件不是密文
+#define FAIL_ERRO_BASE64 35           //base64参数错误
 
 #define FAIL_OPEN_ORIGIN 41           //源文件打开失败
 #define FAIL_OPEN_KEY_FILE 42         //新建密钥文件失败
@@ -223,7 +224,8 @@ int DecryptionFile::VerifyFile(QString yzipAbPath,char v_dest[],char f_dest[],ch
     }
 }
 
-int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate) {
+//int base64Flag 0----无需base64解码  1------需要base64解码
+int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate,int base64Flag) {
 
     FILE *d_origin_file, *d_key_file, *d_decryption_file, *d_ciphertext_file;
     d_origin_file = nullptr;
@@ -250,9 +252,15 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
     QString fileSuffix = or_fileInfo.suffix();
     qDebug()<<"后缀名："<<fileSuffix;
     //base64解码
-    if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
-        temp_filePath = temp_filePath.toUtf8();
-        strcpy_s(de_originalFileLocalPath, temp_filePath.toStdString().c_str());
+    if (base64Flag){
+        if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+            temp_filePath = temp_filePath.toUtf8();
+            strcpy_s(de_originalFileLocalPath, temp_filePath.toStdString().c_str());
+        }else{
+            //return FAIL_ERRO_BASE64;
+            abPath = abPath.toUtf8();
+            strcpy_s(de_originalFileLocalPath, abPath.toStdString().c_str());
+        }
     }else{
         abPath = abPath.toUtf8();
         strcpy_s(de_originalFileLocalPath, abPath.toStdString().c_str());
@@ -308,10 +316,11 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
 //        }
 //        while ((file_length_2 = decryption_file_t->read(file_buffer,BUFFER_SIZE)) >0
 //               &&(key_length = key_file_t->read(key_buffer,BUFFER_SIZE / extractionRate)) >0) {
-       qDebug()<<"111111111";
+       //qDebug()<<"111111111";
+        qDebug()<<"开始解密";
         while (((d_file_length_2 = fread(d_file_buffer, 1, BUFFER_SIZE, d_decryption_file)) > 0)
             && ((d_key_length = fread(d_key_buffer, 1, BUFFER_SIZE / extractionRate, d_key_file)) > 0)) {
-            qDebug()<<"开始解密";
+            //qDebug()<<"开始解密";
             for (int i = 1; i <= d_key_length; i++) {
                 d_file_buffer[i * extractionRate] = d_key_buffer[i - 1];
             }
@@ -329,21 +338,26 @@ int DecryptionFile::decryptFile(QString ykeyAbPath, QString yzipAbPath, QString 
         //QString fileSuffix = fileInfo.suffix();
         qDebug()<<"后缀名："<<fileSuffix;
         //base64解码
-        if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
-            QFile read_fileToBase64(temp_filePath);
-            if(!read_fileToBase64.open(QIODevice::ReadOnly))
-                return false;
+        if (base64Flag){
+            if (fileSuffix.compare(QString::fromLocal8Bit("txt") )==0 || fileSuffix.compare(QString::fromLocal8Bit("png") )==0){
+                QFile read_fileToBase64(temp_filePath);
+                if(!read_fileToBase64.open(QIODevice::ReadOnly))
+                    return false;
 
-            QByteArray decryption_Array = QByteArray::fromBase64(read_fileToBase64.readAll());
+                QByteArray decryption_Array = QByteArray::fromBase64(read_fileToBase64.readAll());
 
-            QFile write_fileToBase64(abPath);
-            if(!write_fileToBase64.open(QIODevice::WriteOnly))
-                return false;
+                QFile write_fileToBase64(abPath);
+                if(!write_fileToBase64.open(QIODevice::WriteOnly))
+                    return false;
 
-            write_fileToBase64.write(decryption_Array);
-            read_fileToBase64.close();
-            write_fileToBase64.close();
+                write_fileToBase64.write(decryption_Array);
+                read_fileToBase64.close();
+                write_fileToBase64.close();
+            }else{
+                //return FAIL_ERRO_BASE64;
+            }
         }
+
 //        QFile file_tem(temp_filePath);
 //        if (file_tem.exists())
 //        {

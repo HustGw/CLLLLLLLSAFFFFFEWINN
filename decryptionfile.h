@@ -16,7 +16,7 @@ public:
 
     int VerifyFile(QString yzipAbPath, char v_dest[], char f_dest[], char u_dest[]);
 
-    int decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate);
+    int decryptFile(QString ykeyAbPath, QString yzipAbPath, QString abPath, int decryptRate, int base64Flag);
 };
 
 #endif // DECRYPTIONFILE_H
