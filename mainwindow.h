@@ -143,6 +143,7 @@ signals:
     void sendUserId(QString);
     void decryptSignal(QString,QString);
     void FinishedDecryption(QString);
+    void FailedDecryption(QString);
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -286,6 +287,7 @@ private slots:
     void httpDowloadFinished();
     void decryptSlot(QString keypath,QString filepath);
     void finishDecryption(QString decryption_id);
+    void failedDecryption(QString decryotion_id);
 //    void FileIsAllowed();//请求同意槽函数
 
     void FileIsIgnored();//请求忽略槽函数

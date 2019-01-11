@@ -700,6 +700,7 @@ void MainWindow::InitUi(){
     ui->pushButton_9->hide();
     connect(this,SIGNAL(decryptSignal(QString,QString)),this,SLOT(decryptSlot(QString,QString)));
     connect(this,SIGNAL(FinishedDecryption(QString)),this,SLOT(finishDecryption(QString)));
+    connect(this,SIGNAL(FailedDecryption(QString)),this,SLOT(failedDecryption(QString)));
 }
 void MainWindow::on_FinishedBtn_clicked()
 {
@@ -3919,6 +3920,37 @@ void MainWindow::finishDecryption(QString decryption_id){
         qDebug()<<"shibai";
     }
 }
+void MainWindow::failedDecryption(QString decryption_id){
+    QSqlQuery query(db);
+    bool updateRequest = query.exec("update Decryption set status = 4 where file_id = '"+decryption_id.toUtf8()+"'");
+    if(updateRequest){
+        QDateTime time = QDateTime::currentDateTime();
+        QString time_str = time.toString("yyyy-MM-dd hh:mm:ss");//获取当前时间
+        QSqlQuery updatetime(db);
+        bool updateTimeSuccess = updatetime.exec("update Decryption set apply_time = '"+time_str+"'where file_id = '"+decryption_id.toUtf8()+"'");
+        if(!updateTimeSuccess){
+            qDebug()<<"update failed";
+        }else{
+            //ReLayout();
+            QSqlQuery query1(db);
+            bool success = query1.exec("select * from Decryption where file_id='"+decryption_id.toUtf8()+"'");
+            if(!success){
+                qDebug() << "查询user失败";
+                return;
+            }else{
+                while(query1.next()){
+                    QString delete_id = query1.record().value("id").toString();
+                    DecryptionItem *m1 = ui->MidStaWidget->findChild<DecryptionItem *>(delete_id+"decryption");
+                    delete m1;
+                    ReLayout();
+                }
+            }
+        }
+    }
+    else{
+        qDebug()<<"shibai";
+    }
+}
 void MainWindow::finishedSlot(QNetworkReply *reply){
     if(reply->error()==QNetworkReply::NoError){
         QByteArray bytes = reply->readAll();
@@ -3977,6 +4009,7 @@ void MainWindow::finishedSlot(QNetworkReply *reply){
                             {
                                 MsgBox *msgbox = new MsgBox(2,QStringLiteral("请求已被驳回！"),this);
                                 msgbox->exec();
+                                emit FailedDecryption(dcrypt_ykeyId);
                             }else if(content.contains("fp_id",Qt::CaseSensitive))
                             {
                                 QJsonParseError jsonError1;//Qt5新类
